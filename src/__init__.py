@@ -2,6 +2,8 @@ from .fileio import open_cptdataset, open_gradsdataset, to_cptv10
 from .utilities import setup_dlauth, read_dlauth, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr
 from .datastructures import GeographicExtent
 from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver
+from .tests import * 
+
 
 from pathlib import Path
 import intake 
