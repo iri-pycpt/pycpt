@@ -4,9 +4,11 @@ def rmrf(dirn):
     subdirs = [diro for diro in dirn.glob('*') if diro.is_dir()]
 
     for file in subfiles: 
+        file.chmod(0o0777)
         file.unlink() 
     for subdir in subdirs: 
         try: 
+            subdir.chmod(0o0777)
             subdir.rmdir() 
         except: 
             rmrf(subdir)
@@ -15,6 +17,7 @@ def rmrf(dirn):
 def rmstar(dirn):
     subfiles = [file for file in dirn.glob('*') if file.is_file()]
     for file in subfiles: 
+        file.chmod(0o0777)
         file.unlink() 
 
 def ls_files_recursive(dirn):
