@@ -28,5 +28,13 @@ python
 import cpttools 
 ``` 
 
+## Tests 
+```
+git clone https://github.com/kjhall-iri/cpt-tools.git
+cd cpt-tools
+pytest -v .
+```
+
+
 for support: kjhall@iri.columbia.edu 
 
