@@ -14,9 +14,9 @@ def cpt_headers(header):
 def open_cptdataset(filename):
     assert Path(filename).absolute().is_file(), 'Cannot find {}'.format(Path(filename).absolute())
     with open(str(Path(filename).absolute()), 'r') as f: 
-        content = f.read() 
-    content = [line.strip() for line in content.split(os.linesep) if 'xmlns' not in line] 
-    xmlnns_lines = [line.strip() for line in content.split(os.linesep) if 'xmlns' in line ]
+        content1 = f.read() 
+    content = [line.strip() for line in content1.split(os.linesep) if 'xmlns' not in line] 
+    xmlnns_lines = [line.strip() for line in content1.split(os.linesep) if 'xmlns' in line ]
     assert 'xmlns:cpt=http://iri.columbia.edu/CPT/v10/' in ' '.join(xmlnns_lines), 'CPT XML Namespace: {} Not detected'.format('xmlns:cpt=http://iri.columbia.edu/CPT/v10/')
     #xmlns = content.pop(0)  # cf header  
     #assert xmlns == 'xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/', 'Invalid XML Namespace: {}'.format(xmlns)
