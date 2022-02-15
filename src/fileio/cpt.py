@@ -99,47 +99,26 @@ def open_cptdataset(filename):
     dataarrays = {f.replace(' ', '_'): xr.DataArray(data_vars[f]['data'], dims=data_vars[f]['dims'], coords=data_vars[f]['coords'], attrs=data_vars[f]['attrs']) for f in data_vars.keys()}
     #print(data_vars['attributes']['coords'])
     return xr.Dataset(dataarrays)
+
     
-# new read_cpt_date
 def read_cpt_date(date_original):
-    tokens = date_original.split('-')
-    foundslash = False
-    ymd, ymd2, ret = [] , [], []
-    ymdlen=-1
-    #print(tokens)
-    for token in tokens:
-        if '/' in token: 
-            last, first = [i.split('T')[0] for i in token.split('/')]
-            #print(first, last)
-            ymd.append(last)
-            ymdlen = len(ymd)
-            while len(ymd) < 3: 
-                ymd.append(1)
-            ret.append(pd.Timestamp(*[int(i) for i in ymd]))
-            ymd2 = [first]
-            foundslash=True
-        elif 'T' in token:
-            if foundslash:
-                ymd2.append(token.split('T')[0])
-            else:
-                ymd.append(token.split('T')[0])
-        else:
-            if foundslash:
-                ymd2.append(token)
-            else: 
-                ymd.append(token)
-
-
-    if len(ymd2) == ymdlen:
-        while len(ymd2) < 3: 
-            ymd2.append(1)
+    if '/' in date_original: 
+        date1, date2 = date_original.split('/')
+        date1, date2 = date1.split('T')[0], date2.split('T')[0]
+        date1, date2 = date1.split(' ')[0], date2.split(' ')[0]
+        if len(date1.split('-')) == len(date2.split('-')): 
+            ret1, ret2 = pd.Timestamp(date1), pd.Timestamp(date2)
+        else: 
+            assert len(date1.split('-')) > len(date2.split('-')), 'date1 must have more elements than date2' 
+            ymd = date1.split('-') 
+            ymd2 = date2.split('-')
+            ymd2= ymd[:len(ymd) - len(ymd2)] + ymd2
+            ret1, ret2 = pd.Timestamp(date1), pd.Timestamp('-'.join(ymd2) if len(ymd2) > 1 else ymd2[0])
+        return ret1 + (ret2 - ret1) / 2
     else: 
-        ymd2 = ymd[:3-len(ymd2)] + ymd2
-    ret.append(pd.Timestamp(*[int(i) for i in ymd2]))
-    if len(ret) == 1: 
-        ret.extend(ret)
-    return ret[0] + (ret[1] - ret[0]) /  2           
-            
+        return pd.Timestamp(date_original) 
+    
+
 
 def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
     assert type(da) == xr.DataArray, 'Can only write Xr.DataArray to CPTv10'

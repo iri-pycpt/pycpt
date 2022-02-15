@@ -142,6 +142,27 @@ def test_subx_EPS6_obs(predictor_domain, entry,obs):
     entry.observations(predictor_domain, obs=obs, target='week12')
 
 @pytest.mark.SUBX
+@pytest.mark.SUBX_GEPS7
+@pytest.mark.hindcast 
+@pytest.mark.parametrize('predictor_domain,entry', make_subx_args(SUBSEASONAL.SUBX.GEPS7))
+def test_subx_EPS7_hcst(predictor_domain, entry):
+    entry.hindcasts(predictor_domain, target='week12')
+
+@pytest.mark.SUBX
+@pytest.mark.SUBX_GEPS7
+@pytest.mark.forecast 
+@pytest.mark.parametrize('predictor_domain,entry', make_subx_args(SUBSEASONAL.SUBX.GEPS7))
+def test_subx_EPS7_fcst(predictor_domain, entry):
+    entry.forecasts(predictor_domain, target='week12')
+
+@pytest.mark.SUBX
+@pytest.mark.SUBX_GEPS7
+@pytest.mark.observed
+@pytest.mark.parametrize('predictor_domain,entry,obs', make_subx_obs_args(SUBSEASONAL.SUBX.GEPS7))
+def test_subx_EPS7_obs(predictor_domain, entry,obs):
+    entry.observations(predictor_domain, obs=obs, target='week12')
+
+@pytest.mark.SUBX
 @pytest.mark.SUBX_NESM
 @pytest.mark.hindcast 
 @pytest.mark.parametrize('predictor_domain,entry', make_subx_args(SUBSEASONAL.SUBX.NESM))

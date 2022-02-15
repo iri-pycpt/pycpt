@@ -1,7 +1,7 @@
 import pandas as pd 
 
 threeletters = [None, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
+monthlengths = [ 0, 31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 def parse_target(target):
     """Gets a numerical month from three-letter month abbreviations"""
     assert ('-' in target and len(target) == 7) or len(target) == 3, 'TARGET must be in three-letter format for one month, or a range of months. For example, "Jun" or "Jun-Jul"'
@@ -24,6 +24,21 @@ def target_from_leads(fdate, lead_low, lead_high):
     target_low = threeletters[low_ndx]
     target_high = threeletters[high_ndx]  
     return target_low if target_low == target_high else '{}_{}'.format(target_low, target_high)
+
+def seasonal_target_length(target): 
+    # target must be three-letter-abbr style 
+    if '-' in target: 
+        total = 0
+        start, end = target.split('-')
+        start_ndx, end_ndx = threeletters.index(start), threeletters.index(end)
+        if end_ndx < start_ndx: # cross-year 
+            total += sum(monthlengths[start_ndx:])
+            total += sum(monthlengths[:end_ndx+1])
+            return total
+        else: 
+            return sum(monthlengths[start_ndx:end_ndx+1])
+    else: 
+        return monthlengths[threeletters.index(target)]
 
 def seasonal_target(fdate, target, lead_low, lead_high):
     if target is not None and lead_high is not None and lead_low is not None: # if all are supplied

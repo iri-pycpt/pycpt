@@ -14,4 +14,4 @@ def make_obs_args():
 @pytest.mark.SEASONAL
 @pytest.mark.parametrize('predictand_domain,entry', make_obs_args())
 def test_seasonal_obs(predictand_domain, entry):
-    entry.observations(predictand_domain, target='Dec-Jan')
+    entry.observations(predictand_domain, target='Jun-Sep')

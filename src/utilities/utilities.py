@@ -11,9 +11,9 @@ def download(url, dest, verbose=True, format='cptv10.tsv', station=False, use_dl
     if verbose:
         print('\nURL: {}\n'.format(url))
         print()
-    if use_dlauth:
+    if str(use_dlauth) == 'True':
         dlauthid = read_dlauth()
-        assert dlauthid is not None, "You need to use pycpt.setup_dlauth('your_iri_email') to get a cookie before you can download data!"
+        assert dlauthid is not None, "You need to use pycpt.setup_dlauth('your_iri_email') to get a cookie before you can download this data!"
         cookies = {'__dlauth_id': dlauthid}
     else:
         cookies={}

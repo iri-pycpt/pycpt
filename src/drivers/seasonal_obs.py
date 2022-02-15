@@ -47,8 +47,8 @@ class SeasonalObsDriver(intake.source.base.DataSource):
             assert True, 'The slow bird gets the worm'
 
         destination = destination +'.'+ filetype.split('.')[1]
-        first_fcst = cftime.num2date(self.catalog_object.describe()['metadata']['limits']['start'], self.catalog_object.describe()['metadata']['limits']['units'], calendar=self.catalog_object.describe()['metadata']['limits']['calendar'])
-        last_fcst = cftime.num2date(self.catalog_object.describe()['metadata']['limits']['end'], self.catalog_object.describe()['metadata']['limits']['units'], calendar=self.catalog_object.describe()['metadata']['limits']['calendar']) if self.catalog_object.describe()['metadata']['limits']['end'] != -1 else fdate
+        first_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['start'] ) # cftime.num2date(self.catalog_object.describe()['metadata']['limits']['start'], self.catalog_object.describe()['metadata']['limits']['units'], calendar=self.catalog_object.describe()['metadata']['limits']['calendar'])
+        last_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['end'] )  if type(self.catalog_object.describe()['metadata']['limits']['end'] ) == str else pd.Timestamp.today()# cftime.num2date(self.catalog_object.describe()['metadata']['limits']['end'], self.catalog_object.describe()['metadata']['limits']['units'], calendar=self.catalog_object.describe()['metadata']['limits']['calendar']) if self.catalog_object.describe()['metadata']['limits']['end'] != -1 else fdate
         
         if first_year is not None:
             assert first_year <= last_fcst.year, 'first_year ({}) must be earlier than or equal to the last available year ({})'.format(first_year, last_fcst.year)
@@ -62,8 +62,10 @@ class SeasonalObsDriver(intake.source.base.DataSource):
         final_year = min(pd.Timestamp(final_year, fdate.month, fdate.day), last_fcst).year if final_year is not None else last_fcst.year
         first_year = max(pd.Timestamp(first_year, fdate.month, fdate.day), first_fcst).year if first_year is not None else first_fcst.year
         fdate, target, lead_low, lead_high = seasonal_target(fdate, target, lead_low, lead_high)
-        url = eval('f"{}"'.format(self.observed_url)) 
-        return download(url, destination, verbose=verbose, format=filetype, station=station)
+        url = eval('f"{}"'.format(self.observed_url))
+        use_dlauth = str(self.catalog_object.describe()['metadata']['dlauth_required'])
+        #assert False, url
+        return download(url, destination, verbose=verbose, format=filetype, station=station, use_dlauth=use_dlauth)
 
     def _close(self):
         # close any files, sockets, etc

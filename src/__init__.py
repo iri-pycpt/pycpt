@@ -1,5 +1,5 @@
 from .fileio import open_cptdataset, open_gradsdataset, to_cptv10
-from .utilities import setup_dlauth, read_dlauth, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr
+from .utilities import setup_dlauth, read_dlauth, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr, seasonal_target_length, target_from_leads, leads_from_target
 from .datastructures import GeographicExtent
 from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver
 from .tests import * 
@@ -24,12 +24,6 @@ if not CPTTOOLS_SPACE.is_dir():
     CPTTOOLS_SPACE.mkdir(exist_ok=True, parents=True)
 assert CPTTOOLS_SPACE.is_dir(), 'could not create ~/.cpttools_space directory'
 
-if (CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml').is_file():
-    catalog = intake.open_catalog( CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml')
-    SEASONAL = catalog.seasonal
-    SUBSEASONAL = catalog.subseasonal
-else: 
-    print('No data catalog found - please try updating with cpttools.update_catalog()')
 
 def update_catalog():
     try:
@@ -50,4 +44,14 @@ def update_catalog():
         SUBSEASONAL = catalog.subseasonal
     except: 
         print('FAILED TO LOAD FRESH CATALOG - Data Library downloads may be unavailable')
-    
+
+if (CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml').is_file():
+    catalog = intake.open_catalog( CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml')
+    SEASONAL = catalog.seasonal
+    SUBSEASONAL = catalog.subseasonal
+else:
+    try: 
+        update_catalog()
+    except:     
+        print('No data catalog found - please try updating with cpttools.update_catalog()')
+
