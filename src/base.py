@@ -8,7 +8,7 @@ class CPT:
         if cpt_directory is None: 
             cpt_directory = find_cpt(version=version)
             if not cpt_directory:
-                cpt_directory = install_cpt_windows(version=version) if platform.system == 'Windows' else install_cpt_unix(version=version) 
+                cpt_directory = install_cpt_windows(version=version) if platform.system() == 'Windows' else install_cpt_unix(version=version) 
         self.cptdir = Path(cpt_directory)
         assert self.cptdir.is_dir(), 'CPT directory does not exist'
         self.last_cmd = 'CPT.x'
