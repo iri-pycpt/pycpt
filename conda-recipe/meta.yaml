@@ -1,0 +1,44 @@
+package:
+  name: cptcore
+  version: "0.1.0"
+
+source:
+  path: ../src
+
+build:
+  number: 0
+  string: cptcore
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+  run:
+    - make # [not win]
+    - {{ compiler('fortran') }} # [not win]
+    - tar # [not win]
+    - python
+    - xarray 
+    - cartopy
+    - matplotlib
+    - cftime 
+    - pandas 
+    - pathlib
+    - scipy
+    - gitpython
+    - cpttools
+    - cptlite
+
+test:
+  imports:
+    - cptcore
+    - cptcore.functional
+    - cptcore.tests
+
+about:
+  home: https://github.com/kjhall-iri/
+  license: MIT
+  summary: 'IRIs Climate Predictability Tool' 
+  description: 'Somewhat like CPT'
+  dev_url: https://github.com/kjhall-iri/
