@@ -292,7 +292,9 @@ def install_cpt_windows(version=CPT_DEFAULT_VERSION):
     #if CPT_SPACE.is_dir():
     #    rmrf(CPT_SPACE)
     CPT_SPACE.mkdir(exist_ok=True, parents=True)
-    subprocess.call([str(CPT_INSTALLER.absolute()), '/SP-', '/VERYSILENT', '/NOCANCEL', f'/DIR="{CPT_SPACE}"'])
+    cptspacevar = str(CPT_SPACE) if str(CPT_SPACE)[:2] != "C:" else str(CPT_SPACE)[2:] 
+    print(f'/DIR={cptspacevar}')
+    subprocess.call([str(CPT_INSTALLER.absolute()), '/SP-', '/VERYSILENT', '/NOCANCEL', f'/DIR={cptspacevar}'])
     CPT_EXECUTABLE = CPT_SPACE / 'CPT_batch.exe'
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE.parents[0]

@@ -4,6 +4,8 @@ import os
 with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-8') as fh:
 	long_description= fh.read()
 
+print('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO {}'.format(os.getenv('RECIPE_DIR')))
+
 
 setup(
     name = "cptcore",
