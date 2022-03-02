@@ -15,8 +15,8 @@ def open_cptdataset(filename):
     assert Path(filename).absolute().is_file(), 'Cannot find {}'.format(Path(filename).absolute())
     with open(str(Path(filename).absolute()), 'r') as f: 
         content1 = f.read() 
-    content = [line.strip() for line in content1.split(os.linesep) if 'xmlns' not in line] 
-    xmlnns_lines = [line.strip() for line in content1.split(os.linesep) if 'xmlns' in line ]
+    content = [line.strip() for line in content1.split("\n") if 'xmlns' not in line] 
+    xmlnns_lines = [line.strip() for line in content1.split("\n") if 'xmlns' in line ]
     assert 'xmlns:cpt=http://iri.columbia.edu/CPT/v10/' in ' '.join(xmlnns_lines), 'CPT XML Namespace: {} Not detected'.format('xmlns:cpt=http://iri.columbia.edu/CPT/v10/')
     #xmlns = content.pop(0)  # cf header  
     #assert xmlns == 'xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/', 'Invalid XML Namespace: {}'.format(xmlns)
@@ -131,8 +131,8 @@ def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
         assert len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)], 'data array coord {} not the same size as the dimension'.format(dim)
     assert len(dims) == len(da.dims), f'Data Array has dims {da.dims}, but you only passed {dims}'
     with open(opfile, 'w') as f: 
-        f.write('xmlns:cpt=http://iri.columbia.edu/CPT/v10/' + os.linesep)
-        f.write('cpt:nfields=1'+os.linesep)
+        f.write('xmlns:cpt=http://iri.columbia.edu/CPT/v10/' + "\n")
+        f.write('cpt:nfields=1'+"\n")
         if C is not None: 
             f.write(f'cpt:ncats={da.shape[list(da.dims).index(C)]}\n')
         if len(extra_dims) == 2: 
