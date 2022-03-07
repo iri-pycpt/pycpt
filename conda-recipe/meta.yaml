@@ -1,6 +1,6 @@
 package:
   name: cpttools
-  version: "1.0.0"
+  version: "1.0.1"
 
 source:
   path: ../src
@@ -33,7 +33,6 @@ test:
     - cpttools
     - cpttools.utilities
     - cpttools.fileio
-    - cpttools.fileio.xgrads
     - cpttools.datastructures 
     - cpttools.drivers
     

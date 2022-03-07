@@ -7,7 +7,7 @@ with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-
 
 setup(
     name = "cpttools",
-    version = "1.0.0",
+    version = "1.0.1",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Tools bridging Xarray and CPT"),
@@ -18,7 +18,6 @@ setup(
                 'cpttools.datastructures', 
                 'cpttools.drivers', 
                 'cpttools.fileio', 
-                'cpttools.fileio.xgrads',
                 'cpttools.utilities' , 
                 'cpttools.tests'],
 	package_dir={ 'cpttools': '{}/../src'.format(os.getenv('RECIPE_DIR')), 
@@ -26,7 +25,6 @@ setup(
                   'cpttools.drivers': '{}/../src/drivers'.format(os.getenv('RECIPE_DIR')),
                   'cpttools.fileio': '{}/../src/fileio'.format(os.getenv('RECIPE_DIR')),
                   'cpttools.utilities': '{}/../src/utilities'.format(os.getenv('RECIPE_DIR')),
-                  'cpttools.fileio.xgrads': '{}/../src/fileio/xgrads'.format(os.getenv('RECIPE_DIR')),
                   },
 	python_requires=">=3.0",
     long_description=long_description,
