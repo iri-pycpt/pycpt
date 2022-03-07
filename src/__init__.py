@@ -15,9 +15,9 @@ __author__  = "Kyle Hall (kjhall@iri.columbia.edu)"
 __license__ = "MIT"
 
 
-intake.register_driver( 'seasonaldriver', SeasonalDriver)
-intake.register_driver( 'seasonalobsdriver', SeasonalObsDriver)
-intake.register_driver( 'subxdriver', SubxDriver)
+intake.register_driver( 'seasonaldriver', SeasonalDriver, overwrite=True)
+intake.register_driver( 'seasonalobsdriver', SeasonalObsDriver, overwrite=True)
+intake.register_driver( 'subxdriver', SubxDriver, overwrite=True)
 
 CPTTOOLS_SPACE = Path().home().absolute() / '.cpttools_space'
 if not CPTTOOLS_SPACE.is_dir():
