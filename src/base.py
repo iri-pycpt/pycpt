@@ -1,10 +1,54 @@
 from pathlib import Path
 from subprocess import Popen, PIPE
-import platform, os , io, uuid
+import platform, os , io, uuid, psutil, time
 from .utilities import * 
+import cpttools as ct 
+import copy 
+
+default_output_files = {
+    'original_predictor': 'original_predictor',
+    'out_of_sample_predictor': 'original_forecast_predictor',
+    'original_predictand': 'original_predictand',
+    'goodness_index': 'goodness_index',
+    'cca_x_timeseries': 'predictor_cca_timeseries',
+    'cca_y_timeseries': 'predictand_cca_timeseries',
+    'cca_canonical_correlation':  'cca_canonical_correlation',
+    'eof_x_timeseries': 'predictor_eof_timeseries',
+    'eof_y_timeseries':  'predictand_eof_timeseries',
+    'eof_x_loadings': 'predictor_eof_spatial_loadings',
+    'eof_y_loadings': 'predictand_eof_spatial_loadings',
+    'cca_x_loadings': 'predictor_cca_spatial_loadings',
+    'cca_y_loadings': 'predictand_cca_spatial_loadings',
+    'forecast_probabilities': 'probabilistic_forecasts',
+    'forecast_values': 'deterministic_forecasts',
+    'crossvalidated_hindcasts': 'crossvalidated_hindcasts',
+    'prediction_error_variance': 'prediction_error_variance',
+    'probabilistic_reforecasts': 'probabilistic_reforecasts',
+    'pearson': 'pearson', 
+    'spearman': 'spearman', 
+    '2afc': '2afc',
+    'pct_variance': 'pct_variance', 
+    'variance_ratio': 'variance_ratio', 
+    'mean_bias': 'mean_bias', 
+    'root_mean_squared_error': 'mean_bias', 
+    'mean_absolute_error': 'mean_bias', 
+    'hit_score': 'mean_bias', 
+    'hit_skill_score': 'mean_bias', 
+    'leps': 'leps', 
+    'gerrity_score': 'gerrity_score', 
+    '2afc_fcst_categories': '2afc_fcst_categories', 
+    '2afc_continuous_fcsts': '2afc_continuous_fcsts',
+    'roc_below': 'roc_below', 
+    'roc_above': 'roc_above', 
+    'generalized_roc': 'generalized_roc', 
+    'rank_probability_skill_score': 'rank_probability_skill_score', 
+    'ignorance': 'ignorance', 
+    'pearson': 'pearson', 
+}
+
 
 class CPT:
-    def __init__(self, cpt_directory=None, version=CPT_DEFAULT_VERSION, interactive=False,  log=None, project_file=None,  record=None, **kwargs):
+    def __init__(self, cpt_directory=None, version=CPT_DEFAULT_VERSION, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, **kwargs):
         if cpt_directory is None: 
             cpt_directory = find_cpt(version=version)
             if not cpt_directory:
@@ -21,6 +65,14 @@ class CPT:
         assert Path(self.cpt).is_file(), 'CPT executable not found'
         if not (Path.home() / '.pycpt_workspace').is_dir():
             (Path.home() / '.pycpt_workspace').mkdir(exist_ok=True, parents=True)
+        
+        self.id = str(uuid.uuid4())
+        self.outputdir = Path.home() / '.pycpt_workspace' /  self.id
+        self.outputdir.mkdir(exist_ok=True, parents=True)
+        self.outputs = copy.deepcopy(output_files)
+        for key in self.outputs.keys():
+            self.outputs[key] = self.outputdir / self.outputs[key]
+
         os.environ['CPT_BIN_DIR'] = str(self.cptdir.absolute())   
         self.record = str(Path(record).absolute()) if record else None 
         self.log = str(Path(log)) if log else None 
@@ -32,7 +84,6 @@ class CPT:
             print(x)
         self.write(571)
         self.write(3)
-
         
     def read(self):
         try: 
@@ -44,17 +95,12 @@ class CPT:
                 queue.insert(0, char)
                 std_out += char
             assert self.cpt_process.poll() is None, 'whoops cpt died'
-            if self.log is not None:
-                log = open(self.log, 'a')
-                log.write(std_out + '\n')
-                log.close()
             return std_out
         except:
             self.kill()
             return std_out
 
     def status(self ):
-        print('CPT is {}'.format('alive' if self.cpt_process.poll() is None else 'dead'))
         return self.cpt_process.poll() is None
 
     def write(self, cpt_cmd):
@@ -65,7 +111,6 @@ class CPT:
         if cpt_cmd[-1] != os.linesep:
             cpt_cmd += os.linesep
 
-        self.last_cmd = cpt_cmd
         try:
             if self.project_file:
                 with open(self.project_file, 'a') as f: 
@@ -79,15 +124,19 @@ class CPT:
             log = open(self.log, 'a')
             log.write(cpt_cmd + '\n')
             log.close()
-        x = ''
-        if cpt_cmd == '111' + os.linesep:
+        x = self.read()
+        if 'Output Results\n  \n' in x:
             while "0. Exit" not in x:
                 x += self.read()
-        else:
-            x += self.read()
+            
         if self.interactive:
             print(x)
-        return x
+        if self.log is not None:
+            log = open(self.log, 'a')
+            log.write(x + '\n')
+            log.close()
+        self.last_cmd = cpt_cmd
+        return self.status()
 
     def execute_script(self, script):
         assert Path(script).is_file()
@@ -99,5 +148,14 @@ class CPT:
     def kill(self):
         self.cpt_process.kill()
    
+    def clean(self):
+        ct.rmrf(self.outputdir)
+
+    def wait_for_files(self):
+        proc = psutil.Process(pid=self.cpt_process.pid)
+        while len(proc.open_files()) > 0: 
+            time.sleep(0.1)
     
-        
+    def __del__(self):
+        self.wait_for_files()
+        self.clean()

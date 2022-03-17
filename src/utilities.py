@@ -258,8 +258,8 @@ def detect_changes(outputdir, wait=0.2):
         cur_sizes = copy.deepcopy(new_sizes )
     return dt.timedelta(seconds=i*wait)
 
-CPT_DEFAULT_VERSION = '17.5.2'
-CPT_VALID_VERSIONS = ['17.5.2', '17.6.1']
+CPT_DEFAULT_VERSION = '17.7.0'
+CPT_VALID_VERSIONS = ['17.7.0', '17.5.2', '17.6.1']
 
 def install_cpt_unix(version=CPT_DEFAULT_VERSION):
     assert platform.system() != 'Windows', 'On Windows, you should be using install_cpt_windows'
@@ -279,6 +279,9 @@ def install_cpt_unix(version=CPT_DEFAULT_VERSION):
     subprocess.call(['tar','xf', f'CPT.{version}.tar.gz' ], cwd=str(CPT_SPACE.absolute()))
     assert CPT_BIN_DIR.is_dir(), 'FAILED TO UNPACK CPT TARBALL'
     print('PyCPT CPT DISTRIBUTION NOT DETECTED - COMPILING CPT FROM SOURCE')
+    if version in [ '17.7.0' ]: 
+        subprocess.call(['make', 'clean'], cwd=str(CPT_BIN_DIR.absolute() / 'lapack' / 'lapack'))
+        subprocess.call(['cp', 'make.inc.example', 'make.inc'], cwd=str(CPT_BIN_DIR.absolute() / 'lapack' / 'lapack'))
     subprocess.call(['make'], cwd=str(CPT_BIN_DIR.absolute()))
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE.parents[0]
