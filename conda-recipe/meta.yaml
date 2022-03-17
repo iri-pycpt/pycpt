@@ -27,6 +27,7 @@ requirements:
     - pathlib
     - scipy
     - gitpython
+    - pytest
     - cpttools
     - cptlite
 
