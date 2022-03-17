@@ -7,7 +7,7 @@ with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-
 
 setup(
     name = "cpttools",
-    version = "1.0.1",
+    version = "1.0.2",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Tools bridging Xarray and CPT"),

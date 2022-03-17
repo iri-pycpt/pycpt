@@ -46,7 +46,7 @@ class SeasonalObsDriver(intake.source.base.DataSource):
         if pressure is None and len(self.pressure_levels) == 0: 
             assert True, 'The slow bird gets the worm'
 
-        destination = destination +'.'+ filetype.split('.')[1]
+        destination = str(destination) +'.'+ filetype.split('.')[1]
         first_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['start'] ) 
         last_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['end'] )  if type(self.catalog_object.describe()['metadata']['limits']['end'] ) == str else pd.Timestamp.today()
         
