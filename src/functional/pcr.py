@@ -19,6 +19,9 @@ def principal_components_regression(
         tailoring=None,  # tailoring None, Anomaly, StdAnomaly, or SPI (SPI only available on Gamma)
         x_eof_modes=(1,5), # minimum and maximum of allowed X Principal Componenets 
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
+        retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
+        retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
+        validation='crossvalidation', #type of leave-n-out crossvalidation to use
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -32,6 +35,12 @@ def principal_components_regression(
         f_sample_dim=None, 
         f_feature_dim=None, 
     ):
+    assert validation.upper() in ['CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'RETROACTIVE']"
+    assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
+    assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
+    assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
+
+
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
     X = X.squeeze()  # drop all size-one dimensions 
@@ -44,6 +53,9 @@ def principal_components_regression(
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         check_all(F, f_lat_dim, f_lon_dim, f_sample_dim, f_feature_dim)
         #F = F.squeeze() #drop all size-one dimensions 
+
+    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
 
 
     cpt = CPT(**cpt_kwargs)
@@ -123,7 +135,14 @@ def principal_components_regression(
     cpt.write(cpt.outputs['goodness_index'].absolute())
 
     #initiate analysis 
-    cpt.write(311)
+    if validation.upper() == 'CROSSVALIDATION':
+        cpt.write(311)
+    elif validation.upper() == 'RETROACTIVE':
+        cpt.write(312)
+        cpt.write(retroactive_initial_training_period)
+        cpt.write(retroactive_step)
+    else:
+        assert False, 'INVALID VALIDATION OPTION'
 
     # save all deterministic skill scores 
     for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above']: 
@@ -198,19 +217,22 @@ def principal_components_regression(
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_curve'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
-    skill_values = xr.merge(skill_values)
+    skill_values = xr.merge(skill_values).mean('Mode')
 
     x_eof_scores = open_cptdataset(str(cpt.outputs['eof_x_timeseries'].absolute()) + '.txt')
     x_eof_scores = getattr(x_eof_scores, [i for i in x_eof_scores.data_vars][0])
     x_eof_scores.name = "x_eof_scores"
+    x_eof_scores = x_eof_scores.rename({'index':'Mode'})
 
     x_eof_loadings = open_cptdataset(str(cpt.outputs['eof_x_loadings'].absolute()) + '.txt')
     x_eof_loadings = getattr(x_eof_loadings, [i for i in x_eof_loadings.data_vars][0])
     x_eof_loadings.name = "x_eof_loadings"
+    x_eof_loadings.coords['Mode'] = x_eof_scores.coords['Mode'].values
 
 
     pattern_values = [ x_eof_scores, x_eof_loadings]
     pattern_values = xr.merge(pattern_values)
+    pattern_values.coords[x_sample_dim] = [pd.Timestamp(str(i)) for i in pattern_values.coords[x_sample_dim].values]
 
     return hcsts, fcsts, skill_values, pattern_values 
 

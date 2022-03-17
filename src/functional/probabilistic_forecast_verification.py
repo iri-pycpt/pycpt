@@ -90,6 +90,6 @@ def probabilistic_forecast_verification(
     skill_values = [ getattr(i, [ii for ii in i.data_vars][0]) for i in skill_values]
     for i in range(len(skill_values)):
         skill_values[i].name = ['generalized_roc', 'ignorance', 'rank_probability_skill_score'][i] 
-    skill_values = xr.merge(skill_values)
+    skill_values = xr.merge(skill_values).mean('Mode')
     return skill_values 
 

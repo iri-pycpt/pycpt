@@ -18,6 +18,9 @@ def multiple_regression(
         transform_predictand=None,  # transformation to apply to the predictand dataset - None, 'Empirical', 'Gamma'
         tailoring=None,  # tailoring None, Anomaly, StdAnomaly, or SPI (SPI only available on Gamma)
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
+        retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
+        retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
+        validation='crossvalidation', #type of leave-n-out crossvalidation to use
         regression='OLS',
         link='identity',
         x_lat_dim=None, 
@@ -33,6 +36,11 @@ def multiple_regression(
         f_sample_dim=None, 
         f_feature_dim=None, 
     ):
+    assert validation.upper() in ['CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'RETROACTIVE']"
+    assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
+    assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
+    assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
+    
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
     X = X.squeeze()  # drop all size-one dimensions 
@@ -40,6 +48,8 @@ def multiple_regression(
     y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
     check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
     Y = Y.squeeze() # drop all size-one dimensions 
+    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
 
     if F is not None: 
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
@@ -198,6 +208,6 @@ def multiple_regression(
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_curve'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
-    skill_values = xr.merge(skill_values)
+    skill_values = xr.merge(skill_values).mean('Mode')
     return hcsts, fcsts, skill_values
 

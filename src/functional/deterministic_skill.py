@@ -95,6 +95,6 @@ def deterministic_skill(
     skill_values = [ getattr(i, [ii for ii in i.data_vars][0]) for i in skill_values]
     for i in range(len(skill_values)):
         skill_values[i].name = ['pearson', 'spearman', '2afc', 'pct_variance', 'variance_ratio', 'mean_bias', 'root_mean_squared_error', 'mean_absolute_error', 'hit_score', 'hit_skill_score', 'leps', 'gerrity_score', '2afc_fcst_categories', '2afc_continuous_fcsts', 'roc_below', 'roc_above'][i] 
-    skill_values = xr.merge(skill_values)
+    skill_values = xr.merge(skill_values).mean('Mode')
     return  skill_values
 

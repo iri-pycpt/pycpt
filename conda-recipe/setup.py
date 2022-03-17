@@ -4,12 +4,9 @@ import os
 with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-8') as fh:
 	long_description= fh.read()
 
-print('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO {}'.format(os.getenv('RECIPE_DIR')))
-
-
 setup(
     name = "cptcore",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),
@@ -19,7 +16,7 @@ setup(
     packages=[  'cptcore', 'cptcore.functional', 'cptcore.tests' ],
     package_data={ 
         'cptcore': ['{}/../src/fortran/*'.format(os.getenv('RECIPE_DIR'))],
-        'cptcore.tests': ['{}/../src/tests/data/*'.format(os.getenv('RECIPE_DIR'))]
+        'cptcore.tests': ['{}/../src/tests/data/seasonal/*'.format(os.getenv('RECIPE_DIR')), '{}/../src/tests/data/subseasonal/*'.format(os.getenv('RECIPE_DIR'))]
     },
 	package_dir={ 
         'cptcore': '{}/../src'.format(os.getenv('RECIPE_DIR')), 

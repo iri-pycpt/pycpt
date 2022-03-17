@@ -1,4 +1,5 @@
 
+from audioop import cross
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
 from pathlib import Path 
@@ -8,19 +9,19 @@ from cpttools import open_cptdataset, to_cptv10
 from cptlite.checks import check_all, guess_coords 
 import xarray as xr 
 
-
-
-
 def canonical_correlation_analysis(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
         F=None, # New Out of sample (forecast) predictor Dataset in an Xarray DataArray with three dimensions, XYT 
-        crossvalidation_window=5,  # number of samples to leave out in each cross-validation step 
         transform_predictand=None,  # transformation to apply to the predictand dataset - None, 'Empirical', 'Gamma'
         tailoring=None,  # tailoring None, Anomaly, StdAnomaly, or SPI (SPI only available on Gamma)
         cca_modes=(1,5), # minimum and maximum of allowed CCA modes 
         x_eof_modes=(1,5), # minimum and maximum of allowed X Principal Componenets 
         y_eof_modes=(1,5), # minimum and maximum of allowed Y Principal Components 
+        crossvalidation_window=5,  # number of samples to leave out in each cross-validation step 
+        retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
+        retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
+        validation='crossvalidation', #type of leave-n-out crossvalidation to use
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -35,6 +36,11 @@ def canonical_correlation_analysis(
         f_sample_dim=None, 
         f_feature_dim=None, 
     ):
+    assert validation.upper() in ['CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'RETROACTIVE']"
+    assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
+    assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
+    assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
+
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
     X = X.squeeze()  # drop all size-one dimensions 
@@ -43,12 +49,14 @@ def canonical_correlation_analysis(
     check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
     Y = Y.squeeze() # drop all size-one dimensions 
 
+    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
+
     if F is not None: 
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         check_all(F, f_lat_dim, f_lon_dim, f_sample_dim, f_feature_dim)
         #F = F.squeeze() #drop all size-one dimensions 
         
-
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
     
@@ -65,8 +73,6 @@ def canonical_correlation_analysis(
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
     cpt.write(534)
     cpt.write(crossvalidation_window)
-
-    
 
     # apply transform_predictand 
     if transform_predictand is not None: 
@@ -132,7 +138,14 @@ def canonical_correlation_analysis(
     cpt.write(cpt.outputs['goodness_index'].absolute())
 
     #initiate analysis 
-    cpt.write(311)
+    if validation.upper() == 'CROSSVALIDATION':
+        cpt.write(311)
+    elif validation.upper() == 'RETROACTIVE':
+        cpt.write(312)
+        cpt.write(retroactive_initial_training_period)
+        cpt.write(retroactive_step)
+    else:
+        assert False, 'INVALID VALIDATION OPTION'
 
     # save all deterministic skill scores 
     for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above']: 
@@ -179,9 +192,11 @@ def canonical_correlation_analysis(
         prob_fcst = open_cptdataset(str(cpt.outputs['forecast_probabilities'].absolute()) + '.txt')
         prob_fcst = getattr(prob_fcst, [i for i in prob_fcst.data_vars][0])
         prob_fcst.name = 'probabilistic_forecasts'
+
         det_fcst = open_cptdataset(str(cpt.outputs['forecast_values'].absolute()) + '.txt')
         det_fcst = getattr(det_fcst, [i for i in det_fcst.data_vars][0])
         det_fcst.name = 'deterministic_forecasts'
+
         pev = open_cptdataset(str(cpt.outputs['prediction_error_variance'].absolute()) + '.txt')
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
@@ -207,36 +222,51 @@ def canonical_correlation_analysis(
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_curve'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
-    skill_values = xr.merge(skill_values)
+    skill_values = xr.merge(skill_values).mean('Mode')
 
     x_cca_scores = open_cptdataset(str(cpt.outputs['cca_x_timeseries'].absolute()) + '.txt')
     x_cca_scores = getattr(x_cca_scores, [i for i in x_cca_scores.data_vars][0])
     x_cca_scores.name = "x_cca_scores"
+    x_cca_scores = x_cca_scores.rename({'index':'Mode'})
+
     y_cca_scores = open_cptdataset(str(cpt.outputs['cca_y_timeseries'].absolute()) + '.txt')
     y_cca_scores = getattr(y_cca_scores, [i for i in y_cca_scores.data_vars][0])
     y_cca_scores.name = "y_cca_scores"
+    y_cca_scores = y_cca_scores.rename({'index':'Mode'})
+
     x_cca_loadings = open_cptdataset(str(cpt.outputs['cca_x_loadings'].absolute()) + '.txt')
     x_cca_loadings = getattr(x_cca_loadings, [i for i in x_cca_loadings.data_vars][0])
     x_cca_loadings.name = "x_cca_loadings"
+    x_cca_loadings.coords['Mode'] = x_cca_scores.coords['Mode'].values
+
     y_cca_loadings = open_cptdataset(str(cpt.outputs['cca_y_loadings'].absolute()) + '.txt')
     y_cca_loadings = getattr(y_cca_loadings, [i for i in y_cca_loadings.data_vars][0])
     y_cca_loadings.name = "y_cca_loadings"
+    y_cca_loadings.coords['Mode'] = y_cca_scores.coords['Mode'].values
 
     x_eof_scores = open_cptdataset(str(cpt.outputs['eof_x_timeseries'].absolute()) + '.txt')
     x_eof_scores = getattr(x_eof_scores, [i for i in x_eof_scores.data_vars][0])
     x_eof_scores.name = "x_eof_scores"
+    x_eof_scores = x_eof_scores.rename({'index':'Mode'})
+
     y_eof_scores = open_cptdataset(str(cpt.outputs['eof_y_timeseries'].absolute()) + '.txt')
     y_eof_scores = getattr(y_eof_scores, [i for i in y_eof_scores.data_vars][0])
     y_eof_scores.name = "y_eof_scores"
+    y_eof_scores = y_eof_scores.rename({'index':'Mode'})
+
     x_eof_loadings = open_cptdataset(str(cpt.outputs['eof_x_loadings'].absolute()) + '.txt')
     x_eof_loadings = getattr(x_eof_loadings, [i for i in x_eof_loadings.data_vars][0])
     x_eof_loadings.name = "x_eof_loadings"
+    x_eof_loadings.coords['Mode'] = x_eof_scores.coords['Mode'].values
+
     y_eof_loadings = open_cptdataset(str(cpt.outputs['eof_y_loadings'].absolute()) + '.txt')
     y_eof_loadings = getattr(y_eof_loadings, [i for i in y_eof_loadings.data_vars][0])
     y_eof_loadings.name = "y_eof_loadings"
+    y_eof_loadings.coords['Mode'] = y_eof_scores.coords['Mode'].values
 
     pattern_values = [ x_cca_scores, y_cca_scores, x_eof_scores, y_eof_scores, x_cca_loadings, y_cca_loadings, x_eof_loadings, y_eof_loadings]
     pattern_values = xr.merge(pattern_values)
+    pattern_values.coords[x_sample_dim] = [pd.Timestamp(str(i)) for i in pattern_values.coords[x_sample_dim].values]
 
     return hcsts, fcsts, skill_values, pattern_values 
 
