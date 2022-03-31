@@ -11,7 +11,7 @@ build:
 
 requirements:
   host:
-    - python
+    - python<3.9
     - pip
     - setuptools
   run:
@@ -19,6 +19,8 @@ requirements:
     - {{ compiler('fortran') }} # [not win]
     - tar # [not win]
     - python
+    - cpttools
+    - cptlite
     - xarray 
     - cartopy
     - matplotlib
@@ -28,8 +30,7 @@ requirements:
     - scipy
     - gitpython
     - pytest
-    - cpttools
-    - cptlite
+
 
 test:
   imports:
