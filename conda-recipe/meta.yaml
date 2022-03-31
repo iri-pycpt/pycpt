@@ -16,7 +16,7 @@ requirements:
     - setuptools
   run:
     - make # [not win]
-    - {{ compiler('fortran') }} # [not win]
+    - gfortran # [not win]
     - tar # [not win]
     - python
     - cpttools
