@@ -12,6 +12,7 @@ import xarray as xr
 def deterministic_skill(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
+        synchronous_predictors=True,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -32,6 +33,9 @@ def deterministic_skill(
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(614) # activate GCM Validation MOS 
+    if synchronous_predictors: 
+        cpt.write(545)
+
     cpt.write(527) # GCM Options 
     cpt.write(1) # interpolate ? 
     cpt.write(1) # No correction 

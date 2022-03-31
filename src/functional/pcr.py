@@ -22,6 +22,7 @@ def principal_components_regression(
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
+        synchronous_predictors=True,
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -60,7 +61,10 @@ def principal_components_regression(
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(612) # activate CCA MOS 
-    
+
+    if synchronous_predictors: 
+        cpt.write(545)
+        
     # apply tailoring 
     tailoring = str(tailoring)
     assert  (tailoring.upper() == 'SPI' and transform_predictand.upper()  == 'GAMMA')  or  tailoring != 'SPI', 'Standard Precipitation Index (SPI) tailoring is only available if transform_predictand=Gamma'

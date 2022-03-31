@@ -13,6 +13,7 @@ import xarray as xr
 def probabilistic_forecast_verification(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
+        synchronous_predictors=True,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -35,7 +36,8 @@ def probabilistic_forecast_verification(
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(621) # activate CCA MOS 
-        
+    if synchronous_predictors: 
+        cpt.write(545)
     # Load X dataset 
     to_cptv10(X.fillna(-999), cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim, C=x_feature_dim)
     cpt.write(1)

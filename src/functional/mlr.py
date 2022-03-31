@@ -23,6 +23,7 @@ def multiple_regression(
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
         regression='OLS',
         link='identity',
+        synchronous_predictors=True,
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -59,7 +60,9 @@ def multiple_regression(
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(614) # activate GCM MOS 
-    
+    if synchronous_predictors: 
+        cpt.write(545)
+        
     cpt.write(527) # GCM settings
     cpt.write(1) # interpolate? 
     cpt.write(3) # bias and variance corrected 

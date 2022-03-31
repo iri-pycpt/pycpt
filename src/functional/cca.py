@@ -22,6 +22,7 @@ def canonical_correlation_analysis(
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
+        synchronous_predictors=True,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -59,7 +60,8 @@ def canonical_correlation_analysis(
         
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
-    
+    if synchronous_predictors: 
+        cpt.write(545)
     # apply tailoring 
     tailoring = str(tailoring)
     assert  (tailoring.upper() == 'SPI' and transform_predictand.upper()  == 'GAMMA')  or  tailoring != 'SPI', 'Standard Precipitation Index (SPI) tailoring is only available if transform_predictand=Gamma'

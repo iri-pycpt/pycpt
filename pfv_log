@@ -1,0 +1,2837 @@
+571
+
+  
+  
+                                 Error Handling
+  
+ Select option for how to handle user input errors:
+ 
+ 1. Retry                                                           
+ 2. Ignore                                                          
+ 3. Stop                                                            
+ >  CPT 
+3
+
+  
+  
+ FILE
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       513.  Expertise Level
+           5131.  Beginner
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+       621.  Probabilistic Forecast Verification (PFV)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+621
+
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (dates)                   0
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         7.  Length of training period
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn on)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+545
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         7.  Length of training period
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+1
+
+ X Input File:  CPT 
+/Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/original_predictor
+
+  
+  
+                                Data Domain (X)
+  
+  
+ Data Domain (X):
+ Domain limits:
+ (Southern latitudes and western longitudes negatives)
+ (Approximate data limits in brackets)
+  
+ Northernmost latitude (  37):  CPT 
+37.0
+
+ Southernmost latitude (   5):  CPT 
+5.0
+
+ Westernmost longitude (  68):  CPT 
+68.0
+
+ Easternmost longitude (  97):  CPT 
+97.0
+
+  
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (dates)                  42
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+       220.  Start at
+            221.  Predictors (X)
+            223.  New Predictors (Z)
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+2
+
+ Y Input File:  CPT 
+/Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/original_predictand
+
+  
+  
+                                Data Domain (Y)
+  
+  
+ Data Domain (Y):
+ Domain limits:
+ (Southern latitudes and western longitudes negatives)
+ (Approximate data limits in brackets)
+  
+ Northernmost latitude (  37):  CPT 
+37.0
+
+ Southernmost latitude (   5):  CPT 
+5.0
+
+ Westernmost longitude (  68):  CPT 
+68.0
+
+ Easternmost longitude (  97):  CPT 
+97.0
+
+  
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+131
+
+ Output format:
+ 
+ 1. unformatted
+ 2. formatted  
+ 3. GrADS      
+ >  CPT 
+2
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+132
+
+ Number of decimal places:  CPT 
+6
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+531
+
+  
+  
+                                 Goodness Index
+  
+ Select score for calculating goodness index:
+ 
+ 1. Pearson's correlation                                           
+ 2. Spearman's correlation                                          
+ 3. Kendall's tau                                                   
+ 4. Akaike Information Criterion (AIC)                              
+ 5. Bayesian Information Criterion (BIC)                            
+ 6. Hannan-Quinn Criterion (HQC)                                    
+ 7. Mutual Information Criterion (MIC)                              
+ >  CPT 
+3
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+544
+
+  
+  
+                                 Missing Values
+  
+  
+ Forecasts:
+ Missing-value flag:  CPT 
+-999
+
+ Maximum % of missing data:  CPT 
+10
+
+ Maximum % of missing gridpoints:  CPT 
+10
+
+  
+  
+ Observations:
+ Missing-value flag:  CPT 
+-999
+
+ Maximum % of missing data:  CPT 
+10
+
+ Maximum % of missing gridpoints:  CPT 
+10
+
+ Number of near-neighbours:  CPT 
+1
+
+  
+ Method for replacing missing data:
+ Select method:
+ 
+ 1. Long-term means     
+ 2. Long-term medians   
+ 3. Random numbers      
+ 4. Best near-neighbours
+ >  CPT 
+4
+
+  
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+313
+
+  
+ Reading data ...
+ Reading /Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/original_predictand ...
+ Reading /Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/original_predictor ...
+  
+ Checking for missing values ...
+  
+ Calculating climatologies and thresholds ...
+ Climatological Period: Jul 1991 to Jul 2020
+  
+ Beginning analysis ...
+ Identifying categories ...
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+131
+
+ Calculating 2AFC Score (GROC) ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/generalized_roc
+
+ Saving: /Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/generalized_roc.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+101
+
+ Calculating Ignorance ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/ignorance
+
+ Saving: /Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/ignorance.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+122
+
+ Calculating Ranked Probability Skill Score ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/rank_probability_skill_score
+
+ Saving: /Users/kjhall/.pycpt_workspace/eec2d596-9011-4d2f-b686-0230a176f26c/rank_probability_skill_score.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+571
+
+  
+  
+                                 Error Handling
+  
+ Select option for how to handle user input errors:
+ 
+ 1. Retry                                                           
+ 2. Ignore                                                          
+ 3. Stop                                                            
+ >  CPT 
+3
+
+  
+  
+  
+ FILE
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       513.  Expertise Level
+           5131.  Beginner
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+       621.  Probabilistic Forecast Verification (PFV)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+621
+
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (dates)                   0
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         7.  Length of training period
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn on)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+545
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         7.  Length of training period
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       811.  Download
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+       611.  Canonical Correlation Analysis      (CCA)
+       612.  Principal Components Regression     (PCR)
+       613.  Multiple Linear Regression          (MLR)
+       614.  GCM Validation                      (GCM)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+1
+
+ X Input File:  CPT 
+/Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/original_predictor
+
+  
+  
+                                Data Domain (X)
+  
+  
+ Data Domain (X):
+ Domain limits:
+ (Southern latitudes and western longitudes negatives)
+ (Approximate data limits in brackets)
+  
+ Northernmost latitude (  37):  CPT 
+37.0
+
+ Southernmost latitude (   5):  CPT 
+5.0
+
+ Westernmost longitude (  68):  CPT 
+68.0
+
+ Easternmost longitude (  97):  CPT 
+97.0
+
+  
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 
+ First data                                 N/A
+ Last data                                  N/A
+ Start at                                   
+ Number of fields                           0
+ Number of lags                             0
+ Number of variables                        0
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (dates)                  42
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+       220.  Start at
+            221.  Predictors (X)
+            223.  New Predictors (Z)
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+2
+
+ Y Input File:  CPT 
+/Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/original_predictand
+
+  
+  
+                                Data Domain (Y)
+  
+  
+ Data Domain (Y):
+ Domain limits:
+ (Southern latitudes and western longitudes negatives)
+ (Approximate data limits in brackets)
+  
+ Northernmost latitude (  37):  CPT 
+37.0
+
+ Southernmost latitude (   5):  CPT 
+5.0
+
+ Westernmost longitude (  68):  CPT 
+68.0
+
+ Easternmost longitude (  97):  CPT 
+97.0
+
+  
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   0
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)             0
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+131
+
+ Output format:
+ 
+ 1. unformatted
+ 2. formatted  
+ 3. GrADS      
+ >  CPT 
+2
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+132
+
+ Number of decimal places:  CPT 
+6
+
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+531
+
+  
+  
+                                 Goodness Index
+  
+ Select score for calculating goodness index:
+ 
+ 1. Pearson's correlation                                           
+ 2. Spearman's correlation                                          
+ 3. Kendall's tau                                                   
+ 4. Akaike Information Criterion (AIC)                              
+ 5. Bayesian Information Criterion (BIC)                            
+ 6. Hannan-Quinn Criterion (HQC)                                    
+ 7. Mutual Information Criterion (MIC)                              
+ >  CPT 
+3
+
+  
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+544
+
+  
+  
+                                 Missing Values
+  
+  
+ Forecasts:
+ Missing-value flag:  CPT 
+-999
+
+ Maximum % of missing data:  CPT 
+10
+
+ Maximum % of missing gridpoints:  CPT 
+10
+
+  
+  
+ Observations:
+ Missing-value flag:  CPT 
+-999
+
+ Maximum % of missing data:  CPT 
+10
+
+ Maximum % of missing gridpoints:  CPT 
+10
+
+ Number of near-neighbours:  CPT 
+1
+
+  
+ Method for replacing missing data:
+ Select method:
+ 
+ 1. Long-term means     
+ 2. Long-term medians   
+ 3. Random numbers      
+ 4. Best near-neighbours
+ >  CPT 
+4
+
+  
+  
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         7.  Length of training period
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            112.  Save Goodness Index
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       210.  Data Domain
+            211.  Predictors (X)
+            212.  Predictands (Y)
+       220.  Start at
+            221.  Predictors (X)
+            222.  Predictands (Y)
+            223.  New Predictors (Z)
+ ACTIONS
+       310.  Calculate
+            313.  Verify
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       531.  Goodness Index
+       532.  Climatological Period
+       537.  Masks Settings
+           5371.  Dry Mask
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       555.  Time Settings
+       540.  Data
+            543.  Sort Ensemble Members (turn off)
+            546.  Ensemble Average (turn on)
+            545.  Synchronous Predictors (turn off)
+            547.  Exclude
+            544.  Missing Values
+           5441.  Missing Values (X)
+           5442.  Missing Values (Y)
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ VIEW
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+313
+
+  
+ Reading data ...
+ Reading /Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/original_predictand ...
+ Reading /Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/original_predictor ...
+  
+ Checking for missing values ...
+  
+ Calculating climatologies and thresholds ...
+ Climatological Period: Jul 1991 to Jul 2020
+  
+ Beginning analysis ...
+ Identifying categories ...
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+131
+
+ Calculating 2AFC Score (GROC) ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/generalized_roc
+
+ Saving: /Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/generalized_roc.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+101
+
+ Calculating Ignorance ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/ignorance
+
+ Saving: /Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/ignorance.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
+437
+
+ Probabilistic Scores
+  
+ All-category scores:
+ 
+101. Ignorance                                                       
+111. Effective Interest Rate                                         
+121. Ranked Probability Score                                        
+122. Ranked Probability Skill Score                                  
+125. Resolution slope                                                
+131. 2AFC Score (GROC)                                               
+141. Linear Probability Score                                        
+151. Hit score (rank 1)                                              
+152. Hit score (rank 2)                                              
+153. Hit score (rank 3)                                              
+  
+  
+ Category-specific scores:
+ 
+201. Ignorance                                                       
+202. Reliability (ignorance)                                         
+203. Resolution (ignorance)                                          
+221. Brier Score                                                     
+222. Brier Skill Score                                               
+223. Reliability (Brier)                                             
+224. Resolution (Brier)                                              
+225. Resolution slope                                                
+231. ROC area                                                        
+  
+ Score:  CPT 
+122
+
+ Calculating Ranked Probability Skill Score ...
+ Done!
+ Probabilistic Scores Output file:  CPT 
+/Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/rank_probability_skill_score
+
+ Saving: /Users/kjhall/.pycpt_workspace/d8c0aab2-40b7-4a75-88e3-076cac5beef7/rank_probability_skill_score.txt
+  
+ Done!
+  
+ _______________________________________________________________________________
+  
+ Climate Predictability Tool 17   - Probabilistic Forecast Verification
+  
+                                     X File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                     Y File
+  
+ Input Data                                 original_predictand
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 1980
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+                                 Forecast File
+  
+ Input Data                                 original_predictor
+ First data                                 17 Jul 1980
+ Last data                                  17 Jul 2021
+ Start at                                   17 Jul 2021
+ Number of fields                           1
+ Number of lags                             1
+ Number of gridpoints                       990
+ Number of variables used                   990
+  
+ Training Data
+ Length of training period (years)                  42
+ Length of climatological period (years)            30
+ Number of forecasts                                 1
+ _______________________________________________________________________________
+  
+ Select option:
+ 
+         1.  Open X input file
+         2.  Open Y input file
+         3.  Open forecast file
+         9.  Number of forecasts
+ FILE
+       140.  Show files
+       141.  New
+       142.  Open
+       143.  Save
+       144.  Save As
+       145.  Save as Parameter File (turn on)
+       121.  Close X
+       122.  Close Y
+       123.  Close Forecast
+       110.  Output Results
+            113.  View Goodness Index
+            111.  Output Results
+       131.  Output-file format
+       132.  Output-data precision
+       133.  Include CPT output tags
+ DATA
+       801.  Merge
+       802.  Update
+       811.  Download
+ EDIT
+       220.  Start at
+            223.  New Predictors (Z)
+ ACTIONS
+       321.  Reset
+ TOOLS
+       430.  Verification
+            431.  Attributes Diagrams
+            432.  ROC Diagram
+            433.  Probabilistic Scores
+            437.  Skill Maps
+            434.  Weather Roulette
+            435.  Tendency Diagram
+            436.  Ranked-Hits Diagram
+       460.  Climatological Maps
+            461.  Thresholds
+            462.  Averages
+            464.  Standard Deviations
+            465.  Coefficients of Variation
+       450.  Forecasts
+            450.  Maps
+                 455.  Probabilities
+                 456.  Odds
+ OPTIONS
+       511.  Language
+       512.  Show Options
+       532.  Climatological Period
+       537.  Masks Settings
+           5372.  Skill Mask
+       551.  Resampling Settings
+       552.  Forecast Settings
+       553.  Verification Settings
+       561.  Skill map p-values (turn on)
+       571.  Error Handling
+       572.  Print Menus (turn off)
+ HELP
+       711.  About
+  
+  
+   0.  Exit
+  
+ >  CPT 
