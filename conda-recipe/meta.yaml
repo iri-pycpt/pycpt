@@ -22,7 +22,6 @@ requirements:
     - cpttools
     - cptlite
     - xarray 
-    - cartopy
     - matplotlib
     - pandas 
     - pathlib
