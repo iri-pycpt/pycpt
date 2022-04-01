@@ -24,11 +24,8 @@ requirements:
     - xarray 
     - cartopy
     - matplotlib
-    - cftime 
     - pandas 
     - pathlib
-    - scipy
-    - gitpython
     - pytest
 
 
