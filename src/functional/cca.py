@@ -1,5 +1,4 @@
 
-from audioop import cross
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
 from pathlib import Path 
