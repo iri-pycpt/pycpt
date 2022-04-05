@@ -1,11 +1,9 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from pathlib import Path 
 import pandas as pd 
-import platform, shutil, time, os
 from cpttools import open_cptdataset, to_cptv10
-from cptlite.checks import check_all, guess_coords 
+from ..checks import check_all, guess_coords 
 import xarray as xr 
 
 
@@ -21,7 +19,7 @@ def principal_components_regression(
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
-        validation='crossvalidation', #type of leave-n-out crossvalidation to use
+        validation='DOUBLE-CROSSVALIDATION', #type of leave-n-out crossvalidation to use
         synchronous_predictors=True,
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -36,7 +34,7 @@ def principal_components_regression(
         f_sample_dim=None, 
         f_feature_dim=None, 
     ):
-    assert validation.upper() in ['CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'RETROACTIVE']"
+    assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
     assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
     assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
@@ -89,7 +87,6 @@ def principal_components_regression(
     to_cptv10(X.fillna(-999), cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
-    x_first_year, x_final_year = pd.Timestamp(min(X.coords[x_sample_dim].values)).year, pd.Timestamp(max(X.coords[x_sample_dim].values)).year
     if len(X.coords) >= 3: # then this is gridded data
         cpt.write( max(X.coords[x_lat_dim].values)) # North
         cpt.write( min(X.coords[x_lat_dim].values)) # South
@@ -108,7 +105,6 @@ def principal_components_regression(
     to_cptv10(Y.fillna(-999), cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
-    y_first_year, y_final_year = pd.Timestamp(min(X.coords[x_sample_dim].values)).year, pd.Timestamp(max(X.coords[x_sample_dim].values)).year
     if len(Y.coords) >= 3: # then this is gridded data
         cpt.write( max(Y.coords[y_lat_dim].values)) # North
         cpt.write( min(Y.coords[y_lat_dim].values)) # South
@@ -141,6 +137,8 @@ def principal_components_regression(
     #initiate analysis 
     if validation.upper() == 'CROSSVALIDATION':
         cpt.write(311)
+    elif validation.upper() == 'DOUBLE-CROSSVALIDATION':
+        cpt.write(314)
     elif validation.upper() == 'RETROACTIVE':
         cpt.write(312)
         cpt.write(retroactive_initial_training_period)
@@ -154,11 +152,28 @@ def principal_components_regression(
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
 
-    
+
     cpt.write('111')
     cpt.write('201')
-    cpt.write( cpt.outputs['crossvalidated_hindcasts'].absolute())
+    cpt.write( cpt.outputs['hindcast_values'].absolute())
     cpt.write('0') 
+
+    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
+        cpt.write('111')
+        cpt.write('221')
+        cpt.write( cpt.outputs['hindcast_values'].absolute())
+        cpt.write('0') 
+
+        cpt.write('111')
+        cpt.write('226')
+        cpt.write( cpt.outputs['hindcast_prediction_error_variance'].absolute())
+        cpt.write('0') 
+
+        cpt.write('111')
+        cpt.write('224')
+        cpt.write( cpt.outputs['hindcast_probabilities'].absolute())
+        cpt.write('0') 
+
 
     if F is not None: 
         cpt.write(454) # deterministic forecasts 
@@ -170,7 +185,7 @@ def principal_components_regression(
 
         cpt.write(111)
         cpt.write(514)
-        cpt.write(cpt.outputs['prediction_error_variance'].absolute())
+        cpt.write(cpt.outputs['forecast_prediction_error_variance'].absolute())
         cpt.write(0)
 
         cpt.write(455) # probabilistic forecasts 
@@ -192,19 +207,34 @@ def principal_components_regression(
     if F is not None: 
         prob_fcst = open_cptdataset(str(cpt.outputs['forecast_probabilities'].absolute()) + '.txt')
         prob_fcst = getattr(prob_fcst, [i for i in prob_fcst.data_vars][0])
-        prob_fcst.name = 'probabilistic_forecasts'
+        prob_fcst.name = 'probabilistic'
+
         det_fcst = open_cptdataset(str(cpt.outputs['forecast_values'].absolute()) + '.txt')
         det_fcst = getattr(det_fcst, [i for i in det_fcst.data_vars][0])
-        det_fcst.name = 'deterministic_forecasts'
-        pev = open_cptdataset(str(cpt.outputs['prediction_error_variance'].absolute()) + '.txt')
+        det_fcst.name = 'deterministic'
+
+        pev = open_cptdataset(str(cpt.outputs['forecast_prediction_error_variance'].absolute()) + '.txt')
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
         fcsts = xr.merge([det_fcst, prob_fcst, pev])
 
-    hcsts = open_cptdataset(str(cpt.outputs['crossvalidated_hindcasts'].absolute()) + '.txt' )
+    hcsts = open_cptdataset(str(cpt.outputs['hindcast_values'].absolute()) + '.txt' )
     hcsts = getattr(hcsts, [i for i in hcsts.data_vars][0])
-    hcsts.name = 'hindcasts' 
-    hcsts = xr.merge([hcsts])
+    hcsts.name = 'deterministic' 
+
+    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
+        hcst_pr = open_cptdataset(str(cpt.outputs['hindcast_probabilities'].absolute()) + '.txt' )
+        hcst_pr = getattr(hcst_pr, [i for i in hcst_pr.data_vars][0])
+        hcst_pr.name = 'probabilistic'
+
+        hcst_pev = open_cptdataset(str(cpt.outputs['hindcast_prediction_error_variance'].absolute()) + '.txt' )
+        hcst_pev = getattr(hcst_pev, [i for i in hcst_pev.data_vars][0])
+        hcst_pev.name = 'prediction_error_variance' 
+        hcst_pev.coords['T'] = hcst_pr.coords['T'].values
+        hcsts = xr.merge([hcsts, hcst_pr, hcst_pev])
+    else:
+        hcsts = xr.merge([hcsts])
+        
     pearson = open_cptdataset(str(cpt.outputs['pearson'].absolute()) + '.txt')
     pearson = getattr(pearson, [i for i in pearson.data_vars][0])
     pearson.name = 'pearson'

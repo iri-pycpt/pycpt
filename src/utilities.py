@@ -1,8 +1,7 @@
 import  os, time, copy 
 from pathlib import Path 
 import datetime as dt 
-import matplotlib.pyplot as plt
-import subprocess, requests, platform 
+import subprocess, platform 
 import shutil
 
 CPT_SECRET  = 'C\bP\bT\b \b'
@@ -259,7 +258,7 @@ def detect_changes(outputdir, wait=0.2):
     return dt.timedelta(seconds=i*wait)
 
 CPT_DEFAULT_VERSION = '17.7.0'
-CPT_VALID_VERSIONS = ['17.7.0', '17.5.2', '17.6.1']
+CPT_VALID_VERSIONS = ['17.7.0']
 
 def install_cpt_unix(version=CPT_DEFAULT_VERSION):
     assert platform.system() != 'Windows', 'On Windows, you should be using install_cpt_windows'

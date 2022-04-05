@@ -1,15 +1,20 @@
 from pathlib import Path
 from subprocess import Popen, PIPE
 import platform, os , io, uuid, psutil, time
-from .utilities import * 
-import cpttools as ct 
+from .utilities import *
+from .bash import rmrf 
 import copy 
 
 default_output_files = {
+    #original files
     'original_predictor': 'original_predictor',
     'out_of_sample_predictor': 'original_forecast_predictor',
     'original_predictand': 'original_predictand',
+
+    # goodness 
     'goodness_index': 'goodness_index',
+
+    #pattern
     'cca_x_timeseries': 'predictor_cca_timeseries',
     'cca_y_timeseries': 'predictand_cca_timeseries',
     'cca_canonical_correlation':  'cca_canonical_correlation',
@@ -19,11 +24,17 @@ default_output_files = {
     'eof_y_loadings': 'predictand_eof_spatial_loadings',
     'cca_x_loadings': 'predictor_cca_spatial_loadings',
     'cca_y_loadings': 'predictand_cca_spatial_loadings',
-    'forecast_probabilities': 'probabilistic_forecasts',
-    'forecast_values': 'deterministic_forecasts',
-    'crossvalidated_hindcasts': 'crossvalidated_hindcasts',
-    'prediction_error_variance': 'prediction_error_variance',
-    'probabilistic_reforecasts': 'probabilistic_reforecasts',
+
+    # hindcasts
+    'hindcast_values': 'hindcast_values',
+    'hindcast_probabilities': 'hindcast_probabilities',
+    'hindcast_prediction_error_variance': 'hindcast_prediction_error_variance',
+    #forecasts 
+    'forecast_probabilities': 'forecast_probabilities',
+    'forecast_values': 'forecast_values',
+    'forecast_prediction_error_variance': 'forecast_prediction_error_variance',
+
+    # skill
     'pearson': 'pearson', 
     'spearman': 'spearman', 
     '2afc': '2afc',
@@ -43,7 +54,6 @@ default_output_files = {
     'generalized_roc': 'generalized_roc', 
     'rank_probability_skill_score': 'rank_probability_skill_score', 
     'ignorance': 'ignorance', 
-    'pearson': 'pearson', 
 }
 
 
@@ -149,7 +159,7 @@ class CPT:
         self.cpt_process.kill()
    
     def clean(self):
-        ct.rmrf(self.outputdir)
+        rmrf(self.outputdir)
 
     def wait_for_files(self):
         proc = psutil.Process(pid=self.cpt_process.pid)
