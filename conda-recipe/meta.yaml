@@ -21,7 +21,6 @@ requirements:
     - cpttools
 
 
-
 test:
   imports:
     - cptcore
