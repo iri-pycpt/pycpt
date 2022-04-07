@@ -1,12 +1,8 @@
 import dataclasses 
-import cartopy.crs as ccrs
-from cartopy import feature
-import matplotlib.pyplot as plt 
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-import matplotlib.ticker as ticker
+
 
 @dataclasses.dataclass
-class GeographicExtent: 
+class Geo: 
     """Tracking and Validating the Geographic Extent of PyCPT Predictors and Predictands
        Conventions: 
          1. "strict-positive": Longitude is specified as [0, 360] with units "degrees east from prime" 
@@ -50,26 +46,3 @@ class GeographicExtent:
             self.west -= 360 
         return self
 
-
-    def plot(self, use_topo=True, title=None):
-        title = 'Domain (N:{:0.2f}, S:{:0.2f}, E:{:0.2f}, W:{:0.2f})'.format(self.north, self.south, self.east, self.west ) if title is None else title 
-        states_provinces = feature.NaturalEarthFeature(category='cultural', name='admin_0_countries', scale='10m', facecolor='none')
-
-        #Create a feature for States/Admin 1 regions at 1:10m from Natural Earth
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
-        ax.set_extent([self.west, self.east, self.south, self.north], ccrs.PlateCarree())
-
-        # Put a background image on for nice sea rendering.
-        if str(use_topo) == "True":
-            ax.stock_img()
-
-        ax.set_title(title)
-        pl=ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=2, color='gray', alpha=0.5, linestyle='--')
-        pl.top_labels = False
-        pl.left_labels = False
-        pl.xformatter = LONGITUDE_FORMATTER
-        pl.yformatter = LATITUDE_FORMATTER
-        pl.xlocator = ticker.MaxNLocator(4)
-        pl.ylocator = ticker.MaxNLocator(4)
-        ax.add_feature(states_provinces, edgecolor='gray')
-        plt.show()

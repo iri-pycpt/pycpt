@@ -4,7 +4,6 @@ import datetime as dt
 import numpy as np 
 import xarray as xr 
 from io import StringIO
-import pandas as pd 
 
 def cpt_headers(header):
     m = re.compile("(?P<tag>cpt:.*?|cf:.*?)=(?P<value>.*?,|.*$)")
@@ -26,14 +25,7 @@ def open_cptdataset(filename):
     for i, header in enumerate(headers): 
         if len( header) == 3:  # we are only looking at the CPT headers that preceed a data block
             attrs.update({ k: header[2][k] for k in  header[2].keys() })
-            #if i < len(headers)-1:
-            #print('\n'.join(content[header[0]+2:header[0]+2+ int(attrs['nrow'])]))
             array = np.genfromtxt( StringIO('\n'.join(content[header[0]+2:header[0]+2+ int(attrs['nrow'])])), delimiter='\t', dtype=str)
-            #extras = np.genfromtxt( StringIO('\n'.join(content[header[0]+1 + int(attrs['nrow']):headers[i+1][0]])), delimiter='\t', dtype=str, skip_header=1)
-
-            #else:
-            #    array = np.genfromtxt(  StringIO('\n'.join(content[header[0]+1:])), delimiter='\t', dtype=str, skip_header=1)
-
             columns = np.genfromtxt(StringIO(content[header[0]+1]), delimiter='\t', dtype=str)
             try:
                 columns = columns.astype(float)
@@ -100,6 +92,11 @@ def open_cptdataset(filename):
     #print(data_vars['attributes']['coords'])
     return xr.Dataset(dataarrays)
 
+def datetime_timestamp(date):
+    fields = [int(i) for i in date.split('-')]
+    while len(fields) < 3: 
+        fields.append(1)
+    return dt.datetime(*fields)
     
 def read_cpt_date(date_original):
     if '/' in date_original: 
@@ -107,16 +104,16 @@ def read_cpt_date(date_original):
         date1, date2 = date1.split('T')[0], date2.split('T')[0]
         date1, date2 = date1.split(' ')[0], date2.split(' ')[0]
         if len(date1.split('-')) == len(date2.split('-')): 
-            ret1, ret2 = pd.Timestamp(date1), pd.Timestamp(date2)
+            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp(date2)
         else: 
             assert len(date1.split('-')) > len(date2.split('-')), 'date1 must have more elements than date2' 
             ymd = date1.split('-') 
             ymd2 = date2.split('-')
             ymd2= ymd[:len(ymd) - len(ymd2)] + ymd2
-            ret1, ret2 = pd.Timestamp(date1), pd.Timestamp('-'.join(ymd2) if len(ymd2) > 1 else ymd2[0])
+            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp('-'.join(ymd2) if len(ymd2) > 1 else ymd2[0])
         return ret1 + (ret2 - ret1) / 2
     else: 
-        return pd.Timestamp(date_original) 
+        return datetime_timestamp(date_original) 
     
 
 

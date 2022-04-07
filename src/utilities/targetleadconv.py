@@ -1,4 +1,17 @@
-import pandas as pd 
+import datetime as dt
+
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+possible_targets = "JFMAMJJASONDJFMAMJJASOND"
+
+def find_target(target):
+    ndx = 0 
+    while possible_targets[ndx:ndx+len(target)] != target and ndx + len(target) <= 24:
+        ndx += 1 
+    assert ndx + len(target) <= 24, "{} Target Not Found".format(target)
+    return months[ndx % 12], months[(ndx + len(target)) % 12 - 1]
+     
+def init_from_lead(lead, tstart):
+    return months[ (months.index(tstart) - lead) % 12 ]
 
 threeletters = [None, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 monthlengths = [ 0, 31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -40,6 +53,21 @@ def seasonal_target_length(target):
     else: 
         return monthlengths[threeletters.index(target)]
 
+def seasonal_target_length_monthly(target): 
+    # target must be three-letter-abbr style 
+    if '-' in target: 
+        total = 0
+        start, end = target.split('-')
+        start_ndx, end_ndx = threeletters.index(start), threeletters.index(end)
+        if end_ndx < start_ndx: # cross-year 
+            total += 12 - start_ndx + 1
+            total += end_ndx 
+            return total
+        else: 
+            return end_ndx - start_ndx +1
+    else: 
+        return monthlengths[threeletters.index(target)]
+
 def seasonal_target(fdate, target, lead_low, lead_high):
     if target is not None and lead_high is not None and lead_low is not None: # if all are supplied
         ll, lh = leads_from_target(fdate, target)
@@ -75,9 +103,9 @@ def subx_target(target=None, lead_low=None, lead_high=None):
 
     
 def first_hdate_in_training_season(fdate):
-    start = pd.Timestamp(fdate.year, fdate.month, 1)
+    start = dt.datetime(fdate.year, fdate.month, 1)
     while start.weekday() != 4: 
-        start = start + pd.Timedelta(days=1)
+        start = start + dt.Timedelta(days=1)
     return start
 
 def targetcenter(target):

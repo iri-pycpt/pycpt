@@ -1,6 +1,6 @@
-import intake, cftime
+import intake
 from ..utilities import *
-import pandas as pd
+import datetime as dt 
 
 class SeasonalDriver(intake.source.base.DataSource):
     container = 'str'
@@ -30,9 +30,9 @@ class SeasonalDriver(intake.source.base.DataSource):
         # Return the appropriate container of data here
         return str('hi')
 
-    def hindcasts(self, predictor_extent, fdate=pd.Timestamp.now() - pd.Timedelta(days=16), target=None, lead_low=None, lead_high=None, first_year=None, final_year=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
+    def hindcasts(self, predictor_extent, fdate=dt.datetime.now() - dt.timedelta(days=16), target=None, lead_low=None, lead_high=None, first_year=None, final_year=None, pressure=None, destination=None, filetype='data.nc', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SEASONAL_{self.catalog_object.name.upper()}_{self.name.upper()}_HCST_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m')}" if destination is None else destination
 
@@ -47,8 +47,8 @@ class SeasonalDriver(intake.source.base.DataSource):
             assert True, 'The slow bird gets the worm'
 
         destination = destination +'.'+ filetype.split('.')[1]
-        first_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['hindcast_limits']['start'] ) # cftime.num2date(self.catalog_object.describe()['metadata']['hindcast_limits']['start'], self.catalog_object.describe()['metadata']['hindcast_limits']['units'], calendar=self.catalog_object.describe()['metadata']['hindcast_limits']['calendar'])
-        last_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['hindcast_limits']['end'] ) if type( self.catalog_object.describe()['metadata']['hindcast_limits']['end'] ) == str else pd.Timestamp.today() # cftime.num2date(self.catalog_object.describe()['metadata']['hindcast_limits']['end'], self.catalog_object.describe()['metadata']['hindcast_limits']['units'], calendar=self.catalog_object.describe()['metadata']['hindcast_limits']['calendar']) if self.catalog_object.describe()['metadata']['hindcast_limits']['end'] != -1 else fdate
+        first_fcst = dt.datetime(*[int (i) for i in  self.catalog_object.describe()['metadata']['hindcast_limits']['start'].split('-')] ) # cftime.num2date(self.catalog_object.describe()['metadata']['hindcast_limits']['start'], self.catalog_object.describe()['metadata']['hindcast_limits']['units'], calendar=self.catalog_object.describe()['metadata']['hindcast_limits']['calendar'])
+        last_fcst = dt.datetime( *[int(i) for i in self.catalog_object.describe()['metadata']['hindcast_limits']['end'].split('-')] ) if type( self.catalog_object.describe()['metadata']['hindcast_limits']['end'] ) == str else dt.datetime.today() # cftime.num2date(self.catalog_object.describe()['metadata']['hindcast_limits']['end'], self.catalog_object.describe()['metadata']['hindcast_limits']['units'], calendar=self.catalog_object.describe()['metadata']['hindcast_limits']['calendar']) if self.catalog_object.describe()['metadata']['hindcast_limits']['end'] != -1 else fdate
         
         if first_year is not None:
             assert first_year <= last_fcst.year, 'first_year ({}) must be earlier than or equal to the last available year ({})'.format(first_year, last_fcst.year)
@@ -66,9 +66,9 @@ class SeasonalDriver(intake.source.base.DataSource):
         use_dlauth = str(self.catalog_object.describe()['metadata']['dlauth_required'])
         return download(url, destination, verbose=verbose, format=filetype, use_dlauth=use_dlauth)
 
-    def forecasts(self, predictor_extent, fdate=pd.Timestamp.now() - pd.Timedelta(days=16), target=None, lead_low=None, lead_high=None,  pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
+    def forecasts(self, predictor_extent, fdate=dt.datetime.now() - dt.timedelta(days=16), target=None, lead_low=None, lead_high=None,  pressure=None, destination=None, filetype='data.nc', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SEASONAL_{self.catalog_object.name.upper()}_{self.name.upper()}_FCST_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m')}" if destination is None else destination
         if pressure is not None and len(self.pressure_levels) > 0:
@@ -82,8 +82,8 @@ class SeasonalDriver(intake.source.base.DataSource):
             assert True, 'The slow bird gets the worm'
             
         destination = destination +'.'+ filetype.split('.')[1]
-        first_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['forecast_limits']['start'] ) 
-        last_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['forecast_limits']['end'] ) if type ( self.catalog_object.describe()['metadata']['forecast_limits']['end'] ) == str else pd.Timestamp.today()
+        first_fcst = dt.datetime( *[ int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['start'].split('-')] ) 
+        last_fcst = dt.datetime( *[ int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['end'].split('-')] ) if type ( self.catalog_object.describe()['metadata']['forecast_limits']['end'] ) == str else dt.datetime.today()
 
         assert fdate >= first_fcst, 'requested initialization of {} predates first forecast by {} which happened on {}'.format(fdate, self.catalog_object.configure_new().name, first_fcst )
         assert fdate <= last_fcst, 'requested initialization of {} on {} does not yet exist'.format(self.catalog_object.configure_new().name, fdate )

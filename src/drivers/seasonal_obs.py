@@ -1,6 +1,6 @@
-import intake, cftime
+import intake
 from ..utilities import *
-import pandas as pd
+import datetime as dt 
 
 class SeasonalObsDriver(intake.source.base.DataSource):
     container = 'str'
@@ -31,9 +31,9 @@ class SeasonalObsDriver(intake.source.base.DataSource):
         # Return the appropriate container of data here
         return str('hi')
 
-    def observations(self, predictand_extent, fdate=pd.Timestamp.now() - pd.Timedelta(days=16), target=None, lead_low=None, lead_high=None, first_year=None, final_year=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True, station=False):
+    def observations(self, predictand_extent, fdate=dt.datetime.now() - dt.timedelta(days=16), target=None, lead_low=None, lead_high=None, first_year=None, final_year=None, pressure=None, destination=None, filetype='data.nc', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SEASONAL_{self.catalog_object.name.upper()}_{self.name.upper()}_OBS_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m')}" if destination is None else destination
         if pressure is not None and len(self.pressure_levels) > 0:
@@ -47,8 +47,8 @@ class SeasonalObsDriver(intake.source.base.DataSource):
             assert True, 'The slow bird gets the worm'
 
         destination = str(destination) +'.'+ filetype.split('.')[1]
-        first_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['start'] ) 
-        last_fcst = pd.Timestamp( self.catalog_object.describe()['metadata']['limits']['end'] )  if type(self.catalog_object.describe()['metadata']['limits']['end'] ) == str else pd.Timestamp.today()
+        first_fcst = dt.datetime( *[ int(i) for i in self.catalog_object.describe()['metadata']['limits']['start'].split('-')] ) 
+        last_fcst = dt.datetime( *[int(i) for i in self.catalog_object.describe()['metadata']['limits']['end'].split('-')] )  if type(self.catalog_object.describe()['metadata']['limits']['end'] ) == str else dt.datetime.today()
         
         if first_year is not None:
             assert first_year <= last_fcst.year, 'first_year ({}) must be earlier than or equal to the last available year ({})'.format(first_year, last_fcst.year)
@@ -64,7 +64,7 @@ class SeasonalObsDriver(intake.source.base.DataSource):
         url = eval('f"{}"'.format(self.observed_url))
         use_dlauth = str(self.catalog_object.describe()['metadata']['dlauth_required'])
         #assert False, url
-        return download(url, destination, verbose=verbose, format=filetype, station=station, use_dlauth=use_dlauth)
+        return download(url, destination, verbose=verbose, format=filetype, use_dlauth=use_dlauth)
 
     def _close(self):
         # close any files, sockets, etc

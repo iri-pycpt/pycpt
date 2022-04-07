@@ -2,7 +2,7 @@ import pytest
 from .. import * 
 
 def make_args(model):
-    predictor_domain = GeographicExtent(20,50, -110, -70)
+    predictor_domain = Geo(20,50, -110, -70)
     attrs = [recursive_getattr(model, i) for i in model.walk() ]
     args = [(predictor_domain, attrs[i]) for i in range(len(attrs))]
     return args

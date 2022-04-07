@@ -2,13 +2,13 @@ import pytest
 from .. import * 
 
 def make_subx_args(model):
-    predictor_domain = GeographicExtent(20,50, -110, -70)
+    predictor_domain = Geo(20,50, -110, -70)
     attrs = [recursive_getattr(model, i) for i in model.walk() ]
     args = [(predictor_domain, attrs[i]) for i in range(len(attrs))]
     return args
 
 def make_subx_obs_args(model):
-    predictor_domain = GeographicExtent(8,25, 70, 90)
+    predictor_domain = Geo(8,25, 70, 90)
     attrs = [recursive_getattr(model, i) for i in model.walk() ]
     obs = ['CPC', 'CHIRPS', 'TRMM', 'IMD1deg', 'IMDp25deg']
     args = [(predictor_domain, attrs[0], obs[i]) for i in range(len(obs))]

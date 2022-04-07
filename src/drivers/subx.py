@@ -1,6 +1,6 @@
-import intake, cftime
+import intake
 from ..utilities import *
-import pandas as pd
+import datetime as dt
 import urllib.parse as parse
 
 class SubxDriver(intake.source.base.DataSource):
@@ -22,32 +22,32 @@ class SubxDriver(intake.source.base.DataSource):
             'TRMM': {
                 'source': 'SOURCES/.NASA/.GES-DAAC/.TRMM_L3/.TRMM_3B42/.v7/.daily/.precipitation/X/0./1.5/360./GRID/Y/-50/1.5/50/GRID',
                 'climo': '',
-                'first_date': pd.Timestamp(1998, 1, 1),
-                'final_date': pd.Timestamp(2015, 5, 31) # last available date 
+                'first_date': dt.datetime(1998, 1, 1),
+                'final_date': dt.datetime(2015, 5, 31) # last available date 
             },
             'CPC': {
                 'source': 'SOURCES/.NOAA/.NCEP/.CPC/.UNIFIED_PRCP/.GAUGE_BASED/.GLOBAL/.v1p0/.extREALTIME/.rain/X/0./.5/360./GRID/Y/-90/.5/90/GRID',
                 'climo': '',
-                'first_date': pd.Timestamp(1979, 1, 1),
+                'first_date': dt.datetime(1979, 1, 1),
                 'final_date': -1 # last available date 
             }, 
             'CHIRPS': {
                 'source': 'SOURCES/.UCSB/.CHIRPS/.v2p0/.daily-improved/.global/.0p25/.prcp/X/-180./.5/180./GRID/Y/-90/.5/90/GRID',
                 'climo': 'SOURCES/.ECMWF/.S2S/.climatologies/.observed/.CHIRPS/.prcpSmooth/X/-180./.5/180./GRID/Y/-90/.5/90/GRID',
-                'first_date': pd.Timestamp(1981, 1, 1),
-                'final_date': pd.Timestamp(2021, 12, 31) # last available date 
+                'first_date': dt.datetime(1981, 1, 1),
+                'final_date': dt.datetime(2021, 12, 31) # last available date 
             },
             'IMD1deg': {
                 'source': 'SOURCES/.IMD/.NCC1-2005/.v4p0/.rf',
                 'climo': '',
-                'first_date': pd.Timestamp(1951, 1, 1),
-                'final_date': pd.Timestamp(2018, 9, 30) # last available date 
+                'first_date': dt.datetime(1951, 1, 1),
+                'final_date': dt.datetime(2018, 9, 30) # last available date 
             },
             'IMDp25deg': {
                 'source': 'SOURCES/.IMD/.RF0p25/.gridded/.daily/.v1901-2015/.rf',
                 'climo': '',
-                'first_date': pd.Timestamp(1901, 1, 1),
-                'final_date': pd.Timestamp(2016, 12, 31) # last available date 
+                'first_date': dt.datetime(1901, 1, 1),
+                'final_date': dt.datetime(2016, 12, 31) # last available date 
             }
         }
 
@@ -64,9 +64,9 @@ class SubxDriver(intake.source.base.DataSource):
         # Return the appropriate container of data here
         return str('hi')
 
-    def hindcasts(self, predictor_extent, fdate=pd.Timestamp.now()  - pd.Timedelta(days=16), first_date=None, last_date=None, target=None, lead_low=None, lead_high=None,  pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
+    def hindcasts(self, predictor_extent, fdate=dt.datetime.now()  - dt.timedelta(days=16), first_date=None, last_date=None, target=None, lead_low=None, lead_high=None,  pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SUBX_{self.catalog_object.name.upper()}_{self.name.upper()}_HCST_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m-%d')}" if destination is None else destination
         if pressure is not None and len(self.pressure_levels) > 0:
@@ -82,8 +82,8 @@ class SubxDriver(intake.source.base.DataSource):
         destination = destination +'.'+ filetype.split('.')[1]
         training_season = threeletters[fdate.month]
         GEPShdate1 = first_hdate_in_training_season(fdate)
-        first_hindcast = pd.Timestamp(self.catalog_object.describe()['metadata']['hindcast_limits']['start'])
-        final_hindcast = pd.Timestamp(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) if type(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) == str else pd.Timestamp.today()
+        first_hindcast = dt.datetime(*[int(i) for i in self.catalog_object.describe()['metadata']['hindcast_limits']['start'].split('-')])
+        final_hindcast = dt.datetime(*[int(i) for i in self.catalog_object.describe()['metadata']['hindcast_limits']['end'].split('-')]) if type(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) == str else dt.datetime.today()
         
         if first_date is not None: 
             assert first_date >= first_hindcast, f'No data before {first_hindcast}'
@@ -102,9 +102,9 @@ class SubxDriver(intake.source.base.DataSource):
         use_dlauth = str(self.catalog_object.describe()['metadata']['dlauth_required'])
         return download(url, destination, verbose=verbose, format=filetype, use_dlauth=use_dlauth)
 
-    def forecasts(self, predictor_extent, fdate=pd.Timestamp.now() - pd.Timedelta(days=16), target=None, lead_low=None, lead_high=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
+    def forecasts(self, predictor_extent, fdate=dt.datetime.now() - dt.timedelta(days=16), target=None, lead_low=None, lead_high=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SUBX_{self.catalog_object.name.upper()}_{self.name.upper()}_FCST_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m-%d')}" if destination is None else destination
 
@@ -118,8 +118,8 @@ class SubxDriver(intake.source.base.DataSource):
         if pressure is None and len(self.pressure_levels) == 0: 
             assert True, 'The slow bird gets the worm'
         tarlengths = { 'week1': 7, 'week2':7, 'week3':7, 'week4':7, 'week12':14, 'week23':14, 'week34':14}
-        first_forecast = pd.Timestamp(self.catalog_object.describe()['metadata']['forecast_limits']['start'])
-        final_forecast = pd.Timestamp(self.catalog_object.describe()['metadata']['forecast_limits']['end']) if type(self.catalog_object.describe()['metadata']['forecast_limits']['end']) == str else pd.Timestamp.today()
+        first_forecast = dt.datetime(*[ int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['start'].split('-')])
+        final_forecast = dt.datetime(*[int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['end'].split('-')]) if type(self.catalog_object.describe()['metadata']['forecast_limits']['end']) == str else dt.datetime.today()
         assert first_forecast <=  fdate <= final_forecast , f'forecast data for {fdate} does not exist - range is {first_forecast} - {final_forecast}' 
 
         destination = destination +'.'+ filetype.split('.')[1]
@@ -130,9 +130,9 @@ class SubxDriver(intake.source.base.DataSource):
         url = eval('f"{}"'.format(self.forecast_url))
         return download(url, destination, verbose=verbose, format=filetype, use_dlauth=use_dlauth)
 
-    def observations(self, predictand_extent, obs='CUSTOM', obs_source=None, first_date=None, last_date=None, obs_climo=None, fdate=pd.Timestamp.now() - pd.Timedelta(days=16), target=None, lead_low=None, lead_high=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
+    def observations(self, predictand_extent, obs='CUSTOM', obs_source=None, first_date=None, last_date=None, obs_climo=None, fdate=dt.datetime.now() - dt.timedelta(days=16), target=None, lead_low=None, lead_high=None, pressure=None, destination=None, filetype='cptv10.tsv', verbose=True):
         assert filetype in ['data.nc', 'cptv10.tsv'], 'invalid format {}'.format(filetype)
-        assert fdate <= pd.Timestamp.now(), "Cannot make a forecast for a future date"
+        assert fdate <= dt.datetime.now(), "Cannot make a forecast for a future date"
         assert target is not None or (lead_low is not None and lead_high is not None), "You must either supply a target season, or high and low lead-time coordinates, or a set of all three that agree"
         destination = f"SUBX_{self.catalog_object.name.upper()}_{self.name.upper()}_{obs}_{target.upper()}_{pressure}_{fdate.strftime('%Y-%m-%d')}" if destination is None else destination
         if pressure is not None and len(self.pressure_levels) > 0:
@@ -149,10 +149,10 @@ class SubxDriver(intake.source.base.DataSource):
         destination = destination +'.'+ filetype.split('.')[1]
         training_season = threeletters[fdate.month]
         GEPShdate1 = first_hdate_in_training_season(fdate)
-        first_hindcast = pd.Timestamp(self.catalog_object.describe()['metadata']['hindcast_limits']['start'])
-        final_hindcast = pd.Timestamp(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) if type(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) == str else pd.Timestamp.today()
+        first_hindcast = dt.datetime(*[ int(i) for i in self.catalog_object.describe()['metadata']['hindcast_limits']['start'].split('-')])
+        final_hindcast = dt.datetime(*[int(i) for i in self.catalog_object.describe()['metadata']['hindcast_limits']['end'].split('-')]) if type(self.catalog_object.describe()['metadata']['hindcast_limits']['end']) == str else dt.datetime.today()
         first_obs = self.observations_urls[obs]['first_date']
-        last_obs = self.observations_urls[obs]['final_date'] if type(self.observations_urls[obs]['final_date']) != int else pd.Timestamp.today()# this can be int
+        last_obs = self.observations_urls[obs]['final_date'] if type(self.observations_urls[obs]['final_date']) != int else dt.datetime.today()# this can be int
        
         if first_date is not None: 
             assert first_date >= first_hindcast, f'No data before {first_hindcast}'

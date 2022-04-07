@@ -1,6 +1,6 @@
 package:
   name: cpttools
-  version: "1.0.2"
+  version: "0.2.0"
 
 source:
   path: ../src
@@ -9,6 +9,7 @@ source:
 build:
   number: 0
   string: cpttools
+  noarch: python
 
 requirements:
   host:
@@ -16,24 +17,15 @@ requirements:
     - pip
     - setuptools
   run:
-    - python
     - xarray 
-    - dask
-    - netcdf4
     - intake
-    - cftime 
-    - pandas 
-    - pathlib
-    - cartopy
-    - matplotlib
-    - gitpython
-    - pytest
 
 test:
   imports:
     - cpttools
     - cpttools.utilities
     - cpttools.fileio
+    - cpttools.scripts
     - cpttools.datastructures 
     - cpttools.drivers
     

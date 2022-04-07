@@ -3,17 +3,15 @@ import datetime as dt
 from ..fileio import *
 from .dlauth import read_dlauth
 import xarray as xr
-import numpy as np
-import intake
 
-def download(url, dest, verbose=True, format='cptv10.tsv', station=False, use_dlauth=True):
+def download(url, dest, verbose=True, format='data.nc', use_dlauth=True):
     assert format in ['cptv10.tsv', 'data.nc'], 'invalid download format: {}'.format(format)
     if verbose:
         print('\nURL: {}\n'.format(url))
         print()
     if str(use_dlauth) == 'True':
         dlauthid = read_dlauth()
-        assert dlauthid is not None, "You need to use pycpt.setup_dlauth('your_iri_email') to get a cookie before you can download this data!"
+        assert dlauthid is not None, "You need to use cpttools.setup_dlauth('your_email') to get a cookie before you can download this data!"
         cookies = {'__dlauth_id': dlauthid}
     else:
         cookies={}
@@ -39,15 +37,10 @@ def download(url, dest, verbose=True, format='cptv10.tsv', station=False, use_dl
             print('DOWNLOADING: [' + '*' * 25 + '] ({} KB) {}'.format(total_size // 1000, dt.datetime.now() - start))
         try: 
             ds = open_cptdataset(path) if format == 'cptv10.tsv' else xr.open_dataset(path, decode_times=False)
-            if format == 'data.nc':
-                ds.S.attrs['calendar'] = '360_day'
-                ds.S.attrs['units'] = 'months since 1960-01-01'
-                ds = xr.decode_cf(ds)
         except Exception as e: 
-            print('Failed to open downloaded cptv10.tsv file: {}'.format(e))
+            print('Failed to open downloaded file: {}'.format(e))
             assert False, "Please check what's downloaded from here, it may be a broken: {}".format(url)
-        
-        return path if format=='cptv10.tsv' else ds
+        return ds
 
 
 
@@ -81,59 +74,9 @@ def recursive_getattr(obj, attr):
         return getattr(obj, attr)
 
 
-def StandardNormalDeviateFromRank(X, x_sample_dim='T', x_feature_dim='M', x_lat_dim='Y', x_lon_dim='X'):
-    ranked = X.rank(x_sample_dim, pct=True)
-    mean = (X.quantile(0.75, x_sample_dim) + X.quantile(0.25, x_sample_dim))/2.0
-    deviate =  (X.quantile(0.75, x_sample_dim) - X.quantile(0.25, x_sample_dim)) / 1.34898 # lazy version of / normal quantile.75 - normal quantil 0.25
-    return mean, deviate
 
-def greedy_ensemble_mean(dss, x_sample_dim='T', x_lat_dim='Y', x_lon_dim='X'):
-    index, sample_size, lat_size, lon_size = 0, 0, 0, 0
-    for i, ds in enumerate(dss):
-        if type(ds) == xr.Dataset:
-            dss[i] = getattr(ds, [i for i in ds.data_vars][0])
-            ds = getattr(ds, [i for i in ds.data_vars][0])
-        assert x_sample_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_sample_dim)
-        assert x_lat_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_lat_dim)
-        assert x_lon_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_lon_dim)
-        if i > 0:
-            assert ds.shape[list(ds.dims).index(x_lat_dim)] == lat_size, 'All provided datasets must be the same spatial resolution'
-            assert ds.shape[list(ds.dims).index(x_lon_dim)] == lon_size, 'All provided datasets must be the same spatial resolution'
-        else:
-            lat_size = ds.shape[list(ds.dims).index(x_lat_dim)]
-            lon_size = ds.shape[list(ds.dims).index(x_lon_dim)]
-        ds_sample_size = ds.shape[list(ds.dims).index(x_sample_dim)]
-        index = i if ds_sample_size > sample_size else index
-        sample_size = ds_sample_size if ds_sample_size > sample_size else sample_size
-    ready = [dss[index]]
-    for i, ds in enumerate(dss):
-        if i != index: 
-            ready.append(ds.reindex_like(ready[0]))
-    return xr.concat(ready, 'M').mean('M')
 
-def strict_ensemble_mean(dss, x_sample_dim='T', x_lat_dim='Y', x_lon_dim='X' ):
-    index, sample_size, lat_size, lon_size = 0, 0, 0, 0
-    for i, ds in enumerate(dss):
-        if type(ds) == xr.Dataset:
-            dss[i] = getattr(ds, [i for i in ds.data_vars][0])
-            ds = getattr(ds, [i for i in ds.data_vars][0])
-        assert x_sample_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_sample_dim)
-        assert x_lat_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_lat_dim)
-        assert x_lon_dim in ds.dims, '{}th object missing {} dimension'.format(i+1, x_lon_dim)
-        if i > 0:
-            assert ds.shape[list(ds.dims).index(x_lat_dim)] == lat_size, 'All provided datasets must be the same spatial resolution'
-            assert ds.shape[list(ds.dims).index(x_lon_dim)] == lon_size, 'All provided datasets must be the same spatial resolution'
-        else:
-            lat_size = ds.shape[list(ds.dims).index(x_lat_dim)]
-            lon_size = ds.shape[list(ds.dims).index(x_lon_dim)]
-        ds_sample_size = ds.shape[list(ds.dims).index(x_sample_dim)]
-        index = i if ds_sample_size > sample_size else index
-        sample_size = ds_sample_size if ds_sample_size > sample_size else sample_size
-    ready = dss[index]
-    for i, ds in enumerate(dss):
-        if i != index: 
-            ready = ready + ds
-    return ready / len(dss)
+
 
 
 
