@@ -4,6 +4,6 @@ from .tests import test_cca, test_deterministic_skill, test_mlr, test_pcr, test_
 from .checks import guess_coords, check_all 
 from .bash import rmrf, ls_files_recursive, rmstar
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 __author__ = "Kyle Joseph Chen Hall (kjhall@iri.columbia.edu)"
 

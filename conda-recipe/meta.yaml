@@ -1,6 +1,6 @@
 package:
   name: cptcore
-  version: "0.1.3"
+  version: "0.2.0"
 
 source:
   path: ../src
@@ -15,9 +15,10 @@ requirements:
     - pip
     - setuptools
   run:
-    - make # [not win]
-    - gfortran # [not win]
-    - tar # [not win]
+    - make # [unix]
+    - gfortran # [osx]
+    - gfortran_linux-64 # [linux]
+    - tar # [unix]
     - cpttools
 
 
