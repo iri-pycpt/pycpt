@@ -6,7 +6,7 @@ from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver
 from pathlib import Path
 import intake 
 import warnings 
-import zipfile , os , requests
+import zipfile , os , sys, requests
 
 __version__ = "0.2.0"
 __author__  = "Kyle Hall (kjhall@iri.columbia.edu)"
@@ -22,8 +22,12 @@ if not CPTTOOLS_SPACE.is_dir():
     CPTTOOLS_SPACE.mkdir(exist_ok=True, parents=True)
 assert CPTTOOLS_SPACE.is_dir(), 'could not create ~/.cpttools_space directory'
 
-
 def update_catalog(version=None):
+    CPTTOOLS_SPACE = Path().home().absolute() / '.cpttools_space'
+    if not CPTTOOLS_SPACE.is_dir():
+        CPTTOOLS_SPACE.mkdir(exist_ok=True, parents=True)
+    assert CPTTOOLS_SPACE.is_dir(), 'could not create ~/.cpttools_space directory'
+
     if version is None: 
         url = "https://github.com/kjhall-iri/data_catalog/archive/refs/heads/main.zip"
     else:
@@ -32,29 +36,28 @@ def update_catalog(version=None):
     assert r.status_code == 200, 'check this link: {}'.format(url)
     with open(str(CPTTOOLS_SPACE / 'zipfile.zip'), 'wb') as f: 
         f.write(r.content)
-    
-    #try:
+
     global catalog, SEASONAL, SUBSEASONAL
-    if Path( CPTTOOLS_SPACE / 'new_data_catalog').is_dir():
-        rmrf(CPTTOOLS_SPACE / 'new_data_catalog')
-    
-    (CPTTOOLS_SPACE / 'new_data_catalog').mkdir(exist_ok=True, parents=True)
     with zipfile.ZipFile(str(CPTTOOLS_SPACE / 'zipfile.zip')) as zf:
         zf.extractall( str(CPTTOOLS_SPACE / 'temp'))
-    [i for i in (CPTTOOLS_SPACE / 'temp').glob('*')][0].rename(CPTTOOLS_SPACE / 'new_data_catalog')
-    assert len([ i for i in (CPTTOOLS_SPACE / 'temp').glob('*')]) == 0, 'moving unpacked dc to new data catalog failed'
-    if Path( CPTTOOLS_SPACE / 'new_data_catalog').is_dir():
-        if Path(CPTTOOLS_SPACE / 'data_catalog').is_dir():
-            rmrf( CPTTOOLS_SPACE / 'data_catalog')
-        Path(CPTTOOLS_SPACE / 'new_data_catalog').rename(Path(CPTTOOLS_SPACE / 'data_catalog'))
-    else: 
-        warnings.warn('Clone of new data catalog failed - defaulting to existing')
 
+    try:
+        testcatalog = intake.open_catalog( [i for i in (CPTTOOLS_SPACE / 'temp').glob('*')][0] / 'catalog.yml')
+        testSEASONAL = testcatalog.seasonal
+        testSUBSEASONAL = testcatalog.subseasonal
+    except: 
+        print('NEWLY DOWNLOADED CATALOG FAILS TO OPEN - PLEASE MANUALLY DOWNLOAD FROM https://github.com/kjhall-iri/data_catalog/archive/refs/heads/main.zip and relocate to {}'.format(CPTTOOLS_SPACE/'data_catalog'))
+        catalog = intake.open_catalog( CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml')
+        SEASONAL = catalog.seasonal
+        SUBSEASONAL = catalog.subseasonal
+        sys.exit()
+    if (CPTTOOLS_SPACE / 'data_catalog').is_dir():
+        rmrf(CPTTOOLS_SPACE / 'data_catalog')
+
+    [i for i in (CPTTOOLS_SPACE / 'temp').glob('*')][0].replace(CPTTOOLS_SPACE / 'data_catalog')
     catalog = intake.open_catalog( CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml')
     SEASONAL = catalog.seasonal
     SUBSEASONAL = catalog.subseasonal
-    #except: 
-     #   print('FAILED TO LOAD FRESH CATALOG - Data Library downloads may be unavailable')
 
 if (CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml').is_file():
     catalog = intake.open_catalog( CPTTOOLS_SPACE / 'data_catalog' / 'catalog.yml')
