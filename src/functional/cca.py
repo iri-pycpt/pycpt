@@ -41,27 +41,41 @@ def canonical_correlation_analysis(
 
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    X = X.squeeze()  # drop all size-one dimensions 
+    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
 
     y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
     check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    Y = Y.squeeze() # drop all size-one dimensions 
-
-    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
+    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
 
     if F is not None: 
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         check_all(F, f_lat_dim, f_lon_dim, f_sample_dim, f_feature_dim)
-        #F = F.squeeze() #drop all size-one dimensions 
-        
+        assert 'missing' in F.attrs.keys() and F.attrs['missing'] == X.attrs['missing'], 'F must have the same "missing" attribute as X'
+
+    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
+
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
+
+    cpt.write(544) # missing value settings 
+    cpt.write(X.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
+    cpt.write(Y.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
+
     if synchronous_predictors: 
         cpt.write(545)
     # apply tailoring 
     tailoring = str(tailoring)
     assert  (tailoring.upper() == 'SPI' and transform_predictand.upper()  == 'GAMMA')  or  tailoring != 'SPI', 'Standard Precipitation Index (SPI) tailoring is only available if transform_predictand=Gamma'
+    
     cpt.write(533)
     cpt.write(CPT_TAILORING_R[tailoring.upper()])
     cpt.write(1) # climatologicial probability thresholds 
@@ -75,12 +89,12 @@ def canonical_correlation_analysis(
 
     # apply transform_predictand 
     if transform_predictand is not None: 
-        cpt.write(534) #set transform 
+        cpt.write(554) #set transform 
         cpt.write(CPT_TRANSFORMATIONS_R[transform_predictand.upper()])
         cpt.write(541) #activate transform 
     
     # Load X dataset 
-    to_cptv10(X.fillna(-999), cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
+    to_cptv10(X, cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
     if len(X.coords) >= 3: # then this is gridded data
@@ -93,12 +107,12 @@ def canonical_correlation_analysis(
 
     # load F dataset if present 
     if F is not None: 
-        to_cptv10(F.fillna(-999), cpt.outputs['out_of_sample_predictor'], row=f_lat_dim, col=f_lon_dim, T=f_sample_dim)
+        to_cptv10(F, cpt.outputs['out_of_sample_predictor'], row=f_lat_dim, col=f_lon_dim, T=f_sample_dim)
         cpt.write(3)
         cpt.write(cpt.outputs['out_of_sample_predictor'].absolute())
 
     # load Y Dataset 
-    to_cptv10(Y.fillna(-999), cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
+    to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
     if len(Y.coords) >= 3: # then this is gridded data
@@ -120,17 +134,6 @@ def canonical_correlation_analysis(
     cpt.write(531) # Kendalls Tau goodness index 
     cpt.write(3)
 
-    cpt.write(544) # missing value settings 
-    cpt.write(-999)
-    cpt.write(10)
-    cpt.write(10)
-    cpt.write(1)
-    cpt.write(4 )
-    cpt.write(-999)
-    cpt.write(10)
-    cpt.write(10)
-    cpt.write(1)
-    cpt.write(4 )
 
     cpt.write(112) 
     cpt.write(cpt.outputs['goodness_index'].absolute())

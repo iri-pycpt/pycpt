@@ -24,19 +24,32 @@ def probabilistic_forecast_verification(
     ):
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    X = X.squeeze()  # drop all size-one dimensions 
+    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
 
     y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
     check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    Y = Y.squeeze() # drop all size-one dimensions 
+    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
     X.name = Y.name
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(621) # activate CCA MOS 
     if synchronous_predictors: 
         cpt.write(545)
+   
+    cpt.write(544) # missing value settings 
+    cpt.write(X.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
+    cpt.write(Y.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
+    
     # Load X dataset 
-    to_cptv10(X.fillna(-999), cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim, C=x_feature_dim)
+    to_cptv10(X, cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim, C=x_feature_dim)
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
 
@@ -47,7 +60,7 @@ def probabilistic_forecast_verification(
         cpt.write( max(X.coords[x_lon_dim].values)) # East 
     
     # load Y Dataset 
-    to_cptv10(Y.fillna(-999), cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
+    to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
 
@@ -65,15 +78,6 @@ def probabilistic_forecast_verification(
     cpt.write(6) 
     cpt.write(531) # Kendalls Tau goodness index 
     cpt.write(3)
-    cpt.write(544) # missing value settings 
-    cpt.write(-999)
-    cpt.write(10)
-    cpt.write(10)
-    cpt.write(-999)
-    cpt.write(10)
-    cpt.write(10)
-    cpt.write(1)
-    cpt.write(4 )
 
     #initiate analysis 
     cpt.write(313)

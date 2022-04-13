@@ -22,16 +22,29 @@ def deterministic_skill(
     ):
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    X = X.squeeze()  # drop all size-one dimensions 
+    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
 
     y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
     check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    Y = Y.squeeze() # drop all size-one dimensions 
+    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
+    X.name = Y.name
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(614) # activate GCM Validation MOS 
     if synchronous_predictors: 
         cpt.write(545)
+
+    cpt.write(544) # missing value settings 
+    cpt.write(X.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
+    cpt.write(Y.attrs['missing'])
+    cpt.write(10)
+    cpt.write(10)
+    cpt.write(1)
+    cpt.write(4 )
 
     cpt.write(527) # GCM Options 
     cpt.write(1) # interpolate ? 
