@@ -1,9 +1,0 @@
-xmlns:cpt=http://iri.columbia.edu/CPT/v10/
-cpt:nfields=1
-cpt:field=correlation, cpt:nrow=5, cpt:ncol=1, cpt:row=Mode, cpt:col=index, cpt:units=N/A, cpt:missing=-999.00000000000000
-	correlation
-1.000000	0.673513
-2.000000	0.501840
-3.000000	0.292512
-4.000000	0.094636
-5.000000	0.000000
