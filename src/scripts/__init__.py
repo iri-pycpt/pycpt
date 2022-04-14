@@ -1,1 +1,1 @@
-from .seasonal import load_nmme, load_c3s, load_observations
+from .seasonal import load_nmme, load_c3s, load_observations, preload_southasia, preload_lesotho_nmme

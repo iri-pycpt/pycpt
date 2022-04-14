@@ -4,6 +4,7 @@ import datetime as dt
 import numpy as np 
 import xarray as xr 
 from io import StringIO
+from ..utilities import is_valid_cptv10
 
 def cpt_headers(header):
     m = re.compile("(?P<tag>cpt:.*?|cf:.*?)=(?P<value>.*?,|.*$)")
@@ -17,14 +18,12 @@ def open_cptdataset(filename):
     content = [line.strip() for line in content1.split("\n") if 'xmlns' not in line] 
     xmlnns_lines = [line.strip() for line in content1.split("\n") if 'xmlns' in line ]
     assert 'xmlns:cpt=http://iri.columbia.edu/CPT/v10/' in ' '.join(xmlnns_lines), 'CPT XML Namespace: {} Not detected'.format('xmlns:cpt=http://iri.columbia.edu/CPT/v10/')
-    #xmlns = content.pop(0)  # cf header  
-    #assert xmlns == 'xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/', 'Invalid XML Namespace: {}'.format(xmlns)
     headers = [(linenum, *cpt_headers(line)) if ',' in line or ('=' in line and 'ncats' not in line and 'nfields' not in line) else ( linenum, line ) for linenum, line in enumerate(content) if 'cpt:' in line ]
-    nrealheaders = len( [ i for i in headers if len(i) == 3 ])
     attrs, data_vars = {}, {}
     for i, header in enumerate(headers): 
         if len( header) == 3:  # we are only looking at the CPT headers that preceed a data block
-            attrs.update({ k: header[2][k] for k in  header[2].keys() })
+            attrs_at_row = { k: header[2][k] for k in  header[2].keys() if k not in ['T', 'S'] }
+            attrs.update(attrs_at_row)
             array = np.genfromtxt( StringIO('\n'.join(content[header[0]+2:header[0]+2+ int(attrs['nrow'])])), delimiter='\t', dtype=str)
             columns = np.genfromtxt(StringIO(content[header[0]+1]), delimiter='\t', dtype=str)
             try:
@@ -58,8 +57,21 @@ def open_cptdataset(filename):
                 coldim= header[2]['col'] if 'col' in header[2].keys() else attrs['col']
                 somedims = [  'T' if 'T' in header[2].keys() else None,  'Mode' if 'Mode' in header[2].keys() else None, 'C' if 'C' in header[2].keys() else None ]
                 somedims = [ jj for jj in somedims if jj is not None ] # keep only dims present 
-                coords = {jj : [ read_cpt_date(header[2][jj]) if jj == 'T' else header[2][jj] ] for jj in somedims }
+                coords = {}
+                for jj in somedims:
+                    if jj =='T':
+                        date_coord = read_cpt_date(header[2][jj])
+                        if len(date_coord) == 1: 
+                            coords[jj] = [ date_coord[0]  ]
+                        else:
+                            coords['T'] = [date_coord[1]]
+                            coords['Ti'] = [date_coord[0]]
+                            coords['Tf'] = [date_coord[2]]
+                    else:
+                        coords[jj] = [ header[2][jj] ] 
                 coords.update({rowdim: rows, coldim: columns})
+                if 'S' in header[2].keys(): # S is always a length-1 situation
+                    coords.update({'S': [read_cpt_date(header[2]['S'])[0]]})
                 alldims = [  rowdim, coldim ]
                 somedims.extend(alldims)
                 alldims = somedims
@@ -71,9 +83,25 @@ def open_cptdataset(filename):
                # print('found {}-dimensional variable {}'.format(len(alldims), field))
             else: 
                 # detect new coordinates in T, C, or Mode: 
-                for dim in data_vars[field]['dims']:
-                    if dim in header[2].keys() and (read_cpt_date(header[2][dim]) if dim == 'T' else header[2][dim]) not in data_vars[field]['coords'][dim]:
-                        data_vars[field]['coords'][dim].append(read_cpt_date(header[2][dim]) if dim == 'T' else header[2][dim])
+                for dim in data_vars[field]['coords'].keys():
+                    if dim in header[2].keys():
+                        if dim == 'T':
+                            date_coord = read_cpt_date(header[2][dim]) 
+                            if len(date_coord) == 1: 
+                                if date_coord[0] not in data_vars[field]['coords'][dim]:
+                                    data_vars[field]['coords'][dim].append(date_coord[0])
+                            else:
+                                if date_coord[1] not in data_vars[field]['coords'][dim]:
+                                    data_vars[field]['coords']['T'].append(date_coord[1])
+                                    data_vars[field]['coords']['Ti'].append(date_coord[0])
+                                    data_vars[field]['coords']['Tf'].append(date_coord[2])
+                        elif dim == 'S':
+                            date_coord = read_cpt_date(header[2][dim])[0]
+                            if date_coord not in data_vars[field]['coords'][dim]:
+                                data_vars[field]['coords'][dim].append(date_coord)
+                        else:
+                            if header[2][dim] not in data_vars[field]['coords'][dim]:
+                                data_vars[field]['coords'][dim].append(header[2][dim])
                 if ndims == 3: 
                     data_vars[field]['data'] = np.concatenate((data_vars[field]['data'], np.expand_dims(data, axis=0)), axis=0)
                 elif ndims == 4: 
@@ -88,36 +116,91 @@ def open_cptdataset(filename):
     for field in data_vars.keys():
         if len(data_vars[field]['dims']) == 4: 
             data_vars[field]['data'] = np.concatenate([np.expand_dims(data_vars[field]['data'][k], axis=0) for k in range(len(data_vars[field]['data']))], axis=0)
+    for f in data_vars.keys():
+        data_vars[f]['coords'] = { m: ('T' if m in ['S', 'Ti', 'Tf'] else m, data_vars[f]['coords'][m]) for m in data_vars[f]['coords'].keys() }
     dataarrays = {f.replace(' ', '_'): xr.DataArray(data_vars[f]['data'], dims=data_vars[f]['dims'], coords=data_vars[f]['coords'], attrs=data_vars[f]['attrs']) for f in data_vars.keys()}
-    #print(data_vars['attributes']['coords'])
+    for k in dataarrays.keys(): 
+        is_valid_cptv10(dataarrays[k], assert_units=False, assertmissing=False)
+        if 'missing' in dataarrays[k].attrs.keys(): 
+            dataarrays[k] = dataarrays[k].where(dataarrays[k] != float(dataarrays[k].attrs['missing']), other=np.nan)
     return xr.Dataset(dataarrays)
 
 def datetime_timestamp(date):
-    fields = [int(i) for i in date.split('-')]
+    if 'T' in date: 
+        ymd, hms = date.split('T')
+    else:
+        ymd = date
+
+    fields = [int(i) for i in ymd.split('-')]
     while len(fields) < 3: 
         fields.append(1)
     return dt.datetime(*fields)
+
+
+def datetime_timestamp_end(date):
+    if 'T' in date: 
+        ymd, hms = date.split('T')
+    else:
+        ymd = date
+    last_days = [None, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    fields = [int(i) for i in ymd.split('-')]
+    while len(fields) < 3: 
+        if len(fields) == 1: 
+            fields.append(12)
+        else:
+            fields.append(last_days[fields[1]])
+    return dt.datetime(*fields)
     
+
 def read_cpt_date(date_original):
     if '/' in date_original: 
         date1, date2 = date_original.split('/')
         date1, date2 = date1.split('T')[0], date2.split('T')[0]
         date1, date2 = date1.split(' ')[0], date2.split(' ')[0]
         if len(date1.split('-')) == len(date2.split('-')): 
-            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp(date2)
+            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp_end(date2)
         else: 
             assert len(date1.split('-')) > len(date2.split('-')), 'date1 must have more elements than date2' 
             ymd = date1.split('-') 
             ymd2 = date2.split('-')
             ymd2= ymd[:len(ymd) - len(ymd2)] + ymd2
-            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp('-'.join(ymd2) if len(ymd2) > 1 else ymd2[0])
-        return ret1 + (ret2 - ret1) / 2
+            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp_end('-'.join(ymd2) if len(ymd2) > 1 else ymd2[0])
+        return [ ret1, ret1 + (ret2 - ret1) / 2, ret2]
     else: 
-        return datetime_timestamp(date_original) 
-    
+        return [datetime_timestamp(date_original)] 
 
+def convert_np64_datetime(np64):
+    unix_epoch = np.datetime64(0, 's')
+    one_second = np.timedelta64(1, 's')
+    seconds_since_epoch = (np64 - unix_epoch) / one_second
+    return dt.datetime.utcfromtimestamp(seconds_since_epoch)
 
-def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
+def guess_cptv10_coords(da, row=None, col=None, T=None, C=None): 
+    ret = {'row': row, 'col': col, 'T': T, 'C': C} 
+    guesses = {
+        'row': ['Y', 'T'],
+        'col': ['X', 'index'],
+        'T': ['T', 'Mode'],
+        'C': ['C']
+    }
+    for dim in ['row', 'col', 'T', 'C']: 
+        for guess in guesses[dim]:
+            if guess in da.dims and ret[dim] is None: 
+                ret[dim] = guess 
+    guesses = [ret[i] for i in ret.keys() if ret[i] is not None]
+    found_dims = []
+    while len(guesses) > 0: 
+        guess = guesses.pop(0)
+        assert guess not in found_dims, "repeated dimension in guesses (None excluded)- {}".format(ret)
+        found_dims.append(guess)
+    assert len(found_dims) == len(da.dims), "Unable to guess names of all dims on da accurately - guessed {} vs {}".format(ret, da.dims)
+    for dim in found_dims:
+        assert dim in da.dims, "guessed a dimension not present on da - {} vs {}".format(ret, da.dims)
+    return ret['row'], ret['col'], ret['T'], ret['C']
+
+def to_cptv10(da, opfile='cptv10.tsv', row=None, col=None, T=None, C=None, assertmissing=True, assert_units=True):
+    row, col, T, C = guess_cptv10_coords(da, row, col, T, C)
+    is_valid_cptv10(da, assert_units=assert_units, assertmissing=assertmissing)
     assert type(da) == xr.DataArray, 'Can only write Xr.DataArray to CPTv10'
     extra_dims = [ i for i in [T, C] if i is not None ]
     assert row is not None and col is not None, 'CPTv10 datasets must have at least two dimensions'
@@ -127,6 +210,7 @@ def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
         assert dim in da.coords.keys(), 'missing coordinate from data array - {}'.format(dim)
         assert len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)], 'data array coord {} not the same size as the dimension'.format(dim)
     assert len(dims) == len(da.dims), f'Data Array has dims {da.dims}, but you only passed {dims}'
+    missingblurb = f", cpt:missing={da.attrs['missing']}" if assertmissing else ''
     with open(opfile, 'w') as f: 
         f.write('xmlns:cpt=http://iri.columbia.edu/CPT/v10/' + "\n")
         f.write('cpt:nfields=1'+"\n")
@@ -136,8 +220,13 @@ def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
             da = da.transpose(T, C, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
                 for j in range(da.shape[list(da.dims).index(C)]):
-                    header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i]}, cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}, cpt:missing={da.attrs['missing']}\n"
-                    temp = da.isel({T:i, C:j}).fillna(float(da.attrs['missing'])).values
+                    
+                    header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                    if assertmissing:
+                        temp = da.isel({T:i, C:j}).fillna(float(da.attrs['missing'])).values
+                    else:
+                        temp = da.isel({T:i, C:j}).values
+
                     f.write(header)
                     f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
                     temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
@@ -145,8 +234,11 @@ def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
         elif len(extra_dims) == 1 and T is not None: 
             da = da.transpose(T, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
-                header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i]}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}, cpt:missing={da.attrs['missing']}\n"
-                temp = da.isel({T:i}).fillna(float(da.attrs['missing'])).values
+                header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                if assertmissing:
+                    temp = da.isel({T:i}).fillna(float(da.attrs['missing'])).values
+                else:
+                    temp = da.isel({T:i}).values
                 f.write(header)
                 f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
                 temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
@@ -154,16 +246,22 @@ def to_cptv10(da, opfile='cptv10.tsv', row='Y', col='X', T=None, C=None):
         elif len(extra_dims) == 1 and C is not None: 
             da = da.transpose(C, row, col)
             for j in range(da.shape[list(da.dims).index(C)]):
-                header = f"cpt:field={da.name}, cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}, cpt:missing={da.attrs['missing']}\n"
-                temp = da.isel({C:j}).fillna(float(da.attrs['missing'])).values
+                header = f"cpt:field={da.name}, cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                if assertmissing:
+                    temp = da.isel({C:j}).fillna(float(da.attrs['missing'])).values
+                else:
+                    temp = da.isel({T:i}).values
                 f.write(header)
                 f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
                 temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
                 np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
         else:
             da = da.transpose(row, col)
-            header = f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}, cpt:missing={da.attrs['missing']}\n"
-            temp = da.fillna(float(da.attrs['missing'])).values
+            header = f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+            if assertmissing:
+                temp = da.fillna(float(da.attrs['missing'])).values
+            else:
+                temp = da.values
             f.write(header)
             f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
             temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])

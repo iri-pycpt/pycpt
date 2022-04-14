@@ -62,3 +62,16 @@ def load_observations(source, target='JJAS', geo=Geo(-90, 90, 0, 360), variable=
     if 'missing' in getattr(ds, [i for i in ds.data_vars][0]).attrs.keys():
         ds = ds.where(ds !=  float(getattr(ds, [i for i in ds.data_vars][0]).attrs['missing']), other=np.nan)
     return ds
+
+import xarray as xr 
+from pathlib import Path 
+
+def preload_southasia():
+    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').prec
+    y = open_cptdataset( Path( __file__).absolute().parents[1] / 'data/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv').prate
+    return x, y
+
+def preload_lesotho_nmme():
+    x = xr.open_dataset(Path( __file__ ).absolute().parents[1] / 'data/nmme_lead1_ond.nc').prec
+    y = open_cptdataset( Path( __file__).absolute().parents[1] / 'data/lesotho_ond.tsv').rfe
+    return x, y

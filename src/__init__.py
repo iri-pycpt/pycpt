@@ -1,5 +1,5 @@
-from .fileio import open_cptdataset, to_cptv10
-from .utilities import setup_dlauth, read_dlauth, s2s_login, c3s_login, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr, seasonal_target_length, target_from_leads, leads_from_target
+from .fileio import open_cptdataset, to_cptv10, guess_cptv10_coords
+from .utilities import setup_dlauth, read_dlauth, s2s_login, c3s_login, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr, seasonal_target_length, target_from_leads, leads_from_target, is_valid_cptv10
 from .datastructures import Geo
 from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver
 
@@ -8,7 +8,7 @@ import intake
 import warnings 
 import zipfile , os , sys, requests
 
-__version__ = "0.2.0"
+__version__ = "0.2.3"
 __author__  = "Kyle Hall (kjhall@iri.columbia.edu)"
 __license__ = "MIT"
 
@@ -69,4 +69,4 @@ else:
     except:     
         print('No data catalog found - please try updating with cpttools.update_catalog()')
 
-from .scripts import load_c3s, load_nmme, load_observations
+from .scripts import load_c3s, load_nmme, load_observations, preload_lesotho_nmme, preload_southasia
