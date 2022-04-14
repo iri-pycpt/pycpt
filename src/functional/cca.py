@@ -2,8 +2,7 @@
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
 import pandas as pd 
-from cpttools import open_cptdataset, to_cptv10
-from ..checks import check_all, guess_coords 
+from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
 import xarray as xr 
 
 def canonical_correlation_analysis(
@@ -19,7 +18,7 @@ def canonical_correlation_analysis(
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
         validation='double-crossvalidation', #type of leave-n-out crossvalidation to use
-        synchronous_predictors=True,
+        synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -39,19 +38,16 @@ def canonical_correlation_analysis(
     assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
     assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
 
-    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
-    check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
+    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
+    is_valid_cptv10(X)
 
-    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
-    check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
+    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_cptv10_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
+    is_valid_cptv10(Y)
 
     if F is not None: 
-        f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
-        check_all(F, f_lat_dim, f_lon_dim, f_sample_dim, f_feature_dim)
-        assert 'missing' in F.attrs.keys() and F.attrs['missing'] == X.attrs['missing'], 'F must have the same "missing" attribute as X'
-
+        f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
+        is_valid_cptv10(F)
+        
     retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
     retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
 
@@ -235,7 +231,15 @@ def canonical_correlation_analysis(
         hcst_pev = open_cptdataset(str(cpt.outputs['hindcast_prediction_error_variance'].absolute()) + '.txt' )
         hcst_pev = getattr(hcst_pev, [i for i in hcst_pev.data_vars][0])
         hcst_pev.name = 'prediction_error_variance' 
-        hcst_pev.coords['T'] = hcst_pr.coords['T'].values
+        if 'T' in hcst_pev.coords:
+            hcst_pev = hcst_pev.drop('T')
+        if 'S' in hcst_pev.coords: 
+            hcst_pev = hcst_pev.drop('S')
+        if 'Ti' in hcst_pev.coords: 
+            hcst_pev = hcst_pev.drop('Ti')
+        if 'Tf' in hcst_pev.coords: 
+            hcst_pev = hcst_pev.drop('Tf')
+        hcst_pev = hcst_pev.assign_coords({'T': hcst_pr.coords['T']})
         hcsts = xr.merge([hcsts, hcst_pr, hcst_pev])
     else:
         hcsts = xr.merge([hcsts])

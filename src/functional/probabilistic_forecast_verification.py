@@ -1,8 +1,7 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_PFV_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from cpttools import open_cptdataset, to_cptv10
-from ..checks import check_all, guess_coords 
+from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
 import xarray as xr 
 
 
@@ -10,7 +9,7 @@ import xarray as xr
 def probabilistic_forecast_verification(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
-        synchronous_predictors=True,
+        synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -22,13 +21,11 @@ def probabilistic_forecast_verification(
         y_feature_dim=None, 
       
     ):
-    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
-    check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
+    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
+    is_valid_cptv10(X)
 
-    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
-    check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
+    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_cptv10_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
+    is_valid_cptv10(Y)
     X.name = Y.name
 
     cpt = CPT(**cpt_kwargs)
@@ -40,8 +37,7 @@ def probabilistic_forecast_verification(
     cpt.write(X.attrs['missing'])
     cpt.write(10)
     cpt.write(10)
-    cpt.write(1)
-    cpt.write(4 )
+
     cpt.write(Y.attrs['missing'])
     cpt.write(10)
     cpt.write(10)

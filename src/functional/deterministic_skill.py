@@ -1,15 +1,14 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from cpttools import open_cptdataset, to_cptv10
-from ..checks import check_all, guess_coords 
+from cpttools import open_cptdataset, to_cptv10, is_valid_cptv10, guess_cptv10_coords
 import xarray as xr 
 
 
 def deterministic_skill(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
-        synchronous_predictors=True,
+        synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -20,13 +19,11 @@ def deterministic_skill(
         y_sample_dim=None, 
         y_feature_dim=None, 
     ):
-    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
-    check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-    assert 'missing' in X.attrs.keys(), 'X must have a "missing" attribute indicating the missing values'
+    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
+    is_valid_cptv10(X)
 
-    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
-    check_all(Y, y_lat_dim, y_lon_dim, y_sample_dim, y_feature_dim)
-    assert 'missing' in Y.attrs.keys(), 'Y must have a "missing" attribute indicating the missing values'
+    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_cptv10_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
+    is_valid_cptv10(Y)
     X.name = Y.name
 
     cpt = CPT(**cpt_kwargs)
@@ -52,7 +49,7 @@ def deterministic_skill(
     cpt.write(1) # uncalibrated ensemble average 
     
     # Load X dataset 
-    to_cptv10(X.fillna(-999), cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
+    to_cptv10(X, cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
     if len(X.coords) >= 3: # then this is gridded data
@@ -63,7 +60,7 @@ def deterministic_skill(
 
 
     # load Y Dataset 
-    to_cptv10(Y.fillna(-999), cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
+    to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
     if len(Y.coords) >= 3: # then this is gridded data
@@ -81,12 +78,12 @@ def deterministic_skill(
     cpt.write(531) # Kendalls Tau goodness index 
     cpt.write(3)
     cpt.write(544) # missing value settings 
-    cpt.write(-999)
+    cpt.write(X.attrs['missing'])
     cpt.write(10)
     cpt.write(10)
     cpt.write(1)
     cpt.write(4 )
-    cpt.write(-999)
+    cpt.write(Y.attrs['missing'])
     cpt.write(10)
     cpt.write(10)
     cpt.write(1)

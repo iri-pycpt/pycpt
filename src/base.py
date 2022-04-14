@@ -5,6 +5,11 @@ from .utilities import *
 from .bash import rmrf 
 import copy 
 
+class CPTError(Exception):
+    def __init__(self, message):            
+        super().__init__(message)
+            
+
 default_output_files = {
     #original files
     'original_predictor': 'original_predictor',
@@ -67,7 +72,7 @@ class CPT:
         assert self.cptdir.is_dir(), 'CPT directory does not exist'
         self.last_cmd = 'CPT.x'
         self.interactive = interactive
-
+        self.last_message = None
         if platform.system() == 'Windows':
             self.cpt = str(Path(self.cptdir / 'CPT_batch.exe').absolute())
         else:
@@ -96,19 +101,15 @@ class CPT:
         self.write(3)
         
     def read(self):
-        try: 
-            std_out = ""
-            queue = list("           ")
-            while CPT_SECRET not in "".join(queue[::-1]) and self.cpt_process.poll() is None:
-                char = self.reader.read(1)
-                queue.pop(-1)
-                queue.insert(0, char)
-                std_out += char
-            assert self.cpt_process.poll() is None, 'whoops cpt died'
-            return std_out
-        except:
-            self.kill()
-            return std_out
+        std_out = ""
+        queue = list("           ")
+        while CPT_SECRET not in "".join(queue[::-1]) and self.cpt_process.poll() is None:
+            char = self.reader.read(1)
+            queue.pop(-1)
+            queue.insert(0, char)
+            std_out += char
+        return std_out
+
 
     def status(self ):
         return self.cpt_process.poll() is None
@@ -127,9 +128,15 @@ class CPT:
                     f.write(cpt_cmd)
             self.cpt_process.stdin.write(cpt_cmd.encode())
             self.cpt_process.stdin.flush() 
-
         except Exception as e: 
-            raise ValueError('CPT Write Error')
+            cptalive = self.cpt_process.poll() is None
+            msg = "\nPROCESS STATUS: {}\n".format("ALIVE" if cptalive else "DEAD")
+            msg += "  last command: '{}'\n".format(self.last_cmd.strip())
+            msg += "  last message:'{}'\n".format(self.last_message.strip())
+
+            raise CPTError(msg)
+            
+            
         if self.log is not None:
             log = open(self.log, 'a')
             log.write(cpt_cmd + '\n')
@@ -138,13 +145,20 @@ class CPT:
         if 'Output Results\n  \n' in x:
             while "0. Exit" not in x:
                 x += self.read()
-            
+        if 'ERROR:' in x: 
+            cptalive = self.cpt_process.poll() is None
+            msg = "\nPROCESS STATUS: {}\n".format("ALIVE (WILL BE STOPPED)" if cptalive else "DEAD")
+            msg += "  last command: '{}'\n".format(cpt_cmd.strip())
+            msg += "  last message:'{}'\n".format(x.strip())
+            self.kill()
+            raise CPTError(msg)
         if self.interactive:
             print(x)
         if self.log is not None:
             log = open(self.log, 'a')
             log.write(x + '\n')
             log.close()
+        self.last_message = x
         self.last_cmd = cpt_cmd
         return self.status()
 
@@ -159,13 +173,20 @@ class CPT:
         self.cpt_process.kill()
    
     def clean(self):
-        rmrf(self.outputdir)
+        if self.outputdir.is_dir():
+            rmrf(self.outputdir)
 
-    def wait_for_files(self):
-        proc = psutil.Process(pid=self.cpt_process.pid)
-        while len(proc.open_files()) > 0: 
-            time.sleep(0.1)
-    
+    def wait_for_files(self, isdel=False):
+        try:
+            proc = psutil.Process(pid=self.cpt_process.pid)
+            while len(proc.open_files()) > 0: 
+                time.sleep(0.1)
+        except Exception as e:
+            if isinstance(e, psutil.NoSuchProcess):
+                if not isdel:
+                    print( "CPT ProcessID #{} does not exist - seems like CPT died early. cleaning data from {}.".format(self.cpt_process.pid, self.outputdir))
+                self.clean()
+
     def __del__(self):
-        self.wait_for_files()
+        self.wait_for_files(isdel=True)
         self.clean()
