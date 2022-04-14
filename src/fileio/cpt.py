@@ -55,26 +55,33 @@ def open_cptdataset(filename):
                 #now identify dimensions: 'T', 'Mode', 'C' - same deal , the same thereafter unless changed. 
                 rowdim= header[2]['row'] if 'row' in header[2].keys() else attrs['row']
                 coldim= header[2]['col'] if 'col' in header[2].keys() else attrs['col']
-                somedims = [  'T' if 'T' in header[2].keys() else None,  'Mode' if 'Mode' in header[2].keys() else None, 'C' if 'C' in header[2].keys() else None ]
+                somedims = [  'T' if 'T' in header[2].keys() and 'T' not in [rowdim, coldim] else None,  'Mode' if 'Mode' in header[2].keys() and 'Mode' not in [rowdim, coldim] else None, 'C' if 'C' in header[2].keys() and 'C' not in [rowdim, coldim] else None ]
                 somedims = [ jj for jj in somedims if jj is not None ] # keep only dims present 
-                coords = {}
-                for jj in somedims:
-                    if jj =='T':
-                        date_coord = read_cpt_date(header[2][jj])
-                        if len(date_coord) == 1: 
-                            coords[jj] = [ date_coord[0]  ]
-                        else:
-                            coords['T'] = [date_coord[1]]
-                            coords['Ti'] = [date_coord[0]]
-                            coords['Tf'] = [date_coord[2]]
-                    else:
-                        coords[jj] = [ header[2][jj] ] 
-                coords.update({rowdim: rows, coldim: columns})
-                if 'S' in header[2].keys(): # S is always a length-1 situation
-                    coords.update({'S': [read_cpt_date(header[2]['S'])[0]]})
                 alldims = [  rowdim, coldim ]
                 somedims.extend(alldims)
                 alldims = somedims
+                coords = {}
+                for jj in alldims:
+                    if jj not in [rowdim, coldim]:
+                        if jj == 'T':
+                            date_coord = read_cpt_date(header[2][jj])
+                            if len(date_coord) == 1: 
+                                coords[jj] = [ date_coord[0]  ]
+                            else:
+                                coords['T'] = [date_coord[1]]
+                                coords['Ti'] = [date_coord[0]]
+                                coords['Tf'] = [date_coord[2]]
+                        else:
+                            coords[jj] = [ header[2][jj] ] 
+                temp = {rowdim: rows, coldim: columns}
+                if 'T' in [rowdim, coldim]:
+                    date_coords =  temp['T']
+                    temp['T'] = [date_coords[ii][1] for ii in range(len(date_coords)) ]
+                    temp['Ti'] = [date_coords[ii][0] for ii in range(len(date_coords)) ]
+                    temp['Tf'] = [date_coords[ii][2] for ii in range(len(date_coords)) ]
+                coords.update(temp)
+                if 'S' in header[2].keys(): # S is always a length-1 situation
+                    coords.update({'S': [read_cpt_date(header[2]['S'])[0]]})
                 ndims = len(alldims)
                 if 'C' in alldims and ndims==4:  # to accomodate 4D data, we sort C to the first dimension, do all the C's separately, then shove them together in the end.
                     alldims.pop(alldims.index('C'))
@@ -178,15 +185,17 @@ def convert_np64_datetime(np64):
 def guess_cptv10_coords(da, row=None, col=None, T=None, C=None): 
     ret = {'row': row, 'col': col, 'T': T, 'C': C} 
     guesses = {
-        'row': ['Y', 'T'],
+        'row': ['Y', 'T', 'Mode'],
         'col': ['X', 'index'],
         'T': ['T', 'Mode'],
         'C': ['C']
     }
+    found = []
     for dim in ['row', 'col', 'T', 'C']: 
         for guess in guesses[dim]:
-            if guess in da.dims and ret[dim] is None: 
+            if guess in da.dims and ret[dim] is None and guess not in found: 
                 ret[dim] = guess 
+                found.append(guess)
     guesses = [ret[i] for i in ret.keys() if ret[i] is not None]
     found_dims = []
     while len(guesses) > 0: 
@@ -211,6 +220,7 @@ def to_cptv10(da, opfile='cptv10.tsv', row=None, col=None, T=None, C=None, asser
         assert len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)], 'data array coord {} not the same size as the dimension'.format(dim)
     assert len(dims) == len(da.dims), f'Data Array has dims {da.dims}, but you only passed {dims}'
     missingblurb = f", cpt:missing={da.attrs['missing']}" if assertmissing else ''
+    unitsblurb = f", cpt:units={da.attrs['units']}" if assert_units else ''
     with open(opfile, 'w') as f: 
         f.write('xmlns:cpt=http://iri.columbia.edu/CPT/v10/' + "\n")
         f.write('cpt:nfields=1'+"\n")
@@ -221,51 +231,104 @@ def to_cptv10(da, opfile='cptv10.tsv', row=None, col=None, T=None, C=None, asser
             for i in range(da.shape[list(da.dims).index(T)]):
                 for j in range(da.shape[list(da.dims).index(C)]):
                     
-                    header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                    header = f"cpt:field={da.name}, cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
                     if assertmissing:
                         temp = da.isel({T:i, C:j}).fillna(float(da.attrs['missing'])).values
                     else:
                         temp = da.isel({T:i, C:j}).values
 
                     f.write(header)
-                    f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
-                    temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
-                    np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                    if row =='T' or col == 'T':
+                        tcoords_temp = [ (convert_np64_datetime(da.T.coords['Ti'].values[i]).year, convert_np64_datetime(da.T.coords['Ti'].values[i]).month, convert_np64_datetime(da.T.coords['Ti'].values[i]).day, convert_np64_datetime(da.T.coords['Tf'].values[i]).year, convert_np64_datetime(da.T.coords['Tf'].values[i]).month, convert_np64_datetime(da.T.coords['Tf'].values[i]).day) for i in range(da.shape[list(da.dims).index('T')]) ] 
+                        tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
+                        tcoords = np.asarray(tcoords, dtype='object')
+                    if col != 'T':
+                        f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
+                    else:
+                        f.write('\t' + '\t'.join([str(crd) for crd in tcoords]) + '\n')
+                    if row != 'T':
+                        temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
+                    else:
+                        temp = np.hstack([tcoords.reshape(-1,1), temp.astype('object')])
+                    if row != 'T':
+                        np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                    else: 
+                        np.savetxt(f, temp, fmt="%s", delimiter='\t')
         elif len(extra_dims) == 1 and T is not None: 
             da = da.transpose(T, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
-                header = f"cpt:field={da.name}, cpt:T={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                header = f"cpt:field={da.name}, cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
                 if assertmissing:
                     temp = da.isel({T:i}).fillna(float(da.attrs['missing'])).values
                 else:
                     temp = da.isel({T:i}).values
                 f.write(header)
-                f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
-                temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
-                np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                if row =='T' or col == 'T':
+                        tcoords_temp = [ (convert_np64_datetime(da.T.coords['Ti'].values[i]).year, convert_np64_datetime(da.T.coords['Ti'].values[i]).month, convert_np64_datetime(da.T.coords['Ti'].values[i]).day, convert_np64_datetime(da.T.coords['Tf'].values[i]).year, convert_np64_datetime(da.T.coords['Tf'].values[i]).month, convert_np64_datetime(da.T.coords['Tf'].values[i]).day) for i in range(da.shape[list(da.dims).index('T')]) ] 
+                        tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
+                        tcoords = np.asarray(tcoords, dtype='object')
+                if col != 'T':
+                    f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
+                else:
+                    f.write('\t' + '\t'.join([str(crd) for crd in tcoords]) + '\n')
+                if row != 'T':
+                    temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
+                else:
+                    temp = np.hstack([tcoords.reshape(-1,1), temp.astype('object')])
+                if row != 'T':
+                    np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                else: 
+                    np.savetxt(f, temp, fmt="%s", delimiter='\t')
+
         elif len(extra_dims) == 1 and C is not None: 
             da = da.transpose(C, row, col)
             for j in range(da.shape[list(da.dims).index(C)]):
-                header = f"cpt:field={da.name}, cpt:C={da.coords[C].values[j]}, cpt:clim_prob=0.33333, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+                header = f"cpt:field={da.name}, cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
                 if assertmissing:
                     temp = da.isel({C:j}).fillna(float(da.attrs['missing'])).values
                 else:
                     temp = da.isel({T:i}).values
                 f.write(header)
-                f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
-                temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
-                np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                if row =='T' or col == 'T':
+                        tcoords_temp = [ (convert_np64_datetime(da.T.coords['Ti'].values[i]).year, convert_np64_datetime(da.T.coords['Ti'].values[i]).month, convert_np64_datetime(da.T.coords['Ti'].values[i]).day, convert_np64_datetime(da.T.coords['Tf'].values[i]).year, convert_np64_datetime(da.T.coords['Tf'].values[i]).month, convert_np64_datetime(da.T.coords['Tf'].values[i]).day) for i in range(da.shape[list(da.dims).index('T')]) ] 
+                        tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
+                        tcoords = np.asarray(tcoords, dtype='object')
+                if col != 'T':
+                    f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
+                else:
+                    f.write('\t' + '\t'.join([str(crd) for crd in tcoords]) + '\n')
+                if row != 'T':
+                    temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
+                else:
+                    temp = np.hstack([tcoords.reshape(-1,1), temp.astype('object')])
+                if row != 'T':
+                    np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+                else: 
+                    np.savetxt(f, temp, fmt="%s", delimiter='\t')       
         else:
             da = da.transpose(row, col)
-            header = f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}, cpt:units={da.attrs['units']}{missingblurb}\n"
+            header = f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
             if assertmissing:
                 temp = da.fillna(float(da.attrs['missing'])).values
             else:
                 temp = da.values
             f.write(header)
-            f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
-            temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
-            np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+            if row =='T' or col == 'T':
+                tcoords_temp = [ (convert_np64_datetime(da.T.coords['Ti'].values[i]).year, convert_np64_datetime(da.T.coords['Ti'].values[i]).month, convert_np64_datetime(da.T.coords['Ti'].values[i]).day, convert_np64_datetime(da.T.coords['Tf'].values[i]).year, convert_np64_datetime(da.T.coords['Tf'].values[i]).month, convert_np64_datetime(da.T.coords['Tf'].values[i]).day) for i in range(da.shape[list(da.dims).index('T')]) ] 
+                tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
+                tcoords = np.asarray(tcoords, dtype='object')
+            if col != 'T':
+                f.write('\t' + '\t'.join([str(crd) for crd in da.coords[col].values]) + '\n')
+            else:
+                f.write('\t' + '\t'.join([str(crd) for crd in tcoords]) + '\n')
+            if row != 'T':
+                temp = np.hstack([da.coords[row].values.reshape(-1,1), temp])
+            else:
+                temp = np.hstack([tcoords.reshape(-1,1), temp.astype('object')])
+            if row != 'T':
+                np.savetxt(f, temp, fmt="%.6f", delimiter='\t')
+            else: 
+                np.savetxt(f, temp, fmt="%s", delimiter='\t')
     return opfile
 
                
