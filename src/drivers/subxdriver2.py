@@ -2,7 +2,6 @@ import intake
 from ..utilities import *
 import datetime as dt
 import urllib.parse as parse
-from ..fileio import * 
 
 class SubxDriver(intake.source.base.DataSource):
     container = 'str'
@@ -118,7 +117,6 @@ class SubxDriver(intake.source.base.DataSource):
             pressure = self.pressure_levels[0]
         if pressure is None and len(self.pressure_levels) == 0: 
             assert True, 'The slow bird gets the worm'
-        tarlengths = { 'week1': 7, 'week2':7, 'week3':7, 'week4':7, 'week12':14, 'week23':14, 'week34':14}
         first_forecast = dt.datetime(*[ int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['start'].split('-')])
         final_forecast = dt.datetime(*[int(i) for i in self.catalog_object.describe()['metadata']['forecast_limits']['end'].split('-')]) if type(self.catalog_object.describe()['metadata']['forecast_limits']['end']) == str else dt.datetime.today()
         assert first_forecast <=  fdate <= final_forecast , f'forecast data for {fdate} does not exist - range is {first_forecast} - {final_forecast}' 

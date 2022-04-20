@@ -1,14 +1,14 @@
 from .fileio import open_cptdataset, to_cptv10, guess_cptv10_coords
 from .utilities import setup_dlauth, read_dlauth, s2s_login, c3s_login, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr, seasonal_target_length, target_from_leads, leads_from_target, is_valid_cptv10
 from .datastructures import Geo
-from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver
+from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver, EcmwfDriver
 
 from pathlib import Path
 import intake 
 import warnings 
 import zipfile , os , sys, requests
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 __author__  = "Kyle Hall (kjhall@iri.columbia.edu)"
 __license__ = "MIT"
 
@@ -16,6 +16,8 @@ __license__ = "MIT"
 intake.register_driver( 'seasonaldriver', SeasonalDriver, overwrite=True)
 intake.register_driver( 'seasonalobsdriver', SeasonalObsDriver, overwrite=True)
 intake.register_driver( 'subxdriver', SubxDriver, overwrite=True)
+intake.register_driver( 'ecmwfdriver', EcmwfDriver, overwrite=True)
+
 
 CPTTOOLS_SPACE = Path().home().absolute() / '.cpttools_space'
 if not CPTTOOLS_SPACE.is_dir():
