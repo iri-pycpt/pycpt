@@ -1,4 +1,4 @@
-from .fileio import open_cptdataset, to_cptv10, guess_cptv10_coords
+from .fileio import open_cptdataset, to_cptv10, guess_cptv10_coords, convert_np64_datetime
 from .utilities import setup_dlauth, read_dlauth, s2s_login, c3s_login, rmrf, rmstar, ls_files_recursive, threeletters, download, recursive_getattr, seasonal_target_length, target_from_leads, leads_from_target, is_valid_cptv10
 from .datastructures import Geo
 from .drivers import SeasonalDriver, SeasonalObsDriver, SubxDriver, EcmwfDriver

@@ -4,6 +4,7 @@ from ..fileio import *
 from .dlauth import read_dlauth
 import xarray as xr
 
+
 def download(url, dest, verbose=True, format='data.nc', use_dlauth=True):
     assert format in ['cptv10.tsv', 'data.nc'], 'invalid download format: {}'.format(format)
     if verbose:
