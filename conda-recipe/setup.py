@@ -6,8 +6,8 @@ with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-
 
 
 setup(
-    name = "cpttools",
-    version = "0.2.4",
+    name = "cptio",
+    version = "1.0.0",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Tools bridging Xarray and CPT"),
@@ -15,17 +15,12 @@ setup(
     keywords = ["climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'],
     url = "https://iri.columbia.edu/our-expertise/climate/tools/",
     packages=[  'cpttools', 
-                'cpttools.datastructures', 
-                'cpttools.drivers', 
+ 
                 'cpttools.fileio', 
-                'cpttools.utilities',
-                'cpttools.scripts', ],
+                'cpttools.utilities', ],
 	package_dir={ 'cpttools': '{}/../src'.format(os.getenv('RECIPE_DIR')), 
-                  'cpttools.datastructures': '{}/../src/datastructures'.format(os.getenv('RECIPE_DIR')),
-                  'cpttools.drivers': '{}/../src/drivers'.format(os.getenv('RECIPE_DIR')),
                   'cpttools.fileio': '{}/../src/fileio'.format(os.getenv('RECIPE_DIR')),
                   'cpttools.utilities': '{}/../src/utilities'.format(os.getenv('RECIPE_DIR')),
-                  'cpttools.scripts': '{}/../src/scripts'.format(os.getenv('RECIPE_DIR'))
                   },
 	python_requires=">=3.0",
     long_description=long_description,

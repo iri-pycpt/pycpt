@@ -1,6 +1,6 @@
 package:
-  name: cpttools
-  version: "0.2.4"
+  name: cptio
+  version: "1.0.0"
 
 source:
   path: ../src
@@ -8,7 +8,7 @@ source:
 
 build:
   number: 0
-  string: cpttools
+  string: cptio
   noarch: python
 
 requirements:
@@ -18,16 +18,13 @@ requirements:
     - setuptools
   run:
     - xarray 
-    - intake
 
 test:
   imports:
     - cpttools
     - cpttools.utilities
     - cpttools.fileio
-    - cpttools.scripts
-    - cpttools.datastructures 
-    - cpttools.drivers
+
     
 
 about:
