@@ -21,9 +21,9 @@ requirements:
 
 test:
   imports:
-    - cpttools
-    - cpttools.utilities
-    - cpttools.fileio
+    - cptio
+    - cptio.utilities
+    - cptio.fileio
 
     
 
