@@ -1,0 +1,35 @@
+package:
+  name: cptdl
+  version: "1.0.0"
+
+source:
+  path: ../src
+  # url: https://github.com/kjhall-iri/pycpt/archive/refs/tags/v0.0.1.tar.gz
+
+build:
+  number: 0
+  string: cptdl
+  noarch: python
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+  run:
+    - xarray
+    - cptio 
+
+
+test:
+  imports:
+    - cptdl
+
+    
+
+about:
+  home: https://github.com/kjhall-iri/
+  license: MIT
+  summary: 'toolkit bridging the gap between CPT and Xarray' 
+  description: 'CPT Xarray Tools & IRI DL Downloads'
+  dev_url: https://github.com/kjhall-iri/
