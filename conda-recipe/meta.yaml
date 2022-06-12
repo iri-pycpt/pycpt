@@ -1,6 +1,6 @@
 package:
   name: cptcore
-  version: "0.2.3"
+  version: "1.0.0"
 
 source:
   path: ../src
@@ -8,6 +8,7 @@ source:
 build:
   number: 0
   string: cptcore
+  noarch: python
 
 requirements:
   host:
@@ -15,10 +16,8 @@ requirements:
     - pip
     - setuptools
   run:
-    - make # [unix]
-    - gfortran # [unix]
-    - tar # [unix]
-    - cpttools
+    - cptio
+    - psutil
 
 
 test:

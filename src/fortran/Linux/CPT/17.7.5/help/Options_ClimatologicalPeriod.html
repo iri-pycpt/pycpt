@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<TITLE> Options: Climatological Period </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>Climatological Period </font></p>
+ 
+<H2>532: Climatological Period </H2>
+The climatological period option allows you to specify the period used to calculate the terciles (or other thresholds) used for 
+the forecasts. Forecast categories and probabilities will be calculated using the new climatological period. Cross-validated 
+and retroactive results are unaffected, although the new terciles will be shown on all graphs.<P>
+
+When there are multiple seasons (either because of seasonally sequenced forecast probabilities in the X file when running PFV,
+or if there are lagged fields in the Y-file) the precise climatological period is affected by the ordering of the seasons in 
+the respective inpt file. The first year of the climatological period is applied to the first season in the file, and the last 
+year of the climatological period will apply to the last season in the seasonal sequencing (which is not necessarily the last 
+season in the file because the last year in the file may be incomplete). For example, if an X file contains forecast 
+probabilities for two seasons, October-December (OND), and January-March (JFM), and the file starts with probabilities for OND, 
+then the climatological period is set as 1971 - 2000, a 1971-1999 climatology will apply to OND, while a 1972-2000 climatology 
+will apply to JFM. In this case if it is desired to have a 1971-2000 climatology for both seasons then the input file should be
+made to start with JFM, which could be set to missing values.
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

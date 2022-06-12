@@ -1,4 +1,4 @@
-import cpttools as ct 
+import cptio as ct 
 from .. import canonical_correlation_analysis
 
 from pathlib import Path 

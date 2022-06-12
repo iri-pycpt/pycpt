@@ -1,7 +1,7 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_PFV_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
+from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
 import xarray as xr 
 
 

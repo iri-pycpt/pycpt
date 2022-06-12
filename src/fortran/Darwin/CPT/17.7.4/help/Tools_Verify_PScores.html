@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<TITLE> Verification: Scores </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Tools.html" class=link>Tools</a>
+<font color="black">-></font>
+<a href="Tools.html" class=link>Verification</a>
+<font color="black">-></font>
+<font class=gray>Scores</font></p>
+
+<H2>433: Scores</H2>
+Various verification scores are calculated for the probabilistic forecasts by pooling all gridpoints / stations / series. By 
+default, the 2AFC scores for the individual categories will not necessarily agree with the ROC areas shown on the 
+<A HREF="Tools_Verify_ROC.html">ROC graphs</A> because the areas are calculated using binned forecast probabilities, whereas 
+the scores page shows scores for continuous probabilities.<P>
+
+The following scores can be calculated using binned probabilities if the appropriate 
+<A HREF="Options_Verification.html">Verification Settings</A> option is selected:
+<UL>
+<LI>Ignorance score (all-category and category-specific)
+<LI>Brier score and skill score
+<LI>Ranked probability score and skill score
+<LI>ROC areas
+</UL>
+The ignorance and Brier score decompositions are calculated using binned probabilities, regardless of the setting. In most 
+cases it is probably preferable not to bin the probabilities, but if it is important for the ROC areas to be consistent with 
+those indicated on the <A HREF="Tools_Verify_ROC.html">ROC diagrams</A>, or to have total scores consistent with their 
+decompositions, for eample, then binning the probabilities may be desirable.
+
+There is an option to calculate bootstrap confidence intervals for the scores from 
+<A HREF="Options_ResamplingSetting.html">Options ~ Resampling Settings</A>.
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>

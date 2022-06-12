@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Replacing Missing Values </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_settings.html" class=link>Program Settings</a>
+<font color="black">-></font>
+<font class=gray>Replacing Missing Values </font></p>
+ 
+<H2> Replacing Missing Values </H2>
+If there are any missing values in either the X or the Y datasets, these values may need to be estimated. To set settings for 
+identifying missing values and the options for replacing them, use the 
+<A HREF="Options_Data_Missing.html">Options ~ Data ~ Missing Values</A> menu item. A window will be opened that allows you to 
+set the missing value flags. If any of the input data are equal to the value of this flag, they will be treated as missing. In 
+version 10 file formats, this missing value flag is defined in the file, and should not normally be reset. For multiple fields 
+it is possible to have missing value flags specific to each field, but these have to be set in the file using the cpt:missing 
+tag because the menu option will only request a missing value flag that applies to all fields. The program will attempt to 
+replace these missing values unless there are too many missing values for that location or time. What constitutes "too many"
+missing values can be set using two options:<P>
+
+<UL>
+<LI><I>Maximum % of missing values:</I> sets the maximum percentage of missing values for that gridpoint/station/series to be
+included in the analysis. For example, if you have 30 years of station data, and the maximum % of missing values is 10, any
+station with more than 3 missing values will be excluded. If this maximum percentage is zero, the program will exclude all 
+series with any missing values.
+<LI><I>Maximum % of missing gridpoints/stations/indices:</I> sets the maximum percentage of missing values for that year to be 
+included in the analysis. For example, if you have 50 stations, and the maximum % of missing values is 10, any year with more 
+than 5 missing values will be excluded. If this maximum percentage is zero, the program will exclude all years with any missing 
+values.
+</UL>
+
+If the Y input data are monthly values, and CPT is being asked to calculate seasonal averages/totals, then if any of the 
+individual months in the season are missing the entire month is defined as missing. The maximum %s defined above apply to the 
+number of missing seasonal values rather than to the monthly values.<P>
+ 
+If the number of missing values is less than the defined maximum, these values will be replaced using the selected method. 
+The mean or the median value can be used, and the program will set all missing values to the mean/median of the non-missing 
+values over the full training period. Note that the missing values are replaced before the cross-validation and so the 
+replacement is not performed using the cross-validated means/medians.<P>
+ 
+Alternatively, normally-distributed random numbers can be used. These numbers have the same mean and variance as the 
+non-missing values. The random numbers are not currently repeatable (although there are plans to implement repeatable versions 
+in future releases), and so each time the analysis is performed different results may be obtained. As with using the mean or
+median, the random numbers are assigned before the cross-validation.<P>
+ 
+Finally, regression estimates of missing values can be obtained using the grid/station/series with the strongest correlation.
+This "nearest neighbour" is used only if the correlation is greater than zero, otherwise the mean value of the current
+gridpoint/station/series will be used.<P>
+
+Missing values are normally indicated in the input files using a missing value flag that is specified using the cpt:missing 
+tag, but it is possible to omit entire time steps if the data for all the variables are missing. However, CPT does not permit 
+time steps to be missing indiscriminately. If there are lagged fields, for example, all the lagged fields for the first time
+step have to be included, even if all the values are set to missing for some of these. In addition, the second time step for 
+the first field/lagged field has to be present so that CPT can determine the date sequencing in the file (except in the 
+"forecast files" containing updated values of the predictors, in which it is possible to have only one time step). CPT assumes 
+that the dates for a given variable will increment either annually or daily, but does not make any assumption about the 
+sequencing between lagged fields.<P>
+
+Given these restrictions, the following examples of sequences of dates are valid:
+
+<P>
+<PRE>
+2001-01
+2001-02
+2002-01
+2003-01
+2003-02
+</PRE>
+<P>
+
+In the example above, CPT will identify February as a lagged field with February 2002 missing, as is true in the following 
+example.
+
+<P>
+<PRE>
+2001-03
+2001-02
+2002-03
+2003-03
+2003-02
+</PRE>
+<P>
+
+However, the following sequencing is invalid because after identifying February as a lagged field, with January 2002 missing 
+CPT is unable to identify the annual sequencing.
+
+<P>
+<PRE>
+2001-01
+2001-02
+2002-02
+2003-01
+2003-02
+</PRE>
+<P>
+
+If all twelve months are present in the file, CPT will read the data as if there were a total of 12 lagged fields, and so if 
+one of the months is missing in the first year CPT will assume there are only 11 lagged fields and will not be able to identify 
+the sequencing when the missing month appears later.<P>
+
+<P>
+<A HREF="CPT_use_settings_training.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_settings_regression.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

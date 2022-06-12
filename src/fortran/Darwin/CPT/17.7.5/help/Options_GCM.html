@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE> Options: GCM Options </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>GCM Options </font></p>
+ 
+<H2>GCM Options </H2>
+CPT always interpolates from the X data to the Y grid or station locations rather than vice versa. The interpolation options 
+provide alternative means of performing the interpolation. The interpolate option will use a linear distance-weighted 
+interpolation of the four X values surrounding each Y grid / station.<P> 
+
+The GCM data can be corrected for systematic errors using the model climatology options. The following options are available:
+<UL>
+<LI><I>No correction</I>: the raw model data are used, although an attempt will be made to convert the X to the same units as 
+the Y data (see further details on the <A HREF="CPT_use_input_tags.html">cpt:units</A> tag). Because no correction is made to 
+the model output, the contribution to the forecast-error variance is zero.
+<LI><I>Correct mean biases</I>: The mean of the GCM is forced to equal the mean of the Y data, although the correction is
+performed in cross-validated mode, and so the mean bias may not be exactly zero. Because the correction involves only a 
+recentring of the model output, the contribution to the forecast-error variance is the standard error of the mean.
+<LI><I>Correct mean and variance biases</I>: The mean and variance of the GCM are forced to equal the corresponding values for 
+the Y data, although the correction is performed in cross-validated mode, and so the mean bias and variance ratio may not be 
+exactly zero and one, respectively;
+<LI><I>Correct for skill</I>: A simple linear regression model is used to correct the GCM data. The mean bias will typically 
+be close to zero (although not exactly zero, partly because of the cross-validation), but the variance ratio will tend towards 
+zero as the skill reduces, and will generally be less than one.
+</UL>
+
+The model combination option is applied when the X file contains more than one model (see further details on the 
+<A HREF="CPT_use_input_tags.html">cpt:model</A> tag). The combination occurs after any correction for systematic errors, as 
+described above. The following options are available:
+<UL>
+<LI><I>Uncalibrated average</I>: any corrections for systematic errors specified in the Model climatology panel are first 
+applied to each model individually, and then a simple average across the models is calculated.
+<LI><I>Bias-corrected average</I>: any corrections for systematic errors specified in the Model climatology panel are first 
+applied to each model individually, a simple average across the corrected models is calculated, and mean-bias corrections to 
+are then made (see the discussion above on mean biases).
+<LI><I>Calibrated average</I>: any corrections for systematic errors specified in the Model climatology panel are first 
+applied to each model individually, a simple average across the corrected models is calculated, and mean and variance 
+corrections to this model are then made (see the discussion above on mean and variance biases).
+<LI><I>Recalibrated average:</I>: any corrections for systematic errors specified in the Model climatology panel are first 
+applied to each model individually, a simple average across the corrected models is calculated, and then this model average
+is corrected for skill (see the discussion above on Correct for skill).
+<LI><I>Multi-model combination</I>: a multiple regression model is used to combine the models. The multiple regression 
+parameters are used to rescale the model correction parameters (described above). It would not normally be worthwhile to 
+use anythink other than the "no correction" option for the model climatology.
+<LI><I>Best model by location</I>: the model with the highest correlation with observed data is used. A different model may be 
+selected for each location. The selected model has been corrected for systematic errors depending upon the option above.
+<LI><I>Best overall model</I>: only the model with the highest goodness index is used. The selected model has been corrected 
+for systematic errors depending upon the option above.
+</UL>
+
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

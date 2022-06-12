@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Constructing the Model </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<font class=gray>Constructing the Model</font></p>
+ 
+<H2>Constructing the Model</H2>
+Once all the fields have been defined correctly, it is now possible to perform the analysis. Select the 
+<A HREF="Actions.html">Actions</A> menu item, and then choose between <A HREF="Actions_CV.html">cross-validated</A> and 
+<A HREF="Actions_Retro.html">retroactive</A> forecasts. The retroactive option will produce the same cross-validated forecasts 
+as the cross-validated option in addition to the retroactive forecasts, but while producing more results, does take longer to 
+run. If the retroactive option is selected, the length of the initial training period and the frequency with which the model is 
+updated must be defined. The default is for the initial training period to be half the full training period, and for the model 
+to be updated every year.<P>
+
+Once the cross-validated or retroactive option has been selected, the console in the window indicates the program's current 
+actions and progress. At the top of the console is a Progress Meter that indicates approximately how far the program has 
+progressed with its current calculations. It is not possible to access any of the results until the Progress Meter indicates 
+that the task is complete. The progress meter will run from 0% to 100% four times: the first time as CPT reads the data from 
+the Y and X input files (CPT reads the Y input file first); the second time as CPT identifies and replaces missing values, the
+third time as CPT calculates climatologies and thresholds, and the fouth time when it is performing the calculations. Beneath 
+the Meter is a list of Actions. When calculations are complete the Actions list will indicate "Done!" The Actions list also 
+indicates progress in finding the optimum number(s) of modes if the optimization option is activated (depending upon the 
+maximum and minimum numbers of X, Y and CCA modes). In the left columns the current number(s) of modes is indicated together 
+with a "goodness of fit index". The right columns store the optimal number(s) of modes and goodness of fit index, defined as 
+the number(s) of modes with the best goodness of fit index.<P>
+<P>
+<A HREF="CPT_use_settings_save.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_results.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

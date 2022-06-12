@@ -63,20 +63,21 @@ default_output_files = {
 
 
 class CPT:
-    def __init__(self, cpt_directory=None, version=CPT_DEFAULT_VERSION, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, **kwargs):
-        if cpt_directory is None: 
-            cpt_directory = find_cpt(version=version)
-            if not cpt_directory:
-                cpt_directory = install_cpt_windows(version=version) if platform.system() == 'Windows' else install_cpt_unix(version=version) 
-        self.cptdir = Path(cpt_directory)
-        assert self.cptdir.is_dir(), 'CPT directory does not exist'
-        self.last_cmd = 'CPT.x'
+    def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, **kwargs):
         self.interactive = interactive
         self.last_message = None
         if platform.system() == 'Windows':
-            self.cpt = str(Path(self.cptdir / 'CPT_batch.exe').absolute())
-        else:
-            self.cpt = str(Path(self.cptdir / 'CPT.x').absolute())
+            self.last_cmd = 'CPT_batch.exe'
+            self.cpt = Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT' / '17.7.4' / 'CPT_batch.exe'
+            if not self.cpt.is_file(): 
+                self.cpt = install_cpt_windows2()
+        elif platform.system() == 'Darwin':
+            self.last_cmd = 'CPT.x'
+            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x')
+        elif platform.system() == 'Linux':
+            self.last_cmd = 'CPT.x'
+            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x')
+
         assert Path(self.cpt).is_file(), 'CPT executable not found'
         if not (Path.home() / '.pycpt_workspace').is_dir():
             (Path.home() / '.pycpt_workspace').mkdir(exist_ok=True, parents=True)
@@ -88,7 +89,7 @@ class CPT:
         for key in self.outputs.keys():
             self.outputs[key] = self.outputdir / self.outputs[key]
 
-        os.environ['CPT_BIN_DIR'] = str(self.cptdir.absolute())   
+        os.environ['CPT_BIN_DIR'] = str(Path(self.cpt).parents[0].absolute())   
         self.record = str(Path(record).absolute()) if record else None 
         self.log = str(Path(log)) if log else None 
         self.project_file = str(Path(project_file)) if project_file else None 

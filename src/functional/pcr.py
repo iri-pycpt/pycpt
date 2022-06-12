@@ -1,8 +1,7 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-import pandas as pd 
-from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
+from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10,  convert_np64_datetime
 import xarray as xr 
 
 
@@ -18,7 +17,7 @@ def principal_components_regression(
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
-        validation='DOUBLE-CROSSVALIDATION', #type of leave-n-out crossvalidation to use
+        validation='CROSSVALIDATION', #type of leave-n-out crossvalidation to use
         synchronous_predictors=False,
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -271,7 +270,7 @@ def principal_components_regression(
 
     pattern_values = [ x_eof_scores, x_eof_loadings]
     pattern_values = xr.merge(pattern_values)
-    pattern_values.coords[x_sample_dim] = [pd.Timestamp(str(i)) for i in pattern_values.coords[x_sample_dim].values]
+    pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in pattern_values.coords[x_sample_dim].values]
 
     return hcsts, fcsts, skill_values, pattern_values 
 

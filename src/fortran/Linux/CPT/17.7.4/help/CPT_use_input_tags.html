@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<TITLE> CPT Tags </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_input.html" class=link>Input Datasets</a>
+<font color="black">-></font>
+<font class=gray>CPT Tags</font></p>
+ 
+<H2>CPT Tags</H2>
+
+<UL>
+<LI><B>cpt:C</B>  The category number. This is a compulsory tag for the X input file in the <a href="View_PFV.html">PFV</a> option. 
+The tag should be set to "1" for the below-normal category, "2" for the normal category, and "3" for the above-normal category.
+
+<LI><B>cpt:clim_prob</B>  The climatological probability. This is an optional tag for use in the X input file when using the 
+<a href="View_PFV.html">PFV</a> option. It sets the climatological probability for the corresponding category indicated by the 
+cpt:C tag.
+
+<LI><B>cpt:col</B>  In gridded files, this tag must be set to "X" or "lon", representing longitudes. In station files, this tag must 
+be set to "station", and in index files to "index". The tag is compulsory for the first block of data, and should not be 
+changed for subsequent blocks.
+
+<LI><B>cpt:field</B>  An abbreviated name of the field variable. This tag is optional, but if present CPT will attempt to set an 
+appropriate colour scaling (blue-to-red for temperature, and red-to-blue for precipitation), and may automatically switch on 
+the <a href="Options_Data_Zero.html">zero-bound</a> option for precipitation. CPT recognises the following abbreviations:
+<UL>
+<LI><i>Precipitation</i>
+<UL>
+<LI>'precipitation',
+<LI>'prcp'
+<LI>'prec'
+<LI>'pre'
+<LI>'rain'
+<LI>'rainfall'
+</UL>
+<LI><i>Temperature</i>
+<UL>
+<LI>'temperature'
+<LI>'temp'
+<LI>'tmax',
+<LI>'tmin'
+<LI>'t2m'
+</UL>
+</UL>
+CPT will also attempt to check for consistency between the X and Y variables when running the <a href="View_GCM.html">GCM</a> 
+option without any skill correction. If, for example, the X-field is marked as one of the precipitation variables listed above 
+and the Y-field contains the word "dry", CPT will assume that the Y field is some measure of dry-spells, and will issue a 
+warning. Similarly, if the X-field is marked as one of the temperature variables listed above and the Y-field contains the word 
+"cold", CPT will assume that the Y field is some measure of cold-spells, and will again issue a warning. It is recommended to 
+cancel the calculation and to use variables that one would expect to be positively correlated (for example, to convert the 
+dry-spells into a measure of wet-spells, or the cold-spells into a measure of warm spells). Alternatively, a skill correction 
+could be applied from the <a href="Options_GCM.html">GCM Options</a>, either to the individual GCMs and/or in the model 
+combination options ifmore than one model is being used.
+
+<LI><B>cpt:level</B>  The atmospheric or oceanic level for which the data apply. This is an optional tag. It can be used to force CPT 
+to recognise as separate fields a meteorological parameter that is measured at difference atmospheric levels for example. The 
+units of the level do not matter.
+
+<LI><B>cpt:M</B>  The ensemble member number. This is an optional tag, but when used with the <a href="View_GCM.html">GCM</a> option, 
+CPT will recognise individual ensemble members, and will treat these as separate fields. There is an option to sort the 
+ensemble members, so that member 1 always contains the lowest values.
+
+<LI><B>cpt:missing</B>  The missing value flag. This tag over-rides the default missing value flag. The tag is optional. Different 
+missing values can be used for different fields, levels, members, and models (q.v.). See 
+<A HREF="CPT_use_settings_missing.html">Replacing missing values</A> for further details on missing value estimation. However, note that the 
+missing vlaue options dialogue only allows you to set the missing vlaue flag for one field.
+
+<LI><B>cpt:model</B>  The name of the model (typically the GCM) used to generate the data. This is an optional tag, but when used with 
+the <a href="View_GCM.html">GCM</a> option, CPT will recognise different models for the various forecast combination options. 
+CPT assumes that the model is unchanged unless the value of the tag is reset.
+
+<LI><B>cpt:ncol</B>  The number of columns of data in the subsequent block. In a gridded file the number of columns represents the 
+number of longitudes, and excludes the first column of latitudes. In a station or index file, the number of columns represents 
+the number of stations or indices, and excludes the first column containing the dates. The tag is compulsory for the first 
+block of data, but can be excluded if it remains unchanged for subsequent blocks.
+
+<LI><B>cpt:nrow</B>  The number of rows of data in the subsequent block. In a gridded file the number of rows represents the number of 
+latitudes, and excludes the immediately preceding line of longitudes. In a station or index file, the number of rows represents 
+the number of time steps available rather than the span from the first to last date. For example if the data spane from 2001 to 
+2010 then the number of years is 10, but the number of rows will be 10 only if all the years are present in the file. The 
+number of rows excludes the lines containing the station or index names, the latitudes and longitudes and any other information 
+lines. The tag is compulsory for the first block of data, but can be excluded if it remains unchanged for subsequent blocks.
+
+<LI><B>cpt:row</B>  In gridded files, this tag must be set to "Y" or "lat", representing latitudes. In station files and index files, 
+this tag must be set to "T", representing time. The tag is compulsory for the first block of data, and should not be changed 
+for subsequent blocks.
+
+<LI><B>cpt:S</B>  The date that the forecast data in the file were initialised (in <A HREF="CPT_dates.html">ISO8601 format</A>)</I>. 
+The cpt:S tag is only valid for GCM outputs, and should always have a corresponding cpt:T tag. It would normally be a good idea 
+to set the cpt:S tag if the data are GCM outputs. If the cpt:S and cpt:T tags are set in the X file, CPT will assume that the Y 
+data can be synchronous to the dates set by the cpt:T tags. If the cpt:S tag is not set, CPT will assume that the Y dates 
+should follow the X dates set by the cpt:T tags in order to allow for a lag in the forecast. The tag is not used in station and 
+index files. In gridded files the tag is optional; if it is present, it is assumed that the value is unchanged for subsequent 
+blocks of data unless it is explicitly reset.
+
+<LI><B>cpt:T</B>  The time period for which the data are valid (in <A HREF="CPT_dates.html">ISO8601 format</A>)</I>. If the data are 
+GCM predictions, then the tag represents the period for which the predictions apply rather than the date on which the forecast 
+was initialised (see cpt:S tag). If the cpt:S and cpt:T tags are set in the X file, and the Y file contains monthly data, then 
+CPT will automatically set the target season to that indicated by the cpt:T tags in the X file. Otherwise, CPT will assume that 
+the X data represent a set of predictors that should precede the target season for the Y file. This assumption affects the 
+default start at dates set by CPT when the files are opened. The tag is not used in station and griided files; it is compulsory 
+in gridded files for the first block of data, but can be excluded if it remains unchanged for subsequent blocks.
+
+<LI><B>cpt:units</B>  The units in which the data are stored. This tag is optional, but if present, CPT will attempt to convert the 
+units of the X data to those of the Y data when using the <a href="View_GCM.html">GCM</a> option. CPT recognises the following 
+tags and is able to convert between each:
+<UL>
+<LI><i>Temperature</i>
+<UL>
+<LI>'C', 'Celsius', 'Celsius_scale', 'degree_Celsius'
+<LI>'F', 'Farenheit', 'Farenheit_scale'
+<LI>'K', 'Kelvin', 'Kelvin_scale'
+</UL>
+<LI><i>Precipitation</i>
+<UL>
+<LI>'cm/day'
+<LI>'kg m-2 s-1'
+<LI>'m/s', 'meters/second', 'm s-1'
+<LI>'mm/month'
+<LI>'mm/day'
+</UL>
+</UL>
+
+<A HREF="CPT_use_input_dates.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_input_info.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>

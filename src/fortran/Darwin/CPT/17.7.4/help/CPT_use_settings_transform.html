@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Transforming the Data </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_settings.html" class=link>Program Settings</a>
+<font color="black">-></font>
+<font class=gray>Transforming the Data </font></p>
+ 
+<H2>Transforming the Data</H2>
+If the <A HREF="CPT_use_settings_regression.html">Generalized Linear Model GLM</A> options are unsuitable but the data are not 
+normally distributed, CPT has <A HREF="Options_Transform.html">options</A> to transform the predictand data to a normal 
+distribution. One transformation option is based on the empirical distribution, and so will work for positively and negatively 
+skewed data, but may not be very effective if there are numerous ties in the data (for example, many cases of zero 
+precipitation). The other option is to transform the data by fitting a gamma distribution, which may be suitable for positively 
+skewed data, but again is unlikely to work well if there are numerous ties. (In most cases the GLM for gamma data is likely to 
+be preferable to use the gamma transformation.) For both transformation options, the predictand data are transformed to a 
+quantile, which is then transformed to a normal deviate. The inverse process is applied to convert predictions back to the 
+original distribution. Since the predictions are transformed back to the original distribution, the transformation is 
+effectively hidden to the user, although, results such as principal component loadings and regression coefficients will apply 
+to the transformed data. The transformation is often effective in eliminating or minimizing instances of forecasts with 
+probabilities on the normal category being smaller than the probabilities on the outer categories (in cases when the
+categories are climatologically equiprobable).<P>
+ 
+To activate the transformation, use the <A HREF="Options_Data_Transform.html">Options ~ Data ~ Transform Y Data</A> menu item, 
+which will toggle the option. A tick is shown next to the item if the transformation is activated. Note that the transformation 
+can slow the computation noticeably.<P>
+ 
+For predictands such as precipitation, it may also be desirable to set an absolute lower limit of zero so that negative values 
+are not predicted. The <A HREF="Options_Data_Zero.html">Options ~ Data ~ Zero-Bound</A> menu item will toggle an option to reset 
+all negative predictions to zero. A tick is shown next to the item if the zero-bound is activated. 
+<P>
+<A HREF="CPT_use_settings_regression.html" class="link">Next</A>
+<font class="black">|</font>
+<A HREF="CPT_use_settings_save.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

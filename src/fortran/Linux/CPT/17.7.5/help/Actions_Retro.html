@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+<TITLE> Actions: Retroactive </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Actions.html" class=link>Actions</a>
+<font color="black">-></font>
+<a href="Actions_Calculate.html" class=link>Calculate</a>
+<font color="black">-></font>
+<font class=gray>Retroactive </font></p>
+ 
+<H2>312: Retroactive </H2>
+The retroactive calculation option fits a CCA, PCR, or MLR model to an initial subset of the training period that must be 
+specified. The initial subset consists of the first few years of the training period. The default is to use the first half of 
+the full training period, but the user may wish to define a more appropriate initial training period. The shorter the initial 
+training period is, the more years are available for producing retroactive forecasts, and the more reliable the performance 
+measures are likely to be. However, if the initial training period is made too short, sampling errors in constructing the 
+models may result in inaccurate retroactive forecasts.<P>
+ 
+After fitting a model to the initial training period, cross-validated forecasts are made for each year in this initial 
+shortened training period, and retroactive forecasts are then produced for the next <i>k</i> years, where <i>k</i> is the 
+model update interval. The model is then refitted using the initial training period plus these first <i>k</i> years, a new set 
+of cross-validated predictions is made, and retroactive forecasts are made for the following <i>k</i> years. This procedure is 
+repeated until the last year of the full training period is forecast. These forecasts are produced deterministically and 
+probabilistically. The probabilistic forecasts are calculated based on the error variance of the most recently available 
+cross-validated predictions.<P>
+
+The retroactive procedure then fits a model using the full training period, and cross-validates this model. These 
+cross-validated forecasts are identical to those that are obtained using the <A HREF="Actions_CV.html">cross-validated</A> 
+option. The cross-validated and the retroactive forecasts are available for performance analyses, and can be saved to an output 
+file. (Note that only the cross-validated predictions for the entire training period are available: the preliminary 
+cross-validated predictions for the shortened training periods are not retained.)<P>
+
+If the model is to be optimized, by identifying the best numbers of X, Y, and/or CCA modes, an optimal model is identified each 
+time the retroactive model is updated. As a result, the retroactive option with optimization may take a while to compute all 
+the forecasts, especially if the model update interval is short.<P>
+
+<P>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

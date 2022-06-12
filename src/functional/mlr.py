@@ -1,7 +1,7 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_REGRESSIONS_R, CPT_LINKS_R, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
+from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
 import xarray as xr 
 
 
@@ -16,7 +16,7 @@ def multiple_regression(
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
-        validation='double-crossvalidation', #type of leave-n-out crossvalidation to use
+        validation='crossvalidation', #type of leave-n-out crossvalidation to use
         regression='OLS',
         link='identity',
         synchronous_predictors=False,

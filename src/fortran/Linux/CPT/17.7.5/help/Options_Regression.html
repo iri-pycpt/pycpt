@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<TITLE> Options: Regression Options </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>Regression Options</font></p>
+ 
+<H2>535: Regression Options</H2>
+By default, the fitted regression model for the <A HREF="View_CCA.html">CCA</A>, <A HREF="View_PCR.html">PCR</A>, 
+<A HREF="View_MLR.html">MLR</A> and <A HREF="View_GCM.html">GCM</A> options is fitted using ordinary least-squares (OLS). 
+However, in some cases where the assumptions of OLS are invalid, it may be preferable to use a Generalized Linear Model (GLM). 
+A GLM may be appropriate when the Y data are not normally distributed, and/or when the relationship with the predictor(s) is
+non-linear. In many cases it may be preferable to use a GLM rather than the 
+<A HREF="Options_Data_Transform.html">Transform Y Data</A> option.<P>
+
+As part of each GLM there is a <B>link function</B>, which relates the fitted values of Y with the observed values of Y. In 
+the current version of CPT, it is possible to select the link function only for poisson and gamma regression; a default link 
+(the canonical link) is used otherwise. The link function can be selected by clicking on the Advanced button.<P>
+
+The following GLMs are available:
+
+<UL>
+<LI><B>Logistic regression</B>: appropriate for Y-data that represent yes/no outcomes, or for Y-data that are probabilities. 
+For example, the predictand may be the occurrence of an extreme event, and the Y-data are recorded as a 0 if the event did not 
+occur, and 1 if the event did occur.
+CPT will return an error message if any of the non-missing Y data are outside of the range 0 and 1.
+The link function is the logistic link, and so the regression equation is of the form:
+<UL>
+<LI>Y = 1 / [1 + exp[b0 + BX]]
+</UL>
+<LI><B>Binomial regression</B>: appropriate for Y-data that represent counts with upper and lower limits. 
+For example, the predictand may be the number of days with no rainfall over a fixed period.
+CPT will return an error message if any of the non-missing Y data are outside of the range 0 and <i>n</i>, where <i>n</i> is 
+the length of the period in days.
+The link function is the logistic link, and so the regression equation is of the form:
+<UL>
+<LI>Y = n / [n + exp[b0 + BX]]
+</UL>
+<LI><B>Poisson regression</B>: appropriate for Y-data that represent counts with no upper limit. 
+For example, the predictand may be the number of storms over a fixed period.
+CPT will return an error message if any of the non-missing Y data are less than 0. The form of the regression equation depends 
+on the link function (see further discussion below).
+<LI><B>Gamma regression</B>: appropriate for Y-data that have a lower limit of 0 and are positively skewed. 
+For example, the predictand may be amount of rainfall.
+CPT will return an error message if any of the non-missing Y data are less than 0.
+The gamma regression is similar to the <A HREF="Options_Transform.html">gamma transformation</A> option, but is a 
+mathematically more suitable way of fitting the model. When the Y data follow a gamma distribution, the error variance of the 
+larger values is greater than of the smaller values, and a GLM model will accout for this difference. The form of the 
+regression equation depends on the link function (see further discussion below).
+</UL>
+For Poisson and gamma regression, the following link functions are available:
+<UL>
+<LI><B>Identity</B>: Assumes that Y is a linear function of the predictor(s). If the identity link function is chosen (the 
+default), the regression equation is the same as for ordinary least-squares regression (but a weighted form of regression is 
+used):
+<UL>
+<LI>Y = b0 + BX
+</UL>
+<LI><B>Inverse</B>: Assumes that Y is a reciprocal function of the predictor(s). The inverse link is the canonical link for 
+gamma regression. If the inverse link function is selected the regression equation is:
+<UL>
+<LI>Y = 1 / [b0 + BX]
+</UL>
+<LI><B>Logarithmic</B>: Assumes that Y is an exponential function of the predictor(s). The logarithmic link is the canonical 
+link for Poisson regression. If the logarithmic link function is selected the regression equation is:
+<UL>
+<LI>Y = Exp [b0 + BX]
+</UL>
+<LI><B>Square root</B>: Assumes that Y is squared function of the predictor(s). If the square root link function is selected the 
+regression equation is:
+<UL>
+<LI>Y = [b0 + BX] ** 2
+</UL>
+
+The scatter plot shown in <A HREF="Tools_Models_Regression.html">Tools ~ Models ~ Regression</A> will no longer show a straight 
+line model fit if a non-linear link function is used, but the non-linear nature of the regression is indicated by the 
+equation.<P>
+
+When using one of the GLMs, it is recommended that one of the information criteria be used as the 
+<A HREF="Options_Goodness.html">goodness index</A>.<P>
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

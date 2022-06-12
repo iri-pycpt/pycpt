@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<TITLE> Options: Masking Settings </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>Masking Settings</font></p>
+
+<H2>537: Masking Settings</H2>
+Two types of masking can be applied to exclude variables (i.e., gridpoints, stations or indices) either from the analysis or 
+from the forecasting:
+<UL>
+<LI><B>Dry-masking</B> excludes all variables that have an average value of less than the threshold indicated by "dry mask". It 
+is designed to act as a dry-mask, but in practice it can be applied to any variable. The dry mask can only be set before 
+running <A HREF="Actions_Calculate.html">Actions ~ Calculate</A>. The average used to apply the mask is calculated 
+using all data from the training period rather than the climatological average, so any variables that are omitted are 
+consistently omitted regardless of the climatological period. These variables are treated as if they were missing values.
+<LI><B>Skill-masking</B> applies only when calculating retroactive forecasts and when running 
+<A HREF="Tools_Forecast.html">Tools ~ Forecast</A>. If the skill is less than the threshold indicated by "skill mask" then 
+climatological forecasts will be issued. The skill can be measured using:
+<UL>
+<LI><B>Pearson's correlation</B>
+<LI><B>Spearman's correlation</B>
+<LI><B>Kendall's tau</B>
+</UL>
+The skill is calculated using either the
+<UL>
+<LI><B>cross-validated hindcasts, or</B>
+<LI><B>retroactive hindcasts, or</B>
+<LI><B>fitted values</B>
+</UL>
+depending upon how the forecast error variance (as set in <A HREF="Options_Forecast.html">Options ~ Forecast</A>) is 
+calculated. The skill masking can be reset after running <A HREF="Actions_Calculate.html">Actions ~ Calculate</A>.
+</UL>
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

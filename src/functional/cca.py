@@ -1,9 +1,9 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-import pandas as pd 
-from cpttools import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10
+from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10, convert_np64_datetime
 import xarray as xr 
+import datetime as dt 
 
 def canonical_correlation_analysis(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
@@ -17,7 +17,7 @@ def canonical_correlation_analysis(
         crossvalidation_window=5,  # number of samples to leave out in each cross-validation step 
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
-        validation='double-crossvalidation', #type of leave-n-out crossvalidation to use
+        validation='crossvalidation', #type of leave-n-out crossvalidation to use
         synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
@@ -101,11 +101,7 @@ def canonical_correlation_analysis(
     cpt.write(x_eof_modes[0])
     cpt.write(x_eof_modes[1])
 
-    # load F dataset if present 
-    if F is not None: 
-        to_cptv10(F, cpt.outputs['out_of_sample_predictor'], row=f_lat_dim, col=f_lon_dim, T=f_sample_dim)
-        cpt.write(3)
-        cpt.write(cpt.outputs['out_of_sample_predictor'].absolute())
+  
 
     # load Y Dataset 
     to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
@@ -177,6 +173,11 @@ def canonical_correlation_analysis(
 
 
     if F is not None: 
+        # load F dataset if present 
+        to_cptv10(F, cpt.outputs['out_of_sample_predictor'], row=f_lat_dim, col=f_lon_dim, T=f_sample_dim)
+        cpt.write(3)
+        cpt.write(cpt.outputs['out_of_sample_predictor'].absolute())
+        
         cpt.write(454) # deterministic forecasts 
 
         cpt.write(111)
@@ -303,9 +304,13 @@ def canonical_correlation_analysis(
     y_eof_loadings.name = "y_eof_loadings"
     y_eof_loadings.coords['Mode'] = y_eof_scores.coords['Mode'].values
 
-    pattern_values = [ x_cca_scores, y_cca_scores, x_eof_scores, y_eof_scores, x_cca_loadings, y_cca_loadings, x_eof_loadings, y_eof_loadings]
-    pattern_values = xr.merge(pattern_values)
-    pattern_values.coords[x_sample_dim] = [pd.Timestamp(str(i)) for i in pattern_values.coords[x_sample_dim].values]
+    x_pattern_values = [ x_cca_scores,  x_eof_scores, x_cca_loadings,  x_eof_loadings,]
+    x_pattern_values = xr.merge(x_pattern_values)
+    x_pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in x_pattern_values.coords[x_sample_dim].values]
 
-    return hcsts, fcsts, skill_values, pattern_values 
+    y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings ]
+    y_pattern_values = xr.merge(y_pattern_values)
+    y_pattern_values.coords[y_sample_dim] = [convert_np64_datetime(i) for i in y_pattern_values.coords[y_sample_dim].values]
+
+    return hcsts, fcsts, skill_values, x_pattern_values, y_pattern_values  
 

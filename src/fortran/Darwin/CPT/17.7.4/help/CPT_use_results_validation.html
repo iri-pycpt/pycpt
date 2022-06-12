@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Model Validation Measures </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_results.html" class=link>Viewing the Results</a>
+<font color="black">-></font>
+<font class=gray>Model Validation Measures </font></p>
+
+<H2>Model Validation Measures</H2>
+Forecast performance scores and graphics can be obtained for the cross-validated forecasts, and if the retroactive forecast 
+option was selected then results for these forecasts is also available.
+Using the <A HREF="Tools_Validate.html">Tools ~ Validation</A> menu item, select whether it is the cross-validated or the 
+retroactive forecasts that are to be verified, and then whether performance statistics, bootstrap confidence interval and 
+permutation significance tests, contingency tables, or scatter and residual plots should be provided for an individual series, 
+or a map/bar chart (depending on whether the Y data are in gridded/station format) for all series. A validation window will 
+open.<P>
+
+<H3>Performance Measues</H3>
+The <A HREF="Tools_Validate_Series.html">Performance Measures</A> window for an individual series provides a variety of 
+forecast performance scores divided into those based on continuous measures, and those based on measures in which the 
+observations, and in some cases the forecasts as well, are divided into three categories. The continuous forecast measures 
+calculated are:
+<UL>
+<LI><B>Pearson's product moment correlation coefficient</B>, which describes the strength of the linear association between the 
+forecasts and the observations;
+<LI><B>Spearman's rank order correlation coefficient</B>, which describes the strength of the monotonic association between the 
+forecasts and the observations;
+<LI><B>2AFC score (continuous)</B>, which indicates the probability of correctly discriminating a higher from a lower value 
+(e.g., the wetter or warmer of two observations);
+<LI><B>Mean squared error</B>, which defines the average squared difference between each forecast and observation;
+<LI><B>Root mean squared error</B>, which is the square root of the mean squared error;
+<LI><B>Mean absolute error</B>, which defines the average amount by which the forecast was incorrect;
+<LI><B>Bias</B>, which defines the difference between the mean of the forecasts and the mean of the observations.
+<LI><B>Variance Ratio</B>, which is the variance of the forecasts divided by the variance of the observations.
+</UL>
+The categorical forecast measures are:
+<UL>
+<LI><B>Hit score</B>, which defines the percentage of times the forecast category corresponds with the observed category;
+<LI><B>Hit skill score</B>, which defines the percentage of times, beyond that expected by chance, the forecast category 
+corresponds with the observed category;
+<LI><B>LEPS score</B>, which calculates a score defined using a scoring table that gives different scores for hits and
+depending on the observed category and on the prior probabilities of the categories;
+<LI><B>Gerrity score</B>, which calculates a score defined using an alternative scoring table to that for the LEPS score;
+<LI><B>2AFC (forecast categories)</B>, which indicates the probability of correctly discriminating an observation in a higher 
+category from one in a lower (e.g., an "above-normal" observation from a "normal" observation) given the forecasts expressed
+in categorical form ("above-normal", "normal", or "below-normal");
+<LI><B>2AFC (continuous forecasts)</B>, which indicates the probability of correctly discriminating an observation in a higher 
+category from one in a lower (e.g., an "above-normal" observation from a "normal" observation) given the forecasts expressed
+in deterministic form (i.e., the forecasts values shown in the accompanying graph);
+<LI><B>ROC area (below-normal)</B>, which defines the area beneath the ROC curve for forecasts of the below-normal category, 
+and gives the proportion of times that below-normal conditions can be distinguished successfully from the other categories;
+<LI><B>ROC area (above-normal)</B>, which defines the area beneath the ROC curve for forecasts of the above-normal category, 
+and gives the proportion of times that above-normal conditions can be distinguished successfully from the other categories.
+</UL>
+Beneath the continuous measures is a graph showing the forecasts (green line) and observations (red line). The graph is divided 
+vertically into three categories. The definition of these categories is explained later in 
+<A HREF="CPT_use_custom.html">Customising the Results</A>.<P>
+
+Beneath the categorical measures are relative operating characteristic (ROC) graphs for the above- (red line) and below-normal 
+(blue line) categories. The observations are categorised using cross-validated category definitions (see <B>Contingency 
+Tables</B> for further details on the definitions of the categories), but the forecasts are considered on the continuous scale. 
+The forecasts are ranked, and the forecast with the highest value is taken as the most confident forecast for above-normal 
+conditions, and that with the lowest value is taken as the least confident forecast. For forecasts of below-normal conditions, 
+this ranking is inverted so that the forecast with the highest value is taken as the most confident forecast for below-normal 
+conditions, and that with the highest value is taken as the least confident forecast. The areas beneath the graphs are given 
+under the categorical skill measures above the ROC graph.<P>
+
+Scores and graphs are shown for one series at a time. Information for the desired series can be shown by setting the 
+appropriate number at the top left of the validation window. A series that has been omitted in the calculations is skipped 
+when cycling through the series using the arrows.<P>
+
+<H3>Bootstrap Results</H3>
+The <A HREF="Tools_Validate_Bootstrap.html">Bootstrap</A> window provides confidence limits and significance tests for a 
+variety of forecast performance scores. The confidence limits are calculated using bootstrap resampling, and provide an 
+indication of the sampling errors in each performance measure. The bootstrap confidence level used is indicated, and can be 
+adjusted using the <A HREF="Options_ResamplingSetting.html">Options ~ Resampling Settings</A> menu item. The actual sample 
+scores are indicated, and are the same as those provided by <A HREF="Tools_Validate_series.html">Performance Measures</A>.<P>
+
+As well as providing confidence limits, significance levels are also provided. The p-value indicates the probability that the 
+sample score would be bettered by chance. Permutation procedures are used to calculate the p-values. The accuracy of the 
+p-values depends upon the number of permutations, which can be set using the 
+<A HREF="Options_ResamplingSetting.html">Options ~ Resampling Settings</A> menu item. It is recommended that at least 200 
+permutations be used, and more if computation time permits.<P>
+
+<H3>Skill Maps</H3>
+If the <A HREF="Tools_Validate_Map.html">Skill Map</A> option is chosen, a window showing a map (if the Y data are 
+gridded/stations) or a bar chart (otherwise) for all series will be shown. It is possible to choose which score to use for the 
+map, simply by checking the button next to the dsired score.<P>
+
+<H3>Scatter Plots</H3>
+The <A HREF="Tools_Validate_Scatter.html">Scatter Plots</A> option shows a graph of the forecast residuals (differences between 
+the forecasts and the observations), as well as a scatter plot of the observations against the forecasts. The scatter plot 
+includes horizontal and veritical divisions that indicate the three categories. In both cases the divisions are defined by the 
+terciles of the observations using all the cases. A best fit linear regression line is shown on the scatter plot, but only over 
+the range of the forecasts.<P>
+
+<H3>Contingency Tables</H3>
+The <A HREF="Tools_Validate_Tables.html">Contingency Table</A> window provides frequency and contingency tables for the 
+forecasts. The frequency tables give the counts of forecasts for each of three categories, marked below-normal (B), normal (N), 
+and above-normal (A), and the number of times each of the three catgories verified. Column totals are given showing the total 
+numbers of times that each of the three categories were forecast/observed. The total number of forecasts is also provided, and 
+for cross-validated forecasts should indicate the total number of cases available, as specified on the Input Window. The 
+contingency tables indicate the percentages of times that each of the three categories verified given the forecast category, 
+and can be obtained from the frequency tables by simply dividing each element in the table by the respective column total. The 
+row totals on the contingency tables indicate the percentage of times that the observations were in each category, and should 
+be identical on the variance-adjusted and unadjusted tables. The column totals on the contingency tables indicate the relative 
+frequency with which the best-guess forecast was in each category.<P>
+
+Note that the contingency tables are calculated based on the category that the best-guess forecast is in rather than on the 
+most probable category. It is often incorrectly assumed that if the best-guess forecast is in the middle ("normal") category 
+then that category is the most likely to occur. For low-skill forecasts, the best-guess forecast will be in the normal category 
+most of the time, but the normal category will rarely be the category with the highest probability. Given these interpretation
+problems, it is recommended that the contingency tabels be used with caution.<P>
+
+
+<A HREF="CPT_use_results.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_results_verification.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>

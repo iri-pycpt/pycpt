@@ -301,6 +301,17 @@ def install_cpt_windows(version=CPT_DEFAULT_VERSION):
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE.parents[0]
 
+def install_cpt_windows2():
+    assert platform.system() == 'Windows', 'On Unix, you should be using install_cpt_unix'
+    CPT_INSTALLER = Path(__file__).parents[0]/ 'fortran' / f'CPT_batch_installation_17.7.5.exe'
+    cptspacevar = Path(__file__).parents[0]/ 'fortran' / platform.system() 
+    cptspacevar = str(cptspacevar) if str(cptspacevar)[:2] != "C:" else str(cptspacevar)[2:] 
+    subprocess.call([str(CPT_INSTALLER.absolute()), '/SP-', '/VERYSILENT', '/NOCANCEL', f'/DIR={cptspacevar}'])
+    CPT_EXECUTABLE = Path(__file__).parents[0]/ 'fortran' / platform.system() / 'CPT' / '17.7.5' / 'CPT_batch.exe'
+    assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
+    return CPT_EXECUTABLE
+
+
 
 def find_cpt(version=CPT_DEFAULT_VERSION):
     assert version in CPT_VALID_VERSIONS, f'PyCPT Requires CPT version to be one of {CPT_VALID_VERSIONS}'

@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<TITLE> Actions: Cross-validated </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Actions.html" class=link>Actions</a>
+<font color="black">-></font>
+<a href="Actions_Calculate.html" class=link>Calculate</a>
+<font color="black">-></font>
+<font class=gray>Cross-validated </font></p>
+ 
+<H2>311: Cross-validated </H2>
+The cross-validated calculation option fits a <A HREF="View_CCA.html">CCA</A>, <A HREF="View_PCR.html">PCR</A>, or 
+<A HREF="View_MLR.html">MLR</A> model using all data within the training period. It also works with the 
+<A HREF="View_GCM.html">GCM</A> option. The option produces cross-validated forecasts for each year in the training period. 
+These cross-validated forecasts, and therefore the available validation statistics, are purely deterministic: no uncertainty 
+estimates are generated. If a set of past probabilistic forecasts is required the <A HREF="Actions_Retro.html">retroactive</A> 
+of the <A HREF="Actions_CV2.html">doube cross-validation</A> option should be selected.<P>
+
+At each cross-validation step <i>k</i> (by default, <i>k</i> = 5) consecutive years are omitted from the training period, where 
+<i>k</i> is the <A HREF="Options_CV.html">length of the cross-validation window</A>, and the middle year of the years that were 
+omitted from the training sample is forecast. This process is repeated with another set of <i>k</i> years omitted until a 
+cross-validated prediction has been made for each year in the training period. At each step, the model is completely 
+reconstructed, including, if appropriate, recalculating the principal components, and redefining the category thresholds.<P>
+
+Towards the beginning and end of the training period the cross-validation window is looped to ensure that exactly <i>k</i> 
+years are always omitted. For example, if <i>k</i> = 5, when forecasting the first year, the first three years are omitted 
+together with the last two; when forecasting the second year, the first four years are omitted together with the last one.<P>
+
+The cross-validated forecasts are made available for <A HREF="File_Output_Results.html">output</A> to a file, and for 
+<A HREF="Tools_Validate_CV.html">performance analyses</A> within CPT. Note that all the information regarding the definitions 
+of the model used to make a <A HREF="Tools_Forecast.html">forecast</A>, such as the <A HREF="Tools_Models.html">principal 
+components and CCA modes</A> or the <A HREF="Tools_Models_Regression.html">regression model</A>, is based on the results using 
+all the data within the training period, but all the results regarding the performance of the model (validation) are based on 
+the cross-validated forecasts.<P>
+<P>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

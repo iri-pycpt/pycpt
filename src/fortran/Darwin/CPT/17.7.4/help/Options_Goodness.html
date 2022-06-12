@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<TITLE> Options: Goodness Index </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>Goodness Index </font></p>
+ 
+<H2>531: Goodness Index</H2>
+The goodness of fit index can be interpreted as the average correlation or information criterion between the cross-validated 
+forecasts and observations for all series. (If the <A HREF="Options_Data_Transform.html">Transform Y Data</A> is on then the 
+cross-validated correlation / information criterion is between the transformed forecasts and observations.) However, if the 
+Pearson's or Spearman's correlation coefficient is used, rather than simply calculating an arithmetic average of the 
+correlations, the correlations are first transformed to the Fisher z-scale, averaged, and then transformed back to the 
+correlation scale (except in the case where any of the correlations are +/-1.0, in which case a simple average is calculated). 
+The Fisher z-scale transform is used for Pearson's and Spearman's correlations because a simple average of these coefficients 
+does not make mathematical sense for a variaety of reasons 
+(<A HREF="https://psycnet.apa.org/fulltext/1987-14534-001.html">Silver and Dunlap 1987</A>).<P>
+
+The <B>Goodness Index</B> menu permits the user to change the score used to calculate the index. Since version 11, the default 
+coefficient has been Kendall's correlation, but in prior versions Pearson's correlation was used. Since version 17, various
+information criteria have been available; these criteria may be preferable when using one of the Generalized Linear Model (GLM)
+options in CPT. (See <A HREF="Options_Regression.html">Regression Options</A> for further details on GLMs.
+
+Kendall's correlation is set as the default because CPT then attempts to maximise the discriminatory power of the forecasts and 
+is insensitive to the distribution of the data. However, if it is considered important to minimise the squared errors in the 
+forecasts then Pearson's correlation may be a preferred option. Note that selecting Pearson's correlation when the 
+<A HREF="Options_Data_Transform.html">Transform Y Data</A> is on is not generally to be recommended because it can result in 
+Pearson's skill scores that are noticeably poorer than the goodness index might suggest. Similarly, if the Y data are not
+normally distributed and the <A HREF="Options_Data_Transform.html">Transform Y Data</A> option is off and a GLM is not being
+used the use of Kendall's or Spearman's correlation is recommended.<P>
+
+If you elect to use one of the information criteria, in most cases the Bayesian Information Criterion (BIC) is preferred over 
+the Akaike (AIC), but the Mutual Information Criterion (MIC) may be most suitable when using CCA or PCR 
+(<A HREF="https://onlinelibrary.wiley.com/doi/full/10.1002/sta4.385">DelSole and Tippett 2021</A>).
+
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+ 
+

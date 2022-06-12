@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Model Details </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_results.html" class=link>Viewing the Results</a>
+<font color="black">-></font>
+<font class=gray>Model Details</font></p>
+ 
+<H2>Model Details</H2>
+A range of graphical results for the prediction models are available depending on what <A HREF="View.html">View</A> option was 
+used.
+
+<H3>Principal Component and CCA Modes</H3>
+<UL>
+<LI><B>Scree Plots.</B> These plots show the percentage of variance explained by each X and Y mode. The percentages are shown 
+for all modes regardless of the numbers that were specified for use. The plots can be useful in selecting the appropriate 
+number(s) of X or Y modes to retain. One method for selecting the number of modes involves identifying "elbows" in the scree 
+plot. The number of modes up to, but not including, the elbow are retained on the basis that the additional modes explain 
+similar amounts of variance, which are assumed to be largely noise. Elbows are often easier to identify when the percentage 
+variance is plotted on a logarithmic axis. An option to use <A HREF="Tools_Models_Scree.html">logarithmic axes</A> is available 
+by right-clicking on the scree plots and using the <B>Customise</B> option. Another method for selecting the number of models 
+is to compare the explained variance of each mode to that expected from random data. A computationally and conceptually simple 
+such approach is based on the random stick theorem, which involves randomly dividing the total variance into segments and 
+considering the expected size of the <i>n</i>th largest segment. The sizes of the random stick segments can be included on the 
+scree plot by an option available by right-clicking on the plot. The broken stick will only show if the axis is linear, and the 
+graph is not cumulative.
+<LI><B>Loadings and Scores.</B> If gridded/station data are used, a map of the spatial loadings for each mode is shown, 
+together with the temporal scores. If forecasts have been made, the score(s) for the X modes are shown as bold crosses on the 
+temporal scores graph. The loadings are shown in the form of correlations between the original gridded/station data 
+and the temporal scores. If the data are unreferenced, a bar chart of the correlations is shown instead. If the loadings are 
+saved to an output file, the actual loadings are saved rather than the correlations shown in the map. The graphics for each 
+mode can be cycled by using the arrows at the top left of the graphics window, or by typing in the requisite number. Depending 
+on your computer speed, you may need to wait a short time for the new graphics to display.
+<LI><B>CCA Maps.</B> The CCA maps (or bar charts if the data are unreferenced) show similar results to the Loadings and Scores, 
+but show the correlations between the original gridded/station/index data and the temporal scores for the corresponding X and Y 
+components of the CCA modes together. The corresponding X and Y temporal scores are shown on the centre graph (the red line is 
+for the X variables, and the green line is for the Y variables). It is the correlation between the curves on this central graph 
+that CCA attempts to maximise. If forecasts have been made, the score(s) for the X component of the CCA modes are shown as bold 
+crosses on the temporal scores graph. Again the loadings and scores for different CCA modes can be displayed using the control 
+at the top left of the CCA maps window. As with the X and Y loadings and scores, the results can be saved to an output file, 
+but the actual weights are saved rather than the correlations between the original gridded/station/index data and the temporal 
+scores for the corresponding X and Y components of the CCA modes. The weights are known as "homogeneous maps" (even for 
+unreferenced data).
+</UL>
+<H3>Regression Models</H3>
+If <A HREF="View_MLR.html">Multiple Linear Regression (MLR)</A>, 
+<A HREF="View_PCR.html">Principal Components Regression (PCR)</A> or 
+<A HREF="View_GCM.html">Genereal Circulation Model (GCM)</A> is used, the regression equation(s) for estimating the value of 
+the Y variable using the X variable(s) are shown. If there is only one X variable, a graph will also be shown comparing the 
+predictor with the predictand. This graph is different to that shown in the 
+<A HREF="Tools_Validate_Scatter.html">Scatter Plot</A>: the scatter plot compares the cross-validated predictions with the 
+observations, whereas the <B>Regression Plot</B> compares the predictors with the observations.<P>
+
+The titles of all graphs can be customised by right-clicking on the graph. The data can be saved using the 
+<A HREF="File_OutputResults.html">File~Output Results</A> menu item.
+<P>
+<A HREF="CPT_use_results_verification.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_forecast.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+

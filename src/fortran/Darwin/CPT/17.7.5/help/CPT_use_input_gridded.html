@@ -1,0 +1,416 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Gridded Datasets </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_input.html" class=link>Input Datasets</a>
+<font color="black">-></font>
+<font class=gray>Gridded Datasets</font></p>
+ 
+<H2>Gridded Datasets</H2>
+
+Gridded data files organise data in blocks with each block representing a common period and field, with the rows representing 
+latitudes and the columns longitudes. Compulsory tags are:<P>
+<UL>
+<LI>cpt:T=<I>time period for which the data are valid (in <A HREF="CPT_dates.html">ISO8601 format</A>)</I>
+<LI>cpt:nrow=<I>number of latitudes</I>
+<LI>cpt:ncol=<I>number of longitudes</I>
+<LI>cpt:row=Y <I>(representing latitudes)</I>
+<LI>cpt:col=X <I>(representing longitudes)</I>
+</UL>
+Optional tags are:
+<UL>
+<LI>cpt:field=<I>abbreviated name of the field variable</I>
+<LI>cpt:model=<I>name of model</I>
+<LI>cpt:M=<I>ensemble member number</I>
+<LI>cpt:S=<I>start date (in <A HREF="CPT_dates.html">ISO8601 format</A>)</I> (indicating when the forecast was 
+initialized, cf. the compulsory cpt:T tag, which gives the target season of the forecast)
+<LI>cpt:units=<I>units in which the data are stored</I>
+<LI>cpt:missing=<I>missing value flag</I>
+</UL>
+Any additional tags are ignored. For further details, see the section on <A HREF="CPT_use_input_tags.html">CPT tags</A>.<P>
+
+Immediately after this tag line there is a line listing all the longitudes from west to east. The longitudes must be between 
+-180 and 360, with negative values representing the western hemisphere. There must be <I>ncol</I> longitudes. The data follow 
+in the subsequent <I>nrow</I> rows, with the first value representing the latitude. Latitudes must be between 90 and -90, with 
+negative values representing the southern hemisphere. The data can be from north to south or from south to north.<P>
+
+If there is only one field and there are no lagged fields (e.g., more than one season per year) then the data for the 
+subsequent date should follow. All tag values should remain the same or be omitted, except for cpt:T=<I>time</I> (and 
+cpt:S=<I>time</I>, if present). For example, if the data are SST anomalies in Celsius, the file might look something like the 
+following:
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:T=1980-01
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+</PRE>
+<P>
+
+It is possible for some of the dates to be missing, although there are some restrictions. For further details see the section 
+on <A HREF="CPT_use_settings_missing.html">missing values</A>.<P>
+
+If there are lagged fields the additional lags can either be included as subsequent dates, or listed as a separate field. For 
+example, in the example below data for January and February of each year are included. Since CPT is looking for one value per 
+year, the February data will be treated as a lagged field. In effect the February data are an extra field, but since they have 
+a different date rather than being a different meteorological parameter they are handled as a lagged field. Because the 
+February values are recognised as lagged fields, there are only two years of data available for the training period in the 
+example. CPT will identify the number of years in the file, recognising that there is one lagged field. The latitudes and 
+longitudes for different lagged fields do not have to be the same, but they do need to be consistent from year to year.<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:T=1979-02
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -1.34563  -0.23456  -0.98857  -0.37327
+-61.25  -2.23454  -3.21124  -1.99463  -2.44437
+-63.75  -4.00043  -3.05441  -2.12645  -1.40078
+cpt:T=1980-01
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:T=1980-02
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.34256  -0.23346   0.26537  -0.67278
+-61.25  -1.07636  -0.96765  -0.85677  -1.14531
+-63.75  -1.34254  -1.04553  -0.25831   0.82646
+</PRE>
+<P>
+
+In the example above, cpt:nfields could have been set as 2, in which case February would have been treated as a separate
+field rather than as a lagged field. The results are exactly the same either way, but the results for the different months 
+will be accessed slightly differently.<P>
+
+If there is a second field the first data for the second field can come either immediately after the first data for the first 
+field ("unstacked"), or all the data for the second field can come after all of the data for the first field have been listed 
+("stacked"). If there are lagged fields, and the data for the second field are unstacked, the second field should come before 
+the first data for any lagged field. The latitudes and longitudes for the two fields do not have to be identical. The missing 
+value flag can be unique to each field.
+
+Thus a file with two unstacked fields may look something like the following:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=2
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:field=mslp, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:field=ssta, cpt:T=1980-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:field=mslp, cpt:T=1980-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+</PRE>
+<P>
+
+If the fields are stacked the same data would be formatted as follows:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=2
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:T=1980-01
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:field=mslp, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:T=1980-01
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+</PRE>
+<P>
+
+No specific indication is given to CPT as to whether the fields are stacked or unstacked. CPT will identify the stacking 
+automatically.<P>
+
+A file with 2 fields, each with one lagged field must be ordered as follows:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=2
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:field=mslp, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:field=ssta, cpt:T=1979-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -1.34563  -0.23456  -0.98857  -0.37327
+-61.25  -2.23454  -3.21124  -1.99463  -2.44437
+-63.75  -4.00043  -3.05441  -2.12645  -1.40078
+cpt:field=mslp, cpt:T=1979-02, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.0   1000.7   1000.7
+-61.25   1002.0   1003.9   1001.6
+-63.75   1004.4   1002.6   1002.7
+cpt:field=ssta, cpt:T=1980-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:field=mslp, cpt:T=1980-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+cpt:field=ssta, cpt:T=1980-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.34256  -0.23346   0.26537  -0.67278
+-61.25  -1.07636  -0.96765  -0.85677  -1.14531
+-63.75  -1.34254  -1.04553  -0.25831   0.82646
+cpt:field=mslp, cpt:T=1980-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-9999
+        -18.75    -16.25    -13.75
+-58.75   1001.7   1000.6   1000.1
+-61.25   1003.7   1001.8   1000.5
+-63.75   1001.5   1001.5   1000.6
+</PRE>
+<P>
+
+Alternatively the fields can be stacked as follows:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=2
+cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:T=1979-02
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -1.34563  -0.23456  -0.98857  -0.37327
+-61.25  -2.23454  -3.21124  -1.99463  -2.44437
+-63.75  -4.00043  -3.05441  -2.12645  -1.40078
+cpt:T=1980-01
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:T=1980-02
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.34256  -0.23346   0.26537  -0.67278
+-61.25  -1.07636  -0.96765  -0.85677  -1.14531
+-63.75  -1.34254  -1.04553  -0.25831   0.82646
+cpt:field=mslp, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:T=1979-02
+        -18.75    -16.25    -13.75
+-58.75   1001.0   1000.7   1000.7
+-61.25   1002.0   1003.9   1001.6
+-63.75   1004.4   1002.6   1002.7
+cpt:T=1980-01
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+cpt:T=1980-02
+        -18.75    -16.25    -13.75
+-58.75   1001.7   1000.6   1000.1
+-61.25   1003.7   1001.8   1000.5
+-63.75   1001.5   1001.5   1000.6
+</PRE>
+<P>
+
+If lagged fields are included and there are multiple fields, all fields must have the same number of lagged fields. If this
+restriction is undesirable, then the lagged fields could be listed as separate fields, For example, if SST anomaly data for 
+January and February are wanted, but MSLP data are wanted only for one month then the file could be constructed as follows:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=3
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:field=ssta, cpt:T=1979-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -1.34563  -0.23456  -0.98857  -0.37327
+-61.25  -2.23454  -3.21124  -1.99463  -2.44437
+-63.75  -4.00043  -3.05441  -2.12645  -1.40078
+cpt:field=mslp, cpt:T=1979-03/04, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:field=ssta, cpt:T=1980-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:field=ssta, cpt:T=1980-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.34256  -0.23346   0.26537  -0.67278
+-61.25  -1.07636  -0.96765  -0.85677  -1.14531
+-63.75  -1.34254  -1.04553  -0.25831   0.82646
+cpt:field=mslp, cpt:T=1980-03/04, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+</PRE>
+<P>
+
+or as a stacked field:<P>
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=3
+cpt:field=ssta, cpt:T=1979-01, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.40977  -1.40228  -1.01278  -1.03197
+-61.25  -3.65581  -3.18779  -2.28418  -1.45435
+-63.75  -3.54459  -3.04635  -2.07969  -1.32451
+cpt:T=1980-01
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.22299  -0.68736   0.27909  -0.42638
+-61.25  -1.13313  -0.56869  -1.02204  -1.09111
+-63.75  -1.40550  -1.10838  -0.37565   0.88614
+cpt:field=ssta, cpt:T=1979-02, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=C, cpt:missing=-9999
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -1.34563  -0.23456  -0.98857  -0.37327
+-61.25  -2.23454  -3.21124  -1.99463  -2.44437
+-63.75  -4.00043  -3.05441  -2.12645  -1.40078
+cpt:T=1980-02
+        -18.75    -16.25    -13.75    -11.25
+-58.75  -2.34256  -0.23346   0.26537  -0.67278
+-61.25  -1.07636  -0.96765  -0.85677  -1.14531
+-63.75  -1.34254  -1.04553  -0.25831   0.82646
+cpt:field=mslp, cpt:T=1979-03/04, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mb, cpt:missing=-10
+        -18.75    -16.25    -13.75
+-58.75   1001.2   1000.6   1000.9
+-61.25   1002.8   1003.2   1001.0
+-63.75   1004.4   1002.6   1002.5
+cpt:T=1980-03/04
+        -18.75    -16.25    -13.75
+-58.75   1001.9   1000.6   1000.5
+-61.25   1003.7   1001.5   1000.7
+-63.75   1001.3   1001.6   1000.7
+</PRE>
+<P>
+
+Note that the dates and the averaging periods for the fields do not have to be the same.<P>
+
+It is possible for some of the dates to be missing, although there are some restrictions. For further details see the section 
+on <A HREF="CPT_use_settings_missing.html">missing values</A>.<P>
+
+To verify gridded forecasts in CPT using the <a href="View_PFV.html">Probabilistic Forecast Verification (PFV)</a> 
+option the X file needs to contain the tag cpt:ncat=3, indicating that the file contains probabilities for three categories. 
+The first block of data should then contain the probabilities for category 1, which is the below-normal category. The category 
+number should be indicated using the <a href="CPT_use_input_tags.html">cpt:C</a> tag, and, optionally, the 
+climatological probability for the category, by using the <a href="CPT_use_input_tags.html">cpt:clim_prob</a> tag. 
+The forecasts for categories 2 and 3 should then follow immediately, as if they were unstacked fields. For example, a gridded 
+probabilistic forecast input file might look something like the following:
+
+<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:ncats=3
+cpt:field=prec, cpt:C=1, cpt:clim_prob=0.333333333333, cpt:T=1991-10/12, cpt:nrow=3, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=%, cpt:missing=-9999
+        32.25    32.75    33.25    33.75
+5.75       50       50       45       40
+5.25       40       35       35       25
+4.75       35       25       25       15
+cpt:C=2, cpt:clim_prob=0.333333333334
+        32.25    32.75    33.25    33.75
+5.75       35       30       35       40
+5.25       35       40       45       35
+4.75       40       35       30       25
+cpt:C=3, cpt:clim_prob=0.333333333333
+        32.25    32.75    33.25    33.75
+5.75       15       20       20       20
+5.25       25       25       20       40
+4.75       25       40       45       60
+cpt:C=1, cpt:clim_prob=0.333333333333, cpt:T=1992-10/12
+...
+</PRE>
+<P>
+
+<A HREF="CPT_use_input.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_input_stations.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>

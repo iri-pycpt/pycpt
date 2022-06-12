@@ -1,0 +1,233 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Station Datasets </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_input.html" class=link>Input Datasets</a>
+<font color="black">-></font>
+<font class=gray>Station Datasets</font></p>
+ 
+<H2>Station Datasets</H2>
+
+Station data files organise data in blocks with each block representing a field, with the rows representing time, and the 
+columns stations. The tags are similar to those for <A HREF="CPT_use_input_gridded.html">gridded data</A>. Compulsory tags 
+are:<P>
+<UL>
+<LI>cpt:nrow=<I>number of time steps</I>
+<LI>cpt:ncol=<I>number of stations</I>
+<LI>cpt:row=T <I>(representing time)</I>
+<LI>cpt:col=station
+</UL>
+The best way to organise a station dataset is to have successive months in each row. The number of time steps will then be 
+equal to the 12 x the number of years of data available (plus the number of any additional months available). With all months 
+present in the file, CPT will attempt to detect the season automatically, or prompt for the season. Organised in this way, the 
+same input file can then be used for any season.<P>
+
+If the first twelve time steps are not consecutive months, CPT will expect the number of time steps to be equal to the number 
+of years available multiplied by the number of lags. For example, if data are available for January and Feburary 1971 to 2000 
+there are two months (one lagged field) and 30 years of data, making a total of 60 time steps. Alternatively, lagged fields 
+can be included as additional fields, and the number of time steps indicated as 30 for each. If there are multiple fields then 
+only the number of time steps for the current field should be listed. If any of the months are missing in the file, cpt:nrow 
+should specify the number of time steps that are availiable. For example, if the data for February 1980 are missing then 
+cpt:nrow should indicate 59 time steps. Alternatively, if the month is included in the file but all the stations have missing 
+values listed then cpt:nrow should indicate that 60 time steps are available. See the section on 
+<A HREF="CPT_use_settings_missing.html">missing values</A> for further details.<P>
+
+Optional tags are:
+<UL>
+<LI>cpt:field=<I>abbreviated name of the field variable</I>
+<LI>cpt:units=<I>units in which the data are stored</I>
+<LI>cpt:missing=<I>missing value flag</I>
+</UL>
+Any additional tags are ignored. For further details, see the section on <A HREF="CPT_use_input_tags.html">CPT tags</A>.<P>
+
+Immediately beneath the tag-line should be a line containing the names, or some kind of unique identifying reference, for each 
+of the ncol stations. The name for each station must not be longer than 16 characters, and should contain no spaces. The 
+latitudes and longitudes of each station then follow on the next two lines. The line for the longitudes must begin with "cpt:X" 
+and that for the latitudes with "cpt:Y". It does not matter whether the latitudes or the longitudes are listed first. As with 
+the <A HREF="CPT_use_input_gridded.html">gridded data</A>, latitudes must be between 90 and -90 with negative latitudes 
+representing the southern hemisphere, and longitudes must be between -180 and 360, with negative longitudes representing the 
+western hemisphere. Additional tagged lines may follow, as in the example below, which includes a line for elevation and one 
+for province. These lines are currently ignored, and are not included in any output files.<P>
+
+The data are arranged in columns by station as the "cpt:col" tag indicates, but the first column must contain the 
+corresponding date. The date format is the same as for <A HREF="CPT_use_input_gridded.html">grdded data</A>. The seasonal 
+average format with the "/" separator is permissible. If the data are input as consecutive months, the file should look 
+something like the following:<P> 
+
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:field=prcp, cpt:nrow=14, cpt:ncol=6, cpt:row=T, cpt:col=station, cpt:units=mm/month, cpt:missing=-2.
+              A       B       C       D       E       F
+cpt:X    -87.05  -87.88  -88.13  -87.58  -86.32  -87.62
+cpt:Y     31.07   30.55   32.83   32.70   31.95   34.75
+cpt:elev   85 m    23 m   125 m   220 m   594 m   536 m
+1981-01    1.46    0.94    1.42    1.94    0.92    1.45
+1981-02   11.20   11.59    8.02    6.01    7.29    4.03
+1981-03    4.61    2.59    6.94    7.97    5.58    3.70
+1981-04    0.50    1.24    6.93    5.89    2.77    2.38
+1981-05    5.25   11.88    2.49    3.45    3.30    3.65
+1981-06    3.92    2.51    2.95    4.08    3.09    5.35
+1981-07    7.96    5.05    5.00    2.43    4.26    6.07
+1981-08    5.29    6.28    6.80    6.01    6.65    6.57
+1981-09    1.84    1.11    2.60    0.74    1.69    1.33
+1981-10    1.63    1.90    3.52    5.20    2.60    3.11
+1981-11    2.02    0.81    0.80    0.75    2.08    3.98
+1981-12    7.52    5.88    5.99    6.92    7.86    1.85
+1982-01    6.42    3.23    6.50    7.83    4.72    7.46
+1982-02   12.19    9.58    8.80    7.41    9.15    4.08
+</PRE>
+
+For annually sequenced data:<P>
+
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:field=prcp, cpt:nrow=8, cpt:ncol=6, cpt:row=T, cpt:col=station, cpt:units=mm/month, cpt:missing=-2.
+              A       B       C       D       E       F
+cpt:X    -87.05  -87.88  -88.13  -87.58  -86.32  -87.62
+cpt:Y     31.07   30.55   32.83   32.70   31.95   34.75
+cpt:elev   85 m    23 m   125 m   220 m   594 m   536 m
+1981-01    1.46    0.94    1.42    1.94    0.92    1.45
+1982-01    6.42    3.23    6.50    7.83    4.72    7.46
+1983-01    4.75    6.60    3.82    4.23    3.46    2.57
+1984-01    4.49    5.74    4.20    3.37   -2.00    2.64
+1985-01    5.81    5.08    3.32    3.96    4.48    3.14
+1986-01    6.76    3.80    1.15    1.31    3.42    0.60
+1987-01    6.70    6.35    7.04    9.08    4.38    3.52
+1988-01    7.20    4.38    3.56    6.86   -2.00    2.51
+
+</PRE>
+
+With an additional lagged field, the file may look like this:<P>
+
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:field=prcp, cpt:nrow=8, cpt:ncol=6, cpt:row=T, cpt:col=station, cpt:units=mm/month, cpt:missing=-2.
+              A       B       C       D       E       F
+cpt:X    -87.05  -87.88  -88.13  -87.58  -86.32  -87.62
+cpt:Y     31.07   30.55   32.83   32.70   31.95   34.75
+cpt:elev   85 m    23 m   125 m   220 m   594 m   536 m
+1981-01    1.46    0.94    1.42    1.94    0.92    1.45
+1981-02   11.20   11.59    8.02    6.01    7.29    4.03
+1982-01    6.42    3.23    6.50    7.83    4.72    7.46
+1982-02   12.19    9.58    8.80    7.41    9.15    4.08
+1983-01    4.75    6.60    3.82    4.23    3.46    2.57
+1983-02    8.70   11.61    6.61   12.49    8.39    5.20
+1984-01    4.49    5.74    4.20    3.37   -2.00    2.64
+1984-02    2.65    5.95    4.27    4.33    4.41    3.63
+</PRE>
+
+It is possible for some of the dates to be missing, although there are some restrictions. For further details see the section 
+on <A HREF="CPT_use_settings_missing.html">missing values</A>.<P>
+
+Any additional fields are included immediately after the data, starting with a new tag-line. All fields must have the same 
+number of lagged fields, but the lags do not have to be the same. The number of stations, their locations, and the missing 
+value flag can all differ from the first field. Even the dates can differ, but the sequencing must be identical, and the first 
+time steps of each fild are assumed to correspond. An example is shown below.<P>
+
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=2
+cpt:field=prcp, cpt:nrow=8, cpt:ncol=5, cpt:row=T, cpt:col=station, cpt:units=mm/month, cpt:missing=-2.
+                   A       B       C       D       E
+cpt:X        122.006 121.050 121.633 120.600 121.557
+cpt:Y         14.102  14.083  18.367  16.417  15.757
+cpt:elev         5 m    10 m  1503 m    25 m     6 m
+cpt:Province       Z       Y       X       W       V
+2000-01         -2.0   121.5   124.0    98.0    95.5
+2000-02        345.5    87.5   224.0   173.5    34.5
+2001-01        428.5    93.5   301.0   104.0    -2.0
+2001-02        341.0   126.0   156.0   130.0    62.5
+2002-01         -2.0    34.0   185.5    75.5    71.5
+2002-02	       117.5    72.0    94.0   216.0    67.5
+2003-01	       143.5    34.5   241.0   134.5     4.5
+2003-02        355.0    81.5   137.5    62.5     7.0
+cpt:field=temp, cpt:nrow=10, cpt:ncol=4, cpt:row=T, cpt:col=station, cpt:units=C, cpt:missing=-2.
+                   A       B       C       D
+cpt:X        122.006 121.050 121.633 120.600
+cpt:Y         14.102  14.083  18.367  16.417
+cpt:elev         5 m    10 m  1503 m    25 m
+cpt:Province       Z       Y       X       W
+2000-01         -2.0    23.3    14.4    22.1
+2000-02         20.4    24.9    17.6    23.6
+2001-01         23.3    24.8    15.8    25.4
+2001-02         25.7    25.7    13.0    24.2
+2002-01         -2.0    24.6    17.2    25.7
+2002-02	        25.8    22.7    18.3    23.8
+2003-01	        27.4    26.3    19.6    25.5
+2003-02         24.0    24.1    16.4    23.6
+2004-01	        26.6    25.2    16.9    24.3
+2004-02         24.4    23.7    16.3    22.1
+</PRE>
+
+In the example above the second field has more years than the first. CPT will recognise that there are at most five years in 
+the file and will treat 2004 in the first field as missing data.<P>
+
+To verify station forecasts in CPT using the <a href="View_PFV.html">Probabilistic Forecast Verification (PFV)</a> 
+option the X file needs to contain the tag cpt:ncat=3, indicating that the file contains probabilities for three categories. 
+The first block of data should then contain the probabilities for category 1, which is the below-normal category. The category 
+number should be indicated using the <a href="CPT_use_input_tags.html">cpt:C</a> tag, and, optionally, the 
+climatological probability for the category, by using the <a href="CPT_use_input_tags.html">cpt:clim_prob</a> tag. 
+The forecasts for categories 2 and 3 should then follow immediately, as if they were unstacked fields. For example, a station 
+probabilistic forecast input file might look something like the following:<P>
+<PRE>
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:ncats=3																			
+cpt:field=prcp, cpt:C=1, cpt:clim_prob=0.333333333333, cpt:nrow=3, cpt:ncol=4, cpt:row=T, cpt:col=station, cpt:units=%, cpt:missing=-9999
+                A     B     C     D
+cpt:Y        18.2  17.1  13.2  15.2
+cpt:X       -63.1 -61.8 -59.6 -55.2
+2000-01/03  -9999 -9999 -9999 -9999
+2001-01/03     50    50    45    40
+2002-01/03     35    25    25    15
+cpt:C=2, cpt:clim_prob=0.333333333334
+                A     B     C     D
+cpt:Y        18.2  17.1  13.2  15.2
+cpt:X       -63.1 -61.8 -59.6 -55.2
+2000-01/03  -9999 -9999 -9999 -9999
+2001-01/03     35    40    45    35
+2002-01/03     40    35    30    25
+cpt:C=3, cpt:clim_prob=0.333333333333
+                A     B     C     D
+cpt:Y        18.2  17.1  13.2  15.2
+cpt:X       -63.1 -61.8 -59.6 -55.2
+2000-01/03  -9999 -9999 -9999 -9999
+2001-01/03     25    25    20    40
+2002-01/03     25    40    45    60
+</PRE>
+<P>
+
+
+<A HREF="CPT_use_input_gridded.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_input_indices.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript">
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>

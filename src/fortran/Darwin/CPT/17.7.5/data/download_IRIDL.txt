@@ -1,0 +1,2297 @@
+cpt:ddt=obs
+cpt:var=ENSO, cpt:ivar=300, cpt:nsource=1
+cpt:csource=ENSO
+.false.                   ! - password protected? -
+index                     ! - data structure -
+1                         ! - number of datasets -
+1856                      ! - first year of data -
+monthly                   ! - temporal resolution of data -
+4                         ! - number of indices -
+NINO12
+NINO3
+NINO34
+NINO4                     ! - variables -
+iridl.ldeo.columbia.edu/  ! - dataset portal -
+.Indices/.nino/.EXTENDED/ ! - source URL -
+NINO12/
+NINO3/
+NINO34/
+NINO4/                    ! - variable URLs -
+
+cpt:var=sst, cpt:ivar=80, cpt:nsource=2
+cpt:csource=ERSST5, cpt:isource=1
+.false.                       ! - password protected? -
+grid                          ! - data structure -
+1                             ! - number of datasets -
+1854                          ! - first year of data -
+monthly                       ! - temporal resolution of data -
+0                             ! - number of pressure levels -
+88                            ! - number of latitudes -
+180                           ! - number of longitudes -
+ 88.00000                     ! - northern limits -
+-88.00000                     ! - southern limits -
+  0.00000                     ! - western limits -
+358.00000                     ! - eastern limits -
+.false.                       ! - north-south orientation? -
+.false.                       ! - summed variables? -
+N/A                           ! - unit conversions -
+iridl.ldeo.columbia.edu/      ! - dataset portal -
+.NOAA/.NCDC/.ERSST/.version5/ ! - source URL -
+.sst/                         ! - variable URL -
+
+cpt:csource=OISST2, cpt:isource=2
+.false.                                     ! - password protected? -
+grid                                        ! - data structure -
+1                                           ! - number of datasets -
+1981                                        ! - first year of data                         -
+monthly                                     ! - temporal resolution of data -
+0                                           ! - number of pressure levels -
+720                                         ! - number of latitudes -
+1440                                        ! - number of longitudes -
+ 89.875                                     ! - northern limits -
+-89.875                                     ! - southern limits -
+ -0.125                                     ! - western limits -
+359.625                                     ! - eastern limits -
+.false.                                     ! - north-south orientation? -
+.false.                                     ! - summed variables? -
+N/A                                         ! - unit conversions -
+iridl.ldeo.columbia.edu/                    ! - dataset portal -
+.NOAA/.NCDC/.OISST/.version2/.AVHRR/        ! - source URL -
+.sst/lon/(X)/renameGRID/lat/(Y)/renameGRID/ ! - variable URL -
+
+cpt:var=Tmean, cpt:ivar=11, cpt:nsource=1
+cpt:csource=CRU_4.05
+.true.                      ! - password protected? -
+grid                        ! - data structure -
+1                           ! - number of datasets -
+1901                        ! - first year of data -
+monthly                     ! - temporal resolution of data -
+0                           ! - number of pressure levels -
+360                         ! - number of latitudes -
+720                         ! - number of longitudes -
+  89.7500                   ! - northern limits -
+ -89.7500                   ! - southern limits -
+-179.7500                   ! - western limits -
+ 179.7500                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.UEA/.CRU/.TS4p05/.monthly/ ! - source URL -
+tmp/                        ! - variable URLs -
+
+cpt:var=Tmax, cpt:ivar=15, cpt:nsource=2
+cpt:csource=CRU_4.05, cpt:isource=1
+.true.                       ! - password protected? -
+grid                         ! - data structure -
+1                            ! - number of datasets -
+1901                         ! - first year of data -
+monthly                      ! - temporal resolution of data -
+0                            ! - number of pressure levels -
+360                          ! - number of latitudes -
+720                          ! - number of longitudes -
+  89.7500                    ! - northern limits -
+ -89.7500                    ! - southern limits -
+-179.7500                    ! - western limits -
+ 179.7500                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.UEA/.CRU/.TS4p05/.monthly/  ! - source URL -
+tmx/                         ! - variable URLs -
+
+cpt:csource=CHIRTS_1, cpt:isource=2
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+1                                         ! - number of datasets -
+1981                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+0                                         ! - number of pressure levels -
+2600                                      ! - number of latitudes -
+7200                                      ! - number of longitudes -
+  69.975                                  ! - northern limits -
+ -59.975                                  ! - southern limits -
+-179.975                                  ! - western limits -
+ 179.975                                  ! - eastern limits -
+.true.                                    ! - north-south orientation? -
+.true.                                    ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.UCSB/.CHIRTS/.v1.0/.daily/.global/.0p05/ ! - source URL -
+.tmax/monthlyAverage/                     ! - variable URL -
+
+cpt:var=Tmin, cpt:ivar=16, cpt:nsource=2
+cpt:csource=CRU_4.05, cpt:isource=2
+.true.                      ! - password protected? -
+grid                        ! - data structure -
+1                           ! - number of datasets -
+1901                        ! - first year of data -
+monthly                     ! - temporal resolution of data -
+0                           ! - number of pressure levels -
+360                         ! - number of latitudes -
+720                         ! - number of longitudes -
+  89.7500                   ! - northern limits -
+ -89.7500                   ! - southern limits -
+-179.7500                   ! - western limits -
+ 179.7500                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.UEA/.CRU/.TS4p05/.monthly/ ! - source URL -
+tmn/                        ! - variable URLs -
+
+cpt:csource=CHIRTS_1, cpt:isource=2
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+1                                         ! - number of datasets -
+1981                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+0                                         ! - number of pressure levels -
+2600                                      ! - number of latitudes -
+7200                                      ! - number of longitudes -
+  69.975                                  ! - northern limits -
+ -59.975                                  ! - southern limits -
+-179.975                                  ! - western limits -
+ 179.975                                  ! - eastern limits -
+.true.                                    ! - north-south orientation? -
+.true.                                    ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.UCSB/.CHIRTS/.v1.0/.daily/.global/.0p05/ ! - source URL -
+.tmin/monthlyAverage/                     ! - variable URL -
+
+cpt:var=prcp, cpt:ivar=61, cpt:nsource=4
+cpt:csource=CRU_4.05, cpt:isource=1
+.true.                      ! - password protected? -
+grid                        ! - data structure -
+1                           ! - number of datasets -
+1901                        ! - first year of data -
+monthly                     ! - temporal resolution of data -
+0                           ! - number of pressure levels -
+360                         ! - number of latitudes -
+720                         ! - number of longitudes -
+  89.7500                   ! - northern limits -
+ -89.7500                   ! - southern limits -
+-179.7500                   ! - western limits -
+ 179.7500                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.true.                      ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.UEA/.CRU/.TS4p05/.monthly/ ! - source URL -
+pre/                        ! - variable URLs -
+
+cpt:csource=GPCC_7, cpt:isource=2
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+1                                         ! - number of datasets -
+1901                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+0                                         ! - number of pressure levels -
+360                                       ! - number of latitudes -
+720                                       ! - number of longitudes -
+  89.7500                                 ! - northern limits -
+ -89.7500                                 ! - southern limits -
+-179.7500                                 ! - western limits -
+ 179.7500                                 ! - eastern limits -
+.true.                                    ! - north-south orientation? -
+.true.                                    ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.WCRP/.GCOS/.GPCC/.FDP/.version2018/.0p5/ ! - source URL -
+.prcp/                                    ! - variable URL -
+
+cpt:csource=CHIRPS_2, cpt:isource=3
+.false.                               ! - password protected? -
+grid                                  ! - data structure -
+1                                     ! - number of datasets -
+1981                                  ! - first year of data -
+daily                                 ! - temporal resolution of data -
+0                                     ! - number of pressure levels -
+2000                                  ! - number of latitudes -
+7200                                  ! - number of longitudes -
+  49.9750                             ! - northern limits -
+ -49.9750                             ! - southern limits -
+-180.0000                             ! - western limits -
+ 179.9500                             ! - eastern limits -
+.true.                                ! - north-south orientation? -
+.true.                                ! - summed variables? -
+N/A                                   ! - unit conversions -
+iridl.ldeo.columbia.edu/              ! - dataset portal -
+.UCSB/.CHIRPS/.v2p0/.monthly/.global/ ! - source URL -
+.precipitation/                       ! - variable URL -
+
+cpt:csource=CHIRPS_2_(NMME), cpt:isource=4
+.false.                                            ! - password protected? -
+grid                                               ! - data structure -
+1                                                  ! - number of datasets -
+1981                                               ! - first year of data -
+monthly                                            ! - temporal resolution of data -
+0                                                  ! - number of pressure levels -
+99                                                 ! - number of latitudes -
+360                                                ! - number of longitudes -
+  49.0                                             ! - northern limits -
+ -49.0                                             ! - southern limits -
+   0.0                                             ! - western limits -
+ 359.0                                             ! - eastern limits -
+.false.                                            ! - north-south orientation? -
+.true.                                             ! - summed variables? -
+N/A                                                ! - unit conversions -
+iridl.ldeo.columbia.edu/                           ! - dataset portal -
+.UCSB/.CHIRPS/.v2p0/.monthly/.global/.NMME_deg1p0/ ! - source URL -
+.precipitation/                                    ! - variable URL -
+
+cpt:var=wetdays, cpt:ivar=193, cpt:nsource=1
+cpt:csource=CRU_4.05
+.true.                      ! - password protected? -
+grid                        ! - data structure -
+1                           ! - number of datasets -
+1901                        ! - first year of data -
+monthly                     ! - temporal resolution of data -
+0                           ! - number of pressure levels -
+360                         ! - number of latitudes -
+720                         ! - number of longitudes -
+  89.7500                   ! - northern limits -
+ -89.7500                   ! - southern limits -
+-179.7500                   ! - western limits -
+ 179.7500                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.true.                      ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.UEA/.CRU/.TS4p05/.monthly/ ! - source URL -
+wet/                        ! - variable URLs -
+
+cpt:ddt=reanalyses
+cpt:var=mslp, cpt:ivar=2, cpt:nsource=1
+cpt:csource=CDAS-1
+.false.                            ! - password protected? -
+grid                               ! - data structure -
+1                                  ! - number of datasets -
+1949                               ! - first year of data -
+monthly                            ! - temporal resolution of data -
+0                                  ! - number of pressure levels -
+73                                 ! - number of latitudes -
+144                                ! - number of longitudes -
+ 90.00000                          ! - northern limits -
+-90.00000                          ! - southern limits -
+  0.00000                          ! - western limits -
+357.50000                          ! - eastern limits -
+.true.                             ! - north-south orientation? -
+.false.                            ! - summed variables? -
+N/A                                ! - unit conversions -
+iridl.ldeo.columbia.edu/           ! - dataset portal -
+.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/ ! - source URL -
+.Intrinsic/.MSL/.pressure/         ! - variable URLs -
+
+cpt:var=gph, cpt:ivar=7, cpt:nsource=1
+cpt:csource=CDAS-1
+.false.                            ! - password protected? -
+grid                               ! - data structure -
+1                                  ! - number of datasets -
+1949                               ! - first year of data -
+monthly                            ! - temporal resolution of data -
+17                                 ! - number of pressure levels -
+73                                 ! - number of latitudes -
+144                                ! - number of longitudes -
+ 90.00000                          ! - northern limits -
+-90.00000                          ! - southern limits -
+  0.00000                          ! - western limits -
+357.50000                          ! - eastern limits -
+.true.                             ! - north-south orientation? -
+.false.                            ! - summed variables? -
+N/A                                ! - unit conversions -
+iridl.ldeo.columbia.edu/           ! - dataset portal -
+.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/ ! - source URL -
+.Intrinsic/.PressureLevel/.phi/    ! - variable URLs -
+P 1000 925 850 700 600 500 400 300 250 200 150 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:var=u, cpt:ivar=33, cpt:nsource=1
+cpt:csource=CDAS-1
+.false.                            ! - password protected? -
+grid                               ! - data structure -
+1                                  ! - number of datasets -
+1949                               ! - first year of data -
+monthly                            ! - temporal resolution of data -
+17                                 ! - number of pressure levels -
+73                                 ! - number of latitudes -
+144                                ! - number of longitudes -
+ 90.00000                          ! - northern limits -
+-90.00000                          ! - southern limits -
+  0.00000                          ! - western limits -
+357.50000                          ! - eastern limits -
+.true.                             ! - north-south orientation? -
+.false.                            ! - summed variables? -
+N/A                                ! - unit conversions -
+iridl.ldeo.columbia.edu/           ! - dataset portal -
+.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/ ! - source URL -
+.Intrinsic/.PressureLevel/.u/      ! - variable URLs -
+P 1000 925 850 700 600 500 400 300 250 200 150 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:var=v, cpt:ivar=34, cpt:nsource=1
+cpt:csource=CDAS-1
+.false.                            ! - password protected? -
+grid                               ! - data structure -
+1                                  ! - number of datasets -
+1949                               ! - first year of data -
+monthly                            ! - temporal resolution of data -
+17                                 ! - number of pressure levels -
+73                                 ! - number of latitudes -
+144                                ! - number of longitudes -
+ 90.00000                          ! - northern limits -
+-90.00000                          ! - southern limits -
+  0.00000                          ! - western limits -
+357.50000                          ! - eastern limits -
+.true.                             ! - north-south orientation? -
+.false.                            ! - summed variables? -
+N/A                                ! - unit conversions -
+iridl.ldeo.columbia.edu/           ! - dataset portal -
+.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/ ! - source URL -
+.Intrinsic/.PressureLevel/.v/      ! - variable URLs -
+P 1000 925 850 700 600 500 400 300 250 200 150 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:var=uv, cpt:ivar=32, cpt:nsource=1
+cpt:csource=CDAS-1
+.false.                            ! - password protected? -
+grid                               ! - data structure -
+1                                  ! - number of datasets -
+1949                               ! - first year of data -
+monthly                            ! - temporal resolution of data -
+17                                 ! - number of pressure levels -
+73                                 ! - number of latitudes -
+144                                ! - number of longitudes -
+ 90.00000                          ! - northern limits -
+-90.00000                          ! - southern limits -
+  0.00000                          ! - western limits -
+357.50000                          ! - eastern limits -
+.true.                             ! - north-south orientation? -
+.false.                            ! - summed variables? -
+N/A                                ! - unit conversions -
+iridl.ldeo.columbia.edu/           ! - dataset portal -
+.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/ ! - source URL -
+.Intrinsic/.PressureLevel/.u/SOURCES/.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/.Intrinsic/.PressureLevel/.v/decompress/{u/v}ds/ ! - variable URLs -
+P 1000 925 850 700 600 500 400 300 250 200 150 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:ddt=gcmouts
+cpt:var=Tmean, cpt:ivar=11, cpt:nsource=14
+cpt:csource=CFS2, cpt:isource=11
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1981                       ! - first year of hindcasts -
+2011 03 01                 ! - first date of forecasts -
+monthly                    ! - temporal resolution of data -
+24                         ! - number of ensemble members in hindcasts -
+32                         ! - number of ensemble members in forecasts -
+0                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+N/A                        ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/ ! - source URL -
+.HINDCAST/.MONTHLY/.tref/
+.FORECAST/.EARLY_MONTH_SAMPLES/.MONTHLY/.tref/ ! - variable URLs -
+
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                  ! - password protected? -
+grid                     ! - data structure -
+N/A                      ! - model family -
+2                        ! - number of datasets -
+1982                     ! - first year of data -
+2011 04 01               ! - first date of forecasts -
+monthly                  ! - temporal resolution of data -
+24                       ! - number of ensemble members in hindcasts -
+24                       ! - number of ensemble members in forecasts -
+0                        ! - number of pressure levels -
+190                      ! - number of latitudes -
+384                      ! - number of longitudes -
+ 89.27665                ! - northern limits -
+-89.27665                ! - southern limits -
+  0.00000                ! - western limits -
+359.06250                ! - eastern limits -
+.true.                   ! - north-south orientation? -
+.false.                  ! - summed variables? -
+N/A                      ! - unit conversions -
+iridl.ldeo.columbia.edu/ ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/ ! - source URL -
+.ENSEMBLE/.FLXF/.2m_above_ground/.TMP/
+.REALTIME_ENSEMBLE/.FLXF/.2m_above_ground/.TMP/ ! - variable URL -
+
+cpt:csource=CFS2, cpt:isource=13
+.false.                               ! - password protected? -
+grid                                  ! - data structure -
+NMME (new)                            ! - model family -
+1                                     ! - number of datasets -
+1982                                  ! - first year of data -
+monthly                               ! - temporal resolution of data -
+28                                    ! - number of ensemble members in forecasts -
+0                                     ! - number of pressure levels -
+181                                   ! - number of latitudes -
+360                                   ! - number of longitudes -
+ 90.00000                             ! - northern limits -
+-90.00000                             ! - southern limits -
+  0.00000                             ! - western limits -
+359.00000                             ! - eastern limits -
+.true.                                ! - north-south orientation? -
+.false.                               ! - summed variables? -
+N/A                                   ! - unit conversions -
+iridl.ldeo.columbia.edu/              ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/            ! - source URL -
+.HINDCAST/.PENTAD_SAMPLES_FULL/.tref/ ! - variable URL -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                   ! - password protected? -
+grid                      ! - data structure -
+NMME                      ! - model family -
+2                         ! - number of datasets -
+1981                      ! - first year of data -
+2019 08 01                ! - first date of second dataset -
+monthly                   ! - temporal resolution of data -
+10                        ! - number of ensemble members in hindcasts -
+10                        ! - number of ensemble members in forecasts -
+0                         ! - number of pressure levels -
+181                       ! - number of latitudes -
+360                       ! - number of longitudes -
+ 90.00000                 ! - northern limits -
+-90.00000                 ! - southern limits -
+  0.00000                 ! - western limits -
+359.00000                 ! - eastern limits -
+.false.                   ! - north-south orientation? -
+.false.                   ! - summed variables? -
+N/A                       ! - unit conversions -
+iridl.ldeo.columbia.edu/  ! - dataset portal -
+.Models/.NMME/.CanCM4i/   ! - source URL -
+.HINDCAST/.MONTHLY/.tref/
+.FORECAST/.MONTHLY/.tref/ ! - variable URLs -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.tref/
+.FORECAST/.MONTHLY/.tref/   ! - variable URLs -
+
+cpt:csource=CCSM4, cpt:isource=41, cpt:ioldsource=4
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+10                                        ! - number of ensemble members -
+monthly                                   ! - temporal resolution of data -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.COLA-RSMAS-CCSM4/.MONTHLY/ ! - source URL -
+.tref/                                    ! - variable URLs -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.tref/                                    ! - variable URL -
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1992                       ! - first year of data -
+2020 12 01                 ! - first date of second dataset -
+monthly                    ! - temporal resolution of data -
+15                         ! - number of ensemble members in hindcasts -
+30                         ! - number of ensemble members in forecasts -
+0                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+N/A                        ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/ ! - source URL -
+.HINDCAST/.MONTHLY/.tref/  ! - variable URLs -
+.FORECAST/.MONTHLY/.tref/  ! - variable URLs -
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+0                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/.tref/    ! - variable URLs -
+.FORECAST/.MONTHLY/.tref/    ! - variable URLs -
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.t2m/
+.forecast/.t2m/                          ! - variable URLs -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.t2m/
+.forecast/.t2m/                          ! - variable URLs -
+
+cpt:csource=GloSea6-GC2-System600, cpt:isource=122
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2021 03 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+28                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/ ! - source URL -
+.hindcast/.t2m/
+.forecast/.t2m/                          ! - variable URLs -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+0                                       ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+N/A                                     ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.t2m/
+.forecast/.t2m/                         ! - variable URLs -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.t2m/
+.forecast/.t2m/                          ! - variable URLs -
+
+cpt:var=Tmax, cpt:ivar=15, cpt:nsource=4
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                                          ! - password protected? -
+grid                                             ! - data structure -
+N/A                                              ! - model family -
+2                                                ! - number of datasets -
+1982                                             ! - first year of data -
+2011 04 01                                       ! - first date of forecasts -
+monthly                                          ! - temporal resolution of data -
+24                                               ! - number of ensemble members in hindcasts -
+24                                               ! - number of ensemble members in forecasts -
+0                                                ! - number of pressure levels -
+190                                              ! - number of latitudes -
+384                                              ! - number of longitudes -
+ 89.27665                                        ! - northern limits -
+-89.27665                                        ! - southern limits -
+  0.00000                                        ! - western limits -
+359.06250                                        ! - eastern limits -
+.true.                                           ! - north-south orientation? -
+.false.                                          ! - summed variables? -
+N/A                                              ! - unit conversions -
+iridl.ldeo.columbia.edu/                         ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/                         ! - source URL -
+.ENSEMBLE/.FLXF/.2m_above_ground/.TMAX/
+.REALTIME_ENSEMBLE/.FLXF/.2m_above_ground/.TMAX/ ! - variable URL -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.t_ref_max/                               ! - variable URLs -
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                       ! - password protected? -
+grid                          ! - data structure -
+NMME                          ! - model family -
+2                             ! - number of datasets -
+1992                          ! - first year of data -
+2020 12 01                    ! - first date of second dataset -
+monthly                       ! - temporal resolution of data -
+15                            ! - number of ensemble members in hindcasts -
+30                            ! - number of ensemble members in forecasts -
+0                             ! - number of pressure levels -
+181                           ! - number of latitudes -
+360                           ! - number of longitudes -
+ 90.00000                     ! - northern limits -
+-90.00000                     ! - southern limits -
+  0.00000                     ! - western limits -
+359.00000                     ! - eastern limits -
+.false.                       ! - north-south orientation? -
+.false.                       ! - summed variables? -
+N/A                           ! - unit conversions -
+iridl.ldeo.columbia.edu/      ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/    ! - source URL -
+.HINDCAST/.MONTHLY/.t_ref_max/ ! - variable URLs -
+.FORECAST/.MONTHLY/.t_ref_max/ ! - variable URLs -
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+0                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/.t2mmax/  ! - variable URLs -
+.FORECAST/.MONTHLY/.t2mmax/  ! - variable URLs -
+
+cpt:var=Tmin, cpt:ivar=16, cpt:nsource=4
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                  ! - password protected? -
+grid                     ! - data structure -
+N/A                      ! - model family -
+2                        ! - number of datasets -
+1982                     ! - first year of data -
+2011 04 01               ! - first date of forecasts -
+monthly                  ! - temporal resolution of data -
+24                       ! - number of ensemble members in hindcasts -
+24                       ! - number of ensemble members in forecasts -
+0                        ! - number of pressure levels -
+190                      ! - number of latitudes -
+384                      ! - number of longitudes -
+ 89.27665                ! - northern limits -
+-89.27665                ! - southern limits -
+  0.00000                ! - western limits -
+359.06250                ! - eastern limits -
+.true.                   ! - north-south orientation? -
+.false.                  ! - summed variables? -
+N/A                      ! - unit conversions -
+iridl.ldeo.columbia.edu/ ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/ ! - source URL -
+.ENSEMBLE/.FLXF/.2m_above_ground/.TMIN/
+.REALTIME_ENSEMBLE/.FLXF/.2m_above_ground/.TMIN/ ! - variable URL -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/ ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.t_ref_min/                               ! - variable URLs -
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                       ! - password protected? -
+grid                          ! - data structure -
+NMME                          ! - model family -
+2                             ! - number of datasets -
+1992                          ! - first year of data -
+2020 12 01                    ! - first date of second dataset -
+monthly                       ! - temporal resolution of data -
+15                            ! - number of ensemble members in hindcasts -
+30                            ! - number of ensemble members in forecasts -
+0                             ! - number of pressure levels -
+181                           ! - number of latitudes -
+360                           ! - number of longitudes -
+ 90.00000                     ! - northern limits -
+-90.00000                     ! - southern limits -
+  0.00000                     ! - western limits -
+359.00000                     ! - eastern limits -
+.false.                       ! - north-south orientation? -
+.false.                       ! - summed variables? -
+N/A                           ! - unit conversions -
+iridl.ldeo.columbia.edu/      ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/    ! - source URL -
+.HINDCAST/.MONTHLY/.t_ref_min/ ! - variable URLs -
+.FORECAST/.MONTHLY/.t_ref_min/ ! - variable URLs -
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+0                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/.t2mmin/  ! - variable URLs -
+.FORECAST/.MONTHLY/.t2mmin/  ! - variable URLs -
+
+cpt:var=prcp, cpt:ivar=61, cpt:nsource=14
+cpt:csource=CFS2, cpt:isource=10
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1981                       ! - first year of hindcasts -
+2011 03 01                 ! - first date of forecasts -
+monthly                    ! - temporal resolution of data -
+24                         ! - number of ensemble members in hindcasts -
+32                         ! - number of ensemble members in forecasts -
+0                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+(mm/day)/                  ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/ ! - source URL -
+.HINDCAST/.MONTHLY/.prec/
+.FORECAST/.EARLY_MONTH_SAMPLES/.MONTHLY/.prec/ ! - variable URLs -
+
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                                                ! - password protected? -
+grid                                                   ! - data structure -
+N/A                                                    ! - model family -
+2                                                      ! - number of datasets -
+1982                                                   ! - first year of data -
+2011 04 01                                             ! - first date of forecasts -
+monthly                                                ! - temporal resolution of data -
+24                                                     ! - number of ensemble members in hindcasts -
+24                                                     ! - number of ensemble members in forecasts -
+0                                                      ! - number of pressure levels -
+190                                                    ! - number of latitudes -
+384                                                    ! - number of longitudes -
+ 89.27665                                              ! - northern limits -
+-89.27665                                              ! - southern limits -
+  0.00000                                              ! - western limits -
+359.06250                                              ! - eastern limits -
+.true.                                                 ! - north-south orientation? -
+.false.                                                ! - summed variables? -
+c://name//water_density/def/998/(kg/m3):c/div/(mm/day) ! - unit conversions -
+iridl.ldeo.columbia.edu/                               ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/                               ! - source URL -
+.ENSEMBLE/.FLXF/.surface/.PRATE/
+.REALTIME_ENSEMBLE/.FLXF/.surface/.PRATE/              ! - variable URL -
+
+cpt:csource=CFS2, cpt:isource=13
+.false.                               ! - password protected? -
+grid                                  ! - data structure -
+NMME (new)                            ! - model family -
+1                                     ! - number of datasets -
+1982                                  ! - first year of data -
+monthly                               ! - temporal resolution of data -
+28                                    ! - number of ensemble members in forecasts -
+0                                     ! - number of pressure levels -
+181                                   ! - number of latitudes -
+360                                   ! - number of longitudes -
+ 90.00000                             ! - northern limits -
+-90.00000                             ! - southern limits -
+  0.00000                             ! - western limits -
+359.00000                             ! - eastern limits -
+.true.                                ! - north-south orientation? -
+.false.                               ! - summed variables? -
+N/A                                   ! - unit conversions -
+iridl.ldeo.columbia.edu/              ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/            ! - source URL -
+.HINDCAST/.PENTAD_SAMPLES_FULL/.prec/ ! - variable URL -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                   ! - password protected? -
+grid                      ! - data structure -
+NMME                      ! - model family -
+2                         ! - number of datasets -
+1981                      ! - first year of data -
+2019 08 01                ! - first date of second dataset -
+monthly                   ! - temporal resolution of data -
+10                        ! - number of ensemble members in hindcasts -
+10                        ! - number of ensemble members in forecasts -
+0                         ! - number of pressure levels -
+181                       ! - number of latitudes -
+360                       ! - number of longitudes -
+ 90.00000                 ! - northern limits -
+-90.00000                 ! - southern limits -
+  0.00000                 ! - western limits -
+359.00000                 ! - eastern limits -
+.false.                   ! - north-south orientation? -
+.false.                   ! - summed variables? -
+N/A                       ! - unit conversions -
+iridl.ldeo.columbia.edu/  ! - dataset portal -
+.Models/.NMME/.CanCM4i/   ! - source URL -
+.HINDCAST/.MONTHLY/.prec/
+.FORECAST/.MONTHLY/.prec/ ! - variable URLs -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.prec/
+.FORECAST/.MONTHLY/.prec/   ! - variable URLs -
+
+cpt:csource=CCSM4, cpt:isource=41, cpt:ioldsource=4
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.COLA-RSMAS-CCSM4/.MONTHLY/ ! - source URL -
+.prec/                                    ! - variable URLs -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.prec/                                    ! - variable URLs -
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1992                       ! - first year of data -
+2020 12 01                 ! - first date of second dataset -
+monthly                    ! - temporal resolution of data -
+15                         ! - number of ensemble members in hindcasts -
+30                         ! - number of ensemble members in forecasts -
+0                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+N/A                        ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/ ! - source URL -
+.HINDCAST/.MONTHLY/.prec/  ! - variable URLs -
+.FORECAST/.MONTHLY/.prec/  ! - variable URLs -
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+0                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/.prec/    ! - variable URLs -
+.FORECAST/.MONTHLY/.prec/    ! - variable URLs -
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+(mm/day)/                                ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.prcp/
+.forecast/.prcp/                         ! - variable URLs -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+(mm/day)/                                ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.prcp/
+.forecast/.prcp/                         ! - variable URLs -
+
+cpt:csource=GloSea6-GC2-System600, cpt:isource=122
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2021 03 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+28                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+(mm/day)/                                ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/ ! - source URL -
+.hindcast/.prcp/
+.forecast/.prcp/                         ! - variable URLs -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+0                                       ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+(mm/day)/                               ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.prcp/
+.forecast/.prcp/                        ! - variable URLs -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+(mm/day)/                                ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.prcp/
+.forecast/.prcp/                         ! - variable URLs -
+
+cpt:var=sst, cpt:ivar=80, cpt:nsource=14
+cpt:csource=CFS2, cpt:isource=11
+.false.                         ! - password protected? -
+grid                            ! - data structure -
+NMME                            ! - model family -
+2                               ! - number of datasets -
+1981                            ! - first year of hindcasts -
+2011 03 01                      ! - first date of forecasts -
+monthly                         ! - temporal resolution of data -
+24                              ! - number of ensemble members in hindcasts -
+32                              ! - number of ensemble members in forecasts -
+0                               ! - number of pressure levels -
+181                             ! - number of latitudes -
+360                             ! - number of longitudes -
+ 90.00000                       ! - northern limits -
+-90.00000                       ! - southern limits -
+  0.00000                       ! - western limits -
+359.00000                       ! - eastern limits -
+.false.                         ! - north-south orientation? -
+.false.                         ! - summed variables? -
+N/A                             ! - unit conversions -
+iridl.ldeo.columbia.edu/        ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/      ! - source URL -
+.HINDCAST/.MONTHLY/.sst/
+.FORECAST/.EARLY_MONTH_SAMPLES/.MONTHLY/.sst/ ! - variable URLs -
+
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                         ! - password protected? -
+grid                            ! - data structure -
+N/A                             ! - model family -
+2                               ! - number of datasets -
+1982                            ! - first year of data -
+2011 04 01                      ! - first date of forecasts -
+monthly                         ! - temporal resolution of data -
+24                              ! - number of ensemble members in hindcasts -
+24                              ! - number of ensemble members in forecasts -
+0                               ! - number of pressure levels -
+190                             ! - number of latitudes -
+384                             ! - number of longitudes -
+ 89.27665                       ! - northern limits -
+-89.27665                       ! - southern limits -
+  0.00000                       ! - western limits -
+359.06250                       ! - eastern limits -
+.true.                          ! - north-south orientation? -
+.false.                         ! - summed variables? -
+N/A                             ! - unit conversions -
+iridl.ldeo.columbia.edu/        ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/        ! - source URL -
+.ENSEMBLE/.OCNF/.surface/.TMP/
+.REALTIME_ENSEMBLE/.OCNF/.surface/.TMP/ ! - variable URL -
+
+cpt:csource=CFS2, cpt:isource=13
+.false.                              ! - password protected? -
+grid                                 ! - data structure -
+NMME (new)                           ! - model family -
+1                                    ! - number of datasets -
+1982                                 ! - first year of data -
+monthly                              ! - temporal resolution of data -
+28                                   ! - number of ensemble members in forecasts -
+0                                    ! - number of pressure levels -
+181                                  ! - number of latitudes -
+360                                  ! - number of longitudes -
+ 90.00000                            ! - northern limits -
+-90.00000                            ! - southern limits -
+  0.00000                            ! - western limits -
+359.00000                            ! - eastern limits -
+.true.                               ! - north-south orientation? -
+.false.                              ! - summed variables? -
+N/A                                  ! - unit conversions -
+iridl.ldeo.columbia.edu/             ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/           ! - source URL -
+.HINDCAST/.PENTAD_SAMPLES_FULL/.sst/ ! - variable URL -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                  ! - password protected? -
+grid                     ! - data structure -
+NMME                     ! - model family -
+2                        ! - number of datasets -
+1981                     ! - first year of data -
+2019 08 01               ! - first date of second dataset -
+monthly                  ! - temporal resolution of data -
+10                       ! - number of ensemble members in hindcasts -
+10                       ! - number of ensemble members in forecasts -
+0                        ! - number of pressure levels -
+181                      ! - number of latitudes -
+360                      ! - number of longitudes -
+ 90.00000                ! - northern limits -
+-90.00000                ! - southern limits -
+  0.00000                ! - western limits -
+359.00000                ! - eastern limits -
+.false.                  ! - north-south orientation? -
+.false.                  ! - summed variables? -
+N/A                      ! - unit conversions -
+iridl.ldeo.columbia.edu/ ! - dataset portal -
+.Models/.NMME/.CanCM4i/  ! - source URL -
+.HINDCAST/.MONTHLY/.sst/
+.FORECAST/.MONTHLY/.sst/ ! - variable URLs -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.sst/
+.FORECAST/.MONTHLY/.sst/    ! - variable URLs -
+
+cpt:csource=CCSM4, cpt:isource=41, cpt:ioldsource=4
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.COLA-RSMAS-CCSM4/.MONTHLY/ ! - source URL -
+.sst/                                     ! - variable URLs -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+0                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.sst/                                     ! - variable URLs -
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1992                       ! - first year of data -
+2020 12 01                 ! - first date of second dataset -
+monthly                    ! - temporal resolution of data -
+15                         ! - number of ensemble members in hindcasts -
+30                         ! - number of ensemble members in forecasts -
+0                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+N/A                        ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/ ! - source URL -
+.HINDCAST/.MONTHLY/.sst/   ! - variable URLs -
+.FORECAST/.MONTHLY/.sst/   ! - variable URLs -
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+0                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/sst/
+.FORECAST/.MONTHLY/sst/      ! - variable URLs -
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.sst/
+.forecast/.sst/                          ! - variable URLs -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.sst/
+.forecast/.sst/                          ! - variable URLs -
+
+cpt:csource=GloSea6-GC2-System600, cpt:isource=122
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2021 03 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+28                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/ ! - source URL -
+.hindcast/.sst/
+.forecast/.sst/                          ! - variable URLs -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+0                                       ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+N/A                                     ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.sst/
+.forecast/.sst/                         ! - variable URLs -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+0                                        ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.sst/
+.forecast/.sst/                          ! - variable URLs -
+
+cpt:var=gph, cpt:ivar=7, cpt:nsource=11
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                                        ! - password protected? -
+grid                                           ! - data structure -
+N/A                                            ! - model family -
+2                                              ! - number of datasets -
+1982                                           ! - first year of data -
+2011 04 01                                     ! - first date of forecasts -
+monthly                                        ! - temporal resolution of data -
+24                                             ! - number of ensemble members in hindcasts -
+24                                             ! - number of ensemble members in forecasts -
+32                                             ! - number of pressure levels -
+190                                            ! - number of latitudes -
+384                                            ! - number of longitudes -
+ 89.27665                                      ! - northern limits -
+-89.27665                                      ! - southern limits -
+  0.00000                                      ! - western limits -
+359.06250                                      ! - eastern limits -
+.true.                                         ! - north-south orientation? -
+.false.                                        ! - summed variables? -
+N/A                                            ! - unit conversions -
+iridl.ldeo.columbia.edu/                       ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/                       ! - source URL -
+.ENSEMBLE/.PGBF/.pressure_level/.HGT/
+.REALTIME_ENSEMBLE/.PGBF/.pressure_level/.HGT/ ! - variable URL -
+P 1000 975 950 925 900 875 850 825 800 775 750 700 650 600 550 500 450 400 350 300 250 225 200 175 150 125 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:csource=CFS2, cpt:isource=13
+.false.                              ! - password protected? -
+grid                                 ! - data structure -
+NMME (new)                           ! - model family -
+1                                    ! - number of datasets -
+1982                                 ! - first year of data -
+monthly                              ! - temporal resolution of data -
+28                                   ! - number of ensemble members in forecasts -
+1                                    ! - number of pressure levels -
+181                                  ! - number of latitudes -
+360                                  ! - number of longitudes -
+ 90.00000                            ! - northern limits -
+-90.00000                            ! - southern limits -
+  0.00000                            ! - western limits -
+359.00000                            ! - eastern limits -
+.true.                               ! - north-south orientation? -
+.false.                              ! - summed variables? -
+N/A                                  ! - unit conversions -
+iridl.ldeo.columbia.edu/             ! - dataset portal -
+.Models/.NMME/.NCEP-CFSv2/           ! - source URL -
+.HINDCAST/.PENTAD_SAMPLES_FULL/.hgt/ ! - variable URL -
+P 200                                ! - pressure levels -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                  ! - password protected? -
+grid                     ! - data structure -
+NMME                     ! - model family -
+2                        ! - number of datasets -
+1981                     ! - first year of data -
+2019 08 01               ! - first date of second dataset -
+monthly                  ! - temporal resolution of data -
+10                       ! - number of ensemble members in hindcasts -
+10                       ! - number of ensemble members in forecasts -
+2                        ! - number of pressure levels -
+181                      ! - number of latitudes -
+360                      ! - number of longitudes -
+ 90.00000                ! - northern limits -
+-90.00000                ! - southern limits -
+  0.00000                ! - western limits -
+359.00000                ! - eastern limits -
+.false.                  ! - north-south orientation? -
+.false.                  ! - summed variables? -
+N/A                      ! - unit conversions -
+iridl.ldeo.columbia.edu/ ! - dataset portal -
+.Models/.NMME/.CanCM4i/  ! - source URL -
+.HINDCAST/.MONTHLY/.hgt/
+.FORECAST/.MONTHLY/.hgt/ ! - variable URLs -
+P2 500 200               ! - pressure levels -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.hgt/
+.FORECAST/.MONTHLY/.hgt/    ! - variable URLs -
+P2 500 200                  ! - pressure levels -
+
+cpt:csource=GFDL-CM2p1-aer04, cpt:isource=54
+.false.                                   ! - password protected? -
+grid                                      ! - data structure -
+NMME                                      ! - model family -
+1                                         ! - number of datasets -
+1982                                      ! - first year of data -
+monthly                                   ! - temporal resolution of data -
+10                                        ! - number of ensemble members -
+1                                         ! - number of pressure levels -
+181                                       ! - number of latitudes -
+360                                       ! - number of longitudes -
+ 90.00000                                 ! - northern limits -
+-90.00000                                 ! - southern limits -
+  0.00000                                 ! - western limits -
+359.00000                                 ! - eastern limits -
+.false.                                   ! - north-south orientation? -
+.false.                                   ! - summed variables? -
+N/A                                       ! - unit conversions -
+iridl.ldeo.columbia.edu/                  ! - dataset portal -
+.Models/.NMME/.GFDL-CM2p1-aer04/.MONTHLY/ ! - source URL -
+.hght/                                    ! - variable URLs -
+P 200                                     ! - pressure levels
+
+cpt:csource=GFDL-SPEAR, cpt:isource=55
+.false.                    ! - password protected? -
+grid                       ! - data structure -
+NMME                       ! - model family -
+2                          ! - number of datasets -
+1992                       ! - first year of data -
+2020 12 01                 ! - first date of second dataset -
+monthly                    ! - temporal resolution of data -
+15                         ! - number of ensemble members in hindcasts -
+30                         ! - number of ensemble members in forecasts -
+1                          ! - number of pressure levels -
+181                        ! - number of latitudes -
+360                        ! - number of longitudes -
+ 90.00000                  ! - northern limits -
+-90.00000                  ! - southern limits -
+  0.00000                  ! - western limits -
+359.00000                  ! - eastern limits -
+.false.                    ! - north-south orientation? -
+.false.                    ! - summed variables? -
+N/A                        ! - unit conversions -
+iridl.ldeo.columbia.edu/   ! - dataset portal -
+.Models/.NMME/.GFDL-SPEAR/ ! - source URL -
+.HINDCAST/.MONTHLY/.h200/  ! - variable URLs -
+.FORECAST/.MONTHLY/.h200/  ! - variable URLs -
+P 200                      ! - pressure levels
+
+cpt:csource=NASA-GEOSS2S, cpt:isource=72
+.false.                      ! - password protected? -
+grid                         ! - data structure -
+NMME                         ! - model family -
+2                            ! - number of datasets -
+1981                         ! - first year of data -
+2017 11 01                   ! - first date of second dataset -
+monthly                      ! - temporal resolution of data -
+4                            ! - number of ensemble members in hindcasts -
+10                           ! - number of ensemble members in forecasts -
+1                            ! - number of pressure levels -
+181                          ! - number of latitudes -
+360                          ! - number of longitudes -
+ 90.00000                    ! - northern limits -
+-90.00000                    ! - southern limits -
+  0.00000                    ! - western limits -
+359.00000                    ! - eastern limits -
+.false.                      ! - north-south orientation? -
+.false.                      ! - summed variables? -
+N/A                          ! - unit conversions -
+iridl.ldeo.columbia.edu/     ! - dataset portal -
+.Models/.NMME/.NASA-GEOSS2S/ ! - source URL -
+.HINDCAST/.MONTHLY/.h500/    ! - variable URLs -
+.FORECAST/.MONTHLY/.h500/    ! - variable URLs -
+P 500                        ! - pressure levels
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.z/
+.forecast/.z/                            ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.z/
+.forecast/.z/                            ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+11                                      ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+N/A                                     ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.z/
+.forecast/.z/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.z/
+.forecast/.z/                            ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:var=u, cpt:ivar=33, cpt:nsource=8
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                                        ! - password protected? -
+grid                                           ! - data structure -
+N/A                                            ! - model family -
+2                                              ! - number of datasets -
+1982                                           ! - first year of data -
+2011 04 01                                     ! - first date of forecasts -
+monthly                                        ! - temporal resolution of data -
+24                                             ! - number of ensemble members in hindcasts -
+24                                             ! - number of ensemble members in forecasts -
+32                                             ! - number of pressure levels -
+190                                            ! - number of latitudes -
+384                                            ! - number of longitudes -
+ 89.27665                                      ! - northern limits -
+-89.27665                                      ! - southern limits -
+  0.00000                                      ! - western limits -
+359.06250                                      ! - eastern limits -
+.true.                                         ! - north-south orientation? -
+.false.                                        ! - summed variables? -
+N/A                                            ! - unit conversions -
+iridl.ldeo.columbia.edu/                       ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/                       ! - source URL -
+.ENSEMBLE/.PGBF/.pressure_level/.UGRD/
+.REALTIME_ENSEMBLE/.PGBF/.pressure_level/.UGRD/ ! - variable URL -
+P 1000 975 950 925 900 875 850 825 800 775 750 700 650 600 550 500 450 400 350 300 250 225 200 175 150 125 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                   ! - password protected? -
+grid                      ! - data structure -
+NMME                      ! - model family -
+2                         ! - number of datasets -
+1981                      ! - first year of data -
+2019 08 01                ! - first date of second dataset -
+monthly                   ! - temporal resolution of data -
+10                        ! - number of ensemble members in hindcasts -
+10                        ! - number of ensemble members in forecasts -
+2                         ! - number of pressure levels -
+181                       ! - number of latitudes -
+360                       ! - number of longitudes -
+ 90.00000                 ! - northern limits -
+-90.00000                 ! - southern limits -
+  0.00000                 ! - western limits -
+359.00000                 ! - eastern limits -
+.false.                   ! - north-south orientation? -
+.false.                   ! - summed variables? -
+N/A                       ! - unit conversions -
+iridl.ldeo.columbia.edu/  ! - dataset portal -
+.Models/.NMME/.CanCM4i/   ! - source URL -
+.HINDCAST/.MONTHLY/.ugrd/
+.FORECAST/.MONTHLY/.ugrd/ ! - variable URLs -
+P2 850 200                ! - pressure levels -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.ugrd/
+.FORECAST/.MONTHLY/.ugrd/   ! - variable URLs -
+P2 850 200                  ! - pressure levels -
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.ua/
+.forecast/.ua/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.ua/
+.forecast/.ua/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=GloSea6-GC2-System600, cpt:isource=122
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2021 03 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+28                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/ ! - source URL -
+.hindcast/.ua/
+.forecast/.ua/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+11                                      ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+N/A                                     ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.ua/
+.forecast/.ua/                          ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.ua/
+.forecast/.ua/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:var=v, cpt:ivar=34, cpt:nsource=8
+cpt:csource=CFS2, cpt:isource=12, cpt:ioldsource=1
+.false.                                         ! - password protected? -
+grid                                            ! - data structure -
+N/A                                             ! - model family -
+2                                               ! - number of datasets -
+1982                                            ! - first year of data -
+2011 04 01                                      ! - first date of forecasts -
+monthly                                         ! - temporal resolution of data -
+24                                              ! - number of ensemble members in hindcasts -
+24                                              ! - number of ensemble members in forecasts -
+32                                              ! - number of pressure levels -
+190                                             ! - number of latitudes -
+384                                             ! - number of longitudes -
+ 89.27665                                       ! - northern limits -
+-89.27665                                       ! - southern limits -
+  0.00000                                       ! - western limits -
+359.06250                                       ! - eastern limits -
+.true.                                          ! - north-south orientation? -
+.false.                                         ! - summed variables? -
+N/A                                             ! - unit conversions -
+iridl.ldeo.columbia.edu/                        ! - dataset portal -
+.NOAA/.NCEP/.EMC/.CFSv2/                        ! - source URL -
+.ENSEMBLE/.PGBF/.pressure_level/.VGRD/
+.REALTIME_ENSEMBLE/.PGBF/.pressure_level/.VGRD/ ! - variable URL -
+P 1000 975 950 925 900 875 850 825 800 775 750 700 650 600 550 500 450 400 350 300 250 225 200 175 150 125 100 70 50 30 20 10 ! - pressure levels -
+
+cpt:csource=CanCM4i, cpt:isource=33
+.false.                   ! - password protected? -
+grid                      ! - data structure -
+NMME                      ! - model family -
+2                         ! - number of datasets -
+1981                      ! - first year of data -
+2019 08 01                ! - first date of second dataset -
+monthly                   ! - temporal resolution of data -
+10                        ! - number of ensemble members in hindcasts -
+10                        ! - number of ensemble members in forecasts -
+2                         ! - number of pressure levels -
+181                       ! - number of latitudes -
+360                       ! - number of longitudes -
+ 90.00000                 ! - northern limits -
+-90.00000                 ! - southern limits -
+  0.00000                 ! - western limits -
+359.00000                 ! - eastern limits -
+.false.                   ! - north-south orientation? -
+.false.                   ! - summed variables? -
+N/A                       ! - unit conversions -
+iridl.ldeo.columbia.edu/  ! - dataset portal -
+.Models/.NMME/.CanCM4i/   ! - source URL -
+.HINDCAST/.MONTHLY/.vgrd/
+.FORECAST/.MONTHLY/.vgrd/ ! - variable URLs -
+P2 850 200                ! - pressure levels -
+
+cpt:csource=CanSIPS-IC3, cpt:isource=36
+.false.                     ! - password protected? -
+grid                        ! - data structure -
+NMME                        ! - model family -
+2                           ! - number of datasets -
+1980                        ! - first year of data -
+2021 10 01                  ! - first date of second dataset -
+monthly                     ! - temporal resolution of data -
+20                          ! - number of ensemble members in hindcasts -
+20                          ! - number of ensemble members in forecasts -
+0                           ! - number of pressure levels -
+181                         ! - number of latitudes -
+360                         ! - number of longitudes -
+ 90.00000                   ! - northern limits -
+-90.00000                   ! - southern limits -
+  0.00000                   ! - western limits -
+359.00000                   ! - eastern limits -
+.false.                     ! - north-south orientation? -
+.false.                     ! - summed variables? -
+N/A                         ! - unit conversions -
+iridl.ldeo.columbia.edu/    ! - dataset portal -
+.Models/.NMME/.CanSIPS-IC3/ ! - source URL -
+.HINDCAST/.MONTHLY/.vgrd/
+.FORECAST/.MONTHLY/.vgrd/   ! - variable URLs -
+P2 850 200                  ! - pressure levels -
+
+cpt:csource=ECMWF-SEAS5, cpt:isource=101
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1981                                     ! - first year of data -
+2017 09 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+181                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 90.00000                                ! - northern limits -
+-90.00000                                ! - southern limits -
+  0.00000                                ! - western limits -
+359.00000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/ ! - source URL -
+.hindcast/.va/
+.forecast/.va/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=Meteo_France-System7, cpt:isource=111
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2019 10 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+25                                       ! - number of ensemble members in hindcasts -
+51                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/ ! - source URL -
+.hindcast/.va/
+.forecast/.va/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=GloSea6-GC2-System600, cpt:isource=122
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2021 03 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+28                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/ ! - source URL -
+.hindcast/.va/
+.forecast/.va/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=CMCC_SPSv3p5, cpt:isource=131
+.false.                                 ! - password protected? -
+grid                                    ! - data structure -
+C3S                                     ! - model family -
+2                                       ! - number of datasets -
+1993                                    ! - first year of data -
+2020 10 01                              ! - first date of second dataset -
+monthly                                 ! - temporal resolution of data -
+40                                      ! - number of ensemble members in hindcasts -
+50                                      ! - number of ensemble members in forecasts -
+11                                      ! - number of pressure levels -
+180                                     ! - number of latitudes -
+360                                     ! - number of longitudes -
+ 89.50000                               ! - northern limits -
+-89.50000                               ! - southern limits -
+  0.50000                               ! - western limits -
+359.50000                               ! - eastern limits -
+.true.                                  ! - north-south orientation? -
+.false.                                 ! - summed variables? -
+N/A                                     ! - unit conversions -
+iridl.ldeo.columbia.edu/                ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.CMCC/.SPSv3p5/ ! - source URL -
+.hindcast/.va/
+.forecast/.va/                          ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
+
+cpt:csource=DWD-GCFS2p1, cpt:isource=141
+.false.                                  ! - password protected? -
+grid                                     ! - data structure -
+C3S                                      ! - model family -
+2                                        ! - number of datasets -
+1993                                     ! - first year of data -
+2020 11 01                               ! - first date of second dataset -
+monthly                                  ! - temporal resolution of data -
+30                                       ! - number of ensemble members in hindcasts -
+50                                       ! - number of ensemble members in forecasts -
+11                                       ! - number of pressure levels -
+180                                      ! - number of latitudes -
+360                                      ! - number of longitudes -
+ 89.50000                                ! - northern limits -
+-89.50000                                ! - southern limits -
+  0.50000                                ! - western limits -
+359.50000                                ! - eastern limits -
+.true.                                   ! - north-south orientation? -
+.false.                                  ! - summed variables? -
+N/A                                      ! - unit conversions -
+iridl.ldeo.columbia.edu/                 ! - dataset portal -
+.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/ ! - source URL -
+.hindcast/.va/
+.forecast/.va/                           ! - variable URLs -
+P 925 850 700 500 400 300 200 100 50 30 10 ! - pressure levels -
