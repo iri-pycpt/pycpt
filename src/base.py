@@ -63,31 +63,45 @@ default_output_files = {
 
 
 class CPT:
-    def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, **kwargs):
+    def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, outputdir=None, **kwargs):
         self.interactive = interactive
         self.last_message = None
         if platform.system() == 'Windows':
             self.last_cmd = 'CPT_batch.exe'
-            self.cpt = Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT' / '17.7.4' / 'CPT_batch.exe'
+            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT' / '17.7.4' / 'CPT_batch.exe').replace('.egg', '')
             if not self.cpt.is_file(): 
-                self.cpt = install_cpt_windows2()
+                self.cpt = str(install_cpt_windows2()).replace('.egg', '')
+            #os.chmod(self.cpt, 0o777)
+            assert Path(self.cpt).is_file(), 'CPT executable not found'
         elif platform.system() == 'Darwin':
             self.last_cmd = 'CPT.x'
-            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x')
+            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
+            assert Path(self.cpt).is_file(), 'CPT executable not found'
+            os.chmod(self.cpt, 0o777)
         elif platform.system() == 'Linux':
             self.last_cmd = 'CPT.x'
-            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x')
-
-        assert Path(self.cpt).is_file(), 'CPT executable not found'
-        if not (Path.home() / '.pycpt_workspace').is_dir():
-            (Path.home() / '.pycpt_workspace').mkdir(exist_ok=True, parents=True)
+            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
+            assert Path(self.cpt).is_file(), 'CPT executable not found'
+            os.chmod(self.cpt, 0o777)
         
-        self.id = str(uuid.uuid4())
-        self.outputdir = Path.home() / '.pycpt_workspace' /  self.id
-        self.outputdir.mkdir(exist_ok=True, parents=True)
-        self.outputs = copy.deepcopy(output_files)
-        for key in self.outputs.keys():
-            self.outputs[key] = self.outputdir / self.outputs[key]
+        if outputdir is None:
+            self.set_outputdir = False
+            if not (Path.home() / '.pycpt_workspace').is_dir():
+                (Path.home() / '.pycpt_workspace').mkdir(exist_ok=True, parents=True)
+            
+            self.id = str(uuid.uuid4())
+            self.outputdir = Path.home() / '.pycpt_workspace' /  self.id
+            self.outputdir.mkdir(exist_ok=True, parents=True)
+            self.outputs = copy.deepcopy(output_files)
+            for key in self.outputs.keys():
+                self.outputs[key] = self.outputdir / self.outputs[key]
+        else:
+            self.set_outputdir = True
+            self.outputdir = Path(outputdir)
+            self.outputdir.mkdir(exist_ok=True, parents=True)
+            self.outputs = copy.deepcopy(output_files)
+            for key in self.outputs.keys():
+                self.outputs[key] = self.outputdir / self.outputs[key]
 
         os.environ['CPT_BIN_DIR'] = str(Path(self.cpt).parents[0].absolute())   
         self.record = str(Path(record).absolute()) if record else None 
@@ -174,7 +188,7 @@ class CPT:
         self.cpt_process.kill()
    
     def clean(self):
-        if self.outputdir.is_dir():
+        if self.outputdir.is_dir() and not self.set_outputdir:
             rmrf(self.outputdir)
 
     def wait_for_files(self, isdel=False):
