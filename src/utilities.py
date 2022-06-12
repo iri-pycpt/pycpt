@@ -307,7 +307,7 @@ def install_cpt_windows2():
     cptspacevar = str(Path(__file__).parents[0]/ 'fortran' / platform.system()).replace('.egg', '') 
     cptspacevar = str(cptspacevar) if str(cptspacevar)[:2] != "C:" else str(cptspacevar)[2:] 
     subprocess.call([str(CPT_INSTALLER.absolute()), '/SP-', '/VERYSILENT', '/NOCANCEL', f'/DIR={cptspacevar}'])
-    CPT_EXECUTABLE = Path(str(Path(__file__).parents[0]/ 'fortran' / platform.system() / 'CPT' / '17.7.4' / 'CPT_batch.exe').replace('.egg', ''))
+    CPT_EXECUTABLE = Path(str(Path(__file__).parents[0]/ 'fortran' / platform.system() / 'CPT_batch.exe').replace('.egg', ''))
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE
 
