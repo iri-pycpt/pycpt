@@ -1,0 +1,51 @@
+package:
+  name: pycpt
+  version: "0.2.0"
+
+source:
+  path: ../src
+
+build:
+  number: 0
+  string: pycpt
+  noarch: python
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+  run:
+    - xarray 
+    - dask
+    - cptio
+    - cptdl 
+    - cptcore 
+    - matplotlib
+    - cartopy
+    - cptlite
+    - netcdf4
+    - scipy
+    - numpy 
+    - scikit-learn
+    - statsmodels
+    - bottleneck
+    - jupyter 
+    - ipykernel 
+    - numpy 
+    - xcast 
+    
+
+
+
+
+test:
+  imports:
+    - pycpt
+
+about:
+  home: https://github.com/kjhall-iri/
+  license: MIT
+  summary: 'Python Interface to the IRIs Climate Predictability Tool' 
+  description: 'CPT'
+  dev_url: https://github.com/kjhall-iri/
