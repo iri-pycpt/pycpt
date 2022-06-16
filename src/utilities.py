@@ -32,8 +32,11 @@ def s2s_login(email):
     with requests.Session() as s: 
         r = s.post("https://iridl.ldeo.columbia.edu/auth/login/local/submit/login", data={'email': email, 'password':pswd, 'redirect': redirect})
         r.raise_for_status()
-        if "This dataset has bytes" not in r.content.decode('utf-8'):
+        # in the line below, the two spaces between 'has' and 'bytes' is intentional
+
+        if "This dataset has  bytes" not in r.content.decode('utf-8'):
             print( 'Incorrect user or password'  )
+            print(r.content.decode('utf-8'))
         else:
             print('You have recorded your agreement to: the S2S terms and conditions / privacy policy\nT&C: https://iridl.ldeo.columbia.edu/auth/legal/terms-of-service\nPrivacy: https://iridl.ldeo.columbia.edu/auth/legal/privacy-policy')
 
@@ -43,7 +46,8 @@ def c3s_login(email):
     with requests.Session() as s: 
         r = s.post("https://iridl.ldeo.columbia.edu/auth/login/local/submit/login", data={'email': email, 'password':pswd, 'redirect': redirect})
         r.raise_for_status()
-        if "This dataset has bytes" not in r.content.decode('utf-8'):
+        # in the line below, the two spaces between 'has' and 'bytes' is intentional
+        if "This dataset has  bytes" not in r.content.decode('utf-8'):
             print( 'Incorrect user or password' )
         else:
             print('You have recorded your agreement to: the C3S terms and conditions / privacy policy\nT&C: https://iridl.ldeo.columbia.edu/auth/legal/terms-of-service\nPrivacy: https://iridl.ldeo.columbia.edu/auth/legal/privacy-policy')
