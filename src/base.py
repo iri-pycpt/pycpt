@@ -65,7 +65,7 @@ default_output_files = {
 class CPT:
     def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, outputdir=None, **kwargs):
         self.interactive = interactive
-        self.last_message = None
+        self.last_message = 'has not started yet'
         if platform.system() == 'Windows':
             self.last_cmd = 'CPT_batch.exe'
             self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT_batch.exe').replace('.egg', '')
@@ -75,7 +75,10 @@ class CPT:
             assert Path(self.cpt).is_file(), 'CPT executable not found'
         elif platform.system() == 'Darwin':
             self.last_cmd = 'CPT.x'
-            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
+            if platform.processor() == 'arm':
+                self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'M1' / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
+            else:
+                self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'intel' / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
             assert Path(self.cpt).is_file(), 'CPT executable not found'
             os.chmod(self.cpt, 0o777)
         elif platform.system() == 'Linux':

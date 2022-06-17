@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<TITLE> Options: Tailoring </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="Help_Menu.html" class=link>Specific Menu Items</a>
+<font color="black">-></font>
+<a href="Options.html" class=link>Options</a>
+<font color="black">-></font>
+<font class=gray>Tailoring</font></p>
+
+<H2>533: Tailoring</H2>
+The <B>tailoring</B> options provide a number of ways of providing flexibility in how the forecasts are expressed. The 
+standardization options provide different ways of comparing the forecast to a set of references, and of defining how the 
+category thresholds are communicated. By selecting the "no standardization" option, the forecasts are expressed in the original 
+units of the input Y data, but these can be converted to anomalies, standardized anomalies, standardized indices (suitable for
+the Standardized Precipitation Index, SPI) or, if the <A HREF="Options_Data_Zero.html">Zero Bound</A> option is switched on, to 
+percentage departures from average. If the % of average standardization option is selected, and the zero bound option is 
+subsequently switched off, the standardization is switched off (a warning is provided). The forecasts, and saved data, and the 
+category thresholds will be expressed in whichever standarization option is selected. The standardized indices option can be 
+switched on or off after calculations have already been performed only if the calculations were performed with the 
+<A HREF="Options_Data_Transform.html">Transform Y Data</A> switched on, and if the 
+<A HREF="Options_Transform.html">Transformation</A> option was set to the gamma distribution. It is therefore best to select 
+standardized indices before calculating results.<P>
+
+The <B>tailoring</B> menu option also allows you to specify the prior probabilities of the above- and below- normal categories, 
+or to use thresholds defined in physical values (mm, for example) instead, or to use previous years' observations. By default 
+the prior probabilities are set at 33% so that the boundaries between the categories are the terciles of the climatogical 
+distribution, but these probabilities can be reset, thus allowing probabilities for more extreme rainfall events to be 
+calculated, for example. However, it should be noted that errors in estimating the thresholds for extreme events can become 
+large, and so changes in the calculated probabilities may be inaccurate. If the absolute thresholds are set, and the lower 
+threshold is set to be larger than the upper threshold, the two are swapped without warning. The values of the thresholds are 
+assumed to be in the same units as the values of the (possibly standardized) Y input data. If the standardization option is set 
+to "anomalies" and absolute thresholds are used, "below-normal rainfall could be set as 100 mm less than average by setting the 
+lower threshold to -100. The reference year option sets the larger of the observed values for the two years as the threshold 
+for the "above-normal" category, and the smaller as the threshold for the "below-normal category". Note that it is possible 
+that the one year may represent the upper threshold for one location but the lower threshold for another location. This option 
+is useful for answering questions such as "What is the probability that there will be more rainfall tahn last year?" Or "What 
+is the probability that it will be colder than in 1980?"<P>
+
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+ 
+

@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+<TITLE> How to Use CPT: Training Data </TITLE>
+<style type="text/css"> 
+<!--
+.link {font: normal 8pt Arial,Helvetica, sans-serif; color: #aa4400;}
+.black {font: normal 8pt Arial,Helvetica, sans-serif; color: #333333;}
+.gray {font: normal 8pt Arial,Helvetica, sans-serif; color: #666666;}
+-->
+</style>
+</HEAD>
+ 
+<BODY BGCOLOR="#ffffcc" vlink="#0066aa" link="#0000aa">
+<CENTER><TABLE width=600 border=0 bgcolor=#ffffff cellpadding=8 cellspacing=0><TR bgcolor=#333399><TD align=center>
+<a href="http://iri.columbia.edu/"><IMG src="IRIblueBanner4_s.gif" border=0 alt="IRI Home"></a>
+</TD></TR><TR><TD valign=top >
+<p><a href="index.html" class=link>CPT Help Home</a> 
+<font color="black">-></font>
+<a href="CPT_use_contents.html" class=link>How to use CPT</a>
+<font color="black">-></font>
+<a href="CPT_use_settings.html" class=link>Program Settings</a>
+<font color="black">-></font>
+<font class=gray>Training Data</font></p>
+ 
+<H2>Training Data</H2>
+The length of the training period must be specified. The length defines the total number of years available to construct the 
+forecasting model. The length of the cross-validation window defines how many years to leave out when performing 
+cross-validation, either in calculating the optimum number of modes, or for calculating performance statistics (discussed 
+later). Leave-one-out cross-validation is most frequently performed, but for robust results it is recommended that a much 
+larger window be used if sufficient data are available. The length of the window is constrained to be odd, and only the middle 
+year of the cross-validation window is predicted at each step. The length of the cross-validation window can be changed
+from <A HREF="Options_CV.html">Options ~ Cross-Validation Options</A>.<P>
+<P>
+<A HREF="CPT_use_settings_cca.html" class="link">Previous</A>
+<font class="black">|</font>
+<A HREF="CPT_use_settings_missing.html" class="link">Next</A>
+</p>
+<br>&nbsp;
+<table cellpadding=0 cellspacing=0 align=right><tr><td><img src="/images/HR_gray.gif" height=1 width=580></td></tr><tr><td>
+<div align=right><font face="verdana,sans-serif" size=-2 point-size=7pt color=#000000><i>
+Last modified: 
+<script language="javascript"> 
+<!--
+if( Date.parse( document.lastModified) != 0) document.write( document.lastModified )
+//-->
+</script>
+</i></font></div>
+</td></tr></table>
+</TD></TR></TABLE></CENTER>
+</BODY>
+</HTML>
+
