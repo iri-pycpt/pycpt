@@ -43,7 +43,7 @@ ifeq ($(FC),gfortran)
    ifeq ($(DEBUG),1)
       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
    else
-      FFLAGS= -O $(CPPDEFS) -std=f2008 -fall-intrinsics
+      FFLAGS= -O $(CPPDEFS) -std=f2008 -fall-intrinsics -static-libgfortran -static-libgcc
    endif
 endif
 
@@ -79,11 +79,11 @@ SRCS := $(wildcard *.F95)
 SRCS := $(filter-out axes.F95, $(SRCS))
 OBJS := $(SRCS:.F95=.o)
 
-LIBS= -L$(LAPACK_DIR) -l$(LAPACK_LIB) -l$(BLAS_LIB)
+LIBS= -L$(LAPACK_DIR) -l$(LAPACK_LIB) -l$(BLAS_LIB) -lgfortran
 
 build: CPT.x
 
-$(LAPACK_DIR)/lib$(LAPACK_LIB).a $(LAPACK_DIR)/lib$(BLAS_LIB).a: 
+$(LAPACK_DIR)/lib$(LAPACK_LIB).a $(LAPACK_DIR)/lib$(BLAS_LIB).a : 
 	make -C $(LAPACK_DIR)
 
 CPT.x: $(OBJS) $(LAPACK_DIR)/lib$(LAPACK_LIB).a $(LAPACK_DIR)/lib$(BLAS_LIB).a
