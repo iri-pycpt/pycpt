@@ -2,21 +2,24 @@ from .base import CPT
 from .functional import canonical_correlation_analysis, principal_components_regression, probabilistic_forecast_verification, deterministic_skill, multiple_regression
 from .tests import test_cca, test_deterministic_skill, test_mlr, test_pcr, test_pfv, load_southasia_nmme
 from .bash import rmrf, ls_files_recursive, rmstar
+from .utilities import install_cpt_linux
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __author__ = "Kyle Joseph Chen Hall (kjhall@iri.columbia.edu)"
 
 from pathlib import Path 
 import zipfile 
 
+# expands an egg file so we can access data files
 path = Path(__file__).parents[1]
-newdir = path.parents[0] / 'cptcore-1.0.0-py3.8'
-
-if not newdir.is_dir(): 
+newdir = Path(str(path).replace('.egg', ''))
+if not newdir.is_dir():
     with zipfile.ZipFile(path, 'r') as zip_ref:
         zip_ref.extractall(newdir)
 
-
+import platform
+if platform.system() == 'Linux':
+    install_cpt_linux()
 
 CPT_CITATION = "Simon J. Mason, Michael K. Tippet, Lulin Song, Ángel G. Muñoz. 2021. Climate Predictability Tool version 17.5.2. Columbia University Academic Commons. https://doi.org/10.7916/d8-em2t-k781"
 PYCPTV1_CITATION = "Muñoz, Á.G., Robertson, A.W., Turkington, T., Mason, S.J., and contributors, 2019: 'PyCPT: a Python interface and enhancement for IRI's Climate Predictability Tool'."
