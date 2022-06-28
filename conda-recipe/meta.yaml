@@ -18,8 +18,8 @@ requirements:
   run:
     - cptio
     - psutil
-    - compilers 
-
+    - gfortran # [linux]
+    - make # [linux]
 test:
   imports:
     - cptcore
