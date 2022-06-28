@@ -1,6 +1,6 @@
 package:
   name: cptcore
-  version: "1.0.3"
+  version: "1.0.4"
 
 source:
   path: ../src
@@ -18,8 +18,7 @@ requirements:
   run:
     - cptio
     - psutil
-    - fortran-compiler 
-    - make
+    - compilers 
 
 test:
   imports:
