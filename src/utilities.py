@@ -311,7 +311,7 @@ def install_cpt_windows2():
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE
 
-def install_cpt_linix():
+def install_cpt_linux():
     assert platform.system() == 'Linux', 'Must only use "install_cpt_linux" on linux machines'
     path = Path(__file__).parents[1]
     newdir = Path(str(path).replace('.egg', ''))    

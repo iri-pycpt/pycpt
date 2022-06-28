@@ -18,8 +18,6 @@ requirements:
   run:
     - cptio
     - psutil
-    - gfortran
-
 
 test:
   imports:
