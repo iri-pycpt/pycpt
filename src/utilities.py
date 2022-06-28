@@ -313,10 +313,9 @@ def install_cpt_windows2():
 
 def install_cpt_linux():
     assert platform.system() == 'Linux', 'Must only use "install_cpt_linux" on linux machines'
-    path = Path(__file__).parents[1]
-    newdir = Path(str(path).replace('.egg', ''))    
-    subprocess.call(['make'], cwd=str((newdir/'fortran'/'Linux'/'CPT'/'17.7.4').absolute()))
-    CPT_EXECUTABLE = (newdir / 'fortran' / 'Linux' / 'CPT' / '17.7.4').absolute() / 'CPT.x'
+    path = Path( str( Path(__file__).parents[0]).replace('.egg', ''))
+    subprocess.call(['make'], cwd=str((path/'fortran'/'Linux'/'CPT'/'17.7.4').absolute()))
+    CPT_EXECUTABLE = (path / 'fortran' / 'Linux' / 'CPT' / '17.7.4').absolute() / 'CPT.x'
     assert CPT_EXECUTABLE.is_file(), 'FAILED TO COMPILE CPT'
     return CPT_EXECUTABLE
 
