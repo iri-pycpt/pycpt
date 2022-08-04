@@ -1,0 +1,35 @@
+package:
+  name: cptextras
+  version: "1.0.0"
+
+source:
+  path: ../src
+build:
+  number: 0
+  string: cptextras
+  noarch: python
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+  run:
+    - scipy
+    - xarray
+    - cartopy
+    - matplotlib
+    - statsmodels
+    - cptio
+    - xcast
+
+test:
+  imports:
+    - cptextras
+
+about:
+  home:
+  license: MIT
+  summary: "CPT-EXTRAS"
+  description: "CPT-EXTRAS"
+  dev_url: https://github.com/kjhall-iri/CPT-EXTRAS/
