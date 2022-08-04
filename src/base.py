@@ -193,6 +193,7 @@ class CPT:
     def clean(self):
         if self.outputdir.is_dir() and not self.set_outputdir:
             rmrf(self.outputdir)
+        self.kill()
 
     def wait_for_files(self, isdel=False):
         try:
