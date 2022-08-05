@@ -21,6 +21,7 @@ requirements:
     - cptio
     - cptdl 
     - cptcore 
+    - cptextras
     - matplotlib
     - cartopy
     - cptlite
@@ -34,6 +35,7 @@ requirements:
     - ipykernel 
     - numpy 
     - xcast 
+    
     
 
 
