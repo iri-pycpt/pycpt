@@ -2,6 +2,7 @@ import statsmodels.distributions.empirical_distribution as edf
 from scipy.stats import norm, gamma, skew
 from scipy.interpolate import interp1d
 import xcast as xc 
+import xarray as xr 
 
 def invcdf(X, x_lat_dim=None, x_lon_dim=None, x_sample_dim=None, x_feature_dim=None, dist=norm):
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = xc.guess_coords(
