@@ -18,6 +18,7 @@ def deterministic_skill(
         y_lon_dim=None, 
         y_sample_dim=None, 
         y_feature_dim=None, 
+        **kwargs
     ):
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     is_valid_cptv10(X)

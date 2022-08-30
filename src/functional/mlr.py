@@ -19,6 +19,8 @@ def multiple_regression(
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
         regression='OLS',
         link='identity',
+        drymask=False,
+        scree=False,
         synchronous_predictors=False,
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -32,6 +34,7 @@ def multiple_regression(
         f_lon_dim=None, 
         f_sample_dim=None, 
         f_feature_dim=None, 
+        **kwargs
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION','CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION','DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
@@ -89,7 +92,10 @@ def multiple_regression(
     cpt.write(1) # climatologicial probability thresholds 
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
-
+    if drymask:
+        cpt.write(5371)
+        cpt.write('Y')
+        cpt.write(Y.attrs['missing'])
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
     cpt.write(534)

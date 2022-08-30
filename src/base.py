@@ -24,6 +24,8 @@ default_output_files = {
     'cca_y_timeseries': 'predictand_cca_timeseries',
     'cca_canonical_correlation':  'cca_canonical_correlation',
     'eof_x_timeseries': 'predictor_eof_timeseries',
+    'eof_x_explained_variance': 'predictor_explained_variance',
+    'eof_y_explained_variance': 'predictand_explained_variance',
     'eof_y_timeseries':  'predictand_eof_timeseries',
     'eof_x_loadings': 'predictor_eof_spatial_loadings',
     'eof_y_loadings': 'predictand_eof_spatial_loadings',

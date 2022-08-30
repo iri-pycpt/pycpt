@@ -95,6 +95,8 @@ CPT_OUTPUT_NEW = {
     'eof_y_loadings': 312,
     'cca_x_loadings': 411,
     'cca_y_loadings': 421,
+    'eof_y_explained_variance': 311, 
+    'eof_x_explained_variance': 301
 }
 
 

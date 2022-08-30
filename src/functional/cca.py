@@ -4,6 +4,7 @@ from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10, convert_np64_datetime
 import xarray as xr 
 import datetime as dt 
+import numpy as np 
 
 def canonical_correlation_analysis(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
@@ -18,6 +19,8 @@ def canonical_correlation_analysis(
         retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
+        drymask=False,
+        scree=False,
         synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
         x_lat_dim=None, 
@@ -32,6 +35,7 @@ def canonical_correlation_analysis(
         f_lon_dim=None, 
         f_sample_dim=None, 
         f_feature_dim=None, 
+        **kwargs
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
@@ -77,7 +81,10 @@ def canonical_correlation_analysis(
     cpt.write(1) # climatologicial probability thresholds 
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
-
+    if drymask:
+        cpt.write(5371)
+        cpt.write('Y')
+        cpt.write(Y.attrs['missing'])
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
     cpt.write(534)
@@ -202,6 +209,17 @@ def canonical_correlation_analysis(
         cpt.write(CPT_OUTPUT_NEW[data])
         cpt.write(cpt.outputs[data].absolute())
         cpt.write(0)
+    
+    if scree: 
+        cpt.write('111')
+        cpt.write(CPT_OUTPUT_NEW['eof_y_explained_variance'])
+        cpt.write(cpt.outputs['eof_y_explained_variance'].absolute())
+        cpt.write(0)
+
+        cpt.write('111')
+        cpt.write(CPT_OUTPUT_NEW['eof_x_explained_variance'])
+        cpt.write(cpt.outputs['eof_x_explained_variance'].absolute())
+        cpt.write(0)
 
     #cpt.kill()
     cpt.wait_for_files()
@@ -264,6 +282,7 @@ def canonical_correlation_analysis(
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
     skill_values = xr.merge(skill_values).mean('Mode')
 
+
     x_cca_scores = open_cptdataset(str(cpt.outputs['cca_x_timeseries'].absolute()) + '.txt')
     x_cca_scores = getattr(x_cca_scores, [i for i in x_cca_scores.data_vars][0])
     x_cca_scores.name = "x_cca_scores"
@@ -303,12 +322,22 @@ def canonical_correlation_analysis(
     y_eof_loadings = getattr(y_eof_loadings, [i for i in y_eof_loadings.data_vars][0])
     y_eof_loadings.name = "y_eof_loadings"
     y_eof_loadings.coords['Mode'] = y_eof_scores.coords['Mode'].values
+    
+    if scree:
+        x_varfile = np.genfromtxt(str(cpt.outputs['eof_x_explained_variance']) + '.txt', skip_header=3, delimiter='\t', dtype=float)
+        y_varfile = np.genfromtxt( str( cpt.outputs['eof_y_explained_variance']) +'.txt', skip_header=3, delimiter='\t', dtype=float)
+        x_explained_variance = xr.DataArray(name='x_explained_variance', data=x_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
+        y_explained_variance = xr.DataArray(name='y_explained_variance', data=y_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
 
-    x_pattern_values = [ x_cca_scores,  x_eof_scores, x_cca_loadings,  x_eof_loadings,]
+        x_pattern_values = [ x_cca_scores,  x_eof_scores, x_cca_loadings,  x_eof_loadings, x_explained_variance]
+        y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings, y_explained_variance ]
+    else: 
+        x_pattern_values = [ x_cca_scores,  x_eof_scores, x_cca_loadings,  x_eof_loadings]
+        y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings ]
+
     x_pattern_values = xr.merge(x_pattern_values)
     x_pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in x_pattern_values.coords[x_sample_dim].values]
 
-    y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings ]
     y_pattern_values = xr.merge(y_pattern_values)
     y_pattern_values.coords[y_sample_dim] = [convert_np64_datetime(i) for i in y_pattern_values.coords[y_sample_dim].values]
 

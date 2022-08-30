@@ -4,7 +4,7 @@ from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10,  convert_np64_datetime
 import xarray as xr 
 
-
+import numpy as np 
 
 def principal_components_regression(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
@@ -19,6 +19,8 @@ def principal_components_regression(
         retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
         validation='CROSSVALIDATION', #type of leave-n-out crossvalidation to use
         synchronous_predictors=False,
+        drymask=False,
+        scree=False, 
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -31,6 +33,7 @@ def principal_components_regression(
         f_lon_dim=None, 
         f_sample_dim=None, 
         f_feature_dim=None, 
+        **kwargs
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
@@ -78,6 +81,10 @@ def principal_components_regression(
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
 
+    if drymask:
+        cpt.write(5371)
+        cpt.write('Y')
+        cpt.write(Y.attrs['missing'])
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
     cpt.write(534)
@@ -190,13 +197,17 @@ def principal_components_regression(
         cpt.write(cpt.outputs['forecast_probabilities'].absolute())
         cpt.write(0)
 
-
     for data in [ 'eof_x_timeseries', 'eof_x_loadings' ]:
         cpt.write('111')
         cpt.write(CPT_OUTPUT_NEW[data])
         cpt.write(cpt.outputs[data].absolute())
         cpt.write(0)
-
+    
+    if scree: 
+        cpt.write('111')
+        cpt.write(CPT_OUTPUT_NEW['eof_x_explained_variance'])
+        cpt.write(cpt.outputs['eof_x_explained_variance'].absolute())
+        cpt.write(0)
 
     cpt.wait_for_files()
     fcsts = None
@@ -257,6 +268,9 @@ def principal_components_regression(
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
     skill_values = xr.merge(skill_values).mean('Mode')
 
+
+
+
     x_eof_scores = open_cptdataset(str(cpt.outputs['eof_x_timeseries'].absolute()) + '.txt')
     x_eof_scores = getattr(x_eof_scores, [i for i in x_eof_scores.data_vars][0])
     x_eof_scores.name = "x_eof_scores"
@@ -268,7 +282,13 @@ def principal_components_regression(
     x_eof_loadings.coords['Mode'] = x_eof_scores.coords['Mode'].values
 
 
-    pattern_values = [ x_eof_scores, x_eof_loadings]
+    if scree:
+        x_varfile = np.genfromtxt(str(cpt.outputs['eof_x_explained_variance']) + '.txt', skip_header=3, delimiter='\t', dtype=float)
+        x_explained_variance = xr.DataArray(name='x_explained_variance', data=x_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
+        pattern_values = [ x_eof_scores, x_eof_loadings, x_explained_variance]
+    else: 
+        pattern_values = [ x_eof_scores, x_eof_loadings]
+
     pattern_values = xr.merge(pattern_values)
     pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in pattern_values.coords[x_sample_dim].values]
 
