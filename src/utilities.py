@@ -74,7 +74,7 @@ def setup_dlauth(email):
 class PyCPT_ERROR(Exception):
     pass    
 
-def evaluate_url(url, **kwargs):
+def evaluate_url(url, ensemblemean=True, **kwargs):
     from .targetleadconv import seasonal_target, seasonal_target_length_monthly, seasonal_target_length, threeletters
     locals().update(**kwargs)
     return eval('f"{}"'.format(url))
