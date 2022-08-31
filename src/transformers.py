@@ -2,6 +2,7 @@ import statsmodels.distributions.empirical_distribution as edf
 from scipy.stats import norm, gamma, skew
 from scipy.interpolate import interp1d
 import xarray as xr 
+import numpy as np 
 
 def check_dimensions(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim):
 	"""Checks that X is 4D, with Dimension Names as specified by x_lat_dim, x_lon_dim, x_sample_dim, and x_feature_dim"""

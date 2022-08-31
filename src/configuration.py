@@ -25,8 +25,8 @@ def check_tuple(tup):
     assert isinstance(tup[0], int) and isinstance(tup[1], int) and tup[1] > tup[0], 'tuple must contain two integers, and the second must be larger'
 
 def check_cpt_args(args):
-    keys = ['transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes', 'crossvalidation_window', 'synchronous_predictors', 'drymask']
-    keytypes = {'transform_predictand': str, 'tailoring': str, 'cca_modes': tuple, 'x_eof_modes': tuple, 'y_eof_modes': tuple, 'crossvalidation_window': int, 'synchronous_predictors': bool, 'drymask': bool}
+    keys = ['transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes', 'crossvalidation_window', 'synchronous_predictors', 'scree', 'drymask', 'validation']
+    keytypes = {'transform_predictand': str, 'tailoring': str, 'cca_modes': tuple, 'x_eof_modes': tuple, 'y_eof_modes': tuple, 'crossvalidation_window': int, 'synchronous_predictors': bool, 'drymask': bool, 'scree': bool, 'validation': str}
     for key in args.keys():
         assert key in keys, 'illegal extent key - {}'.format(key)
         if args[key] is None: 
