@@ -20,7 +20,7 @@ setup(
     package_data={
     },
     package_dir={
-        'xcast': '{}/../src'.format(os.getenv('RECIPE_DIR')),
+        'cptextras': '{}/../src'.format(os.getenv('RECIPE_DIR')),
         },
     python_requires=">=3.4",
     long_description=long_description,

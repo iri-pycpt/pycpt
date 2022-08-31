@@ -21,7 +21,6 @@ requirements:
     - matplotlib
     - statsmodels
     - cptio
-    - xcast
 
 test:
   imports:
