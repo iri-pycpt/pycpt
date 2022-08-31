@@ -24,7 +24,6 @@ requirements:
     - cptextras
     - matplotlib
     - cartopy
-    - cptlite
     - netcdf4
     - scipy
     - numpy 
@@ -34,7 +33,6 @@ requirements:
     - jupyter 
     - ipykernel 
     - numpy 
-    - xcast 
     
     
 
