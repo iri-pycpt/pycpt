@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.colors as colors
 import xarray as xr
-import xcast as xc 
 import numpy as np 
 
 def guess_coords_view_prob(X, x_lat_dim=None, x_lon_dim=None, x_sample_dim=None, x_feature_dim=None):
@@ -39,10 +38,10 @@ def view_probabilistic(X, x_lat_dim=None, x_lon_dim=None, x_sample_dim=None, x_f
 	x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim = guess_coords_view_prob(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
 	assert x_sample_dim is None, 'View probabilistic requires you to select across sample dim to eliminate that dimension first'
 	#check_all(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
-	assert x_lat_dim in X.coords.keys(), 'XCast requires a dataset_lat_dim to be a coordinate on X'
-	assert x_lon_dim in X.coords.keys(), 'XCast requires a dataset_lon_dim to be a coordinate on X'
-	assert x_feature_dim in X.coords.keys(), 'XCast requires a dataset_feature_dim to be a coordinate on X'
-	xc.check_type(X, x_lat_dim, x_lon_dim, x_sample_dim, x_feature_dim)
+	assert x_lat_dim in X.coords.keys(), 'pycpt requires a dataset_lat_dim to be a coordinate on X'
+	assert x_lon_dim in X.coords.keys(), 'pycpt requires a dataset_lon_dim to be a coordinate on X'
+	assert x_feature_dim in X.coords.keys(), 'pycpt requires a dataset_feature_dim to be a coordinate on X'
+	assert type(X) == xr.DataArray, 'pycpt requires a dataset to be of type "Xarray.DataArray"'
 
 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7, 9), subplot_kw={'projection': ccrs.PlateCarree()})
 	bounds = [40,45,50,55,60,65,70,75,80]
