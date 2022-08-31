@@ -7,8 +7,8 @@ from io import StringIO
 
 
 def is_valid_cptv10(da, assertmissing=True, assert_units=True):
-    valid_dims = ['T', 'X', 'Y', 'Mode', 'index', 'C']
-    valid_coords = ['T', 'Ti', 'Tf', 'S', 'X', 'Y', 'Mode', 'index', 'C']
+    valid_dims = ['T', 'X', 'Y', 'Mode', 'index', 'C', 'M']
+    valid_coords = ['T', 'Ti', 'Tf', 'S', 'X', 'Y', 'Mode', 'index', 'C', 'M']
     assert type(da) == xr.DataArray, "CPTv10 only deals with data arrays, not datasets"
     assert len(list(da.dims)) >= 2 and len(list(da.dims)) <= 4, 'CPTv10 can only have between 2-4 dimensions'
     for dim in da.dims:
@@ -87,7 +87,7 @@ def open_cptdataset(filename):
                 #now identify dimensions: 'T', 'Mode', 'C' - same deal , the same thereafter unless changed. 
                 rowdim= header[2]['row'] if 'row' in header[2].keys() else attrs['row']
                 coldim= header[2]['col'] if 'col' in header[2].keys() else attrs['col']
-                somedims = [  'T' if 'T' in header[2].keys() and 'T' not in [rowdim, coldim] else None,  'Mode' if 'Mode' in header[2].keys() and 'Mode' not in [rowdim, coldim] else None, 'C' if 'C' in header[2].keys() and 'C' not in [rowdim, coldim] else None ]
+                somedims = [  'T' if 'T' in header[2].keys() and 'T' not in [rowdim, coldim] else None,  'Mode' if 'Mode' in header[2].keys() and 'Mode' not in [rowdim, coldim] else None, 'C' if 'C' in header[2].keys() and 'C' not in [rowdim, coldim] else None, 'M' if 'M' in header[2].keys() and 'M' not in [rowdim, coldim] else None ]
                 somedims = [ jj for jj in somedims if jj is not None ] # keep only dims present 
                 alldims = [  rowdim, coldim ]
                 somedims.extend(alldims)
@@ -118,6 +118,9 @@ def open_cptdataset(filename):
                 if 'C' in alldims and ndims==4:  # to accomodate 4D data, we sort C to the first dimension, do all the C's separately, then shove them together in the end.
                     alldims.pop(alldims.index('C'))
                     alldims.insert(0, 'C') 
+                if 'M' in alldims and ndims==4:  # to accomodate 4D data, we sort C to the first dimension, do all the C's separately, then shove them together in the end.
+                    alldims.pop(alldims.index('M'))
+                    alldims.insert(0, 'M') 
                 data_vars[field] = {'dims': alldims, 'coords':coords, 'data':  data if ndims == 2 else np.expand_dims(data, 0) if ndims == 3 else [np.expand_dims(data, 0)] if ndims == 4 else None, 'attrs': attrs}
                # print('found {}-dimensional variable {}'.format(len(alldims), field))
             else: 
@@ -144,11 +147,18 @@ def open_cptdataset(filename):
                 if ndims == 3: 
                     data_vars[field]['data'] = np.concatenate((data_vars[field]['data'], np.expand_dims(data, axis=0)), axis=0)
                 elif ndims == 4: 
-                    assert 'C' in header[2].keys(), 'Only accomodating 4D data with a C dimension as the highest dimension right now - its coord must change in every header'
-                    if len(data_vars[field]['data']) <= int(header[2]['C']) -1: 
-                        data_vars[field]['data'].append(np.expand_dims(data, axis=0))
-                    else:
-                        data_vars[field]['data'][int(header[2]['C']) -1] = np.concatenate((data_vars[field]['data'][int(header[2]['C']) -1], np.expand_dims(data, axis=0)), axis=0)
+                    assert 'C' in header[2].keys() or 'M' in header[2].keys(), 'Only accomodating 4D data with a C (or M) dimension as the highest dimension right now - its coord must change in every header'
+                    if 'C' in header[2].keys():
+                        if len(data_vars[field]['data']) <= int(float(header[2]['C'])) -1: 
+                            data_vars[field]['data'].append(np.expand_dims(data, axis=0))
+                        else:
+                            data_vars[field]['data'][int(float(header[2]['C'])) -1] = np.concatenate((data_vars[field]['data'][int(float(header[2]['C'])) -1], np.expand_dims(data, axis=0)), axis=0)
+                    if 'M' in header[2].keys():
+                        if len(data_vars[field]['data']) <= int(float(header[2]['M'])) -1: 
+                            data_vars[field]['data'].append(np.expand_dims(data, axis=0))
+                        else:
+                            data_vars[field]['data'][int(float(header[2]['M'])) -1] = np.concatenate((data_vars[field]['data'][int(float(header[2]['M'])) -1], np.expand_dims(data, axis=0)), axis=0)
+
                 data_vars[field]['attrs'].update(attrs)
     #print(data_vars['attributes']['coords'])
 
@@ -220,7 +230,7 @@ def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
         'row': ['Y', 'T', 'Mode'],
         'col': ['X', 'index'],
         'T': ['T', 'Mode'],
-        'C': ['C']
+        'C': ['C', 'M']
     }
     found = []
     for dim in ['row', 'col', 'T', 'C']: 
