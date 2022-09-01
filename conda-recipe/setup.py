@@ -6,7 +6,7 @@ with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-
 
 setup(
     name = "cptcore",
-    version = "1.0.6",
+    version = "1.0.7",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),

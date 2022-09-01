@@ -8,7 +8,7 @@ VERSION=$(MAJOR_VERSION).$(MINOR_VERSION).$(PATCH_VERSION)
 
 # User should change the "FC" to reflect the fortran compiler available on your machine.  
 # CPT was tested with the following fortran compilers: gfortran, ifort, nagfor, pgf90, pgf95 
-FC=gfortran
+FC=x86_64-conda_cos6-linux-gnu-gfortran
 
 # install target installs the binaries to INSTALL_DIR
 INSTALL_DIR ?= .
@@ -38,7 +38,7 @@ LAPACK_LIB=lapack
 BLAS_LIB=refblas
 
 
-ifeq ($(FC),gfortran)
+ifeq ($(FC),x86_64-conda_cos6-linux-gnu-gfortran)
    CPPDEFS += -DGFORTRAN 
    ifeq ($(DEBUG),1)
       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics

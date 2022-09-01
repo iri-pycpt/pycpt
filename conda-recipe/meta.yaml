@@ -1,6 +1,6 @@
 package:
   name: cptcore
-  version: "1.0.6"
+  version: "1.0.7"
 
 source:
   path: ../src
@@ -19,12 +19,10 @@ requirements:
     - cptio
     - psutil
     - make # [linux]
-    - fortran-compiler # [linux]
-    - cxx-compiler # [linux]
-    - libpng # [linux]
+    - gfortran_linux-64 # [linux]
+    - gxx_linux-64 # [linux]
+    - gcc_linux-64 # [linux]
     - libgd # [linux]
-    - jpeg # [linux]
-    - libnetcdf # [linux]
     - openlibm # [linux]
     - xorg-libx11 # [linux]
 
