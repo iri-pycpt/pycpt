@@ -21,6 +21,7 @@ requirements:
     - matplotlib
     - statsmodels
     - cptio
+    - cptdl
 
 test:
   imports:
