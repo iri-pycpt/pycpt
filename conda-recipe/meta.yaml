@@ -18,8 +18,16 @@ requirements:
   run:
     - cptio
     - psutil
-    - gfortran # [linux]
     - make # [linux]
+    - fortran-compiler # [linux]
+    - cxx-compiler # [linux]
+    - libpng # [linux]
+    - libgd # [linux]
+    - jpeg # [linux]
+    - libnetcdf # [linux]
+    - openlibm # [linux]
+    - xorg-libx11 # [linux]
+
 test:
   imports:
     - cptcore

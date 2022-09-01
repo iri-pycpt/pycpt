@@ -43,7 +43,7 @@ ifeq ($(FC),gfortran)
    ifeq ($(DEBUG),1)
       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
    else
-      FFLAGS= -O $(CPPDEFS) -std=f2008 -fall-intrinsics -static-libgfortran -static-libgcc
+      FFLAGS= -O $(CPPDEFS) -std=f2008 -fall-intrinsics 
    endif
 endif
 
