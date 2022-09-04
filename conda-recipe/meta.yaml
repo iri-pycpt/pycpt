@@ -8,6 +8,7 @@ source:
 build:
   number: 0
   string: cptcore
+  noarch: python 
 
 requirements:
   host:
@@ -17,13 +18,7 @@ requirements:
   run:
     - cptio
     - psutil
-    - make # [linux]
-    - gfortran_linux-64 # [linux]
-    - gxx_linux-64 # [linux]
-    - gcc_linux-64 # [linux]
-    - libgd # [linux]
-    - openlibm # [linux]
-    - xorg-libx11 # [linux]
+
 
 test:
   imports:
