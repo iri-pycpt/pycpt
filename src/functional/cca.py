@@ -275,10 +275,10 @@ def canonical_correlation_analysis(
     two_afc.name = 'two_alternative_forced_choice'
     roc_below = open_cptdataset(str(cpt.outputs['roc_below'].absolute()) + '.txt') 
     roc_below = getattr(roc_below, [i for i in roc_below.data_vars][0])
-    roc_below.name = 'roc_area_under_curve'
+    roc_below.name = 'roc_area_below_normal'
     roc_above = open_cptdataset(str(cpt.outputs['roc_above'].absolute()) + '.txt')
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
-    roc_above.name = 'roc_area_above_curve'
+    roc_above.name = 'roc_area_above_normal'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
     skill_values = xr.merge(skill_values).mean('Mode')
 
