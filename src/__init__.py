@@ -4,7 +4,7 @@ from .tests import test_cca, test_deterministic_skill, test_mlr, test_pcr, test_
 from .bash import rmrf, ls_files_recursive, rmstar
 from .utilities import install_cpt_linux
 
-__version__ = "1.0.8"
+__version__ = "1.0.9"
 __author__ = "Kyle Joseph Chen Hall (kjhall@iri.columbia.edu)"
 
 from pathlib import Path 
