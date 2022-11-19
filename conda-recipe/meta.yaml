@@ -1,6 +1,6 @@
 package:
   name: cptdl
-  version: "1.0.3"
+  version: "1.0.4"
 
 source:
   path: ../src
@@ -28,8 +28,8 @@ test:
     
 
 about:
-  home: https://github.com/kjhall-iri/
+  home: https://github.com/iri-pycpt/
   license: MIT
   summary: 'toolkit bridging the gap between CPT and Xarray' 
   description: 'IRI DL Downloads'
-  dev_url: https://github.com/kjhall-iri/
+  dev_url: https://github.com/iri-pycpt/
