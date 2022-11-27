@@ -43,7 +43,7 @@ def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predic
         MOS = "None"
     for predictor in predictors:
         assert predictor in dl.hindcasts.keys() and predictor in dl.forecasts.keys(), 'illegal predictor - {}'.format(predictor)
-    assert predictand in dl.observations.keys(), 'illegal predictand - {}'.format(predictor)
+    assert predictand in dl.observations.keys(), 'illegal predictand - {}'.format(predictand)
     assert MOS in ['CCA', 'PCR', 'None'], 'Illegal MOS selection - {}'.format(MOS)
 
     download_args = copy.copy(download_args2)
