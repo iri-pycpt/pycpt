@@ -259,8 +259,8 @@ def detect_changes(outputdir, wait=0.2):
         cur_sizes = copy.deepcopy(new_sizes )
     return dt.timedelta(seconds=i*wait)
 
-CPT_DEFAULT_VERSION = '17.7.0'
-CPT_VALID_VERSIONS = ['17.7.0']
+CPT_DEFAULT_VERSION = '17.7.8'
+CPT_VALID_VERSIONS = ['17.7.0','17.7.4','17.7.8']
 
 def install_cpt_unix(version=CPT_DEFAULT_VERSION):
     assert platform.system() != 'Windows', 'On Windows, you should be using install_cpt_windows'
@@ -305,7 +305,7 @@ def install_cpt_windows(version=CPT_DEFAULT_VERSION):
 
 def install_cpt_windows2():
     assert platform.system() == 'Windows', 'On Unix, you should be using install_cpt_unix'
-    CPT_INSTALLER = Path(str(Path(__file__).parents[0]/ 'fortran' / f'CPT_batch_installation_17.7.4.exe').replace('.egg', ''))
+    CPT_INSTALLER = Path(str(Path(__file__).parents[0]/ 'fortran' / f'CPT_batch_installation_17.7.8.exe').replace('.egg', ''))
     cptspacevar = str(Path(__file__).parents[0]/ 'fortran' / platform.system()).replace('.egg', '') 
     cptspacevar = str(cptspacevar) if str(cptspacevar)[:2] != "C:" else str(cptspacevar)[2:] 
     subprocess.call([str(CPT_INSTALLER.absolute()), '/SP-', '/VERYSILENT', '/NOCANCEL', f'/DIR={cptspacevar}'])
