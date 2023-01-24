@@ -1,4 +1,4 @@
-from .utilities import * 
+from .utilities import *
 from .bash import *
-from .targetleadconv import * 
-from .verify import * 
+from .targetleadconv import *
+from .verify import *
