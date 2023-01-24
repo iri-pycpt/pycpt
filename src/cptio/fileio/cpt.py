@@ -139,13 +139,16 @@ def open_cptdataset(filename):
                     pass
             data = array[:, 1:].astype(float)
 
-            # The first CPT header always has a 'field' field indicating the variable stored. It is assumed to be the same thereafter if not explicitly changed
+            # The first CPT header always has a 'field' field
+            # indicating the variable stored. It is assumed to be the
+            # same thereafter if not explicitly changed
             field = (
                 header[2]["field"] if "field" in header[2].keys() else attrs["field"]
             )
 
             if field not in data_vars.keys():
-                # now identify dimensions: 'T', 'Mode', 'C' - same deal , the same thereafter unless changed.
+                # now identify dimensions: 'T', 'Mode', 'C' - same
+                # deal , the same thereafter unless changed.
                 rowdim = header[2]["row"] if "row" in header[2].keys() else attrs["row"]
                 coldim = header[2]["col"] if "col" in header[2].keys() else attrs["col"]
                 somedims = [
@@ -193,12 +196,16 @@ def open_cptdataset(filename):
                 ndims = len(alldims)
                 if (
                     "C" in alldims and ndims == 4
-                ):  # to accomodate 4D data, we sort C to the first dimension, do all the C's separately, then shove them together in the end.
+                ):  # to accomodate 4D data, we sort C to the first
+                    # dimension, do all the C's separately, then shove
+                    # them together in the end.
                     alldims.pop(alldims.index("C"))
                     alldims.insert(0, "C")
                 if (
                     "M" in alldims and ndims == 4
-                ):  # to accomodate 4D data, we sort C to the first dimension, do all the C's separately, then shove them together in the end.
+                ):  # to accomodate 4D data, we sort C to the first
+                    # dimension, do all the C's separately, then shove
+                    # them together in the end.
                     alldims.pop(alldims.index("M"))
                     alldims.insert(0, "M")
                 data_vars[field] = {
