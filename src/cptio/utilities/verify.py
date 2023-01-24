@@ -37,32 +37,40 @@ def is_valid_cptv10(da, assertmissing=True, assert_units=True):
         assert (
             dim in da.coords
         ), "Each dim on a CPTv10 must have corresponding coordinates"
-        assert (
-            len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)]
-        ), "Each dim on a CPTv10 must have exactly one coordinate per index along that dimension"
+        assert len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)], (
+            "Each dim on a CPTv10 must have exactly one coordinate per index along that"
+            " dimension"
+        )
     if "T" in da.dims:
         for dim in ["Ti", "Tf", "S"]:
             if dim in da.coords:
                 assert (
                     len(da.coords[dim].values) == da.shape[list(da.dims).index("T")]
-                ), "If the CPTv10 has optional Time coordinates Ti, Tf, or S, they must be indexing the T dimension"
+                ), (
+                    "If the CPTv10 has optional Time coordinates Ti, Tf, or S, they"
+                    " must be indexing the T dimension"
+                )
     for dim in ["Ti", "Tf", "S"]:
         if dim in da.dims:
-            assert (
-                "T" in da.dims
-            ), "if the optional time coordinates are present on the CPTv10, the required time coord must also be"
+            assert "T" in da.dims, (
+                "if the optional time coordinates are present on the CPTv10, the"
+                " required time coord must also be"
+            )
     if "Ti" in da.coords:
-        assert (
-            "Tf" in da.coords
-        ), "Cannot have one optional time coordinate and not the other. found Ti but not Tf. except for S"
+        assert "Tf" in da.coords, (
+            "Cannot have one optional time coordinate and not the other. found Ti but"
+            " not Tf. except for S"
+        )
     if "Tf" in da.coords:
-        assert (
-            "Ti" in da.coords
-        ), "Cannot have one optional time coordinate and not the other. found Tf but not Ti. except for S"
+        assert "Ti" in da.coords, (
+            "Cannot have one optional time coordinate and not the other. found Tf but"
+            " not Ti. except for S"
+        )
     if assertmissing:
-        assert (
-            "missing" in da.attrs.keys()
-        ), "CPTv10 is required to have a 'missing' attribute indicating the 'missing_value' value which replaces NaNs in CPT"
+        assert "missing" in da.attrs.keys(), (
+            "CPTv10 is required to have a 'missing' attribute indicating the"
+            " 'missing_value' value which replaces NaNs in CPT"
+        )
         assert not np.isnan(
             float(da.attrs["missing"])
         ), "CPTv10 Missing Value cannot be NaN"

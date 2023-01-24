@@ -21,32 +21,40 @@ def is_valid_cptv10(da, assertmissing=True, assert_units=True):
         assert (
             dim in da.coords
         ), "Each dim on a CPTv10 must have corresponding coordinates"
-        assert (
-            len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)]
-        ), "Each dim on a CPTv10 must have exactly one coordinate per index along that dimension"
+        assert len(da.coords[dim].values) == da.shape[list(da.dims).index(dim)], (
+            "Each dim on a CPTv10 must have exactly one coordinate per index along that"
+            " dimension"
+        )
     if "T" in da.dims:
         for dim in ["Ti", "Tf", "S"]:
             if dim in da.coords:
                 assert (
                     len(da.coords[dim].values) == da.shape[list(da.dims).index("T")]
-                ), "If the CPTv10 has optional Time coordinates Ti, Tf, or S, they must be indexing the T dimension"
+                ), (
+                    "If the CPTv10 has optional Time coordinates Ti, Tf, or S, they"
+                    " must be indexing the T dimension"
+                )
     for dim in ["Ti", "Tf", "S"]:
         if dim in da.dims:
-            assert (
-                "T" in da.dims
-            ), "if the optional time coordinates are present on the CPTv10, the required time coord must also be"
+            assert "T" in da.dims, (
+                "if the optional time coordinates are present on the CPTv10, the"
+                " required time coord must also be"
+            )
     if "Ti" in da.coords:
-        assert (
-            "Tf" in da.coords
-        ), "Cannot have one optional time coordinate and not the other. found Ti but not Tf. except for S"
+        assert "Tf" in da.coords, (
+            "Cannot have one optional time coordinate and not the other. found Ti but"
+            " not Tf. except for S"
+        )
     if "Tf" in da.coords:
-        assert (
-            "Ti" in da.coords
-        ), "Cannot have one optional time coordinate and not the other. found Tf but not Ti. except for S"
+        assert "Ti" in da.coords, (
+            "Cannot have one optional time coordinate and not the other. found Tf but"
+            " not Ti. except for S"
+        )
     if assertmissing:
-        assert (
-            "missing" in da.attrs.keys()
-        ), "CPTv10 is required to have a 'missing' attribute indicating the 'missing_value' value which replaces NaNs in CPT"
+        assert "missing" in da.attrs.keys(), (
+            "CPTv10 is required to have a 'missing' attribute indicating the"
+            " 'missing_value' value which replaces NaNs in CPT"
+        )
         assert not np.isnan(
             float(da.attrs["missing"])
         ), "CPTv10 Missing Value cannot be NaN"
@@ -240,9 +248,11 @@ def open_cptdataset(filename):
                         (data_vars[field]["data"], np.expand_dims(data, axis=0)), axis=0
                     )
                 elif ndims == 4:
-                    assert (
-                        "C" in header[2].keys() or "M" in header[2].keys()
-                    ), "Only accomodating 4D data with a C (or M) dimension as the highest dimension right now - its coord must change in every header"
+                    assert "C" in header[2].keys() or "M" in header[2].keys(), (
+                        "Only accomodating 4D data with a C (or M) dimension as the"
+                        " highest dimension right now - its coord must change in every"
+                        " header"
+                    )
                     if "C" in header[2].keys():
                         if (
                             len(data_vars[field]["data"])
@@ -453,8 +463,13 @@ def to_cptv10(
             da = da.transpose(T, C, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
                 for j in range(da.shape[list(da.dims).index(C)]):
-
-                    header = f"cpt:field={da.name}, cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+                    header = (
+                        f"cpt:field={da.name},"
+                        f" cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''},"
+                        f" cpt:nrow={da.shape[list(da.dims).index(row)]},"
+                        f" cpt:ncol={da.shape[list(da.dims).index(col)]},"
+                        f" cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+                    )
                     if assertmissing:
                         temp = (
                             da.isel({T: i, C: j})
@@ -504,7 +519,12 @@ def to_cptv10(
         elif len(extra_dims) == 1 and T is not None:
             da = da.transpose(T, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
-                header = f"cpt:field={da.name}, cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+                header = (
+                    f"cpt:field={da.name},"
+                    f" cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]},"
+                    f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
+                    f" cpt:col={col}{unitsblurb}{missingblurb}\n"
+                )
                 if assertmissing:
                     temp = da.isel({T: i}).fillna(float(da.attrs["missing"])).values
                 else:
@@ -544,7 +564,13 @@ def to_cptv10(
         elif len(extra_dims) == 1 and C is not None:
             da = da.transpose(C, row, col)
             for j in range(da.shape[list(da.dims).index(C)]):
-                header = f"cpt:field={da.name}, cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+                header = (
+                    f"cpt:field={da.name},"
+                    f" cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''},"
+                    f" cpt:nrow={da.shape[list(da.dims).index(row)]},"
+                    f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
+                    f" cpt:col={col}{unitsblurb}{missingblurb}\n"
+                )
                 if assertmissing:
                     temp = da.isel({C: j}).fillna(float(da.attrs["missing"])).values
                 else:
@@ -582,7 +608,11 @@ def to_cptv10(
                     np.savetxt(f, temp, fmt="%s", delimiter="\t")
         else:
             da = da.transpose(row, col)
-            header = f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]}, cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+            header = (
+                f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]},"
+                f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
+                f" cpt:col={col}{unitsblurb}{missingblurb}\n"
+            )
             if assertmissing:
                 temp = da.fillna(float(da.attrs["missing"])).values
             else:

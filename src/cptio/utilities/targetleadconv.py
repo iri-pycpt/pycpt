@@ -51,9 +51,10 @@ monthlengths = [0, 31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 def parse_target(target):
     """Gets a numerical month from three-letter month abbreviations"""
-    assert ("-" in target and len(target) == 7) or len(
-        target
-    ) == 3, 'TARGET must be in three-letter format for one month, or a range of months. For example, "Jun" or "Jun-Jul"'
+    assert ("-" in target and len(target) == 7) or len(target) == 3, (
+        "TARGET must be in three-letter format for one month, or a range of months. For"
+        ' example, "Jun" or "Jun-Jul"'
+    )
     low, high = target.split("-") if "-" in target else (target, target)
     return threeletters.index(low), threeletters.index(high)
 
@@ -134,15 +135,13 @@ def seasonal_target(fdate, target, lead_low, lead_high):
         target is not None and lead_high is not None and lead_low is not None
     ):  # if all are supplied
         ll, lh = leads_from_target(fdate, target)
-        assert (
-            ll == lead_low
-        ), "Provided lead_low incompatible with provided target and fdate - calculated {} but given {}".format(
-            ll, lead_low
+        assert ll == lead_low, (
+            "Provided lead_low incompatible with provided target and fdate - calculated"
+            " {} but given {}".format(ll, lead_low)
         )
-        assert (
-            ll == lead_low
-        ), "Provided lead_high incompatible with provided target and fdate - calculated {} but given {}".format(
-            lh, lead_high
+        assert ll == lead_low, (
+            "Provided lead_high incompatible with provided target and fdate -"
+            " calculated {} but given {}".format(lh, lead_high)
         )
         return fdate, target, lead_low, lead_high
     elif (
@@ -156,9 +155,10 @@ def seasonal_target(fdate, target, lead_low, lead_high):
         target = target_from_leads(fdate, lead_low, lead_high)
         return fdate, target, lead_low, lead_high
     else:
-        assert (
-            False
-        ), "Must provide either a TARGET in three-letter format for one month, or a range of months, or a set of lead-times, or all three which agree"
+        assert False, (
+            "Must provide either a TARGET in three-letter format for one month, or a"
+            " range of months, or a set of lead-times, or all three which agree"
+        )
 
 
 def subx_target(target=None, lead_low=None, lead_high=None):
@@ -183,13 +183,15 @@ def subx_target(target=None, lead_low=None, lead_high=None):
         assert target in leads.keys(), "invalid subx target {}".format(target)
         lead_low, lead_high = leads[target]
     elif target is None and lead_low is not None and lead_high is None:
-        assert (
-            False
-        ), "must either provide a target, or both leads, or a set of all three which agree"
+        assert False, (
+            "must either provide a target, or both leads, or a set of all three which"
+            " agree"
+        )
     elif target is None and lead_low is None and lead_high is not None:
-        assert (
-            False
-        ), "must either provide a target, or both leads, or a set of all three which agree"
+        assert False, (
+            "must either provide a target, or both leads, or a set of all three which"
+            " agree"
+        )
     else:
         target = (
             lr[(lead_low, lead_high)]
