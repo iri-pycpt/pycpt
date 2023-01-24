@@ -470,12 +470,32 @@ def to_cptv10(
             da = da.transpose(T, C, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
                 for j in range(da.shape[list(da.dims).index(C)]):
+                    if 'Ti' in da.coords:
+                        dates = format_date_range(
+                            da.coords['Ti'].values[i],
+                            da.coords['Tf'].values[i]
+                        )
+                    else:
+                        dates = format_date(da.coords[T].values[i])
+                    if 'S' in da.coords:
+                        s = convert_np64_datetime(da.coords['S'].values[i])
+                        s_part = f", cpt:S={s.strftime('%Y-%m-%dT%H:%M')}"
+                    else:
+                        s_part = ""
+                    if C == 'C':
+                        prob_part = ", cpt:clim_prob=0.33333"
+                    else:
+                        prob_part = ""
                     header = (
-                        f"cpt:field={da.name},"
-                        f" cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else 'cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:{C}={da.coords[C].values[j]}{', cpt:clim_prob=0.33333' if C=='C' else ''},"
-                        f" cpt:nrow={da.shape[list(da.dims).index(row)]},"
-                        f" cpt:ncol={da.shape[list(da.dims).index(col)]},"
-                        f" cpt:row={row}, cpt:col={col}{unitsblurb}{missingblurb}\n"
+                        f"cpt:field={da.name}"
+                        f", cpt:{T}={dates}"
+                        f"{s_part}"
+                        f", cpt:{C}={da.coords[C].values[j]}"
+                        f"{prob_part}"
+                        f", cpt:nrow={da.shape[list(da.dims).index(row)]}"
+                        f", cpt:ncol={da.shape[list(da.dims).index(col)]}"
+                        f", cpt:row={row}, cpt:col={col}"
+                        f"{unitsblurb}{missingblurb}\n"
                     )
                     if assertmissing:
                         temp = (
@@ -489,22 +509,13 @@ def to_cptv10(
                     f.write(header)
                     if row == "T" or col == "T":
                         tcoords_temp = [
-                            (
-                                convert_np64_datetime(da.T.coords["Ti"].values[i]).year,
-                                convert_np64_datetime(
-                                    da.T.coords["Ti"].values[i]
-                                ).month,
-                                convert_np64_datetime(da.T.coords["Ti"].values[i]).day,
-                                convert_np64_datetime(da.T.coords["Tf"].values[i]).year,
-                                convert_np64_datetime(
-                                    da.T.coords["Tf"].values[i]
-                                ).month,
-                                convert_np64_datetime(da.T.coords["Tf"].values[i]).day,
+                            format_date_range(ti, tf)
+                            for ti, tf in zip(
+                                da.coords["Ti"].values,
+                                da.coords["Tf"].values
                             )
-                            for i in range(da.shape[list(da.dims).index("T")])
                         ]
-                        tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
-                        tcoords = np.asarray(tcoords, dtype="object")
+                        tcoords = np.asarray(tcoords_temp, dtype="object")
                     if col != "T":
                         f.write(
                             "\t"
@@ -526,11 +537,26 @@ def to_cptv10(
         elif len(extra_dims) == 1 and T is not None:
             da = da.transpose(T, row, col)
             for i in range(da.shape[list(da.dims).index(T)]):
+                if 'Ti' in da.coords:
+                    dates = format_date_range(
+                        da.coords['Ti'].values[i],
+                        da.coords['Tf'].values[i]
+                    )
+                else:
+                    dates = format_date(da.coords[T].values[i])
+                if 'S' in da.coords:
+                    s = convert_np64_datetime(da.coords['S'].values[i])
+                    s_part = f", cpt:S={s.strftime('%Y-%m-%dT%H:%M')}"
+                else:
+                    s_part = ""
                 header = (
-                    f"cpt:field={da.name},"
-                    f" cpt:{T}={da.coords[T].values[i] if 'Ti' not in da.coords else '{}-{}-{}/{}-{}-{}'.format(convert_np64_datetime(da.coords['Ti'].values[i]).year, convert_np64_datetime(da.coords['Ti'].values[i]).month, convert_np64_datetime(da.coords['Ti'].values[i]).day, convert_np64_datetime(da.coords['Tf'].values[i]).year, convert_np64_datetime(da.coords['Tf'].values[i]).month, convert_np64_datetime(da.coords['Tf'].values[i]).day ) },{'' if 'S' not in da.coords.keys() else ' cpt:S='+ convert_np64_datetime(da.coords['S'].values[i]).strftime('%Y-%m-%dT%H:%M') + ', '} cpt:nrow={da.shape[list(da.dims).index(row)]},"
-                    f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
-                    f" cpt:col={col}{unitsblurb}{missingblurb}\n"
+                    f"cpt:field={da.name}"
+                    f", cpt:{T}={dates}"
+                    f"{s_part}"
+                    f", cpt:nrow={da.shape[list(da.dims).index(row)]}"
+                    f", cpt:ncol={da.shape[list(da.dims).index(col)]}"
+                    f", cpt:row={row}, cpt:col={col}"
+                    f"{unitsblurb}{missingblurb}\n"
                 )
                 if assertmissing:
                     temp = da.isel({T: i}).fillna(float(da.attrs["missing"])).values
@@ -539,18 +565,13 @@ def to_cptv10(
                 f.write(header)
                 if row == "T" or col == "T":
                     tcoords_temp = [
-                        (
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).year,
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).month,
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).day,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).year,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).month,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).day,
+                        format_date_range(ti, tf)
+                        for ti, tf in zip(
+                            da.coords["Ti"].values,
+                            da.coords["Tf"].values
                         )
-                        for i in range(da.shape[list(da.dims).index("T")])
                     ]
-                    tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
-                    tcoords = np.asarray(tcoords, dtype="object")
+                    tcoords = np.asarray(tcoords_temp, dtype="object")
                 if col != "T":
                     f.write(
                         "\t"
@@ -585,18 +606,13 @@ def to_cptv10(
                 f.write(header)
                 if row == "T" or col == "T":
                     tcoords_temp = [
-                        (
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).year,
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).month,
-                            convert_np64_datetime(da.T.coords["Ti"].values[i]).day,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).year,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).month,
-                            convert_np64_datetime(da.T.coords["Tf"].values[i]).day,
+                        format_date_range(ti, tf)
+                        for ti, tf in zip(
+                            da.coords["Ti"].values,
+                            da.coords["Tf"].values
                         )
-                        for i in range(da.shape[list(da.dims).index("T")])
                     ]
-                    tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
-                    tcoords = np.asarray(tcoords, dtype="object")
+                    tcoords = np.asarray(tcoords_temp, dtype="object")
                 if col != "T":
                     f.write(
                         "\t"
@@ -627,18 +643,13 @@ def to_cptv10(
             f.write(header)
             if row == "T" or col == "T":
                 tcoords_temp = [
-                    (
-                        convert_np64_datetime(da.T.coords["Ti"].values[i]).year,
-                        convert_np64_datetime(da.T.coords["Ti"].values[i]).month,
-                        convert_np64_datetime(da.T.coords["Ti"].values[i]).day,
-                        convert_np64_datetime(da.T.coords["Tf"].values[i]).year,
-                        convert_np64_datetime(da.T.coords["Tf"].values[i]).month,
-                        convert_np64_datetime(da.T.coords["Tf"].values[i]).day,
+                    format_date_range(ti, tf)
+                    for ti, tf in zip(
+                        da.coords["Ti"].values,
+                        da.coords["Tf"].values
                     )
-                    for i in range(da.shape[list(da.dims).index("T")])
                 ]
-                tcoords = ["{}-{}-{}/{}-{}-{}".format(*i) for i in tcoords_temp]
-                tcoords = np.asarray(tcoords, dtype="object")
+                tcoords = np.asarray(tcoords_temp, dtype="object")
             if col != "T":
                 f.write(
                     "\t" + "\t".join([str(crd) for crd in da.coords[col].values]) + "\n"
@@ -654,3 +665,16 @@ def to_cptv10(
             else:
                 np.savetxt(f, temp, fmt="%s", delimiter="\t")
     return opfile
+
+
+def format_date(t):
+    return t
+
+
+def format_date_range(ti, tf):
+    ti = convert_np64_datetime(ti)
+    tf = convert_np64_datetime(tf)
+    return '{}-{}-{}/{}-{}-{}'.format(
+        ti.year, ti.month, ti.day,
+        tf.year, tf.month, tf.day
+    )
