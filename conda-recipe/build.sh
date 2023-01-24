@@ -1,1 +1,1 @@
-$PYTHON $RECIPE_DIR/setup.py install
+$PYTHON $RECIPE_DIR/../setup.py install
