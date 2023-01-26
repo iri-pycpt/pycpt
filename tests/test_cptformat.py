@@ -1,4 +1,4 @@
-from .. import *
+from cptio import *
 from pathlib import Path 
 import pytest 
 
@@ -9,7 +9,7 @@ def xarray_equals(x, y):
 def test_gcm_input():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').prec
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').prec
     testfile = to_cptv10(x, opfile='test.tsv')
     assert xarray_equals(open_cptdataset(testfile), x)
     
@@ -18,7 +18,7 @@ def test_gcm_input():
 def test_cpc_input():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    y = open_cptdataset( Path( __file__).absolute().parents[1] / 'data/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv').prate
+    y = open_cptdataset( Path( __file__).absolute().parents[0] / 'data/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv').prate
     testfile = to_cptv10(y, opfile='test.tsv')
     assert xarray_equals(open_cptdataset(testfile), y)
 
@@ -26,7 +26,7 @@ def test_cpc_input():
 def test_missing_data():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/lesotho_ond.tsv').rfe
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/lesotho_ond.tsv').rfe
     testfile = to_cptv10(x, opfile='test.tsv')
     assert xarray_equals(open_cptdataset(testfile), x)
 
@@ -34,7 +34,7 @@ def test_missing_data():
 def test_probabilistic_data():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/prob_rfcsts.tsv')
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/prob_rfcsts.tsv')
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile='test.tsv')
     assert xarray_equals(open_cptdataset(testfile), x)
 
@@ -42,7 +42,7 @@ def test_probabilistic_data():
 def test_skill():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/pearson.txt')
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/pearson.txt')
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile='test.tsv', assertmissing=False, assert_units=False)
     assert xarray_equals(open_cptdataset(testfile), x)
 
@@ -50,7 +50,7 @@ def test_skill():
 def test_spatial_loadings():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/predictand_cca_spatial_loadings.txt')
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/predictand_cca_spatial_loadings.txt')
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile='test.tsv', assertmissing=False, assert_units=False)
     assert xarray_equals(open_cptdataset(testfile), x)
 
@@ -58,7 +58,7 @@ def test_spatial_loadings():
 def test_eof_timeseries(): 
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/predictand_eof_timeseries.txt')
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/predictand_eof_timeseries.txt')
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile='test.tsv', assertmissing=False, assert_units=False)
     assert xarray_equals(open_cptdataset(testfile), x)
 
@@ -66,7 +66,7 @@ def test_eof_timeseries():
 def test_canonical_correlation():
     if Path('test.tsv').is_file():
         Path('test.tsv').unlink()
-    x = open_cptdataset(Path( __file__ ).absolute().parents[1] / 'data/cca_canonical_correlation.txt')
+    x = open_cptdataset(Path( __file__ ).absolute().parents[0] / 'data/cca_canonical_correlation.txt')
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile='test.tsv')
     assert xarray_equals(open_cptdataset(testfile), x)
 
