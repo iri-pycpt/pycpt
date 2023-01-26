@@ -674,7 +674,18 @@ def format_date(t):
 def format_date_range(ti, tf):
     ti = convert_np64_datetime(ti)
     tf = convert_np64_datetime(tf)
-    return '{}-{}-{}/{}-{}-{}'.format(
-        ti.year, ti.month, ti.day,
-        tf.year, tf.month, tf.day
-    )
+    # If it looks like a season (sequence of full months), use monthly
+    # notation instead of daily. While it's usually ok to represent a
+    # season using daily notation, it's not ok if the season ends in
+    # February, because when using the daily notation, CPT rejects
+    # seasons whose length is different in leap years.
+    if is_season(ti, tf):
+        result = f"{ti.year}-{ti.month}/{tf.year}-{tf.month}"
+    else:
+        result = f"{ti.year}-{ti.month}-{ti.day}/{tf.year}-{tf.month}-{tf.day}"
+    return result
+
+
+def is_season(ti, tf):
+    '''True if ti is the first day of a month and tf is the last day of a month.'''
+    return ti.day == 1 and (tf + dt.timedelta(days=1)).day == 1
