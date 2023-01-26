@@ -353,14 +353,21 @@ def datetime_timestamp_end(date):
         ymd, hms = date.split("T")
     else:
         ymd = date
-    last_days = [None, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     fields = [int(i) for i in ymd.split("-")]
-    while len(fields) < 3:
-        if len(fields) == 1:
-            fields.append(12)
+    y = fields[0]
+    m = fields[1]
+    if len(fields) == 3:
+        d = fields[2]
+    elif len(fields) == 2:
+        if m == 12:
+            d = 31
         else:
-            fields.append(last_days[fields[1]])
-    return dt.datetime(*fields)
+            # Find the first day of the following month, then back up
+            # one day.
+            d = (dt.datetime(y, m + 1, 1) - dt.timedelta(days=1)).day
+    else:
+        assert False, f"Can't parse date {ymd}"
+    return dt.datetime(y, m, d)
 
 
 def read_cpt_date(date_original):
