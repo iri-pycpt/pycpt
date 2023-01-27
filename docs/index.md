@@ -3,7 +3,7 @@
 A python library for reading and writing CPTv10-formatted tab-separated values (tsv) files via Xarray
 
 
-Maintainer: Kyle Hall (kjhall@iri.columbia.edu) 
+Maintainer: IRI (pycpt-help@iri.columbia.edu)
 
 ### Installation
 

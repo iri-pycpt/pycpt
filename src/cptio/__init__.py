@@ -18,5 +18,5 @@ from .utilities import (
 
 
 __version__ = "1.0.1"
-__author__ = "Kyle Hall (kjhall@iri.columbia.edu)"
+__author__ = "Kyle Hall (pycpt-help@iri.columbia.edu)"
 __license__ = "MIT"

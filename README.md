@@ -49,5 +49,5 @@ pytest -v .
 ```
 
 
-for support: awr@iri.columbia.edu
+for support: pycpt-help@iri.columbia.edu
 
