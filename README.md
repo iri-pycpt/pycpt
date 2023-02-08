@@ -21,7 +21,7 @@ git clone https://github.com/iri-pycpt/cpt-io.git
 cd cpt-io
 pip install -e .
 python
-import src/cptio as cptio
+import cptio
 ```
 Changes you make to the library will take effect when you restart python, no need to build the package first.
 
@@ -49,5 +49,5 @@ pytest -v .
 ```
 
 
-for support: awr@iri.columbia.edu
+for support: pycpt-help@iri.columbia.edu
 

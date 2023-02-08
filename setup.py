@@ -7,9 +7,9 @@ long_description = readme_path.read_text(encoding='utf-8')
 
 setup(
     name = "cptio",
-    version = "1.0.1",
+    version = "1.0.2",
     author = "Kyle Hall",
-    author_email = "kjhall@iri.columbia.edu",
+    author_email = "pycpt-help@iri.columbia.edu",
     description = ("Tools bridging Xarray and CPT"),
     license = "MIT",
     keywords = ["climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'],
