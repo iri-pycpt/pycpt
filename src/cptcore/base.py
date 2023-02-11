@@ -1,3 +1,4 @@
+import collections
 from pathlib import Path
 from subprocess import Popen, PIPE
 import platform, os , io, uuid, psutil, time
@@ -108,14 +109,17 @@ class CPT:
         self.write(3)
         
     def read(self):
-        std_out = ""
-        queue = list("           ")
-        while CPT_SECRET not in "".join(queue[::-1]) and self.cpt_process.poll() is None:
+        output = io.StringIO()
+        buf = collections.deque(maxlen=len(CPT_SECRET))
+        while True:
             char = self.reader.read(1)
-            queue.pop(-1)
-            queue.insert(0, char)
-            std_out += char
-        return std_out
+            if char == "":
+                break
+            output.write(char)
+            buf.append(char)
+            if ''.join(buf) == CPT_SECRET or self.cpt_process.poll() is not None:
+                break
+        return output.getvalue()
 
 
     def status(self ):
