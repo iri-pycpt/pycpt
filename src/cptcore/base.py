@@ -103,6 +103,7 @@ class CPT:
         self.cpt_process = Popen([Path(self.cpt).absolute()], stdin=PIPE, stderr=PIPE, stdout=PIPE)
         self.reader = io.TextIOWrapper(self.cpt_process.stdout, encoding='utf8')
         x = self.read()
+        self.last_message = x
         if self.interactive:
             print(x)
         self.write(571)
