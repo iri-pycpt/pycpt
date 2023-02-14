@@ -1,7 +1,7 @@
+from pathlib import Path
 from setuptools import *
-import os
 
-with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-8') as fh:
+with open(Path(__file__ ).parent / 'README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
 setup(
@@ -16,12 +16,10 @@ setup(
     url="https://github.com/kjhall-iri/CPT-EXTRAS",
     packages=[
         'cptextras',
-        ],
-    package_data={
-    },
+    ],
     package_dir={
-        'cptextras': '{}/../src'.format(os.getenv('RECIPE_DIR')),
-        },
+        '': 'src',
+    },
     python_requires=">=3.4",
     long_description=long_description,
     long_description_content_type='text/markdown',
