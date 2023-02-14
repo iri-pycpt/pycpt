@@ -8,12 +8,12 @@ setup(
     name="cptextras",
     version="1.0.3",
     author="Kyle Hall",
-    author_email="kjhall@iri.columbia.edu",
+    author_email="pycpt-help@iri.columbia.edu",
     description=(
         "CPT-EXTRAS"),
     license="MIT",
     keywords="CPT PyCPT ",
-    url="https://github.com/kjhall-iri/CPT-EXTRAS",
+    url="https://github.com/iri-pycpt/CPT-EXTRAS",
     packages=[
         'cptextras',
     ],
