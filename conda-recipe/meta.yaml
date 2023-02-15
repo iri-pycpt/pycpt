@@ -6,7 +6,6 @@ source:
   path: ..
 build:
   number: 0
-  string: cptextras
   noarch: python
 
 requirements:
