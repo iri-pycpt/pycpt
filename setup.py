@@ -9,7 +9,7 @@ setup(
     name = "cptcore",
     version = "2.0.0",
     author = "Kyle Hall",
-    author_email = "kjhall@iri.columbia.edu",
+    author_email = "pycpt-help@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),
     license = "MIT",
     keywords = ["climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'],

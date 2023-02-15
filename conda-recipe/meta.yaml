@@ -27,8 +27,8 @@ test:
     - cptcore.tests
 
 about:
-  home: https://github.com/kjhall-iri/
+  home: https://github.com/iri-pycpt/
   license: MIT
   summary: 'IRIs Climate Predictability Tool' 
   description: 'Somewhat like CPT'
-  dev_url: https://github.com/kjhall-iri/
+  dev_url: https://github.com/iri-pycpt/

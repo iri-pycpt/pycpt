@@ -4,7 +4,7 @@ from .tests import test_cca, test_deterministic_skill, test_mlr, test_pcr, test_
 from .bash import rmrf, ls_files_recursive, rmstar
 
 __version__ = "2.0.0"
-__author__ = "Kyle Joseph Chen Hall (kjhall@iri.columbia.edu)"
+__author__ = "Kyle Joseph Chen Hall (pycpt-help@iri.columbia.edu)"
 
 CPT_CITATION = "Simon J. Mason, Michael K. Tippet, Lulin Song, Ángel G. Muñoz. 2021. Climate Predictability Tool version 17.5.2. Columbia University Academic Commons. https://doi.org/10.7916/d8-em2t-k781"
 PYCPTV1_CITATION = "Muñoz, Á.G., Robertson, A.W., Turkington, T., Mason, S.J., and contributors, 2019: 'PyCPT: a Python interface and enhancement for IRI's Climate Predictability Tool'."
