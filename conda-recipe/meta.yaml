@@ -3,10 +3,9 @@ package:
   version: "1.0.3"
 
 source:
-  path: ../src
+  path: ..
 build:
   number: 0
-  string: cptextras
   noarch: python
 
 requirements:
@@ -32,4 +31,4 @@ about:
   license: MIT
   summary: "CPT-EXTRAS"
   description: "CPT-EXTRAS"
-  dev_url: https://github.com/kjhall-iri/CPT-EXTRAS/
+  dev_url: https://github.com/iri-pycpt/CPT-EXTRAS
