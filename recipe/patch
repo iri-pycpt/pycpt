@@ -1,0 +1,15 @@
+diff --git a/17.8.1/Makefile b/17.8.1/Makefile
+index 451a480..cd83d3a 100644
+--- a/17.8.1/Makefile
++++ b/17.8.1/Makefile
+@@ -38,8 +38,8 @@ LAPACK_LIB=lapack
+ BLAS_LIB=refblas
+ 
+ 
+-ifeq ($(FC),gfortran)
+-   CPPDEFS += -DGFORTRAN 
++ifeq ($(findstring gfortran,$(FC)),gfortran)
++   CPPDEFS += -DGFORTRAN
+    ifeq ($(DEBUG),1)
+       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
+    else

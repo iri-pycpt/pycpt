@@ -1,0 +1,43 @@
+{% set version = "17.8.1" %}
+
+package:
+  name: cptbin
+  version: {{ version }}
+
+source:
+  url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version  }}.tar.gz
+  sha256: add40186f8477cb83a6e41c7c85e0fc75e94ad5186ad35fd98b63d300e53e573
+  patches:
+    - patch
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - make
+    - {{ compiler('fortran') }}
+
+test:
+  commands:
+    - echo 0 | $CONDA_PREFIX/bin/CPT.x
+
+about:
+  home: https://iri.columbia.edu/our-expertise/climate/tools/cpt/
+  summary: 'The Climate Predictability Tool'
+  description: |
+    The Climate Predictability Tool (CPT) is a software package for
+    constructing a seasonal climate forecast model, performing model
+    validation, and producing forecasts given updated data. Its design
+    has been tailored for producing seasonal climate forecasts using
+    model output statistic (MOS) corrections to climate predictions
+    from general circulation model (GCM), or for producing forecasts
+    using fields of sea-surface temperatures or similar
+    predictors. Although the software is specifically tailored for
+    these applications, it can be used in more general settings to
+    perform canonical correlation analysis (CCA), principal components
+    regression (PCR), or multiple linear regression (MLR) on any data,
+    and for any application.
+  license_file:
+    - {{ version }}/LICENSE
+    - {{ version }}/lapack/lapack/LICENSE
