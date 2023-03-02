@@ -11,7 +11,7 @@ source:
     - patch
 
 build:
-  number: 0
+  number: 4
 
 requirements:
   build:
@@ -20,7 +20,7 @@ requirements:
 
 test:
   commands:
-    - echo 0 | $CONDA_PREFIX/bin/CPT.x
+    - echo 0 | $CONDA_PREFIX/bin/CPT.x | grep "International Research Institute"
 
 about:
   home: https://iri.columbia.edu/our-expertise/climate/tools/cpt/

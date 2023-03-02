@@ -1,15 +1,46 @@
 diff --git a/17.8.1/Makefile b/17.8.1/Makefile
-index 451a480..cd83d3a 100644
+index 451a480..382e5f1 100644
 --- a/17.8.1/Makefile
 +++ b/17.8.1/Makefile
-@@ -38,8 +38,8 @@ LAPACK_LIB=lapack
+@@ -38,7 +38,7 @@ LAPACK_LIB=lapack
  BLAS_LIB=refblas
  
  
 -ifeq ($(FC),gfortran)
--   CPPDEFS += -DGFORTRAN 
 +ifeq ($(findstring gfortran,$(FC)),gfortran)
-+   CPPDEFS += -DGFORTRAN
+    CPPDEFS += -DGFORTRAN 
     ifeq ($(DEBUG),1)
        FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
-    else
+diff --git a/17.8.1/data_io_constants.F95 b/17.8.1/data_io_constants.F95
+index 733bd27..aa154a5 100644
+--- a/17.8.1/data_io_constants.F95
++++ b/17.8.1/data_io_constants.F95
+@@ -103,7 +103,7 @@ Module data_io_constants
+ ! Scalars
+ !
+ ! Character scalars
+-   Character(Len=256), Public :: ddir ! - data directory -
+-   Character(Len=256), Public :: rdir ! - CPT root directory -
++   Character(Len=512), Public :: ddir ! - data directory -
++   Character(Len=512), Public :: rdir ! - CPT root directory -
+ !
+ End Module data_io_constants
+diff --git a/17.8.1/user.F95 b/17.8.1/user.F95
+index 390688c..c2bced9 100644
+--- a/17.8.1/user.F95
++++ b/17.8.1/user.F95
+@@ -16,11 +16,11 @@ Module user
+ !
+ ! Character scalars
+    Character(Len=  128), Public :: userprofile ! - user home directory -
+-   Character(Len=  256), Public :: cpt_dir     ! - CPT directory -
++   Character(Len=  512), Public :: cpt_dir     ! - CPT directory -
+ #endif
+-   Character(Len=256+8), Public :: cpt_ini     ! - CPT initialization file -
++   Character(Len=512+8), Public :: cpt_ini     ! - CPT initialization file -
+ !
+-   Character(Len=  256), Private :: user_dir   ! - user directory -
++   Character(Len=  512), Private :: user_dir   ! - user directory -
+ !
+ Contains
+ !
