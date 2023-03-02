@@ -31,6 +31,6 @@ setup(
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
-		"Operating System :: OS Independent",
+	"Operating System :: OS Independent",
     ],
 )

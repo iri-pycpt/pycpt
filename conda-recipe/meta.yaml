@@ -6,16 +6,18 @@ source:
   path: ..
 
 build:
-  number: 0
+  number: 1
   noarch: python 
 
 requirements:
-  host:
+  build:
     - python
     - pip
     - setuptools
   run:
+    - python
     - cptio
+    - cptbin
     - psutil
 
 
@@ -28,6 +30,5 @@ test:
 about:
   home: https://github.com/iri-pycpt/
   license: MIT
-  summary: 'IRIs Climate Predictability Tool' 
-  description: 'Somewhat like CPT'
+  summary: "Python interface to IRI's Climate Predictability Tool"
   dev_url: https://github.com/iri-pycpt/
