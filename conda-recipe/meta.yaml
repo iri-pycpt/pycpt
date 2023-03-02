@@ -1,6 +1,6 @@
 package:
   name: cptcore
-  version: "1.0.11"
+  version: "2.0.0"
 
 source:
   path: ../src

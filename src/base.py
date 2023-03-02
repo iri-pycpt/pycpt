@@ -68,26 +68,14 @@ class CPT:
     def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, outputdir=None, **kwargs):
         self.interactive = interactive
         self.last_message = 'has not started yet'
+
         if platform.system() == 'Windows':
-            self.last_cmd = 'CPT_batch.exe'
-            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT_batch.exe').replace('.egg', '')
-            if not Path(self.cpt).is_file(): 
-                self.cpt = str(install_cpt_windows2()).replace('.egg', '')
-            #os.chmod(self.cpt, 0o777)
-            assert Path(self.cpt).is_file(), 'CPT executable not found'
-        elif platform.system() == 'Darwin':
-            self.last_cmd = 'CPT.x'
-            if platform.processor() == 'arm':
-                self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'M1' / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
-            else:
-                self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'intel' / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
-            assert Path(self.cpt).is_file(), 'CPT executable not found'
-            os.chmod(self.cpt, 0o777)
-        elif platform.system() == 'Linux':
-            self.last_cmd = 'CPT.x'
-            self.cpt = str(Path(__file__).parents[0] / 'fortran' / platform.system() / 'CPT'/'17.7.4'/ 'CPT.x').replace('.egg', '')
-            assert Path(self.cpt).is_file(), 'CPT executable not found'
-            os.chmod(self.cpt, 0o777)
+            exe_name = 'CPT_batch.exe'
+        else:
+            exe_name = 'CPT.x'
+        self.last_cmd = exe_name
+        self.cpt = str(Path(os.getenv('CPT_BIN_DIR')) / exe_name)
+        assert Path(self.cpt).is_file(), 'CPT executable not found'
         
         if outputdir is None:
             self.set_outputdir = False
@@ -108,7 +96,6 @@ class CPT:
             for key in self.outputs.keys():
                 self.outputs[key] = self.outputdir / self.outputs[key]
 
-        os.environ['CPT_BIN_DIR'] = str(Path(self.cpt).parents[0].absolute())   
         self.record = str(Path(record).absolute()) if record else None 
         self.log = str(Path(log)) if log else None 
         self.project_file = str(Path(project_file)) if project_file else None 

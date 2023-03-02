@@ -6,7 +6,7 @@ with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-
 
 setup(
     name = "cptcore",
-    version = "1.0.11",
+    version = "2.0.0",
     author = "Kyle Hall",
     author_email = "kjhall@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),
@@ -15,7 +15,6 @@ setup(
     url = "https://iri.columbia.edu/our-expertise/climate/tools/",
     packages=[  'cptcore', 'cptcore.functional', 'cptcore.tests' ],
     package_data={ 
-        'cptcore': ['{}/../src/fortran'.format(os.getenv('RECIPE_DIR')) + ''.join(['/*' for i in range(j) ]) for j in range(10) ],
         'cptcore.tests': ['{}/../src/tests/data/seasonal/*'.format(os.getenv('RECIPE_DIR')), '{}/../src/tests/data/subseasonal/*'.format(os.getenv('RECIPE_DIR'))]
     },
 	package_dir={ 
