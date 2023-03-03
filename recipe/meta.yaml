@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version  }}.tar.gz
-  sha256: 0fa635eb2c6328c86e97c1371569666962008d8f59644260b51a744521790307
+  sha256: c2f7992331ef6db2ee9c813a5c7a505e384e059492acf85fdc32671bf79e62e0
   patches:
     - patch
 
