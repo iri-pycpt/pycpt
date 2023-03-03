@@ -1,7 +1,7 @@
-diff --git a/17.8.1/Makefile b/17.8.1/Makefile
+diff --git a/17.8.2/Makefile b/17.8.2/Makefile
 index 451a480..382e5f1 100644
---- a/17.8.1/Makefile
-+++ b/17.8.1/Makefile
+--- a/17.8.2/Makefile
++++ b/17.8.2/Makefile
 @@ -38,7 +38,7 @@ LAPACK_LIB=lapack
  BLAS_LIB=refblas
  
@@ -11,10 +11,10 @@ index 451a480..382e5f1 100644
     CPPDEFS += -DGFORTRAN 
     ifeq ($(DEBUG),1)
        FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
-diff --git a/17.8.1/data_io_constants.F95 b/17.8.1/data_io_constants.F95
+diff --git a/17.8.2/data_io_constants.F95 b/17.8.2/data_io_constants.F95
 index 733bd27..aa154a5 100644
---- a/17.8.1/data_io_constants.F95
-+++ b/17.8.1/data_io_constants.F95
+--- a/17.8.2/data_io_constants.F95
++++ b/17.8.2/data_io_constants.F95
 @@ -103,7 +103,7 @@ Module data_io_constants
  ! Scalars
  !
@@ -25,10 +25,10 @@ index 733bd27..aa154a5 100644
 +   Character(Len=512), Public :: rdir ! - CPT root directory -
  !
  End Module data_io_constants
-diff --git a/17.8.1/user.F95 b/17.8.1/user.F95
+diff --git a/17.8.2/user.F95 b/17.8.2/user.F95
 index 390688c..c2bced9 100644
---- a/17.8.1/user.F95
-+++ b/17.8.1/user.F95
+--- a/17.8.2/user.F95
++++ b/17.8.2/user.F95
 @@ -16,11 +16,11 @@ Module user
  !
  ! Character scalars

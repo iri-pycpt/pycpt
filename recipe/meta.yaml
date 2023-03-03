@@ -1,4 +1,4 @@
-{% set version = "17.8.1" %}
+{% set version = "17.8.2" %}
 
 package:
   name: cptbin
@@ -6,12 +6,12 @@ package:
 
 source:
   url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version  }}.tar.gz
-  sha256: add40186f8477cb83a6e41c7c85e0fc75e94ad5186ad35fd98b63d300e53e573
+  sha256: 0fa635eb2c6328c86e97c1371569666962008d8f59644260b51a744521790307
   patches:
     - patch
 
 build:
-  number: 4
+  number: 0
 
 requirements:
   build:
