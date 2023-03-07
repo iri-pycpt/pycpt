@@ -5,19 +5,23 @@ package:
   version: {{ version }}
 
 source:
-  url: https://academiccommons.columbia.edu/doi/10.7916/wehb-sq76/download
-  fn: CPT.{{ version }}.tar.gz
-  sha256: a6ec2dd00aee284cce2834359cd467dbbad5e87450b0a1db8c77889f8ef28118
-  patches:
-    - patch
+  - url: https://academiccommons.columbia.edu/doi/10.7916/wehb-sq76/download  # [not win]
+    fn: CPT.{{ version }}.tar.gz  # [not win]
+    sha256: a6ec2dd00aee284cce2834359cd467dbbad5e87450b0a1db8c77889f8ef28118  # [not win]
+    patches:  # [not win]
+      - patch  # [not win]
+
+  - url: https://academiccommons.columbia.edu/doi/10.7916/ma14-2m65/download  # [win]
+    fn: CPT_batch_installation_{{ version }}.exe  # [win]
+    sha256: e0276cc51809fa678fbb8da3d18de8238490a60f5dcb73fb72130f8d55a03fae  # [win]
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
-    - make
-    - {{ compiler('fortran') }}
+    - make  # [not win]
+    - {{ compiler('fortran') }}  # [not win]
 
     # I think this is the default when building with conda-smithy, but
     # when building manually with conda-build it's easy to forget to
@@ -29,7 +33,8 @@ requirements:
 
 test:
   commands:
-    - echo 0 | $CONDA_PREFIX/bin/CPT.x | grep "International Research Institute"
+    - echo 0 | "$CONDA_PREFIX/bin/CPT.x" | grep "International Research Institute"  # [not win]
+    - echo 0 | "%CONDA_PREFIX%\Library\opt\cpt\CPT_batch.exe" | find "International Research Institute"  # [win]
 
 about:
   home: https://iri.columbia.edu/our-expertise/climate/tools/cpt/
@@ -48,5 +53,11 @@ about:
     regression (PCR), or multiple linear regression (MLR) on any data,
     and for any application.
   license_file:
-    - {{ version }}/LICENSE
-    - {{ version }}/lapack/lapack/LICENSE
+    # Would rather get the licenses directly from the source package,
+    # but conda-build can't automaticaly extract files from the
+    # windows exe installer, so keeping copies of the licenses in the
+    # recipe for now.
+    # - {{ version }}/LICENSE  # [not win]
+    # - {{ version }}/lapack/lapack/LICENSE  # [not win]
+    - LICENSE
+    - vendor-licenses/
