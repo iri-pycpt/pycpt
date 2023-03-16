@@ -1,22 +1,16 @@
-{% set version = "17.8.2" %}
+{% set version = "17.8.3" %}
 
 package:
   name: cptbin
   version: {{ version }}
 
 source:
-  - url: https://academiccommons.columbia.edu/doi/10.7916/wehb-sq76/download  # [not win]
-    fn: CPT.{{ version }}.tar.gz  # [not win]
-    sha256: a6ec2dd00aee284cce2834359cd467dbbad5e87450b0a1db8c77889f8ef28118  # [not win]
-    patches:  # [not win]
-      - patch  # [not win]
-
-  - url: https://academiccommons.columbia.edu/doi/10.7916/ma14-2m65/download  # [win]
-    fn: CPT_batch_installation_{{ version }}.exe  # [win]
-    sha256: e0276cc51809fa678fbb8da3d18de8238490a60f5dcb73fb72130f8d55a03fae  # [win]
+  - url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version }}.tar.gz
+    sha256: 58423f04b517ae63d1e6ff17f81e29dceaeb5ad74aad9945d44a8eb4c4ca5512
+    # applying patches in build script, not here.
 
 build:
-  number: 0
+  string: dev0
 
 requirements:
   build:
@@ -34,7 +28,8 @@ requirements:
 test:
   commands:
     - echo 0 | "$CONDA_PREFIX/bin/CPT.x" | grep "International Research Institute"  # [not win]
-    - echo 0 | "%CONDA_PREFIX%\Library\opt\cpt\CPT_batch.exe" | find "International Research Institute"  # [win]
+    # Use full path of Windows find to avoid getting the msys2 find
+    - echo 0 | "%CONDA_PREFIX%\Library\cpt\CPT_batch.exe" | C:\Windows\System32\find.exe "International Research Institute"  # [win]
 
 about:
   home: https://iri.columbia.edu/our-expertise/climate/tools/cpt/

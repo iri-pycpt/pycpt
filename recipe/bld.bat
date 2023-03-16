@@ -1,8 +1,29 @@
-CPT_batch_installation_%PKG_VERSION%.exe /SP- /VERYSILENT /NOCANCEL /SUPPRESSMSGBOXES /NORESTART /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /COMPONENTS=program,data /TASKS="" /DIR="%PREFIX%\Library\opt\cpt" || goto :error
+REM When building from local tarball, conda-build doesn't unpack automatically.
+REM We do it ourselves, stripping the first path component to match
+REM conda-build's behavior.
+REM tar --strip-components=1 zxf "CPT.%PKG_VERSION%.tar.gz" || goto :error
 
-del "%PREFIX%\Library\opt\cpt\unins*" || goto :error
+REM when building from URL, conda unpacks and applies patch.
+cd "%PKG_VERSION%" || goto :error
 
-REM mklink "%PREFIX%\Library\bin\CPT_batch.exe" "%PREFIX%\Library\opt\cpt\CPT_batch.exe" || goto :error
+set INSTALL_DIR="%PREFIX%\Library\cpt"
+mkdir "%INSTALL_DIR%" || goto :error
+
+patch -i "%RECIPE_DIR%\patch" || goto :error
+copy lapack\lapack\make.inc.example lapack\lapack\make.inc || goto :error
+make || goto :error
+
+copy CPT.x "%INSTALL_DIR%\CPT_batch.exe" || goto :error
+copy cpt.ini "%INSTALL_DIR%" || goto error
+mkdir "%INSTALL_DIR%\data" || goto :error
+copy data\labels.txt "%INSTALL_DIR%\data" || goto :error
+copy data\download_IRIDL.txt "%INSTALL_DIR%\data" || goto :error
+
+set MSYS_DLL_DIR=c:\msys64\usr\bin
+copy "%MSYS_DLL_DIR%\msys-gfortran-5.dll" "%INSTALL_DIR%" || goto :error
+copy "%MSYS_DLL_DIR%\msys-2.0.dll" "%INSTALL_DIR%" || goto :error
+copy "%MSYS_DLL_DIR%\msys-gcc_s-seh-1.dll" "%INSTALL_DIR%" || goto :error
+copy "%MSYS_DLL_DIR%\msys-quadmath-0.dll" "%INSTALL_DIR%" || goto :error
 
 mkdir "%PREFIX%\etc\conda\activate.d" || goto :error
 copy "%RECIPE_DIR%\activate.bat" "%PREFIX%\etc\conda\activate.d\%PKG_NAME%_activate.bat" || goto :error

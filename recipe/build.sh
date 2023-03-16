@@ -1,6 +1,7 @@
 set -x
 
 cd "$SRC_DIR/$PKG_VERSION"
+patch < "$RECIPE_DIR/patch"
 
 # get rid of build artifacts Simon accidentally included in source dist
 find . -name "*.o" -print0 | xargs -0 rm -f

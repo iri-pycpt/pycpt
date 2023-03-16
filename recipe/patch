@@ -1,21 +1,7 @@
-diff --git a/17.8.2/Makefile b/17.8.2/Makefile
-index 451a480..382e5f1 100644
---- a/17.8.2/Makefile
-+++ b/17.8.2/Makefile
-@@ -38,7 +38,7 @@ LAPACK_LIB=lapack
- BLAS_LIB=refblas
- 
- 
--ifeq ($(FC),gfortran)
-+ifeq ($(findstring gfortran,$(FC)),gfortran)
-    CPPDEFS += -DGFORTRAN 
-    ifeq ($(DEBUG),1)
-       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
-diff --git a/17.8.2/data_io_constants.F95 b/17.8.2/data_io_constants.F95
-index 733bd27..aa154a5 100644
---- a/17.8.2/data_io_constants.F95
-+++ b/17.8.2/data_io_constants.F95
-@@ -103,7 +103,7 @@ Module data_io_constants
+diff -ur CPT/17.8.3/data_io_constants.F95 CPT-new/17.8.3/data_io_constants.F95
+--- CPT/17.8.3/data_io_constants.F95	2023-03-13 14:57:58.000000000 -0400
++++ CPT-new/17.8.3/data_io_constants.F95	2023-03-15 20:39:19.061270186 -0400
+@@ -103,7 +103,7 @@
  ! Scalars
  !
  ! Character scalars
@@ -25,11 +11,22 @@ index 733bd27..aa154a5 100644
 +   Character(Len=512), Public :: rdir ! - CPT root directory -
  !
  End Module data_io_constants
-diff --git a/17.8.2/user.F95 b/17.8.2/user.F95
-index 390688c..c2bced9 100644
---- a/17.8.2/user.F95
-+++ b/17.8.2/user.F95
-@@ -16,11 +16,11 @@ Module user
+diff -ur CPT/17.8.3/Makefile CPT-new/17.8.3/Makefile
+--- CPT/17.8.3/Makefile	2023-03-13 14:57:58.000000000 -0400
++++ CPT-new/17.8.3/Makefile	2023-03-15 20:38:37.604864122 -0400
+@@ -38,7 +38,7 @@
+ BLAS_LIB=refblas
+ 
+ 
+-ifeq ($(FC),gfortran)
++ifeq ($(findstring gfortran,$(FC)),gfortran)
+    CPPDEFS += -DGFORTRAN 
+    ifeq ($(DEBUG),1)
+       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
+diff -ur CPT/17.8.3/user.F95 CPT-new/17.8.3/user.F95
+--- CPT/17.8.3/user.F95	2023-03-13 14:58:00.000000000 -0400
++++ CPT-new/17.8.3/user.F95	2023-03-15 20:40:11.801786716 -0400
+@@ -16,11 +16,11 @@
  !
  ! Character scalars
     Character(Len=  128), Public :: userprofile ! - user home directory -
