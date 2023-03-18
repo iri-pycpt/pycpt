@@ -16,6 +16,7 @@ requirements:
   build:
     - make  # [not win]
     - {{ compiler('fortran') }}  # [not win]
+    - dos2unix  # helps with patching source code with inconsistent line endings
 
     # I think this is the default when building with conda-smithy, but
     # when building manually with conda-build it's easy to forget to
