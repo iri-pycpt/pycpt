@@ -1,6 +1,8 @@
 set -x
 
 cd "$SRC_DIR/$PKG_VERSION"
+# Some files use DOS line endings, some unix. Gnu patch doesn't like patching the DOS ones.
+dos2unix data_io_constants.F95
 patch < "$RECIPE_DIR/patch"
 
 # get rid of build artifacts Simon accidentally included in source dist
