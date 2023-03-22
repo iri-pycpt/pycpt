@@ -34,8 +34,10 @@ requirements:
     - ipykernel 
     - numpy 
     
-    
-
+    # Temporarily pinning tornado because it seems to fix occasional
+    # crashes of the jupyter kernel.  See
+    # https://github.com/jupyter/notebook/issues/6721
+    - tornado<6.2
 
 
 
