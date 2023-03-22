@@ -1,8 +1,8 @@
-from setuptools import *
-import os
+from pathlib import Path
+from setuptools import setup
 
-with open('{}/../README.md'.format(os.getenv('RECIPE_DIR')), 'r', encoding='utf-8') as fh:
-	long_description= fh.read()
+readme_path = Path(__file__).parent / 'README.md'
+long_description = readme_path.read_text(encoding='utf-8')
 
 setup(
     name = "pycpt",
@@ -15,16 +15,16 @@ setup(
     url = "https://iri.columbia.edu/our-expertise/climate/tools/",
     packages=[  'pycpt' ],
     package_data={},
-	package_dir={ 
-        'pycpt': '{}/../src'.format(os.getenv('RECIPE_DIR')), 
+    package_dir={
+        '': 'src',
     },
-	python_requires=">=3.0",
+    python_requires=">=3.0",
     long_description=long_description,
-	long_description_content_type='text/markdown',
+    long_description_content_type='text/markdown',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
-		"Operating System :: OS Independent",
+	"Operating System :: OS Independent",
     ],
 )
