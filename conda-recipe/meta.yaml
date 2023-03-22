@@ -1,6 +1,6 @@
 package:
   name: cptdl
-  version: "1.0.5"
+  version: "1.0.6"
 
 source:
   path: ../src
@@ -18,18 +18,18 @@ requirements:
     - setuptools
   run:
     - xarray
-    - cptio 
+    - cptio
     - requests
 
 test:
   imports:
     - cptdl
 
-    
+
 
 about:
   home: https://github.com/iri-pycpt/
   license: MIT
-  summary: 'toolkit bridging the gap between CPT and Xarray' 
+  summary: 'toolkit bridging the gap between CPT and Xarray'
   description: 'IRI DL Downloads'
   dev_url: https://github.com/iri-pycpt/
