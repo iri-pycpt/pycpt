@@ -5,12 +5,13 @@ package:
   version: {{ version }}
 
 source:
-  - url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version }}.tar.gz
+  - url: https://academiccommons.columbia.edu/doi/10.7916/fdp6-v391/download
+    fn: CPT.{{ version }}.tar.gz
     sha256: 58423f04b517ae63d1e6ff17f81e29dceaeb5ad74aad9945d44a8eb4c4ca5512
     # applying patches in build script, not here.
 
 build:
-  string: dev0
+  number: 0
 
 requirements:
   build:
