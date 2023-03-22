@@ -1,9 +1,9 @@
-REM When building from local tarball, conda-build doesn't unpack automatically.
-REM We do it ourselves, stripping the first path component to match
+REM When building from URL, conda-build unpacks automatically, but
+REM when building from local tarball it doesn't, so we do it
+REM ourselves, stripping the first path component to match
 REM conda-build's behavior.
 REM tar --strip-components=1 zxf "CPT.%PKG_VERSION%.tar.gz" || goto :error
 
-REM when building from URL, conda unpacks and applies patch.
 cd "%PKG_VERSION%" || goto :error
 
 set INSTALL_DIR="%PREFIX%\Library\cpt"
