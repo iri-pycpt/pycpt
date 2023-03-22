@@ -1,0 +1,43 @@
+diff -ur CPT/17.8.3/data_io_constants.F95 CPT-new/17.8.3/data_io_constants.F95
+--- CPT/17.8.3/data_io_constants.F95	2023-03-13 14:57:58.000000000 -0400
++++ CPT-new/17.8.3/data_io_constants.F95	2023-03-15 20:39:19.061270186 -0400
+@@ -103,7 +103,7 @@
+ ! Scalars
+ !
+ ! Character scalars
+-   Character(Len=256), Public :: ddir ! - data directory -
+-   Character(Len=256), Public :: rdir ! - CPT root directory -
++   Character(Len=512), Public :: ddir ! - data directory -
++   Character(Len=512), Public :: rdir ! - CPT root directory -
+ !
+ End Module data_io_constants
+diff -ur CPT/17.8.3/Makefile CPT-new/17.8.3/Makefile
+--- CPT/17.8.3/Makefile	2023-03-13 14:57:58.000000000 -0400
++++ CPT-new/17.8.3/Makefile	2023-03-15 20:38:37.604864122 -0400
+@@ -38,7 +38,7 @@
+ BLAS_LIB=refblas
+ 
+ 
+-ifeq ($(FC),gfortran)
++ifeq ($(findstring gfortran,$(FC)),gfortran)
+    CPPDEFS += -DGFORTRAN 
+    ifeq ($(DEBUG),1)
+       FFLAGS= -g -Wall -fbounds-check $(CPPDEFS) -std=f2008 -fall-intrinsics
+diff -ur CPT/17.8.3/user.F95 CPT-new/17.8.3/user.F95
+--- CPT/17.8.3/user.F95	2023-03-13 14:58:00.000000000 -0400
++++ CPT-new/17.8.3/user.F95	2023-03-15 20:40:11.801786716 -0400
+@@ -16,11 +16,11 @@
+ !
+ ! Character scalars
+    Character(Len=  128), Public :: userprofile ! - user home directory -
+-   Character(Len=  256), Public :: cpt_dir     ! - CPT directory -
++   Character(Len=  512), Public :: cpt_dir     ! - CPT directory -
+ #endif
+-   Character(Len=256+8), Public :: cpt_ini     ! - CPT initialization file -
++   Character(Len=512+8), Public :: cpt_ini     ! - CPT initialization file -
+ !
+-   Character(Len=  256), Private :: user_dir   ! - user directory -
++   Character(Len=  512), Private :: user_dir   ! - user directory -
+ !
+ Contains
+ !
