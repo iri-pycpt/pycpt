@@ -44,8 +44,8 @@ test:
     - pycpt
 
 about:
-  home: https://github.com/kjhall-iri/
+  home: https://iri-pycpt.github.io/
   license: MIT
   summary: 'Python Interface to the IRIs Climate Predictability Tool' 
   description: 'CPT'
-  dev_url: https://github.com/kjhall-iri/
+  dev_url: https://github.com/iri-pycpt/
