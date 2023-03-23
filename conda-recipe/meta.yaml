@@ -1,9 +1,9 @@
 package:
   name: pycpt
-  version: "0.2.0"
+  version: "0.2.1"
 
 source:
-  path: ../src
+  path: ..
 
 build:
   number: 0
@@ -34,8 +34,10 @@ requirements:
     - ipykernel 
     - numpy 
     
-    
-
+    # Temporarily pinning tornado because it seems to fix occasional
+    # crashes of the jupyter kernel.  See
+    # https://github.com/jupyter/notebook/issues/6721
+    - tornado<6.2
 
 
 
@@ -44,8 +46,8 @@ test:
     - pycpt
 
 about:
-  home: https://github.com/kjhall-iri/
+  home: https://iri-pycpt.github.io/
   license: MIT
   summary: 'Python Interface to the IRIs Climate Predictability Tool' 
   description: 'CPT'
-  dev_url: https://github.com/kjhall-iri/
+  dev_url: https://github.com/iri-pycpt/
