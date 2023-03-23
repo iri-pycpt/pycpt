@@ -3,7 +3,7 @@ from .redate import *
 from .transformers import *
 from .view import *
 from .extrafuncs import *
-from .DLcolors import *
+from .dlcolors import *
 from .configuration import load_configuration, save_configuration
 
 __version__ = "1.0.4"
