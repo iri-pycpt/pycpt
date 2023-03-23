@@ -25,7 +25,7 @@ def standardized_range(min_val, max_val):
 
 def make_cmap(colors, name, reverse=True):
     colors = [ (colors[i][0] / 255.0, colors[i][1] / 255.0, colors[i][2] / 255.0) for i in range(len(colors))]
-    #print(colors)
+
     if reverse:
         colors.reverse()
     return LinearSegmentedColormap.from_list( name, colors)
@@ -225,7 +225,6 @@ for name, colors in color_arrays.items():
         else:
             cmaps[name] = make_cmap(colors, name)
 
-#LinearSegmentedColormap.from_list("DL_RAINFALL_COLORMAP",to_dash_colorscale(RAINFALL_COLORMAP), N=len(to_dash_colorscale(RAINFALL_COLORMAP)))
 
 
 def get_colors_bars(cmaps=cmaps):
