@@ -7,7 +7,6 @@ source:
 
 build:
   number: 0
-  string: pycpt
   noarch: python
 
 requirements:
