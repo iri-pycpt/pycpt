@@ -4,6 +4,7 @@ import cartopy.mpl.gridliner as gridliner
 import cptcore as cc
 import cptdl as dl
 import cptextras as ce
+import cptio as cio
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,12 +43,17 @@ def setup(case_dir, domain):
 
 
 def download_data(
-        predictand_name, predictor_names, download_args, files_root, force_download
+        predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
 ):
-    print('Downloading observed predictand dataset')
-    Y = download_observations(
-        download_args, files_root, predictand_name, force_download
-    )
+    if local_predictand_file is None:
+        print('Downloading observed predictand dataset')
+        Y = download_observations(
+            download_args, files_root, predictand_name, force_download
+        )
+    else:
+        print('Using local observed predictand dataset')
+        Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
+
     print('Downloading predictor model hindcast datasets')
     hindcast_data = download_hindcasts(
         predictor_names, files_root, force_download, download_args, Y.name
