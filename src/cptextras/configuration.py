@@ -1,7 +1,8 @@
-import json 
-import datetime as dt 
-import cptdl as dl 
 import copy 
+import cptdl as dl
+import datetime as dt
+import hashlib
+import json
 
 def check_extent(extent):
     keys = ['north', 'south', 'east', 'west']
@@ -38,21 +39,39 @@ def check_cpt_args(args):
             check_tuple(arg)
 
 
-def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predictand): 
+def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predictand, local_predictand_file):
+    import cptcore as cc
+    import cptio as cio
+    from . import __version__
+
+    tosave = {}
+
     if MOS is None:
         MOS = "None"
+    assert MOS in ['CCA', 'PCR', 'None'], 'Illegal MOS selection - {}'.format(MOS)
+    tosave['MOS'] = MOS
+
     for predictor in predictors:
         assert predictor in dl.hindcasts.keys() and predictor in dl.forecasts.keys(), 'illegal predictor - {}'.format(predictor)
-    assert predictand in dl.observations.keys(), 'illegal predictand - {}'.format(predictand)
-    assert MOS in ['CCA', 'PCR', 'None'], 'Illegal MOS selection - {}'.format(MOS)
+    tosave ['predictors'] = predictors
+
+    if local_predictand_file is None:
+        assert predictand in dl.observations.keys(), 'illegal predictand - {}'.format(predictand)
+        tosave['local_predictand_digest'] = None
+    else:
+        assert cio.open_cptdataset(local_predictand_file)
+        digest = hashlib.sha256()
+        with open(local_predictand_file, 'rb') as f:
+            digest.update(f.read())
+        tosave['local_predictand_digest'] = digest.hexdigest()
+    tosave['predictand'] = predictand
+    tosave['local_predictand_file'] = local_predictand_file
 
     download_args = copy.copy(download_args2)
     cpt_args = copy.copy(cpt_args2)
 
     check_download_args(download_args)
     check_cpt_args(cpt_args)
-
-    tosave = {'MOS': MOS, 'predictors': predictors, 'predictand': predictand}
 
     # convert illegal json types to legal json types 
     for key in cpt_args.keys():
@@ -74,10 +93,6 @@ def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predic
     tosave['download_args'] = download_args
     tosave['cpt_args'] = cpt_args 
     
-    import cptcore as cc 
-    import cptio as cio 
-    from . import __version__
-
     tosave['cptio_version'] = cio.__version__
     tosave['cptdl_version'] = dl.__version__
     tosave['cptcore_version'] = cc.__version__
@@ -117,6 +132,11 @@ def load_configuration(fname):
 
     predictors = to_unpack['predictors']
     predictand = to_unpack['predictand']
+    local_predictand_file = to_unpack['local_predictand_file']
+    digest = hashlib.sha256()
+    with open(local_predictand_file, 'rb') as f:
+        digest.update(f.read())
+    assert digest.hexdigest() == to_unpack['local_predictand_digest']
     
     cpt_args = to_unpack['cpt_args']
     download_args = to_unpack['download_args']
@@ -141,4 +161,4 @@ def load_configuration(fname):
     check_download_args(download_args)
     check_cpt_args(cpt_args)
 
-    return MOS, download_args, cpt_args, predictors, predictand
+    return MOS, download_args, cpt_args, predictors, predictand, local_predictand_file
