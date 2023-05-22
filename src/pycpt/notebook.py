@@ -1,5 +1,6 @@
 import cartopy
 import cartopy.crs as ccrs
+import cartopy.mpl.gridliner as gridliner
 import cptcore as cc
 import cptdl as dl
 import cptextras as ce
@@ -171,7 +172,7 @@ def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, 
             cca_h = xr.merge([cca_h, ce.redate(cca_f.probabilistic, yeardelta=-48), ce.redate(cca_f.prediction_error_variance, yeardelta=-48)])
 
     #         # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
-    #         # warning - this produces unrealistically optimistic values 
+    #         # warning - this produces unrealistically optimistic values
             cca_pfv = cc.probabilistic_forecast_verification(cca_h.probabilistic, Y, **cpt_args)
             cca_s = xr.merge([cca_s, cca_pfv])
 
@@ -183,17 +184,17 @@ def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, 
 
         elif str(MOS).upper() == 'PCR':
 
-            # fit PCR model between X & Y and produce real-time forecasts for F 
+            # fit PCR model between X & Y and produce real-time forecasts for F
             pcr_h, pcr_rtf, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=forecast_data[i], **cpt_args)
 
-            # fit PCR model again between X & Y, and produce in-sample probabilistic hindcasts 
+            # fit PCR model again between X & Y, and produce in-sample probabilistic hindcasts
             # this is using X in place of F, with the year coordinates changed to n+100 years
             # because CPT does not allow you to make forecasts for in-sample data
             pcr_h, pcr_f, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=ce.redate(model_hcst, yeardelta=48), **cpt_args)
             pcr_h = xr.merge([pcr_h, ce.redate(pcr_f.probabilistic, yeardelta=-48), ce.redate(pcr_f.prediction_error_variance, yeardelta=-48)])
 
             # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
-            # warning - this produces unrealistically optimistic values 
+            # warning - this produces unrealistically optimistic values
             pcr_pfv = cc.probabilistic_forecast_verification(pcr_h.probabilistic, Y, **cpt_args)
             pcr_s = xr.merge([pcr_s, pcr_pfv])
             hcsts.append(pcr_h)
@@ -201,7 +202,7 @@ def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, 
             skill.append(pcr_s.where(pcr_s > -999, other=np.nan))
             pxs.append(pcr_px)
         else:
-            # simply compute deterministic skill scores of non-corrected ensemble means 
+            # simply compute deterministic skill scores of non-corrected ensemble means
             nomos_skill = cc.deterministic_skill(model_hcst, Y, **cpt_args)
             skill.append(nomos_skill.where(nomos_skill > -999, other=np.nan))
 
@@ -217,7 +218,7 @@ def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, 
             pcr_rtf.to_netcdf(outputDir / (predictor_names[i] + '_realtime_pcr_forecasts.nc'))
             pcr_s.to_netcdf(outputDir / (predictor_names[i] + '_skillscores_pcr.nc'))
             pcr_px.to_netcdf(outputDir / (predictor_names[i] + '_pcr_x_spatial_loadings.nc'))
-        else: 
+        else:
             nomos_skill.to_netcdf(outputDir / (predictor_names[i] + '_nomos_skillscores.nc'))
     return hcsts, fcsts, skill, pxs, pys
 
@@ -935,6 +936,7 @@ def plot_mme_flex_forecasts(
     Y,
     MOS,
     files_root,
+    color_bar,
 ):
     if point_latitude is None:
         point_latitude = round(
@@ -1005,7 +1007,7 @@ def plot_mme_flex_forecasts(
 
     # plot exceedance probability map
 
-    ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas("POE", predictand_name)
+    ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas('POE',predictand_name,None,color_bar)
 
     # setting up canvas on which to draw
 
@@ -1039,6 +1041,19 @@ def plot_mme_flex_forecasts(
     )
     coasts = art.axes.coastlines()
     art.axes.add_feature(cartopy.feature.BORDERS)
+    gl = map_ax.gridlines(
+            crs=ccrs.PlateCarree(),
+            draw_labels=True,
+            linewidth=1,
+            color='gray',
+            alpha=0.5,
+            linestyle='--'
+        )
+    gl.top_labels = False
+    gl.right_labels = False
+    gl.xformatter = gridliner.LongitudeFormatter()
+    gl.yformatter = gridliner.LatitudeFormatter()
+
     title = map_ax.set_title("(a) Probabilities of Exceedance")
 
     # point calculations - select the nearest point to the lat/lon the user wanted to plot curves
@@ -1265,25 +1280,25 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     if isPercentile:
         if transformer is None:
             # if the user provided a percentile theshold, rather than an actual value
-            # and also used no transformation / normalization, 
+            # and also used no transformation / normalization,
             # then we also need to compute the theshold as an actual value
             threshold = Y.quantile(threshold, dim='T').drop('quantile')
         else:
-            # if the user used a transformation and gave a percentile threshold, 
-            # we we can set the threshold using the cumulative distribution function 
-            # for the normal distribution N(0, 1)- since thats what the Y data has 
+            # if the user used a transformation and gave a percentile threshold,
+            # we we can set the threshold using the cumulative distribution function
+            # for the normal distribution N(0, 1)- since thats what the Y data has
             # been transformed to
             threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * norm.cdf(threshold)
     else:
         if transformer is None:
             # if the user did not use a transform, and also did not use a percentile for a threshold,
             # we can just use the value directly. but it must be expanded to a 2D datatype
-            threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * threshold 
-        else: 
-            # if the user used a transformation, but gave a full value and NOT a percentile, 
-            # we must use the transformation that CPT used to transform the threshold onto 
+            threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * threshold
+        else:
+            # if the user used a transformation, but gave a full value and NOT a percentile,
+            # we must use the transformation that CPT used to transform the threshold onto
             # the normal distribution at N(0, 1)
-            threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * threshold 
+            threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * threshold
             threshold = transformer.transform(threshold)
 
     def _xr_tsf(thrs, loc1, scale1, dof1=1):
@@ -1305,7 +1320,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
-    # after having transformed the forecast mean to match the units of the 
+    # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
     exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
 
