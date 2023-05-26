@@ -75,18 +75,15 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None):
                 vmin= 0
                 vmax= 1
                 mark='red'
-                if user_color == None:
-                    barcolor=cmaps['DL_RAIN_POE_COLORMAP']
-                else:
-                    barcolor=cmaps[user_color]
+                barcolor=cmaps['DL_RAIN_POE_COLORMAP']
             elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
                 vmin= 0
                 vmax= 1
                 mark='black'
-                if user_color == None:
-                    barcolor=cmaps['DL_TEMP_POE_COLORMAP']
-                else:
-                    barcolor=cmaps[user_color]
+                barcolor=cmaps['DL_TEMP_POE_COLORMAP']
+
+            if not user_color == None:
+                barcolor=cmaps[user_color]
             return for_title, vmin, vmax, mark, barcolor
         else:
             for_title='('+tailoring+')'
@@ -95,6 +92,8 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None):
                 vmax=None
                 barcolor=cmaps['DL_RAINFALL_COLORMAP']
 
+        if not user_color == None:
+            barcolor=cmaps[user_color]
         return for_title, vmin, vmax, barcolor
 
     elif type=='probabilistic' :
@@ -118,6 +117,8 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None):
             vmax=40
             barcolor=cmaps['DL_TEMP_COLORS']
 
+        if not user_color == None:
+            barcolor=cmaps[user_color]
         return for_title, vmin, vmax, barcolor
 
 #
