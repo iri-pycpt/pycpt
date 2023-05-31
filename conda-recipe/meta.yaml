@@ -19,6 +19,12 @@ requirements:
     - cptio
     - requests
 
+    # requests depends on urllib3; urllib3 v2 removes all the old,
+    # unsafe ciphers that are currently supported by the ancient
+    # version of squid on iridl.ldeo.columbia.edu, causing all https
+    # downloads to fail.
+    - urllib3<2
+
 test:
   imports:
     - cptdl
