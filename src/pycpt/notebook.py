@@ -249,10 +249,8 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
         ncols=len(skill_metrics),
         subplot_kw={"projection": cartopy.crs.PlateCarree()},
         figsize=(5 * len(skill_metrics), 2.5 * len(predictor_names)),
+        squeeze=False,
     )
-    if len(predictor_names) * len(skill_metrics) == 1:
-        ax = [ax]
-
     for i, model in enumerate(predictor_names):
         for j, skill_metric in enumerate(skill_metrics):
             metric = SKILL_METRICS[skill_metric]
@@ -774,19 +772,18 @@ def plot_mme_skill(
         ncols=len(skill_metrics),
         subplot_kw={"projection": ccrs.PlateCarree()},
         figsize=(5 * len(skill_metrics), 1 * len(predictor_names)),
+        squeeze=False,
     )
-    if len(skill_metrics) == 1:
-        ax = [ax]
 
-    for i in [1]:
+    for i in [0]:
         for j, skill_metric in enumerate(skill_metrics):
             metric = SKILL_METRICS[skill_metric]
-            ax[j].set_title(skill_metric)
+            ax[i][j].set_title(skill_metric)
             n = (
                 getattr(nextgen_skill, skill_metric)
                 .where(getattr(nextgen_skill, skill_metric) > missing_value_flag)
                 .plot(
-                    ax=ax[j],
+                    ax=ax[i][j],
                     cmap=metric[0],
                     vmin=metric[1],
                     vmax=metric[2],
@@ -794,9 +791,9 @@ def plot_mme_skill(
                 )
             )
 
-            ax[j].coastlines()
-            ax[j].add_feature(cartopy.feature.BORDERS)
-            ax[j].set_title(skill_metric.upper())
+            ax[i][j].coastlines()
+            ax[i][j].add_feature(cartopy.feature.BORDERS)
+            ax[i][j].set_title(skill_metric.upper())
 
             cb = plt.colorbar(n, orientation=graph_orientation)  # location='bottom')
             cb.set_label(label=skill_metric, size=15)
