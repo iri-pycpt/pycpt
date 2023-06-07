@@ -1007,7 +1007,7 @@ def plot_mme_flex_forecasts(
 
     # plot exceedance probability map
 
-    ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas('POE',predictand_name,None,color_bar)
+    ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas('POE',predictand_name,user_color=color_bar)
 
     # setting up canvas on which to draw
 
