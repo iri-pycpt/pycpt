@@ -33,8 +33,8 @@ def make_cmap(colors, name, reverse=True):
 def colormap_info():
     ret = "Colormaps starting with 'cpt.' come from\nthe International Research Institute\nfor Climate & Society's Climate Predictability Tool\n\nColormaps starting with 'pycpt.' come from PyCPT.\n\nColormaps starting with 'cmc.' come\nfrom cmcrameri, all credit to Fabio Crameri\nsee their message:\n\n" + cmc.__doc__ + '\nAll other colormaps come from matplotlib\nPlease Cite Colormaps accordingly!'
     print(ret)
-
-def prepare_canvas(tailoring=None,predictand='PRCP',type=None):
+#if user_color != None:
+def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None):
     if tailoring != None and (type==None or type=='deterministic'):
         if tailoring == 'Anomaly' :
             if 'PRCP' in predictand:
@@ -81,6 +81,9 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None):
                 vmax= 1
                 mark='black'
                 barcolor=cmaps['DL_TEMP_POE_COLORMAP']
+
+            if not user_color == None:
+                barcolor=cmaps[user_color]
             return for_title, vmin, vmax, mark, barcolor
         else:
             for_title='('+tailoring+')'
@@ -89,6 +92,8 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None):
                 vmax=None
                 barcolor=cmaps['DL_RAINFALL_COLORMAP']
 
+        if not user_color == None:
+            barcolor=cmaps[user_color]
         return for_title, vmin, vmax, barcolor
 
     elif type=='probabilistic' :
@@ -112,6 +117,8 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None):
             vmax=40
             barcolor=cmaps['DL_TEMP_COLORS']
 
+        if not user_color == None:
+            barcolor=cmaps[user_color]
         return for_title, vmin, vmax, barcolor
 
 #
