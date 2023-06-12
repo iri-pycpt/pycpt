@@ -6,6 +6,6 @@ from .extrafuncs import *
 from .dlcolors import *
 from .configuration import load_configuration, save_configuration
 
-__version__ = "1.0.4"
+__version__ = "1.1.0"
 __author__ = "Kyle Hall"
 __license__ = "MIT"

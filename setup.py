@@ -6,7 +6,7 @@ with open(Path(__file__ ).parent / 'README.md', 'r', encoding='utf-8') as fh:
 
 setup(
     name="cptextras",
-    version="1.0.4",
+    version="1.1.0",
     author="Kyle Hall",
     author_email="pycpt-help@iri.columbia.edu",
     description=(
