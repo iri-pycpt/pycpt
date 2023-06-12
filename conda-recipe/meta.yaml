@@ -20,7 +20,7 @@ requirements:
     - cptio
     - cptdl 
     - cptcore 
-    - cptextras
+    - cptextras>=1.1.0
     - matplotlib
     - cartopy
     - netcdf4
