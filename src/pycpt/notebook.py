@@ -4,6 +4,7 @@ import cartopy.mpl.gridliner as gridliner
 import cptcore as cc
 import cptdl as dl
 import cptextras as ce
+import cptio as cio
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,19 +43,24 @@ def setup(case_dir, domain):
 
 
 def download_data(
-        predictand_name, predictor_names, download_args, files_root, force_download
+        predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
 ):
-    print('Downloading observed predictand dataset')
-    Y = download_observations(
-        download_args, files_root, predictand_name, force_download
-    )
+    if local_predictand_file is None:
+        print('Downloading observed predictand dataset')
+        Y = download_observations(
+            download_args, files_root, predictand_name, force_download
+        )
+    else:
+        print('Using local observed predictand dataset')
+        Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
+
     print('Downloading predictor model hindcast datasets')
     hindcast_data = download_hindcasts(
-        predictor_names, files_root, force_download, download_args, Y
+        predictor_names, files_root, force_download, download_args, Y.name
     )
     print('Downloading predictor model forecast datasets')
     forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args, Y
+        predictor_names, files_root, force_download, download_args, Y.name
     )
     return Y, hindcast_data, forecast_data
 
@@ -105,7 +111,7 @@ def download_observations(download_args, files_root, predictand_name, force_down
     return Y
 
 
-def download_hindcasts(predictor_names, files_root, force_download, download_args, Y):
+def download_hindcasts(predictor_names, files_root, force_download, download_args, y_name):
     dataDir = files_root / "data"
     # download training data
     hindcast_data = []
@@ -119,17 +125,17 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
                 use_dlauth=False,
             )
             X = getattr(X, [i for i in X.data_vars][0])
-            X.name = Y.name
+            X.name = y_name
             X.to_netcdf(dataDir / "{}.nc".format(model))
         else:
             X = xr.open_dataset(dataDir / (model + ".nc"))
             X = getattr(X, [i for i in X.data_vars][0])
-            X.name = Y.name
+            X.name = y_name
         hindcast_data.append(X)
     return hindcast_data
 
 
-def download_forecasts(predictor_names, files_root, force_download, download_args, Y):
+def download_forecasts(predictor_names, files_root, force_download, download_args, y_name):
     dataDir = files_root / "data"
     forecast_data = []
     for model in predictor_names:
@@ -142,12 +148,12 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
                 use_dlauth=False,
             )
             F = getattr(F, [i for i in F.data_vars][0])
-            F.name = Y.name
+            F.name = y_name
             F.to_netcdf(dataDir / (model + "_f.nc"))
         else:
             F = xr.open_dataset(dataDir / (model + "_f.nc"))
             F = getattr(F, [i for i in F.data_vars][0])
-            F.name = Y.name
+            F.name = y_name
         forecast_data.append(F)
     return forecast_data
 
