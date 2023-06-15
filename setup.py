@@ -7,7 +7,7 @@ long_description = readme_path.read_text(encoding='utf-8')
 
 setup(
     name = "cptio",
-    version = "1.0.2",
+    version = "1.0.3",
     author = "Kyle Hall",
     author_email = "pycpt-help@iri.columbia.edu",
     description = ("Tools bridging Xarray and CPT"),
