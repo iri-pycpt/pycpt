@@ -187,9 +187,12 @@ def open_cptdataset(filename):
                 temp = {rowdim: rows, coldim: columns}
                 if "T" in [rowdim, coldim]:
                     date_coords = temp["T"]
-                    temp["T"] = [date_coords[ii][1] for ii in range(len(date_coords))]
-                    temp["Ti"] = [date_coords[ii][0] for ii in range(len(date_coords))]
-                    temp["Tf"] = [date_coords[ii][2] for ii in range(len(date_coords))]
+                    if len(date_coords[0]) == 1:
+                        temp["T"] = [date_coords[ii][0] for ii in range(len(date_coords))]
+                    else:
+                        temp["T"] = [date_coords[ii][1] for ii in range(len(date_coords))]
+                        temp["Ti"] = [date_coords[ii][0] for ii in range(len(date_coords))]
+                        temp["Tf"] = [date_coords[ii][2] for ii in range(len(date_coords))]
                 coords.update(temp)
                 if "S" in header[2].keys():  # S is always a length-1 situation
                     coords.update({"S": [read_cpt_date(header[2]["S"])[0]]})
