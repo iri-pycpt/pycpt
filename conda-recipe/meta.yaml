@@ -7,7 +7,6 @@ source:
 
 build:
   number: 0
-  string: cptio
   noarch: python
 
 requirements:
