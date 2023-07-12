@@ -1,13 +1,14 @@
-{% set version = "17.8.3" %}
+{% set version = "17.8.4" %}
 
 package:
   name: cptbin
   version: {{ version }}
 
 source:
-  - url: https://academiccommons.columbia.edu/doi/10.7916/fdp6-v391/download
+  - url: https://academiccommons.columbia.edu/doi/10.7916/08zy-yz03/download
+  #- url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version }}.tar.gz
     fn: CPT.{{ version }}.tar.gz
-    sha256: 58423f04b517ae63d1e6ff17f81e29dceaeb5ad74aad9945d44a8eb4c4ca5512
+    sha256: fb1f775cd2ec0d1becb9ac06a50f092896944b0e9237257d4497a252c565d95d
     # applying patches in build script, not here.
 
 build:
