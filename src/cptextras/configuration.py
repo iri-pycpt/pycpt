@@ -120,10 +120,11 @@ def load_configuration(fname):
     predictors = to_unpack['predictors']
     predictand = to_unpack['predictand']
     local_predictand_file = to_unpack['local_predictand_file']
-    digest = hashlib.sha256()
-    with open(local_predictand_file, 'rb') as f:
-        digest.update(f.read())
-    assert digest.hexdigest() == to_unpack['local_predictand_digest']
+    if local_predictand_file is not None:
+        digest = hashlib.sha256()
+        with open(local_predictand_file, 'rb') as f:
+            digest.update(f.read())
+        assert digest.hexdigest() == to_unpack['local_predictand_digest']
     
     cpt_args = to_unpack['cpt_args']
     download_args = to_unpack['download_args']
