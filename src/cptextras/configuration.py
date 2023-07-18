@@ -1,8 +1,10 @@
 import copy 
 import cptdl as dl
+import cptio as cio
 import datetime as dt
 import hashlib
 import json
+import subprocess
 
 def check_extent(extent):
     keys = ['north', 'south', 'east', 'west']
@@ -40,10 +42,6 @@ def check_cpt_args(args):
 
 
 def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predictand, local_predictand_file):
-    import cptcore as cc
-    import cptio as cio
-    from . import __version__
-
     tosave = {}
 
     if MOS is None:
@@ -93,11 +91,10 @@ def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predic
     tosave['download_args'] = download_args
     tosave['cpt_args'] = cpt_args 
     
-    tosave['cptio_version'] = cio.__version__
-    tosave['cptdl_version'] = dl.__version__
-    tosave['cptcore_version'] = cc.__version__
-    tosave['cptextras_version'] = __version__
- 
+    tosave['conda_list'] = subprocess.check_output(
+        ['conda', 'list', '--explicit'],
+        encoding='ascii'
+    )
 
     with open(fname, 'w') as f: 
         json.dump(tosave, f, indent=4, sort_keys=True)
@@ -110,16 +107,6 @@ def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predic
 def load_configuration(fname): 
     with open(fname, 'r') as f: 
         to_unpack = json.load(f)
-
-
-    import cptcore as cc 
-    import cptio as cio 
-    from . import __version__
-
-    assert to_unpack['cptio_version'] == cio.__version__, "Environment not compatible with configuration - config requires {} but you have {}".format(to_unpack['cptio_version'], cio.__version__)
-    assert to_unpack['cptdl_version'] == dl.__version__, "Environment not compatible with configuration - config requires {} but you have {}".format(to_unpack['cptdl_version'], dl.__version__)
-    assert to_unpack['cptcore_version'] == cc.__version__, "Environment not compatible with configuration - config requires {} but you have {}".format(to_unpack['cptcore_version'], cc.__version__)
-    assert to_unpack['cptextras_version'] == __version__, "Environment not compatible with configuration - config requires {} but you have {}".format(to_unpack['cptextras_version'], __version__)
 
     MOS = to_unpack['MOS']
     if MOS == 'None':
