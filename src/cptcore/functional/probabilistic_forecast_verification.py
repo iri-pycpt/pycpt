@@ -78,18 +78,17 @@ def probabilistic_forecast_verification(
     #initiate analysis 
     cpt.write(313)
 
-    # save all probabilistic skill scores
-    scores = ['generalized_roc', 'ignorance', 'rank_probability_skill_score']
-    for skill in scores:
+    # save all probabilistic skill scores 
+    for skill in ['generalized_roc', 'ignorance', 'rank_probability_skill_score']: 
         cpt.write(437)
         cpt.write(CPT_PFV_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
     cpt.wait_for_files()
 
-    skill_values = [ open_cptdataset(str(cpt.outputs[i].absolute()) + '.txt') for i in scores ]
+    skill_values = [ open_cptdataset(str(cpt.outputs[i].absolute()) + '.txt') for i in ['generalized_roc', 'ignorance', 'rank_probability_skill_score'] ]
     skill_values = [ getattr(i, [ii for ii in i.data_vars][0]) for i in skill_values]
     for i in range(len(skill_values)):
-        skill_values[i].name = scores[i]
+        skill_values[i].name = ['generalized_roc', 'ignorance', 'rank_probability_skill_score'][i] 
     skill_values = xr.merge(skill_values).mean('Mode')
     return skill_values 
 
