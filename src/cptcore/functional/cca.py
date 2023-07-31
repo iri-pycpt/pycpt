@@ -137,12 +137,14 @@ def canonical_correlation_analysis(
     cpt.write(112) 
     cpt.write(cpt.outputs['goodness_index'].absolute())
 
+    val = validation.upper()
+
     #initiate analysis 
-    if validation.upper() == 'CROSSVALIDATION':
+    if val == 'CROSSVALIDATION':
         cpt.write(311)
-    elif validation.upper() == 'DOUBLE-CROSSVALIDATION':
+    elif val == 'DOUBLE-CROSSVALIDATION':
         cpt.write(314)
-    elif validation.upper() == 'RETROACTIVE':
+    elif val == 'RETROACTIVE':
         cpt.write(312)
         cpt.write(retroactive_initial_training_period)
         cpt.write(retroactive_step)
@@ -151,22 +153,33 @@ def canonical_correlation_analysis(
 
     # save all deterministic skill scores 
     for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above']: 
-        cpt.write(413)
+        if val in ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION']:
+            cpt.write(413)
+        elif val == 'RETROACTIVE':
+            cpt.write(423)
+        else:
+            assert False
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
 
-
-    cpt.write('111')
-    cpt.write('201')
+    # output predictions
+    cpt.write(111)
+    if val == 'CROSSVALIDATION':
+        cpt.write(201)
+    elif val == 'DOUBLE-CROSSVALIDATION':
+        cpt.write('221')
+    elif val == 'RETROACTIVE':
+        cpt.write(211)
+    else:
+        assert False
     cpt.write( cpt.outputs['hindcast_values'].absolute())
     cpt.write('0') 
 
-    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
-        cpt.write('111')
-        cpt.write('221')
-        cpt.write( cpt.outputs['hindcast_values'].absolute())
-        cpt.write('0') 
-
+    # output hindcast probabilistic information if available
+    if val == 'CROSSVALIDATION':
+        # not available
+        pass
+    if val == 'DOUBLE-CROSSVALIDATION':
         cpt.write('111')
         cpt.write('226')
         cpt.write( cpt.outputs['hindcast_prediction_error_variance'].absolute())
@@ -175,9 +188,19 @@ def canonical_correlation_analysis(
         cpt.write('111')
         cpt.write('224')
         cpt.write( cpt.outputs['hindcast_probabilities'].absolute())
-        cpt.write('0') 
+        cpt.write('0')
+    elif val == 'RETROACTIVE':
+        cpt.write(111)
+        cpt.write(216)
+        cpt.write(cpt.outputs['hindcast_prediction_error_variance'].absolute())
+        cpt.write(0)
 
-
+        cpt.write('111')
+        cpt.write('214')
+        cpt.write( cpt.outputs['hindcast_probabilities'].absolute())
+        cpt.write('0')
+    else:
+        assert False
 
     if F is not None: 
         # load F dataset if present 
@@ -242,7 +265,7 @@ def canonical_correlation_analysis(
     hcsts = getattr(hcsts, [i for i in hcsts.data_vars][0])
     hcsts.name = 'deterministic' 
 
-    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
         hcst_pr = open_cptdataset(str(cpt.outputs['hindcast_probabilities'].absolute()) + '.txt' )
         hcst_pr = getattr(hcst_pr, [i for i in hcst_pr.data_vars][0])
         hcst_pr.name = 'probabilistic'
