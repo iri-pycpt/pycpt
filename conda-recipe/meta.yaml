@@ -21,7 +21,7 @@ requirements:
     - cptdl 
     - cptcore 
     - cptextras>=1.1.0
-    - matplotlib
+    - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
     - cartopy
     - netcdf4
     - scipy
