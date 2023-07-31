@@ -19,7 +19,10 @@ missing_value_flag = -999
 
 def setup(case_dir, domain):
     # extracting domain boundaries and create house keeping
-    e, w, n, s = domain.values()
+    e = domain['east']
+    w = domain['west']
+    n = domain['north']
+    s = domain['south']
 
     domainFolder = str(w) + "W-" + str(e) + "E" + "_to_" + str(s) + "S-" + str(n) + "N"
 
