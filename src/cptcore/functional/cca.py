@@ -1,10 +1,11 @@
-
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R, CPT_PFV_R
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10, convert_np64_datetime
 import xarray as xr 
 import datetime as dt 
 import numpy as np 
+
+PFV_METRICS = ['generalized_roc', 'ignorance', 'rank_probability_skill_score']
 
 def canonical_correlation_analysis(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
@@ -162,8 +163,13 @@ def canonical_correlation_analysis(
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
 
-    # Probabilistic skill scores are calculated in
-    # probabilistic_forecast_validation.py.
+    # save all probabilistic skill scores, if applicable
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
+        for skill in PFV_METRICS:
+            cpt.write(437)
+            cpt.write(CPT_PFV_R[skill.upper()])
+            cpt.write(cpt.outputs[skill].absolute())
+        cpt.wait_for_files()
 
     # output predictions
     cpt.write(111)
@@ -285,6 +291,7 @@ def canonical_correlation_analysis(
         if 'Tf' in hcst_pev.coords: 
             hcst_pev = hcst_pev.drop('Tf')
         hcst_pev = hcst_pev.assign_coords({'T': hcst_pr.coords['T']})
+
         hcsts = xr.merge([hcsts, hcst_pr, hcst_pev])
     else:
         hcsts = xr.merge([hcsts])
@@ -306,6 +313,16 @@ def canonical_correlation_analysis(
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_normal'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
+
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
+        hcst_pr_skill = [
+            next(iter(
+                open_cptdataset(str(cpt.outputs[metric].absolute()) + '.txt').data_vars.values()
+            )).rename(metric)
+            for metric in PFV_METRICS
+        ]
+        skill_values += hcst_pr_skill
+
     skill_values = xr.merge(skill_values).mean('Mode')
 
 
