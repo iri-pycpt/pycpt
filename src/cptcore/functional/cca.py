@@ -162,6 +162,9 @@ def canonical_correlation_analysis(
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
 
+    # Probabilistic skill scores are calculated in
+    # probabilistic_forecast_validation.py.
+
     # output predictions
     cpt.write(111)
     if val == 'CROSSVALIDATION':
