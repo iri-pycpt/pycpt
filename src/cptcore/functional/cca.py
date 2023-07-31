@@ -327,7 +327,7 @@ def canonical_correlation_analysis(
         x_varfile = np.genfromtxt(str(cpt.outputs['eof_x_explained_variance']) + '.txt', skip_header=3, delimiter='\t', dtype=float)
         y_varfile = np.genfromtxt( str( cpt.outputs['eof_y_explained_variance']) +'.txt', skip_header=3, delimiter='\t', dtype=float)
         x_explained_variance = xr.DataArray(name='x_explained_variance', data=x_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
-        y_explained_variance = xr.DataArray(name='y_explained_variance', data=y_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
+        y_explained_variance = xr.DataArray(name='y_explained_variance', data=y_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': y_varfile[:, 0].squeeze()})
 
         x_pattern_values = [ x_cca_scores,  x_eof_scores, x_cca_loadings,  x_eof_loadings, x_explained_variance]
         y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings, y_explained_variance ]
