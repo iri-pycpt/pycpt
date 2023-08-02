@@ -1,13 +1,12 @@
 package:
   name: cptio
-  version: "1.0.3"
+  version: "1.0.4"
 
 source:
   path: ..
 
 build:
   number: 0
-  string: cptio
   noarch: python
 
 requirements:
