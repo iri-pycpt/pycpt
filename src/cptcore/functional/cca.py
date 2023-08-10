@@ -188,7 +188,7 @@ def canonical_correlation_analysis(
     if val == 'CROSSVALIDATION':
         # not available
         pass
-    if val == 'DOUBLE-CROSSVALIDATION':
+    elif val == 'DOUBLE-CROSSVALIDATION':
         cpt.write('111')
         cpt.write('226')
         cpt.write( cpt.outputs['hindcast_prediction_error_variance'].absolute())
