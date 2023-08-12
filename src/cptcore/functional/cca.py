@@ -269,6 +269,9 @@ def canonical_correlation_analysis(
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
         fcsts = xr.merge([det_fcst, prob_fcst, pev])
+        # CPT doesn't pass through the S coordinate, so put it back on.
+        assert len(F['S']) == len(fcsts.coords['T'])
+        fcsts = fcsts.assign_coords(S=('T', F['S'].data))
 
     hcsts = open_cptdataset(str(cpt.outputs['hindcast_values'].absolute()) + '.txt' )
     hcsts = getattr(hcsts, [i for i in hcsts.data_vars][0])
@@ -296,6 +299,9 @@ def canonical_correlation_analysis(
     else:
         hcsts = xr.merge([hcsts])
 
+    # CPT doesn't pass through the S coordinate, so put it back on.
+    assert len(X['S']) == len(hcsts.coords['T'])
+    hcsts = hcsts.assign_coords(S=('T', X['S'].data))
 
     pearson = open_cptdataset(str(cpt.outputs['pearson'].absolute()) + '.txt')
     pearson = getattr(pearson, [i for i in pearson.data_vars][0])
