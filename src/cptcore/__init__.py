@@ -3,7 +3,7 @@ from .functional import canonical_correlation_analysis, principal_components_reg
 from .tests import test_cca, test_deterministic_skill, test_mlr, test_pcr, test_pfv, load_southasia_nmme
 from .bash import rmrf, ls_files_recursive, rmstar
 
-__version__ = "2.1.0dev2"
+__version__ = "2.2.0"
 __author__ = "Kyle Joseph Chen Hall (pycpt-help@iri.columbia.edu)"
 
 CPT_CITATION = "Simon J. Mason, Michael K. Tippet, Lulin Song, Ángel G. Muñoz. 2021. Climate Predictability Tool version 17.5.2. Columbia University Academic Commons. https://doi.org/10.7916/d8-em2t-k781"
