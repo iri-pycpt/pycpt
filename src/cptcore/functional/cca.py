@@ -269,9 +269,13 @@ def canonical_correlation_analysis(
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
         fcsts = xr.merge([det_fcst, prob_fcst, pev])
-        # CPT doesn't pass through the S coordinate, so put it back on.
-        assert len(F['S']) == len(fcsts.coords['T'])
-        fcsts = fcsts.assign_coords(S=('T', F['S'].data))
+        # CPT doesn't pass through the S coordinate, so put it back on
+        # if we have it.  (We don't have it yet in the subseasonal
+        # case. Have to get rid of the fake T grid hack first in order
+        # to fix that.)
+        if 'S' in F.coords:
+            assert len(F['S']) == len(fcsts.coords['T'])
+            fcsts = fcsts.assign_coords(S=('T', F['S'].data))
 
     hcsts = open_cptdataset(str(cpt.outputs['hindcast_values'].absolute()) + '.txt' )
     hcsts = getattr(hcsts, [i for i in hcsts.data_vars][0])
@@ -300,8 +304,9 @@ def canonical_correlation_analysis(
         hcsts = xr.merge([hcsts])
 
     # CPT doesn't pass through the S coordinate, so put it back on.
-    assert len(X['S']) == len(hcsts.coords['T'])
-    hcsts = hcsts.assign_coords(S=('T', X['S'].data))
+    if 'S' in X.coords:
+        assert len(X['S']) == len(hcsts.coords['T'])
+        hcsts = hcsts.assign_coords(S=('T', X['S'].data))
 
     pearson = open_cptdataset(str(cpt.outputs['pearson'].absolute()) + '.txt')
     pearson = getattr(pearson, [i for i in pearson.data_vars][0])
