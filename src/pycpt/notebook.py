@@ -8,6 +8,7 @@ import cptio as cio
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from PIL import Image
 from scipy.stats import norm, t
@@ -1244,11 +1245,13 @@ def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_d
     nextgen_skill = xr.merge([nextgen_skill_deterministic, nextgen_skill_probabilistic])
 
     # write out files to outputs directory (NB: generic filenaming neeeds improving)
-    det_fcst.to_netcdf(outputDir / ('MME_deterministic_forecasts.nc'))
+    assert len(det_fcst['S']) == 1
+    year = pd.Timestamp(det_fcst['S'].values[0]).year
+    det_fcst.to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
     det_hcst.to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
-    pev_fcst.to_netcdf(outputDir / ('MME_forecast_prediction_error_variance.nc'))
+    pev_fcst.to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
     pev_hcst.to_netcdf(outputDir / ('MME_hindcast_prediction_error_variance.nc'))
-    pr_fcst.to_netcdf(outputDir / ('MME_probabilistic_forecasts.nc'))
+    pr_fcst.to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
     pr_hcst.to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
     nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
 
