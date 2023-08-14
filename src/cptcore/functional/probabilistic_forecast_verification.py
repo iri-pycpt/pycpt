@@ -78,7 +78,7 @@ def probabilistic_forecast_verification(
     #initiate analysis 
     cpt.write(313)
 
-    # save all deterministic skill scores 
+    # save all probabilistic skill scores 
     for skill in ['generalized_roc', 'ignorance', 'rank_probability_skill_score']: 
         cpt.write(437)
         cpt.write(CPT_PFV_R[skill.upper()])

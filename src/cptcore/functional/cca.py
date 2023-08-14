@@ -1,10 +1,11 @@
-
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R, CPT_PFV_R
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10, convert_np64_datetime
 import xarray as xr 
 import datetime as dt 
 import numpy as np 
+
+PFV_METRICS = ['generalized_roc', 'ignorance', 'rank_probability_skill_score']
 
 def canonical_correlation_analysis(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
@@ -16,8 +17,8 @@ def canonical_correlation_analysis(
         x_eof_modes=(1,5), # minimum and maximum of allowed X Principal Componenets 
         y_eof_modes=(1,5), # minimum and maximum of allowed Y Principal Components 
         crossvalidation_window=5,  # number of samples to leave out in each cross-validation step 
-        retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
-        retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
+        retroactive_initial_training_period=45, # percent of samples to be used as initial training period for retroactive validation
+        retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
         drymask=False,
         scree=False,
@@ -39,8 +40,8 @@ def canonical_correlation_analysis(
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
-    assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
-    assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
+    assert 0 < retroactive_initial_training_period < 100, 'retroactive_initial_training_period must be a percentage between 0 and 100'
+    assert 0 < retroactive_step < 100, 'retroactive_step must be a percentage between 0 and 1'
 
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     is_valid_cptv10(X)
@@ -52,8 +53,8 @@ def canonical_correlation_analysis(
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         is_valid_cptv10(F)
         
-    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index(x_sample_dim)])
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
@@ -137,12 +138,14 @@ def canonical_correlation_analysis(
     cpt.write(112) 
     cpt.write(cpt.outputs['goodness_index'].absolute())
 
+    val = validation.upper()
+
     #initiate analysis 
-    if validation.upper() == 'CROSSVALIDATION':
+    if val == 'CROSSVALIDATION':
         cpt.write(311)
-    elif validation.upper() == 'DOUBLE-CROSSVALIDATION':
+    elif val == 'DOUBLE-CROSSVALIDATION':
         cpt.write(314)
-    elif validation.upper() == 'RETROACTIVE':
+    elif val == 'RETROACTIVE':
         cpt.write(312)
         cpt.write(retroactive_initial_training_period)
         cpt.write(retroactive_step)
@@ -151,22 +154,41 @@ def canonical_correlation_analysis(
 
     # save all deterministic skill scores 
     for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above']: 
-        cpt.write(413)
+        if val in ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION']:
+            cpt.write(413)
+        elif val == 'RETROACTIVE':
+            cpt.write(423)
+        else:
+            assert False
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
 
+    # save all probabilistic skill scores, if applicable
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
+        for skill in PFV_METRICS:
+            cpt.write(437)
+            cpt.write(CPT_PFV_R[skill.upper()])
+            cpt.write(cpt.outputs[skill].absolute())
+        cpt.wait_for_files()
 
-    cpt.write('111')
-    cpt.write('201')
+    # output predictions
+    cpt.write(111)
+    if val == 'CROSSVALIDATION':
+        cpt.write(201)
+    elif val == 'DOUBLE-CROSSVALIDATION':
+        cpt.write('221')
+    elif val == 'RETROACTIVE':
+        cpt.write(211)
+    else:
+        assert False
     cpt.write( cpt.outputs['hindcast_values'].absolute())
     cpt.write('0') 
 
-    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
-        cpt.write('111')
-        cpt.write('221')
-        cpt.write( cpt.outputs['hindcast_values'].absolute())
-        cpt.write('0') 
-
+    # output hindcast probabilistic information if available
+    if val == 'CROSSVALIDATION':
+        # not available
+        pass
+    elif val == 'DOUBLE-CROSSVALIDATION':
         cpt.write('111')
         cpt.write('226')
         cpt.write( cpt.outputs['hindcast_prediction_error_variance'].absolute())
@@ -175,9 +197,19 @@ def canonical_correlation_analysis(
         cpt.write('111')
         cpt.write('224')
         cpt.write( cpt.outputs['hindcast_probabilities'].absolute())
-        cpt.write('0') 
+        cpt.write('0')
+    elif val == 'RETROACTIVE':
+        cpt.write(111)
+        cpt.write(216)
+        cpt.write(cpt.outputs['hindcast_prediction_error_variance'].absolute())
+        cpt.write(0)
 
-
+        cpt.write('111')
+        cpt.write('214')
+        cpt.write( cpt.outputs['hindcast_probabilities'].absolute())
+        cpt.write('0')
+    else:
+        assert False
 
     if F is not None: 
         # load F dataset if present 
@@ -237,12 +269,19 @@ def canonical_correlation_analysis(
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
         fcsts = xr.merge([det_fcst, prob_fcst, pev])
+        # CPT doesn't pass through the S coordinate, so put it back on
+        # if we have it.  (We don't have it yet in the subseasonal
+        # case. Have to get rid of the fake T grid hack first in order
+        # to fix that.)
+        if 'S' in F.coords:
+            assert len(F['S']) == len(fcsts.coords['T'])
+            fcsts = fcsts.assign_coords(S=('T', F['S'].data))
 
     hcsts = open_cptdataset(str(cpt.outputs['hindcast_values'].absolute()) + '.txt' )
     hcsts = getattr(hcsts, [i for i in hcsts.data_vars][0])
     hcsts.name = 'deterministic' 
 
-    if validation.upper() == 'DOUBLE-CROSSVALIDATION':
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
         hcst_pr = open_cptdataset(str(cpt.outputs['hindcast_probabilities'].absolute()) + '.txt' )
         hcst_pr = getattr(hcst_pr, [i for i in hcst_pr.data_vars][0])
         hcst_pr.name = 'probabilistic'
@@ -259,10 +298,15 @@ def canonical_correlation_analysis(
         if 'Tf' in hcst_pev.coords: 
             hcst_pev = hcst_pev.drop('Tf')
         hcst_pev = hcst_pev.assign_coords({'T': hcst_pr.coords['T']})
+
         hcsts = xr.merge([hcsts, hcst_pr, hcst_pev])
     else:
         hcsts = xr.merge([hcsts])
 
+    # CPT doesn't pass through the S coordinate, so put it back on.
+    if 'S' in X.coords:
+        assert len(X['S']) == len(hcsts.coords['T'])
+        hcsts = hcsts.assign_coords(S=('T', X['S'].data))
 
     pearson = open_cptdataset(str(cpt.outputs['pearson'].absolute()) + '.txt')
     pearson = getattr(pearson, [i for i in pearson.data_vars][0])
@@ -280,6 +324,16 @@ def canonical_correlation_analysis(
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_normal'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
+
+    if val in ['DOUBLE-CROSSVALIDATION', 'RETROACTIVE']:
+        hcst_pr_skill = [
+            next(iter(
+                open_cptdataset(str(cpt.outputs[metric].absolute()) + '.txt').data_vars.values()
+            )).rename(metric)
+            for metric in PFV_METRICS
+        ]
+        skill_values += hcst_pr_skill
+
     skill_values = xr.merge(skill_values).mean('Mode')
 
 

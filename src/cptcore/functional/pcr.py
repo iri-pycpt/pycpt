@@ -15,8 +15,8 @@ def principal_components_regression(
         tailoring=None,  # tailoring None, Anomaly, StdAnomaly, or SPI (SPI only available on Gamma)
         x_eof_modes=(1,5), # minimum and maximum of allowed X Principal Componenets 
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
-        retroactive_initial_training_period=0.45, # percent of samples to be used as initial training period for retroactive validation
-        retroactive_step=0.1, # percent of samples to increment retroactive training period by each time. 
+        retroactive_initial_training_period=45, # percent of samples to be used as initial training period for retroactive validation
+        retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='CROSSVALIDATION', #type of leave-n-out crossvalidation to use
         synchronous_predictors=False,
         drymask=False,
@@ -37,8 +37,8 @@ def principal_components_regression(
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
-    assert isinstance(retroactive_initial_training_period, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_initial_training_period must be a float between 0 and 1'
-    assert isinstance(retroactive_step, float) and  0 < retroactive_initial_training_period < 1, 'retroactive_step must be a float between 0 and 1'
+    assert 0 < retroactive_initial_training_period < 100, 'retroactive_initial_training_period must be a percentage between 0 and 100'
+    assert 0 < retroactive_step < 100, 'retroactive_step must be a percentage between 0 and 100'
 
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     is_valid_cptv10(X)
@@ -50,8 +50,8 @@ def principal_components_regression(
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         is_valid_cptv10(F)
 
-    retroactive_initial_training_period = int(retroactive_initial_training_period * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index(x_sample_dim)])
 
 
     cpt = CPT(**cpt_kwargs)
