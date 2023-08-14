@@ -8,6 +8,7 @@ import cptio as cio
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from PIL import Image
 from scipy.stats import norm, t
@@ -49,7 +50,6 @@ def download_data(
         predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
 ):
     if local_predictand_file is None:
-        print('Downloading observed predictand dataset')
         Y = download_observations(
             download_args, files_root, predictand_name, force_download
         )
@@ -57,11 +57,9 @@ def download_data(
         print('Using local observed predictand dataset')
         Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
 
-    print('Downloading predictor model hindcast datasets')
     hindcast_data = download_hindcasts(
         predictor_names, files_root, force_download, download_args, Y.name
     )
-    print('Downloading predictor model forecast datasets')
     forecast_data = download_forecasts(
         predictor_names, files_root, force_download, download_args, Y.name
     )
@@ -94,10 +92,8 @@ def download_observations(download_args, files_root, predictand_name, force_down
         download_args_obs["first_year"] += 1
         download_args_obs["final_year"] += 1
 
-    print(download_args)
-    print(download_args_obs)
-
     if not Path(dataDir / "{}.nc".format(predictand_name)).is_file() or force_download:
+        print('Downloading observed predictand data')
         Y = dl.download(
             dl.observations[predictand_name],
             dataDir / (predictand_name + ".tsv"),
@@ -108,6 +104,7 @@ def download_observations(download_args, files_root, predictand_name, force_down
         Y = getattr(Y, [i for i in Y.data_vars][0])
         Y.to_netcdf(dataDir / "{}.nc".format(predictand_name))
     else:
+        print('Reusing saved data for observed predictand')
         Y = xr.open_dataset(dataDir / "{}.nc".format(predictand_name))
         Y = getattr(Y, [i for i in Y.data_vars][0])
 
@@ -120,6 +117,7 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
     hindcast_data = []
     for model in predictor_names:
         if not Path(dataDir / (model + ".nc")).is_file() or force_download:
+            print(f'Downloading {model} hindcasts')
             X = dl.download(
                 dl.hindcasts[model],
                 dataDir / (model + ".tsv"),
@@ -131,6 +129,7 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
             X.name = y_name
             X.to_netcdf(dataDir / "{}.nc".format(model))
         else:
+            print(f'Reusing saved {model} hindcasts')
             X = xr.open_dataset(dataDir / (model + ".nc"))
             X = getattr(X, [i for i in X.data_vars][0])
             X.name = y_name
@@ -143,6 +142,7 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
     forecast_data = []
     for model in predictor_names:
         if not Path(dataDir / (model + "_f.nc")).is_file() or force_download:
+            print(f'Downloading {model} forecasts')
             F = dl.download(
                 dl.forecasts[model],
                 dataDir / (model + "_f.tsv"),
@@ -154,6 +154,7 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
             F.name = y_name
             F.to_netcdf(dataDir / (model + "_f.nc"))
         else:
+            print(f'Reusing saved {model} forecasts')
             F = xr.open_dataset(dataDir / (model + "_f.nc"))
             F = getattr(F, [i for i in F.data_vars][0])
             F.name = y_name
@@ -1244,11 +1245,13 @@ def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_d
     nextgen_skill = xr.merge([nextgen_skill_deterministic, nextgen_skill_probabilistic])
 
     # write out files to outputs directory (NB: generic filenaming neeeds improving)
-    det_fcst.to_netcdf(outputDir / ('MME_deterministic_forecasts.nc'))
+    assert len(det_fcst['S']) == 1
+    year = pd.Timestamp(det_fcst['S'].values[0]).year
+    det_fcst.to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
     det_hcst.to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
-    pev_fcst.to_netcdf(outputDir / ('MME_forecast_prediction_error_variance.nc'))
+    pev_fcst.to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
     pev_hcst.to_netcdf(outputDir / ('MME_hindcast_prediction_error_variance.nc'))
-    pr_fcst.to_netcdf(outputDir / ('MME_probabilistic_forecasts.nc'))
+    pr_fcst.to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
     pr_hcst.to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
     nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
 
