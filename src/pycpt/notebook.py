@@ -880,7 +880,7 @@ def plot_mme_forecasts(
     ax1.imshow(pil_img)
 
     datart = det_fcst.where(det_fcst > missing_value_flag).isel(T=-1)
-    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]) and i == 0:
+    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]):
         vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
     art = datart.plot(
