@@ -679,7 +679,7 @@ def plot_forecasts(
         ax1 = fig.add_subplot(2, 2, 1)
         ax1.set_axis_off()
         ax1.set_title(
-            predictor_names[i].upper() + " - Probabilistic Forecasts " + ForTitle
+            predictor_names[i].upper() + " - Probabilistic Forecast "
         )
         pil_img = Image.open(
             files_root / "figures" / "Test.png"
@@ -742,7 +742,7 @@ def plot_forecasts(
         ax2.set_axis_off()
 
         ax2.set_title(
-            predictor_names[i].upper() + " - Deterministic Forecasts " + ForTitle
+            predictor_names[i].upper() + " - Deterministic Forecast " + ForTitle
         )
         pil_img = Image.open(
             files_root / "figures" / "Test.png"
@@ -871,7 +871,7 @@ def plot_mme_forecasts(
 
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.set_axis_off()
-    ax1.set_title(MOS + "_ensemble" + " - Probabilistic Forecasts " + ForTitle)
+    ax1.set_title(MOS + "_ensemble" + " - Probabilistic Forecast")
     pil_img = Image.open(
         files_root / "figures" / "Test.png"
     )
@@ -914,7 +914,7 @@ def plot_mme_forecasts(
 
     ax2 = fig.add_subplot(2, 2, 2)
     ax2.set_axis_off()
-    ax2.set_title(MOS + "_ensemble" + " - Deterministic Forecasts " + ForTitle)
+    ax2.set_title(MOS + "_ensemble" + " - Deterministic Forecast " + ForTitle)
     pil_img = Image.open(
         files_root / "figures" / "Test.png"
     )
