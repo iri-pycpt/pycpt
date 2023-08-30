@@ -150,7 +150,7 @@ def principal_components_regression(
         assert False, 'INVALID VALIDATION OPTION'
 
     # save all deterministic skill scores 
-    for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above']: 
+    for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above', 'root_mean_squared_error']:
         cpt.write(413)
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
@@ -265,7 +265,10 @@ def principal_components_regression(
     roc_above = open_cptdataset(str(cpt.outputs['roc_above'].absolute()) + '.txt')
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_normal'
-    skill_values = [pearson, spearman, two_afc, roc_below, roc_above]
+    rmse = open_cptdataset(str(cpt.outputs['root_mean_squared_error'].absolute()) + '.txt')
+    rmse = getattr(rmse, [i for i in rmse.data_vars][0])
+    rmse.name = 'root_mean_squared_error'
+    skill_values = [pearson, spearman, two_afc, roc_below, roc_above, rmse]
     skill_values = xr.merge(skill_values).mean('Mode')
 
 
