@@ -1331,12 +1331,19 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_mu =  Y2.mean('T') # xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) if transformer is not None else
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
+    tailoring = cpt_args['tailoring']
+    if tailoring == None:
+        adjusted_fcst_mu = fcst_mu
+    elif tailoring == 'Anomaly':
+        adjusted_fcst_mu = fcst_mu + climo_mu
+    else:
+        raise Exception(f'tailoring {tailoring} not yet supported')
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
-    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
+    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
 
-    return exceedance_prob, fcst_scale, climo_scale, fcst_mu, climo_mu, Y2, ntrain, threshold
+    return exceedance_prob, fcst_scale, climo_scale, adjusted_fcst_mu, climo_mu, Y2, ntrain, threshold
 
 def plot_domains(predictor_extent, predictand_extent):
         #Create a feature for States/Admin 1 regions at 1:10m from Natural Earth
