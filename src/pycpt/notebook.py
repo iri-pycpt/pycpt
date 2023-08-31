@@ -679,7 +679,7 @@ def plot_forecasts(
         ax1 = fig.add_subplot(2, 2, 1)
         ax1.set_axis_off()
         ax1.set_title(
-            predictor_names[i].upper() + " - Probabilistic Forecasts " + ForTitle
+            predictor_names[i].upper() + " - Probabilistic Forecast "
         )
         pil_img = Image.open(
             files_root / "figures" / "Test.png"
@@ -742,7 +742,7 @@ def plot_forecasts(
         ax2.set_axis_off()
 
         ax2.set_title(
-            predictor_names[i].upper() + " - Deterministic Forecasts " + ForTitle
+            predictor_names[i].upper() + " - Deterministic Forecast " + ForTitle
         )
         pil_img = Image.open(
             files_root / "figures" / "Test.png"
@@ -871,7 +871,7 @@ def plot_mme_forecasts(
 
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.set_axis_off()
-    ax1.set_title(MOS + "_ensemble" + " - Probabilistic Forecasts " + ForTitle)
+    ax1.set_title(MOS + "_ensemble" + " - Probabilistic Forecast")
     pil_img = Image.open(
         files_root / "figures" / "Test.png"
     )
@@ -880,7 +880,7 @@ def plot_mme_forecasts(
     ax1.imshow(pil_img)
 
     datart = det_fcst.where(det_fcst > missing_value_flag).isel(T=-1)
-    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]) and i == 0:
+    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]):
         vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
     art = datart.plot(
@@ -914,7 +914,7 @@ def plot_mme_forecasts(
 
     ax2 = fig.add_subplot(2, 2, 2)
     ax2.set_axis_off()
-    ax2.set_title(MOS + "_ensemble" + " - Deterministic Forecasts " + ForTitle)
+    ax2.set_title(MOS + "_ensemble" + " - Deterministic Forecast " + ForTitle)
     pil_img = Image.open(
         files_root / "figures" / "Test.png"
     )
@@ -1331,12 +1331,19 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_mu =  Y2.mean('T') # xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) if transformer is not None else
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
+    tailoring = cpt_args['tailoring']
+    if tailoring == None:
+        adjusted_fcst_mu = fcst_mu
+    elif tailoring == 'Anomaly':
+        adjusted_fcst_mu = fcst_mu + climo_mu
+    else:
+        raise Exception(f'tailoring {tailoring} not yet supported')
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
-    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
+    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
 
-    return exceedance_prob, fcst_scale, climo_scale, fcst_mu, climo_mu, Y2, ntrain, threshold
+    return exceedance_prob, fcst_scale, climo_scale, adjusted_fcst_mu, climo_mu, Y2, ntrain, threshold
 
 def plot_domains(predictor_extent, predictand_extent):
         #Create a feature for States/Admin 1 regions at 1:10m from Natural Earth
