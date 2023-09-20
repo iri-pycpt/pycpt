@@ -1,0 +1,34 @@
+package:
+  name: cptcore
+  version: "2.2.0"
+
+source:
+  path: ..
+
+build:
+  number: 1
+  noarch: python 
+
+requirements:
+  build:
+    - python
+    - pip
+    - setuptools
+  run:
+    - python
+    - cptio
+    - cptbin
+    - psutil
+
+
+test:
+  imports:
+    - cptcore
+    - cptcore.functional
+    - cptcore.tests
+
+about:
+  home: https://github.com/iri-pycpt/
+  license: MIT
+  summary: "Python interface to IRI's Climate Predictability Tool"
+  dev_url: https://github.com/iri-pycpt/
