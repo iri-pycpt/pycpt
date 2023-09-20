@@ -248,35 +248,38 @@ def evaluate_models(hindcast_data, forecast_data, Y, MOS, cpt_args, domain_dir, 
 
 
 def plot_skill(skill, MOS, files_root, skill_metrics):
-    for metric_name in skill_metrics:
-        nrows = len(skill['model'])
-        ncols = len(skill['lead_name'])
-        fig, ax = plt.subplots(
-            nrows=nrows,
-            ncols=ncols,
-            subplot_kw={"projection": cartopy.crs.PlateCarree()},
-            figsize=(8, 2 * nrows),
-            squeeze=False,
-        )
+    nblocks = len(skill_metrics)
+    nrows_per_block = len(skill['model'])
+    nrows = nblocks * nrows_per_block
+    ncols = len(skill['lead_name'])
+    fig, ax = plt.subplots(
+        nrows=nrows,
+        ncols=ncols,
+        subplot_kw={"projection": cartopy.crs.PlateCarree()},
+        figsize=(8, 2 * nrows),
+        squeeze=False,
+    )
+    for b, metric_name in enumerate(skill_metrics):
         metric = SKILL_METRICS[metric_name]
-        for i, model in enumerate(skill['model'].values):
-            for j, lead_name in enumerate(skill['lead_name'].values):
+        for row_of_block, model in enumerate(skill['model'].values):
+            for c, lead_name in enumerate(skill['lead_name'].values):
+                r = b * nrows_per_block + row_of_block
                 (
                     skill[metric_name].sel(model=model, lead_name=lead_name)
                     .where(lambda x: x > missing_value_flag)
                     .plot(
-                        ax=ax[i][j],
+                        ax=ax[r][c],
                         cmap=metric[0],
                         vmin=metric[1],
                         vmax=metric[2],
                         # colorbar only on last (rightmost) plot
-                        add_colorbar=j == len(skill['lead_name']) - 1)
+                        add_colorbar=c == len(skill['lead_name']) - 1)
                 )
-                ax[i][j].coastlines()
-                ax[i][j].add_feature(cartopy.feature.BORDERS)
-                ax[0][j].set_title(lead_name) # todo looks fishy
+                ax[r][c].coastlines()
+                ax[r][c].add_feature(cartopy.feature.BORDERS)
+                ax[r][c].set_title(lead_name)
 
-            ax[i][0].text(
+            ax[r][0].text(
                 -0.07,
                 0.55,
                 model.upper(),
@@ -284,7 +287,7 @@ def plot_skill(skill, MOS, files_root, skill_metrics):
                 ha="center",
                 rotation="vertical",
                 rotation_mode="anchor",
-                transform=ax[i][0].transAxes,
+                transform=ax[r][0].transAxes,
             )
 
     # save plots
