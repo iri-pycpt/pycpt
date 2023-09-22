@@ -2,6 +2,7 @@ import datetime as dt
 from io import StringIO
 import numpy as np
 import os
+import pandas as pd
 from pathlib import Path
 import re
 import xarray as xr
@@ -399,11 +400,7 @@ def read_cpt_date(date_original):
         return [datetime_timestamp(date_original)]
 
 
-def convert_np64_datetime(np64):
-    unix_epoch = np.datetime64(0, "s")
-    one_second = np.timedelta64(1, "s")
-    seconds_since_epoch = (np64 - unix_epoch) / one_second
-    return dt.datetime.utcfromtimestamp(seconds_since_epoch)
+convert_np64_datetime = pd.Timestamp
 
 
 def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
