@@ -1,9 +1,10 @@
-from pathlib import Path
-import os, re
 import datetime as dt
-import numpy as np
-import xarray as xr
 from io import StringIO
+import numpy as np
+import os
+from pathlib import Path
+import re
+import xarray as xr
 
 
 def is_valid_cptv10(da, assertmissing=True, assert_units=True):
