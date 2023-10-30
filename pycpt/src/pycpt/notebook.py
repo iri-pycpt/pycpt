@@ -49,6 +49,9 @@ def setup(case_dir, domain):
 def download_data(
         predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
 ):
+    forecast_data = download_forecasts(
+        predictor_names, files_root, force_download, download_args
+    )
     if local_predictand_file is None:
         Y = download_observations(
             download_args, files_root, predictand_name, force_download
@@ -58,10 +61,7 @@ def download_data(
         Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
 
     hindcast_data = download_hindcasts(
-        predictor_names, files_root, force_download, download_args, Y.name
-    )
-    forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args, Y.name
+        predictor_names, files_root, force_download, download_args
     )
     return Y, hindcast_data, forecast_data
 
@@ -127,7 +127,7 @@ def download_observations(download_args, files_root, predictand_name, force_down
     return Y
 
 
-def download_hindcasts(predictor_names, files_root, force_download, download_args, y_name):
+def download_hindcasts(predictor_names, files_root, force_download, download_args):
     download_args_hcst = _preprocess_download_args(download_args)
     dataDir = files_root / "data"
     # download training data
@@ -143,18 +143,16 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
                 use_dlauth=False,
             )
             X = getattr(X, [i for i in X.data_vars][0])
-            X.name = y_name
             X.to_netcdf(dataDir / "{}.nc".format(model))
         else:
             print(f'Reusing saved {model} hindcasts')
             X = xr.open_dataset(dataDir / (model + ".nc"))
             X = getattr(X, [i for i in X.data_vars][0])
-            X.name = y_name
         hindcast_data.append(X)
     return hindcast_data
 
 
-def download_forecasts(predictor_names, files_root, force_download, download_args, y_name):
+def download_forecasts(predictor_names, files_root, force_download, download_args):
     download_args_fcst = _preprocess_download_args(download_args)
     dataDir = files_root / "data"
     forecast_data = []
@@ -169,13 +167,11 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
                 use_dlauth=False,
             )
             F = getattr(F, [i for i in F.data_vars][0])
-            F.name = y_name
             F.to_netcdf(dataDir / (model + "_f.nc"))
         else:
             print(f'Reusing saved {model} forecasts')
             F = xr.open_dataset(dataDir / (model + "_f.nc"))
             F = getattr(F, [i for i in F.data_vars][0])
-            F.name = y_name
         forecast_data.append(F)
     return forecast_data
 
