@@ -66,17 +66,33 @@ def download_data(
     return Y, hindcast_data, forecast_data
 
 
+def _preprocess_download_args(download_args):
+    lead_low, lead_high = dl.leads_from_target(download_args['fdate'], download_args['target'])
+    user_lead_low = download_args.get('lead_low')
+    user_lead_high = download_args.get('lead_high')
+    assert (
+            (user_lead_low is None or user_lead_low == lead_low) and
+            (user_lead_high is None or user_lead_high == lead_high)
+    ), "lead_low and lead_high are not consistent with fdate and target."
+    result = dict(
+        download_args,
+        lead_low=lead_low,
+        lead_high=lead_high,
+    )
+    return result
+
 def download_observations(download_args, files_root, predictand_name, force_download):
+    download_args_obs = _preprocess_download_args(download_args)
+
     dataDir = files_root / "data"
     # Deal with "Cross-year issues" where either the target season
     # crosses Jan 1 (eg DJF), or where the forecast initialization is
     # in the calendar year before the start of the target season (eg
     # JFM from Dec 1 sart)
 
-    fmon = download_args["fdate"].month
-    tmon1 = fmon + download_args["lead_low"]  # first month of the target season
-    tmon2 = fmon + download_args["lead_high"]  # last month of the target season
-    download_args_obs = download_args.copy()
+    fmon = download_args_obs["fdate"].month
+    tmon1 = fmon + download_args_obs["lead_low"]  # first month of the target season
+    tmon2 = fmon + download_args_obs["lead_high"]  # last month of the target season
 
     # For when the target season crossing Jan 1 (eg DJF)
     # (i.e., when target season starts in the same calendar year as the forecast init
@@ -112,6 +128,7 @@ def download_observations(download_args, files_root, predictand_name, force_down
 
 
 def download_hindcasts(predictor_names, files_root, force_download, download_args, y_name):
+    download_args_hcst = _preprocess_download_args(download_args)
     dataDir = files_root / "data"
     # download training data
     hindcast_data = []
@@ -121,7 +138,7 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
             X = dl.download(
                 dl.hindcasts[model],
                 dataDir / (model + ".tsv"),
-                **download_args,
+                **download_args_hcst,
                 verbose=True,
                 use_dlauth=False,
             )
@@ -138,6 +155,7 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
 
 
 def download_forecasts(predictor_names, files_root, force_download, download_args, y_name):
+    download_args_fcst = _preprocess_download_args(download_args)
     dataDir = files_root / "data"
     forecast_data = []
     for model in predictor_names:
@@ -146,7 +164,7 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
             F = dl.download(
                 dl.forecasts[model],
                 dataDir / (model + "_f.tsv"),
-                **download_args,
+                **download_args_fcst,
                 verbose=True,
                 use_dlauth=False,
             )
