@@ -133,7 +133,8 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
 def download_forecasts(predictor_names, files_root, force_download, download_args):
     return [
         cached_download(
-            dl.forecasts[model], files_root, f'{model}_f',
+            dl.forecasts[model], files_root,
+            f'{model}_f{download_args["fdate"].year}',
             force_download, download_args
         )
         for model in predictor_names
