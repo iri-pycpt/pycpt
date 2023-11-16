@@ -112,72 +112,55 @@ def download_observations(download_args, files_root, predictand_name, force_down
         download_args_obs["first_year"] += 1
         download_args_obs["final_year"] += 1
 
-    if not Path(dataDir / "{}.nc".format(predictand_name)).is_file() or force_download:
-        print('Downloading observed predictand data')
-        Y = dl.download(
-            dl.observations[predictand_name],
-            dataDir / (predictand_name + ".tsv"),
-            **download_args_obs,
-            verbose=True,
-            use_dlauth=False,
-        )
-        Y = getattr(Y, [i for i in Y.data_vars][0])
-        Y.to_netcdf(dataDir / "{}.nc".format(predictand_name))
-    else:
-        print('Reusing saved data for observed predictand')
-        Y = xr.open_dataset(dataDir / "{}.nc".format(predictand_name))
-        Y = getattr(Y, [i for i in Y.data_vars][0])
+    url_pattern = dl.observations[predictand_name]
 
-    return Y
+    return cached_download(
+        dl.observations[predictand_name], files_root, predictand_name,
+        force_download, download_args_obs
+    )
 
 
 def download_hindcasts(predictor_names, files_root, force_download, download_args):
-    download_args_hcst = _preprocess_download_args(download_args)
-    dataDir = files_root / "data"
-    # download training data
-    hindcast_data = []
-    for model in predictor_names:
-        if not Path(dataDir / (model + ".nc")).is_file() or force_download:
-            print(f'Downloading {model} hindcasts')
-            X = dl.download(
-                dl.hindcasts[model],
-                dataDir / (model + ".tsv"),
-                **download_args_hcst,
-                verbose=True,
-                use_dlauth=False,
-            )
-            X = getattr(X, [i for i in X.data_vars][0])
-            X.to_netcdf(dataDir / "{}.nc".format(model))
-        else:
-            print(f'Reusing saved {model} hindcasts')
-            X = xr.open_dataset(dataDir / (model + ".nc"))
-            X = getattr(X, [i for i in X.data_vars][0])
-        hindcast_data.append(X)
-    return hindcast_data
+    return [
+        cached_download(
+            dl.hindcasts[model], files_root, f'{model}',
+            force_download, download_args
+        )
+        for model in predictor_names
+    ]
 
 
 def download_forecasts(predictor_names, files_root, force_download, download_args):
-    download_args_fcst = _preprocess_download_args(download_args)
+    return [
+        cached_download(
+            dl.forecasts[model], files_root, f'{model}_f',
+            force_download, download_args
+        )
+        for model in predictor_names
+    ]
+
+
+def cached_download(url_pattern, files_root, basename, force_download, download_args):
     dataDir = files_root / "data"
-    forecast_data = []
-    for model in predictor_names:
-        if not Path(dataDir / (model + "_f.nc")).is_file() or force_download:
-            print(f'Downloading {model} forecasts')
-            F = dl.download(
-                dl.forecasts[model],
-                dataDir / (model + "_f.tsv"),
-                **download_args_fcst,
-                verbose=True,
-                use_dlauth=False,
-            )
-            F = getattr(F, [i for i in F.data_vars][0])
-            F.to_netcdf(dataDir / (model + "_f.nc"))
-        else:
-            print(f'Reusing saved {model} forecasts')
-            F = xr.open_dataset(dataDir / (model + "_f.nc"))
-            F = getattr(F, [i for i in F.data_vars][0])
-        forecast_data.append(F)
-    return forecast_data
+    full_download_args = _preprocess_download_args(download_args)
+    tsvfile = dataDir / f'{basename}.tsv'
+    ncfile = dataDir / f'{basename}.nc'
+    if not ncfile.is_file() or force_download:
+        print(f'Downloading {basename}')
+        ds = dl.download(
+            url_pattern,
+            tsvfile,
+            **full_download_args,
+            verbose=True,
+            use_dlauth=False,
+        )
+        ds.to_netcdf(ncfile)
+    else:
+        print(f'Reusing already-downloaded {basename}')
+        ds = xr.open_dataset(ncfile)
+
+    return getattr(ds, [i for i in ds.data_vars][0])
+
 
 def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, predictor_names, interactive=False):
     outputDir = domain_dir / "output"
