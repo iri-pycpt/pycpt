@@ -76,6 +76,8 @@ class PyCPT_ERROR(Exception):
 
 def evaluate_url(url, ensemblemean=True, **kwargs):
     from .targetleadconv import seasonal_target, seasonal_target_length_monthly, seasonal_target_length, threeletters
+    # TODO The python docs say "The contents of [the locals] dictionary
+    # should not be modified."
     locals().update(**kwargs)
     return eval('f"{}"'.format(url))
 
