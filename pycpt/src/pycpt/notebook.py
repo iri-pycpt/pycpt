@@ -1209,7 +1209,9 @@ def plot_mme_flex_forecasts(
     )
 
 
-def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
+# Like construct_mme but also returns hindcasts. This will be renamed
+# construct_mme in 3.0.
+def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
     outputDir = domain_dir / "output"
     det_fcst = []
     det_hcst = []
@@ -1256,6 +1258,13 @@ def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_d
     pr_hcst.to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
     nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
 
+    return det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill
+
+
+# Backwards-compatible version of construct_mme_new, to avoid breaking existing
+# notebooks.
+def construct_mme(*args):
+    det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill = construct_mme_new(*args)
     return det_fcst, pr_fcst, pev_fcst, nextgen_skill
 
 
