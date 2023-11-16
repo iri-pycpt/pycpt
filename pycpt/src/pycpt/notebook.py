@@ -28,6 +28,12 @@ def setup(case_dir, domain):
     domainFolder = str(w) + "W-" + str(e) + "E" + "_to_" + str(s) + "S-" + str(n) + "N"
 
     files_root = case_dir / domainFolder
+    setup_domain_dir(files_root)
+
+    return files_root
+
+
+def setup_domain_dir(files_root):
     files_root.mkdir(exist_ok=True, parents=True)
 
     dataDir = files_root / "data"
@@ -42,8 +48,6 @@ def setup(case_dir, domain):
     print(f"Input data will be saved in {dataDir}")
     print(f"Figures will be saved in {figDir}")
     print(f"Output will be saved in {outputDir}")
-
-    return files_root
 
 
 def download_data(
