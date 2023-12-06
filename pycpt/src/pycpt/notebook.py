@@ -62,7 +62,13 @@ def download_data(
         )
     else:
         print('Using local observed predictand dataset')
-        Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
+        if local_predictand_file.endswith('.tsv'):
+            Y = cio.open_cptdataset(local_predictand_file)
+        elif local_predictand_file.endswith('.nc'):
+            Y = xr.open_dataset(local_predictand_file)
+        else:
+            assert False
+        Y = next(iter(Y.data_vars.values()))
 
     hindcast_data = download_hindcasts(
         predictor_names, files_root, force_download, download_args
