@@ -28,6 +28,12 @@ def setup(case_dir, domain):
     domainFolder = str(w) + "W-" + str(e) + "E" + "_to_" + str(s) + "S-" + str(n) + "N"
 
     files_root = case_dir / domainFolder
+    setup_domain_dir(files_root)
+
+    return files_root
+
+
+def setup_domain_dir(files_root):
     files_root.mkdir(exist_ok=True, parents=True)
 
     dataDir = files_root / "data"
@@ -43,40 +49,60 @@ def setup(case_dir, domain):
     print(f"Figures will be saved in {figDir}")
     print(f"Output will be saved in {outputDir}")
 
-    return files_root
-
 
 def download_data(
         predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
 ):
+    forecast_data = download_forecasts(
+        predictor_names, files_root, force_download, download_args
+    )
     if local_predictand_file is None:
         Y = download_observations(
             download_args, files_root, predictand_name, force_download
         )
     else:
         print('Using local observed predictand dataset')
-        Y = next(iter(cio.open_cptdataset(local_predictand_file).data_vars.values()))
+        if local_predictand_file.endswith('.tsv'):
+            Y = cio.open_cptdataset(local_predictand_file)
+        elif local_predictand_file.endswith('.nc'):
+            Y = xr.open_dataset(local_predictand_file)
+        else:
+            assert False
+        Y = next(iter(Y.data_vars.values()))
 
     hindcast_data = download_hindcasts(
-        predictor_names, files_root, force_download, download_args, Y.name
-    )
-    forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args, Y.name
+        predictor_names, files_root, force_download, download_args
     )
     return Y, hindcast_data, forecast_data
 
 
+def _preprocess_download_args(download_args):
+    lead_low, lead_high = dl.leads_from_target(download_args['fdate'], download_args['target'])
+    user_lead_low = download_args.get('lead_low')
+    user_lead_high = download_args.get('lead_high')
+    assert (
+            (user_lead_low is None or user_lead_low == lead_low) and
+            (user_lead_high is None or user_lead_high == lead_high)
+    ), "lead_low and lead_high are not consistent with fdate and target."
+    result = dict(
+        download_args,
+        lead_low=lead_low,
+        lead_high=lead_high,
+    )
+    return result
+
 def download_observations(download_args, files_root, predictand_name, force_download):
+    download_args_obs = _preprocess_download_args(download_args)
+
     dataDir = files_root / "data"
     # Deal with "Cross-year issues" where either the target season
     # crosses Jan 1 (eg DJF), or where the forecast initialization is
     # in the calendar year before the start of the target season (eg
     # JFM from Dec 1 sart)
 
-    fmon = download_args["fdate"].month
-    tmon1 = fmon + download_args["lead_low"]  # first month of the target season
-    tmon2 = fmon + download_args["lead_high"]  # last month of the target season
-    download_args_obs = download_args.copy()
+    fmon = download_args_obs["fdate"].month
+    tmon1 = fmon + download_args_obs["lead_low"]  # first month of the target season
+    tmon2 = fmon + download_args_obs["lead_high"]  # last month of the target season
 
     # For when the target season crossing Jan 1 (eg DJF)
     # (i.e., when target season starts in the same calendar year as the forecast init
@@ -92,74 +118,56 @@ def download_observations(download_args, files_root, predictand_name, force_down
         download_args_obs["first_year"] += 1
         download_args_obs["final_year"] += 1
 
-    if not Path(dataDir / "{}.nc".format(predictand_name)).is_file() or force_download:
-        print('Downloading observed predictand data')
-        Y = dl.download(
-            dl.observations[predictand_name],
-            dataDir / (predictand_name + ".tsv"),
-            **download_args_obs,
+    url_pattern = dl.observations[predictand_name]
+
+    return cached_download(
+        dl.observations[predictand_name], files_root, predictand_name,
+        force_download, download_args_obs
+    )
+
+
+def download_hindcasts(predictor_names, files_root, force_download, download_args):
+    return [
+        cached_download(
+            dl.hindcasts[model], files_root, f'{model}',
+            force_download, download_args
+        )
+        for model in predictor_names
+    ]
+
+
+def download_forecasts(predictor_names, files_root, force_download, download_args):
+    return [
+        cached_download(
+            dl.forecasts[model], files_root,
+            f'{model}_f{download_args["fdate"].year}',
+            force_download, download_args
+        )
+        for model in predictor_names
+    ]
+
+
+def cached_download(url_pattern, files_root, basename, force_download, download_args):
+    dataDir = files_root / "data"
+    full_download_args = _preprocess_download_args(download_args)
+    tsvfile = dataDir / f'{basename}.tsv'
+    ncfile = dataDir / f'{basename}.nc'
+    if not ncfile.is_file() or force_download:
+        print(f'Downloading {basename}')
+        ds = dl.download(
+            url_pattern,
+            tsvfile,
+            **full_download_args,
             verbose=True,
             use_dlauth=False,
         )
-        Y = getattr(Y, [i for i in Y.data_vars][0])
-        Y.to_netcdf(dataDir / "{}.nc".format(predictand_name))
+        ds.to_netcdf(ncfile)
     else:
-        print('Reusing saved data for observed predictand')
-        Y = xr.open_dataset(dataDir / "{}.nc".format(predictand_name))
-        Y = getattr(Y, [i for i in Y.data_vars][0])
+        print(f'Reusing already-downloaded {basename}')
+        ds = xr.open_dataset(ncfile)
 
-    return Y
+    return getattr(ds, [i for i in ds.data_vars][0])
 
-
-def download_hindcasts(predictor_names, files_root, force_download, download_args, y_name):
-    dataDir = files_root / "data"
-    # download training data
-    hindcast_data = []
-    for model in predictor_names:
-        if not Path(dataDir / (model + ".nc")).is_file() or force_download:
-            print(f'Downloading {model} hindcasts')
-            X = dl.download(
-                dl.hindcasts[model],
-                dataDir / (model + ".tsv"),
-                **download_args,
-                verbose=True,
-                use_dlauth=False,
-            )
-            X = getattr(X, [i for i in X.data_vars][0])
-            X.name = y_name
-            X.to_netcdf(dataDir / "{}.nc".format(model))
-        else:
-            print(f'Reusing saved {model} hindcasts')
-            X = xr.open_dataset(dataDir / (model + ".nc"))
-            X = getattr(X, [i for i in X.data_vars][0])
-            X.name = y_name
-        hindcast_data.append(X)
-    return hindcast_data
-
-
-def download_forecasts(predictor_names, files_root, force_download, download_args, y_name):
-    dataDir = files_root / "data"
-    forecast_data = []
-    for model in predictor_names:
-        if not Path(dataDir / (model + "_f.nc")).is_file() or force_download:
-            print(f'Downloading {model} forecasts')
-            F = dl.download(
-                dl.forecasts[model],
-                dataDir / (model + "_f.tsv"),
-                **download_args,
-                verbose=True,
-                use_dlauth=False,
-            )
-            F = getattr(F, [i for i in F.data_vars][0])
-            F.name = y_name
-            F.to_netcdf(dataDir / (model + "_f.nc"))
-        else:
-            print(f'Reusing saved {model} forecasts')
-            F = xr.open_dataset(dataDir / (model + "_f.nc"))
-            F = getattr(F, [i for i in F.data_vars][0])
-            F.name = y_name
-        forecast_data.append(F)
-    return forecast_data
 
 def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, predictor_names, interactive=False):
     outputDir = domain_dir / "output"
@@ -1208,7 +1216,9 @@ def plot_mme_flex_forecasts(
     )
 
 
-def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
+# Like construct_mme but also returns hindcasts. This will be renamed
+# construct_mme in 3.0.
+def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
     outputDir = domain_dir / "output"
     det_fcst = []
     det_hcst = []
@@ -1255,6 +1265,13 @@ def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_d
     pr_hcst.to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
     nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
 
+    return det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill
+
+
+# Backwards-compatible version of construct_mme_new, to avoid breaking existing
+# notebooks.
+def construct_mme(*args):
+    det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill = construct_mme_new(*args)
     return det_fcst, pr_fcst, pev_fcst, nextgen_skill
 
 
