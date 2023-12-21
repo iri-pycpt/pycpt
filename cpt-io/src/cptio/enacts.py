@@ -16,9 +16,13 @@ def add_ti(ds):
     ds = ds.assign_coords(Ti=ti).expand_dims('Ti')
     return ds
 
-def open_enacts_decadal(decadal_dir):
+def open_enacts_decadal(decadal_dir, missing=-999):
     ds = xr.open_mfdataset(f"{decadal_dir}/*.nc", preprocess=add_ti)
     ds = ds.rename(Lon='X', Lat='Y')
+    assert len(ds.data_vars) == 1
+    varname = list(ds.data_vars)[0]
+    # pycpt requires this attribute.
+    ds[varname].attrs['missing'] = missing
     # todo add Tf, T
     return ds
 
