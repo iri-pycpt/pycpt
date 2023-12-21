@@ -23,8 +23,8 @@ def ax_to_2d(ax, T, M):
 
 
 def is_valid_cptv10(da, assertmissing=True, assert_units=True):
-    valid_dims = ["T", "X", "Y", "Mode", "index", "C"]
-    valid_coords = ["T", "Ti", "Tf", "S", "X", "Y", "Mode", "index", "C"]
+    valid_dims = ["T", "X", "Y", "Mode", "index", "C", "M"]
+    valid_coords = ["T", "Ti", "Tf", "S", "X", "Y", "Mode", "index", "C", "M"]
     assert type(da) == xr.DataArray, "CPTv10 only deals with data arrays, not datasets"
     assert (
         len(list(da.dims)) >= 2 and len(list(da.dims)) <= 4
