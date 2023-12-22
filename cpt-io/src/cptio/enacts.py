@@ -16,13 +16,9 @@ def add_ti(ds):
     ds = ds.assign_coords(Ti=ti).expand_dims('Ti')
     return ds
 
-def open_enacts_decadal(decadal_dir, missing=-999):
+def open_enacts_decadal(decadal_dir):
     ds = xr.open_mfdataset(f"{decadal_dir}/*.nc", preprocess=add_ti)
     ds = ds.rename(Lon='X', Lat='Y')
-    assert len(ds.data_vars) == 1
-    varname = list(ds.data_vars)[0]
-    # pycpt requires this attribute.
-    ds[varname].attrs['missing'] = missing
     # todo add Tf, T
     return ds
 
@@ -78,6 +74,34 @@ def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final
     ds = open_enacts_decadal(decadal_dir)
     ds = open_enacts_monthly(decadal_dir)
 
+def satisfy_pycpt(ds, missing="-999", y_order=None):
+    '''Make it a dataset that PyCPT can handle'''
+    ds = ds.copy()
+    if isinstance(ds, xr.Dataset):
+        assert len(ds.data_vars) == 1
+        varname = list(ds.data_vars)[0]
+        da = ds[varname]
+    else:
+        da = ds
+
+    da.attrs['missing'] = missing
+
+    # TODO This should probably go in to_cptv10?
+    ds['X'] = ds['X'].values.round(6)
+    ds['Y'] = ds['Y'].values.round(6)
+
+    if y_order is not None:
+        if y_order not in ('increasing', 'decreasing'):
+            raise Exception('y_order must be "increasing" or "decreasing"')
+        if (
+                y_order == 'increasing' and ds['Y'][-1] < ds['Y'][0] or
+                y_order == 'decreasing' and ds['Y'][-1] > ds['Y'][0]
+        ):
+            ds = ds.isel(Y=slice(None, None, -1))
+
+    return ds
+
+
 def cmd_extract_seasonal(argv=None):
     import argparse
     import sys
@@ -93,6 +117,7 @@ def cmd_extract_seasonal(argv=None):
     parser.add_argument('--first-year', type=int)
     parser.add_argument('--final-year', type=int)
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('--y-order')
     parser.add_argument('indir')
     parser.add_argument('season')
     parser.add_argument('outfile')
@@ -105,6 +130,8 @@ def cmd_extract_seasonal(argv=None):
     seasonal = monthly_to_seasonal(
         monthly, first_month, last_month, 'sum', args.first_year, args.final_year
     )
+
+    seasonal = satisfy_pycpt(seasonal, y_order=args.y_order)
 
     if args.verbose:
         print(seasonal)
