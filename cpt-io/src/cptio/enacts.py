@@ -86,10 +86,6 @@ def satisfy_pycpt(ds, missing="-999", y_order=None):
 
     da.attrs['missing'] = missing
 
-    # TODO This should probably go in to_cptv10?
-    ds['X'] = ds['X'].values.round(6)
-    ds['Y'] = ds['Y'].values.round(6)
-
     if y_order is not None:
         if y_order not in ('increasing', 'decreasing'):
             raise Exception('y_order must be "increasing" or "decreasing"')

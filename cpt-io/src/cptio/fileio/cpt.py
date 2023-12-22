@@ -529,7 +529,7 @@ def to_cptv10(
                 if col != "T":
                     f.write(
                         "\t"
-                        + "\t".join([str(crd) for crd in da.coords[col].values])
+                        + "\t".join([str(crd) for crd in da.coords[col].values.round(6)])
                         + "\n"
                     )
                 else:
@@ -570,7 +570,7 @@ def to_cptv10(
                 if col != "T":
                     f.write(
                         "\t"
-                        + "\t".join([str(crd) for crd in da.coords[col].values])
+                        + "\t".join([str(crd) for crd in da.coords[col].values.round(6)])
                         + "\n"
                     )
                 else:
@@ -606,7 +606,7 @@ def to_cptv10(
                 tcoords = np.asarray(tcoords_temp, dtype="object")
             if col != "T":
                 f.write(
-                    "\t" + "\t".join([str(crd) for crd in da.coords[col].values]) + "\n"
+                    "\t" + "\t".join([str(crd) for crd in da.coords[col].values].round(6)) + "\n"
                 )
             else:
                 f.write("\t" + "\t".join([str(crd) for crd in tcoords]) + "\n")
