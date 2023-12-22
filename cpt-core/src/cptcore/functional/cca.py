@@ -305,7 +305,7 @@ def canonical_correlation_analysis(
 
     # CPT doesn't pass through the S coordinate, so put it back on.
     if 'S' in X.coords:
-        assert len(X['S']) == len(hcsts.coords['T'])
+        assert len(X['S']) == len(hcsts.coords['T']), f"Calibrated hindcast doesn't have the same number of years as the original: {X['S']}\n{hcsts['T']}"
         hcsts = hcsts.assign_coords(S=('T', X['S'].data))
 
     pearson = open_cptdataset(str(cpt.outputs['pearson'].absolute()) + '.txt')
