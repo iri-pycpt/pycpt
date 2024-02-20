@@ -4,5 +4,5 @@ from .targetleadconv import *
 
 
 __author__ = 'Kyle J. C. Hall (pycpt-help@iri.columbia.edu)'
-__version__ = '1.1.2'
+__version__ = '1.1.3'
 __license__ = 'MIT'
