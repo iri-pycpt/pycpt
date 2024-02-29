@@ -1,3 +1,4 @@
+import cptdl as dl
 import datetime
 from pathlib import Path
 import tempfile
@@ -77,10 +78,14 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                now=None, persistent_dir=None):
     if now is None:
         now = datetime.datetime.now()
-    first_fcst_year = download_args['final_year'] + 1 # TODO cross-jan season
+    target_low, _ = dl.parse_target(download_args['target'])
     for issue_month in issue_months:
+        modified_download_args = dict(download_args)
         month_dir = Path(dest_dir) / f'{issue_month:02}'
-        issue_date = datetime.datetime(first_fcst_year, issue_month, 1)
+        if issue_month > target_low:
+            modified_download_args['first_year'] -= 1
+            modified_download_args['final_year'] -= 1
+        issue_date = datetime.datetime(modified_download_args['final_year'] + 1, issue_month, 1)
         with tempfile.TemporaryDirectory() as tempdir:
             while issue_date < now:
                 fcst_file = month_dir / f'MME_deterministic_forecast_{issue_date.year}.nc'
@@ -90,7 +95,7 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                     print(f'skipping issue date {issue_date}')
                 else:
                     print(f"generate forecast initialized {issue_date}")
-                    issue_download_args = dict(download_args, fdate=issue_date)
+                    issue_download_args = dict(modified_download_args, fdate=issue_date)
                     pycpt_dir = Path(persistent_dir or tempdir)
                     update_one_issue(
                         dest_dir,
