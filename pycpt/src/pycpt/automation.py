@@ -3,6 +3,7 @@ import datetime
 from pathlib import Path
 import tempfile
 import numpy as np
+import requests.exceptions
 import xarray as xr
 
 from . import notebook
@@ -107,15 +108,29 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                     print(f"generate forecast initialized {issue_date}")
                     issue_download_args = dict(modified_download_args, fdate=issue_date)
                     pycpt_dir = Path(persistent_dir or tempdir)
-                    update_one_issue(
-                        dest_dir,
-                        pycpt_dir,
-                        MOS,
-                        predictor_names,
-                        predictand_name,
-                        local_predictand_file,
-                        issue_download_args,
-                        cpt_args
-                    )
+                    try:
+                        update_one_issue(
+                            dest_dir,
+                            pycpt_dir,
+                            MOS,
+                            predictor_names,
+                            predictand_name,
+                            local_predictand_file,
+                            issue_download_args,
+                            cpt_args
+                        )
+                    except Exception as e:
+                        # Treat most exceptions as fatal, but if we
+                        # fail on this month's forecast simply because
+                        # the model outputs aren't available yet,
+                        # continue with the next issue months.
+                        if (
+                                issue_date.month == now.month and
+                                issue_date.year == now.year and
+                                isinstance(e, requests.exceptions.HTTPError)
+                        ):
+                            print(f'Failed to generate forecast for {issue_date}: {e}')
+                        else:
+                            raise
 
                 issue_date = datetime.datetime(issue_date.year + 1, issue_month, 1)
