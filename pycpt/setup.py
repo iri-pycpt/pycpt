@@ -27,4 +27,10 @@ setup(
         "License :: OSI Approved :: MIT License",
 	"Operating System :: OS Independent",
     ],
+    entry_points = {
+        'console_scripts': [
+            'generate-forecasts=pycpt.commands:generate_forecasts',
+            'upload-forecasts=pycpt.commands:upload_forecasts',
+        ],
+    },
 )
