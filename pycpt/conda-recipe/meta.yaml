@@ -32,6 +32,7 @@ requirements:
     - jupyter 
     - ipykernel 
     - numpy 
+    - ftputil
     
     # Temporarily pinning tornado because it seems to fix occasional
     # crashes of the jupyter kernel.  See
@@ -47,6 +48,6 @@ test:
 about:
   home: https://iri-pycpt.github.io/
   license: MIT
-  summary: 'Python Interface to the IRIs Climate Predictability Tool' 
+  summary: "Python Interface to the IRI's Climate Predictability Tool"
   description: 'CPT'
   dev_url: https://github.com/iri-pycpt/
