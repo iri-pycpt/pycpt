@@ -45,30 +45,40 @@ def ensure_file_monthdir(src_ds, dest_dir, name):
     ensure_file(src_ds, dest)
 
 
-def update_one_issue(dest_dir, *args):
+def update_one_issue(
+        dest_dir,
+        domain_dir, MOS, predictor_names, predictand_name, local_predictand_file,
+        download_args, cpt_args
+):
     Y, det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill = (
-        generate_forecast(*args)
+        generate_forecast(
+            domain_dir, MOS, predictor_names, predictand_name, local_predictand_file,
+            download_args, cpt_args
+        )
     )
     issue_year = det_fcst['S'].dt.year.item()
     assert pev_fcst['S'].dt.year.item() == issue_year
+    issue_month = np.unique(det_fcst['S'].dt.month).item()
+    issue_month_dir = Path(dest_dir) / f'{issue_month:02d}'
+    issue_month_dir.mkdir(exist_ok=True)
 
     ensure_file(Y, Path(dest_dir) / 'obs.nc')
-    ensure_file_monthdir(
-        det_hcst, dest_dir,
-        'MME_deterministic_hindcasts.nc'
+    ensure_file(det_hcst, issue_month_dir / 'MME_deterministic_hindcasts.nc')
+    ensure_file(pev_hcst, issue_month_dir / 'MME_hindcast_prediction_error_variance.nc')
+    ensure_file(det_fcst, issue_month_dir / f'MME_deterministic_forecast_{issue_year}.nc')
+    ensure_file(pev_fcst, issue_month_dir / f'MME_forecast_prediction_error_variance_{issue_year}.nc')
+
+    notebook.plot_mme_forecasts(
+        cpt_args,
+        predictand_name,
+        pr_fcst,
+        MOS,
+        domain_dir,
+        det_fcst,
     )
-    ensure_file_monthdir(
-        pev_hcst, dest_dir,
-        'MME_hindcast_prediction_error_variance.nc'
-    )
-    ensure_file_monthdir(
-        det_fcst, dest_dir,
-        f'MME_deterministic_forecast_{issue_year}.nc'
-    )
-    ensure_file_monthdir(
-        pev_fcst, dest_dir,
-        f'MME_forecast_prediction_error_variance_{issue_year}.nc'
-    )
+    figfile = domain_dir / 'figures' / f"{MOS}_ensemble_probabilistic-deterministicForecast.png"
+    figname = f"forecast_{download_args['target']}_ini-{issue_year}-{issue_month:02}.png"
+    figfile.rename(issue_month_dir / figname)
 
 
 def update_all(dest_dir, issue_months, skip_issue_dates,
@@ -109,5 +119,3 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                     )
 
                 issue_date = datetime.datetime(issue_date.year + 1, issue_month, 1)
-
-
