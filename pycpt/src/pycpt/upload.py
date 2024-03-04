@@ -38,10 +38,10 @@ def scan_dir(local_root, remote_root, relpath, ftp):
     remote_dir = remote_root / relpath
 
     new_files = []
-    if ftp.path.exists(remote_dir):
-        assert ftp.path.isdir(remote_dir)
+    if ftp.path.exists(remote_dir.as_posix()):
+        assert ftp.path.isdir(remote_dir.as_posix())
     else:
-        ftp.makedirs(remote_dir)
+        ftp.makedirs(remote_dir.as_posix())
     for local_item in local_dir.iterdir():
         item_relpath = local_item.relative_to(local_root)
         if local_item.is_dir():
@@ -54,12 +54,13 @@ def scan_dir(local_root, remote_root, relpath, ftp):
 
     
 def is_new_file(remote_path, ftp):
-    if ftp.path.exists(remote_path):
-        assert ftp.path.isfile(remote_path)
+    p = remote_path.as_posix()
+    if ftp.path.exists(p):
+        assert ftp.path.isfile(p)
         return False
     else:
         return True
 
 
 def upload_file(local, remote, ftp):
-    ftp.upload(local, remote)
+    ftp.upload(local, remote.as_posix())
