@@ -29,6 +29,9 @@ setup(
     ],
     entry_points = {
         'console_scripts': [
+            # Warning: these must be specified redundantly in the
+            # conda recipe. Otherwise they work on linux and macos but
+            # not on windows.
             'generate-forecasts=pycpt.commands:generate_forecasts',
             'upload-forecasts=pycpt.commands:upload_forecasts',
         ],
