@@ -1,6 +1,7 @@
 import cptdl as dl
 import datetime
 from pathlib import Path
+import shutil
 import tempfile
 import numpy as np
 import requests.exceptions
@@ -79,7 +80,10 @@ def update_one_issue(
     )
     figfile = domain_dir / 'figures' / f"{MOS}_ensemble_probabilistic-deterministicForecast.png"
     figname = f"forecast_{download_args['target']}_ini-{issue_year}-{issue_month:02}.png"
-    figfile.rename(issue_month_dir / figname)
+    # Using shutil.move rather than figfile.rename because the latter
+    # fails if domain_dir and issue_month_dir are on different
+    # filesystems.
+    shutil.move(figfile, issue_month_dir / figname)
 
 
 def update_all(dest_dir, issue_months, skip_issue_dates,
