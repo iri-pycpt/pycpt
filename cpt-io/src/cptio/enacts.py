@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import xarray as xr
 
-def add_ti(ds):
+def add_t(ds):
     fname = Path(ds.encoding["source"]).name
     prefix = 'rr_mrg_'
     assert fname.startswith(prefix)
@@ -12,24 +12,43 @@ def add_ti(ds):
     year = int(fname[pl : pl + 4])
     month = int(fname[pl + 4 : pl + 6])
     dekad = int(fname[pl + 6 : pl + 7])
-    ti = dt.datetime(year, month, (dekad - 1) * 10 + 1)
-    ds = ds.assign_coords(Ti=ti).expand_dims('Ti')
-    return ds
 
-def open_enacts_decadal(decadal_dir):
-    ds = xr.open_mfdataset(f"{decadal_dir}/*.nc", preprocess=add_ti)
-    ds = ds.rename(Lon='X', Lat='Y')
-    # todo add Tf, T
-    return ds
-
-def decadal_to_monthly(ds, agg):
-    assert agg == 'sum', "Sum is the only aggregation implemented so far"
-    ds = ds.resample(Ti='1MS').sum()
-    ti = ds['Ti'].to_pandas()
-    tf = ti + pd.DateOffset(months=1, days=-1)
+    ti = pd.Timestamp(year, month, (dekad - 1) * 10 + 1)
+    if dekad == 3:
+        tf = pd.Timestamp(year, month, 1) + pd.DateOffset(months=1)
+    else:
+        tf = ti + pd.DateOffset(days=10)
     t = ti + (tf - ti) / 2
-    ds = ds.assign_coords(T=('Ti', t)).swap_dims(Ti='T')
-    ds = ds.assign_coords(Tf=('T', tf))
+    ds = ds.assign_coords(T=t, Ti=ti, Tf=tf).expand_dims(['T'])
+    return ds
+
+def open_enacts_dekadal(dekadal_dir):
+    ds = xr.open_mfdataset(f"{dekadal_dir}/*.nc", preprocess=add_t)
+    if isinstance(ds, xr.Dataset):
+        assert len(ds.data_vars) == 1
+        varname = list(ds.data_vars)[0]
+        da = ds[varname]
+    else:
+        da = ds
+    da = da.rename(Lon='X', Lat='Y')
+    return da
+
+def dekadal_to_monthly(ds, agg):
+    assert agg == 'sum', "sum is the only aggregation implemented so far"
+    ds = ds.resample(Ti='1MS').sum(skipna=False)
+    return ds
+
+def dekadal_to_monthly_incorrect(ds, agg):
+    '''Reproduces the often-used but inexact ingrid calculation "T
+monthlyAverage 3 mul", which is only an approximation of the monthly
+total because it weights dekads by their length.
+    '''
+    assert agg == 'sum', "sum is the only aggregation implemented so far"
+    lengths = (ds['Tf'] - ds['Ti']).dt.days
+    ds = (
+        (ds * lengths).resample(T='1MS').sum(skipna=False) /
+        lengths.resample(T='1MS').sum()
+    ) * 3 # 3 dekads per month
     return ds
 
 def month_range(first_month, last_month):
@@ -52,12 +71,12 @@ def season_start(date, season_months):
     return None
 
 def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final_year=None):
-    assert agg == 'sum', "Sum is the only aggregation implemented so far"
+    assert agg == 'mean', "mean is the only aggregation implemented so far"
     months = month_range(first_month, last_month)
 
     ti = ds['T'].to_pandas().apply(lambda d: season_start(d, months))
     ds = ds.assign_coords(Ti=('T', ti))
-    ds = ds.groupby('Ti').sum()
+    ds = ds.groupby('Ti').mean(skipna=False)
     ti = ds['Ti'].to_pandas()
     tf = ti + pd.DateOffset(months=len(months), days=-1)
     t = ti + (tf - ti) / 2
@@ -71,65 +90,15 @@ def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final
 
     return ds
 
-    ds = open_enacts_decadal(decadal_dir)
-    ds = open_enacts_monthly(decadal_dir)
-
-def satisfy_pycpt(ds, missing="-999", y_order=None):
+def satisfy_pycpt(da, missing="-999"):
     '''Make it a dataset that PyCPT can handle'''
-    ds = ds.copy()
-    if isinstance(ds, xr.Dataset):
-        assert len(ds.data_vars) == 1
-        varname = list(ds.data_vars)[0]
-        da = ds[varname]
-    else:
-        da = ds
+    da = da.copy()
 
+    # Ensure that there's a missing value atribute
     da.attrs['missing'] = missing
 
-    if y_order is not None:
-        if y_order not in ('increasing', 'decreasing'):
-            raise Exception('y_order must be "increasing" or "decreasing"')
-        if (
-                y_order == 'increasing' and ds['Y'][-1] < ds['Y'][0] or
-                y_order == 'decreasing' and ds['Y'][-1] > ds['Y'][0]
-        ):
-            ds = ds.isel(Y=slice(None, None, -1))
+    # Ensure that latitudes are in increasing order
+    if da['Y'][-1] < da['Y'][0]:
+        da = da.isel(Y=slice(None, None, -1))
 
-    return ds
-
-
-def cmd_extract_seasonal(argv=None):
-    import argparse
-    import sys
-
-    if argv is None:
-        argv = sys.argv[1:]
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-a', '--aggregation', required=True,
-        help='Aggregation to use over the season. Currently only "sum" is supported.'
-    )
-    parser.add_argument('--first-year', type=int)
-    parser.add_argument('--final-year', type=int)
-    parser.add_argument('-v', '--verbose', action='store_true')
-    parser.add_argument('--y-order')
-    parser.add_argument('indir')
-    parser.add_argument('season')
-    parser.add_argument('outfile')
-    args = parser.parse_args(argv)
-
-    first_month, last_month = dl.parse_target(args.season)
-
-    decadal = open_enacts_decadal(args.indir)
-    monthly = decadal_to_monthly(decadal, args.aggregation)
-    seasonal = monthly_to_seasonal(
-        monthly, first_month, last_month, 'sum', args.first_year, args.final_year
-    )
-
-    seasonal = satisfy_pycpt(seasonal, y_order=args.y_order)
-
-    if args.verbose:
-        print(seasonal)
-
-    seasonal.to_netcdf(args.outfile)
+    return da
