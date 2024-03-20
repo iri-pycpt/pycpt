@@ -1,5 +1,6 @@
 import datetime as dt
 import cptdl as dl
+import numpy as np
 from pathlib import Path
 import pandas as pd
 import xarray as xr
@@ -78,7 +79,7 @@ def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final
     ds = ds.assign_coords(Ti=('T', ti))
     ds = ds.groupby('Ti').mean(skipna=False)
     ti = ds['Ti'].to_pandas()
-    tf = ti + pd.DateOffset(months=len(months), days=-1)
+    tf = ti + pd.DateOffset(months=len(months))
     t = ti + (tf - ti) / 2
     ds = ds.assign_coords(T=('Ti', t)).swap_dims(Ti='T')
     ds = ds.assign_coords(Tf=('T', tf))
@@ -100,5 +101,12 @@ def satisfy_pycpt(da, missing="-999"):
     # Ensure that latitudes are in increasing order
     if da['Y'][-1] < da['Y'][0]:
         da = da.isel(Y=slice(None, None, -1))
+
+    # To match a systematic error in pycpt, shift the end of the
+    # season back by 24 hours, e.g. for MAM shift Tf from midnight on
+    # June 1 to midnight on May 31. Also shift T back by 12 hours
+    # accordingly.
+    da['Tf'] = da['Tf'] - np.timedelta64(24, 'h')
+    da['T'] = da['T'] - np.timedelta64(12, 'h')
 
     return da
