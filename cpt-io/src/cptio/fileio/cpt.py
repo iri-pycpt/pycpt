@@ -410,7 +410,7 @@ def to_cptv10(
         da.dims
     ), f"Data Array has dims {da.dims}, but you only passed {dims}"
     missingblurb = (
-        ", cpt:missing={:.6f}".format(float(da.attrs["missing"]))
+        ", cpt:missing={:#g}".format(float(da.attrs["missing"]))
         if assertmissing
         else ""
     )
@@ -473,7 +473,7 @@ def to_cptv10(
                     if col != "T":
                         f.write(
                             "\t"
-                            + "\t".join([str(crd) for crd in da.coords[col].values])
+                            + "\t".join([f"{crd:#g}" for crd in da.coords[col]])
                             + "\n"
                         )
                     else:
@@ -485,7 +485,7 @@ def to_cptv10(
                             [tcoords.reshape(-1, 1), temp.astype("object")]
                         )
                     if row != "T":
-                        np.savetxt(f, temp, fmt="%.6f", delimiter="\t")
+                        np.savetxt(f, temp, fmt="%#g", delimiter="\t")
                     else:
                         np.savetxt(f, temp, fmt="%s", delimiter="\t")
         elif len(extra_dims) == 1 and T is not None:
@@ -529,7 +529,7 @@ def to_cptv10(
                 if col != "T":
                     f.write(
                         "\t"
-                        + "\t".join([str(crd) for crd in da.coords[col].values.round(6)])
+                        + "\t".join([f"{crd:#g}" for crd in da.coords[col].values])
                         + "\n"
                     )
                 else:
@@ -539,7 +539,7 @@ def to_cptv10(
                 else:
                     temp = np.hstack([tcoords.reshape(-1, 1), temp.astype("object")])
                 if row != "T":
-                    np.savetxt(f, temp, fmt="%.6f", delimiter="\t")
+                    np.savetxt(f, temp, fmt="%#g", delimiter="\t")
                 else:
                     np.savetxt(f, temp, fmt="%s", delimiter="\t")
 
@@ -570,7 +570,7 @@ def to_cptv10(
                 if col != "T":
                     f.write(
                         "\t"
-                        + "\t".join([str(crd) for crd in da.coords[col].values.round(6)])
+                        + "\t".join([f"{crd:#g}" for crd in da.coords[col].values])
                         + "\n"
                     )
                 else:
@@ -580,7 +580,7 @@ def to_cptv10(
                 else:
                     temp = np.hstack([tcoords.reshape(-1, 1), temp.astype("object")])
                 if row != "T":
-                    np.savetxt(f, temp, fmt="%.6f", delimiter="\t")
+                    np.savetxt(f, temp, fmt="%#g", delimiter="\t")
                 else:
                     np.savetxt(f, temp, fmt="%s", delimiter="\t")
         else:
@@ -606,16 +606,16 @@ def to_cptv10(
                 tcoords = np.asarray(tcoords_temp, dtype="object")
             if col != "T":
                 f.write(
-                    "\t" + "\t".join([str(crd) for crd in da.coords[col].values].round(6)) + "\n"
+                    "\t" + "\t".join([f"{crd:#g}" for crd in da.coords[col].values]) + "\n"
                 )
             else:
-                f.write("\t" + "\t".join([str(crd) for crd in tcoords]) + "\n")
+                f.write("\t" + "\t".join([f"{crd:#g}" for crd in tcoords]) + "\n")
             if row != "T":
                 temp = np.hstack([da.coords[row].values.reshape(-1, 1), temp])
             else:
                 temp = np.hstack([tcoords.reshape(-1, 1), temp.astype("object")])
             if row != "T":
-                np.savetxt(f, temp, fmt="%.6f", delimiter="\t")
+                np.savetxt(f, temp, fmt="%#g", delimiter="\t")
             else:
                 np.savetxt(f, temp, fmt="%s", delimiter="\t")
     return opfile
