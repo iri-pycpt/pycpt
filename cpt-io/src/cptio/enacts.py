@@ -1,5 +1,4 @@
 import datetime as dt
-import cptdl as dl
 import numpy as np
 from pathlib import Path
 import pandas as pd
