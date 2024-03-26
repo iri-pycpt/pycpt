@@ -25,29 +25,34 @@ def add_t(ds):
 
 def open_enacts_dekadal(dekadal_dir):
     ds = xr.open_mfdataset(f"{dekadal_dir}/*.nc", preprocess=add_t)
-    if isinstance(ds, xr.Dataset):
-        assert len(ds.data_vars) == 1
-        varname = list(ds.data_vars)[0]
-        da = ds[varname]
-    else:
-        da = ds
+    assert len(ds.data_vars) == 1
+    da = next(iter(ds.data_vars.values()))
     da = da.rename(Lon='X', Lat='Y')
+    # CPT seems to round off coordinate values. If we don't round them
+    # off ahead of time, then the forecasts that come back from CPT
+    # don't align with the obs. Had this problem with the Lesotho
+    # ENACTS; I don't know if other datasets have weird coordinate
+    # values too or if they did something wrong in Lesotho.
+    da['X'] = da['X'].round(6)
+    da['Y'] = da['Y'].round(6)
     return da
 
 def dekadal_to_monthly(ds, agg):
-    assert agg == 'sum', "sum is the only aggregation implemented so far"
-    ds = ds.resample(Ti='1MS').sum(skipna=False)
-    return ds
+    groups = ds.resample(Ti='1MS')
+    result = getattr(groups, agg)(skipna=False)
+    return result
 
 def dekadal_to_monthly_incorrect(ds, agg):
     '''Reproduces the often-used but inexact ingrid calculation "T
 monthlyAverage 3 mul", which is only an approximation of the monthly
 total because it weights dekads by their length.
     '''
-    assert agg == 'sum', "sum is the only aggregation implemented so far"
     lengths = (ds['Tf'] - ds['Ti']).dt.days
+    weighted = ds * lengths
+    groups = weighted.resample(T='1MS')
+    aggregated = getattr(groups, agg)(skipna=False)
     ds = (
-        (ds * lengths).resample(T='1MS').sum(skipna=False) /
+        aggregated /
         lengths.resample(T='1MS').sum()
     ) * 3 # 3 dekads per month
     return ds
@@ -72,12 +77,12 @@ def season_start(date, season_months):
     return None
 
 def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final_year=None):
-    assert agg == 'mean', "mean is the only aggregation implemented so far"
     months = month_range(first_month, last_month)
 
     ti = ds['T'].to_pandas().apply(lambda d: season_start(d, months))
     ds = ds.assign_coords(Ti=('T', ti))
-    ds = ds.groupby('Ti').mean(skipna=False)
+    groups = ds.groupby('Ti')
+    ds = getattr(groups, agg)(skipna=False)
     ti = ds['Ti'].to_pandas()
     tf = ti + pd.DateOffset(months=len(months))
     t = ti + (tf - ti) / 2
@@ -93,14 +98,11 @@ def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final
 
 def satisfy_pycpt(da, missing="-999"):
     '''Make it a dataset that PyCPT can handle'''
+
+    assert 'missing' in da.attrs
+    assert 'units' in da.attrs
+
     da = da.copy()
-
-    # Ensure that there's a missing value atribute
-    da.attrs['missing'] = missing
-
-    # Ensure that latitudes are in increasing order
-    if da['Y'][-1] < da['Y'][0]:
-        da = da.isel(Y=slice(None, None, -1))
 
     # To match a systematic error in pycpt, shift the end of the
     # season back by 24 hours, e.g. for MAM shift Tf from midnight on
