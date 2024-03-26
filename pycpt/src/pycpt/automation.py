@@ -93,13 +93,31 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                now=None, persistent_dir=None):
     if now is None:
         now = datetime.datetime.now()
-    target_low, _ = dl.parse_target(download_args['target'])
+    target_start, target_end = dl.parse_target(download_args['target'])
+    target_length = (target_end - target_start) % 12 + 1
+    target_mid = (target_start - 1 + target_length // 2) % 12 + 1
     for issue_month in issue_months:
         modified_download_args = dict(download_args)
         month_dir = Path(dest_dir) / f'{issue_month:02}'
-        if issue_month > target_low:
-            modified_download_args['first_year'] -= 1
-            modified_download_args['final_year'] -= 1
+        if 'target_first_year' in download_args and 'target_final_year' in download_args:
+            if 'first_year' in download_args or 'final_year' in download_args:
+                raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
+            if issue_month > target_mid:
+                modified_download_args['first_year'] = download_args['target_first_year'] - 1
+                modified_download_args['final_year'] = download_args['target_final_year'] - 1
+            else:
+                modified_download_args['first_year'] = download_args['target_first_year']
+                modified_download_args['final_year'] = download_args['target_final_year']
+        elif 'first_year' in download_args and 'final_year' in download_args:
+            if 'target_first_year' in download_args or 'target_final_year' in download_args:
+                raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
+            # Preserving the weird behavior of first_year and
+            # final_year from pycpt 2.7.2 for backwards
+            # compatibility. New configurations should use
+            # target_first_year and target_final_year instead.
+            if issue_month > target_start:
+                modified_download_args['first_year'] -= 1
+                modified_download_args['final_year'] -= 1
         issue_date = datetime.datetime(modified_download_args['final_year'] + 1, issue_month, 1)
         with tempfile.TemporaryDirectory() as tempdir:
             while issue_date < now:
