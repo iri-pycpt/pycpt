@@ -62,6 +62,7 @@ def download_data(
         )
     else:
         print('Using local observed predictand dataset')
+        local_predictand_file = str(local_predictand_file) # in case it's a pathlib.Path
         if local_predictand_file.endswith('.tsv'):
             Y = cio.open_cptdataset(local_predictand_file)
         elif local_predictand_file.endswith('.nc'):
