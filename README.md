@@ -12,5 +12,11 @@ PyCPT is made up of six conda packages: `cpt-bin`, `cpt-core`, `cpt-dl`, `cpt-ex
 
 Having `cpt-bin` as a separate package is useful because the python code is being developed more actively than CPT, and it is  convenient to be able to publish changes to the python code without rebuilding three platform-specific packages. The original motivation for splitting the python code into five different packages was that we anticipated using some of the support libraries in other applications , e.g. in python maprooms, and we wanted to be able to do that without carrying over all of PyCPT's dependencies, including CPT. This motivation is no longer as strong as it was. For one thing, installing cpt-bin on linux is no longer as difficult as it was, as explained in the previous paragraph. Second, in practice code reuse has been rare so far. The administrative burden of coordinating changes between different packages arguably outweighs what little benefit we get from it. We should consider merging some or all of the python packages in the future.
 
-## 
+## Frozen conda environments
+
+The original installation instructions for PyCPT 2 said simply to install the `pycpt` package, relying on conda to pull in all of pycpt's dependencies (packages that pycpt imports, and other packages that they import, etc.). This method is unreliable. Conda generally (subject to certain constraints) installs the version of each library that is most recent at the moment of installation. PyCPT currently depends on more than 300 libraries, all maintained on different schedules by different open source developers, so new versions of various dependencies are constantly appearing. Consequently, if you install by that method, you are likely to get a different set of packages next week than you would get today. Most of the time these updates are innocuous or beneficial, but occasionally one breaks PyCPT. To ensure that users get versions of all the packages that actually work together, instead of instructing them to install the latest version of everything, we specify a precise version number for all 300+ libraries. This specification can be found in the `.lock` files that are included in the pycpt release, one per platform (linux, osx, windows). The versions listed in the lock file are by no means the only versions that will work; they are simply one combination that has been tested and is known to work.
+
+## Development setup
+
+## Publishing new versions
 
