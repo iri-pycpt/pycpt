@@ -25,11 +25,63 @@ In addition to the `pycpt` repositiory, there is a second repository called `not
 
 A "release" of PyCPT consists of a compatible set of the above files. Releases are published through the `notebooks` repository in GitHub, at https://github.com/iri-pycpt/notebooks/releases . Releases are currently identified by the version of the `pycpt` package they include. This numbering system can be inconvenient: in order to publish a change to a package like `cptdl`, we need to increment the version number of `pycpt` and publish a new `pycpt` package, even though the contents of that package are identical to those of the previous version. Merging packages as suggested in [Package structure](#package-structure) may resolve this.
 
+I (Aaron) find the separation between the `pycpt` and `notebooks` repositories confusing. I think we should move the Operational subdir of `notebooks` into `pycpt`, and then publish subsequent releases from that repo instead.
+
 Instructions for creating a release are given in the [Publishing new versions](#publishing-new-versions) section below.
 
 ## Development setup
 
+All of the PyCPT python packages support pip's [development mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html), which allows you to edit the python code and test it in place, without building and installing a new package each time. To create a conda environment for testing changes, start with the environment from the latest release, and then replace each of the pycpt packages with your editable copy. That is,
+- Download the release file for your platform, e.g. `conda-linux-64.lock`
+- `conda create -n pycpt-dev --file conda-linux-64.lock`
+- `conda activate pycpt-dev`
+- `cd` to the root of the `pycpt` repository
+- `pip install -e cpt-bin`
+- `pip install -e cpt-core`
+- ... similarly for the other packages
 
+## Publishing a new release
 
-## Publishing new versions
+The steps for creating a new release of PyCPT can be summarized as follows:
 
+- Modify one or more of the python packages
+- Build new conda packages for the modified python packages
+- Publish the new conda packages to anaconda.org
+- Modify the environment lock files to use the new conda package versions
+- Modify `pycpt-operational.ipynb` if necessary
+- Ideally, build the new environment on each platform and test the latest notebook in those environments. This is such a tedious and time-consuming step that I sometimes skip it, which makes the release process less reliable than it could be. We need to automate some tests to help with this.
+- Publish a new GitHub release from the `notebooks` repository.
+
+We will now go into more detail on some of these steps.
+
+### Building a pure python package
+
+After modifying any package other than `cpt-bin`, follow these instructions. (The process for `cpt-bin` is more complicated because that package contains Fortran code that must be compiled for each platform. Instructions for that are in the next section.)
+
+- `cd` to the subdirectory of `pycpt` for the package you want to build, e.g. `cd cpt-dl`.
+- Increment the version number. Currently the version number is found in three different files, all of which must be kept in lock step: `setup.py`, `conda-recipe/meta.yaml`, and `src/<package name>/__init__.py`, e.g. `src/cptdl/__init__.py`. See [About version numbers](#about-version-numbers) below.
+- Commit and push your changes, including the changed version number. Have your changes reviewed and approved, then merge them.
+- If you have never built a conda package before, start by creating a conda environment called `build` that contains the tools for building conda packages: `conda create -n build -c conda-forge boa`. Once you have this environment you can use it for all package builds.
+- Activate your `build` environment: `conda activate build`
+- `conda mambabuild conda-recipe`
+- Wait a long time. Watch the log messages for errors.
+- If there are no errors, near the end of the log it will show the path of the newly built package, e.g.
+    ```
+    /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptdl-1.1.3-py_0.tar.bz2
+    ```
+- If there were packaging-related changes, test that built package in a new conda environment. When only changing python code I generally skip this step.
+- Upload the new package file, whose path we noted above, to anaconda.org, e.g.
+    ```
+    anaconda upload -u iri-nextgen /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptdl-1.1.3-py_0.tar.bz2
+    ```
+  Get the password from another PyCPT developer.
+
+  The above command makes the package available in the `iri-nextgen` channel. If you want to share the package with some beta-testers prior to releasing it, you can add `-l dev`. It will then be available in a channel called `iri-nextgen/label/dev`. If problems are discovered and you need to make changes, it's ok to remove the broken package from the `dev` channel, but once a package is published to `iri-nextgen` it should be considered as released and should generally not be overwritten or removed.
+
+### Building cpt-bin
+
+(To be written)
+
+### Updating environment lock files
+
+  
