@@ -6,8 +6,8 @@ with open(Path(__file__ ).parent / 'README.md', 'r', encoding='utf-8') as fh:
 
 setup(
     name="cptdl",
-    version="1.1.3",
-    author="Kyle Hall",
+    version="1.1.4",
+    author="IRI",
     author_email="pycpt-help@iri.columbia.edu",
     description=(
         "Tools bridging Xarray and CPT"),
