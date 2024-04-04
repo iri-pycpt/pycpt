@@ -14,9 +14,22 @@ Having `cpt-bin` as a separate package is useful because the python code is bein
 
 ## Frozen conda environments
 
-The original installation instructions for PyCPT 2 said simply to install the `pycpt` package, relying on conda to pull in all of pycpt's dependencies (packages that pycpt imports, and other packages that they import, etc.). This method is unreliable. Conda generally (subject to certain constraints) installs the version of each library that is most recent at the moment of installation. PyCPT currently depends on more than 300 libraries, all maintained on different schedules by different open source developers, so new versions of various dependencies are constantly appearing. Consequently, if you install by that method, you are likely to get a different set of packages next week than you would get today. Most of the time these updates are innocuous or beneficial, but occasionally one breaks PyCPT. To ensure that users get versions of all the packages that actually work together, instead of instructing them to install the latest version of everything, we specify a precise version number for all 300+ libraries. This specification can be found in the `.lock` files that are included in the pycpt release, one per platform (linux, osx, windows). The versions listed in the lock file are by no means the only versions that will work; they are simply one combination that has been tested and is known to work.
+The original installation instructions for PyCPT 2 said simply to install the `pycpt` package, relying on conda to pull in all of pycpt's dependencies (packages that pycpt imports, and other packages that they import, etc.). This method is unreliable. Conda generally (subject to certain constraints) installs the version of each library that is most recent at the moment of installation. PyCPT currently depends on more than 300 libraries, all maintained on different schedules by different open source developers, so new versions of various dependencies are constantly appearing. Consequently, if you install by that method, you are likely to get a different set of packages next week than you would get today. Most of the time these updates are innocuous or beneficial, but occasionally one breaks PyCPT. To ensure that users get versions of all the packages that actually work together, instead of instructing them to install the latest version of everything, we specify exact version numbers for all 300+ libraries. This specification can be found in the `.lock` files that are included in the pycpt release, one per platform (linux, osx, windows). The versions listed in the lock file are by no means the only versions that will work; they are simply one combination that has been tested and is known to work.
+
+## The `notebooks` repository
+
+In addition to the `pycpt` repositiory, there is a second repository called `notebooks` that contains example Jupyter Notebooks that demonstrate the functionality provided by the pycpt packages. Of particular note is the `Operations` directory, which contains
+- `pycpt-operational.ipynb`, a basic seasonal forecast notebook that serves as the starting point for most training sessions
+- `config-example.py`, a template config file to be customized and then used with the `generate-forecasts` operational command
+- `conda-linux64.lock`, `conda-osx-64.lock`, and `conda-win-64.lock`, the frozen conda environment specifications described in the previous section.
+
+A "release" of PyCPT consists of a compatible set of the above files. Releases are published through the `notebooks` repository in GitHub, at https://github.com/iri-pycpt/notebooks/releases . Releases are currently identified by the version of the `pycpt` package they include. This numbering system can be inconvenient: in order to publish a change to a package like `cptdl`, we need to increment the version number of `pycpt` and publish a new `pycpt` package, even though the contents of that package are identical to those of the previous version. Merging packages as suggested in [Package structure](#package-structure) may resolve this.
+
+Instructions for creating a release are given in the [Publishing new versions](#publishing-new-versions) section below.
 
 ## Development setup
+
+
 
 ## Publishing new versions
 
