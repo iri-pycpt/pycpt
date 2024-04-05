@@ -35,14 +35,16 @@ All of the PyCPT python packages support pip's [development mode](https://setupt
 - Download the release file for your platform, e.g. `conda-linux-64.lock`
 - `conda create -n pycpt-dev --file conda-linux-64.lock`
 - `conda activate pycpt-dev`
-- `cd` to the root of the `pycpt` repository
+- clone the `pycpt` repository and `cd` into it
 - `pip install -e cpt-bin`
 - `pip install -e cpt-core`
 - ... similarly for the other packages
 
-## Publishing a new release
+Then you can activate the development environment (`conda activate pycpt-dev`) and run PyCPT in it. When you make changes to the PyCPT code, restart the jupyter kernel to load the modified version.
 
-The steps for creating a new release of PyCPT can be summarized as follows:
+## Publishing changes
+
+The steps for creating a new version of PyCPT can be summarized as follows:
 
 - Modify one or more of the python packages
 - Build new conda packages for the modified python packages
