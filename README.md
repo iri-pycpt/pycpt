@@ -63,7 +63,7 @@ After modifying any package other than `cpt-bin`, follow these instructions. (Th
 - Commit and push your changes, including the changed version number. Have your changes reviewed and approved, then merge them.
 - If you have never built a conda package before, start by creating a conda environment called `build` that contains the tools for building conda packages: `conda create -n build -c conda-forge boa`. Once you have this environment you can use it for all package builds.
 - Activate your `build` environment: `conda activate build`
-- `conda mambabuild conda-recipe`
+- `conda mambabuild -c iri-nextgen -c conda-forge conda-recipe`
 - Wait a long time. Watch the log messages for errors.
 - If there are no errors, near the end of the log it will show the path of the newly built package, e.g.
     ```
