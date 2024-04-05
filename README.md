@@ -104,3 +104,24 @@ If this process results in the wrong versions of some packages being installed, 
 
 When recreating the environment from scratch, this process must be repeated on each platform (Windows, macOS, Linux).
 
+### Creating a GitHub release
+
+We used to instruct users to download files from the GitHub `Code` tab, but this had the following disadvantages:
+- Many users had trouble figuring out how to download a file through this interface, which is designed for viewing code in a browser, not for downloading.
+- It made us avoid merging changes into `master` until they were ready to release, which meant changes had to be merged in big batches rather than incrementally as they were ready.
+
+To solve these problems, we switched to publishing via GitHub's "Releases" mechanism. To create a new release,
+- Click the `Actions` tab in the `notebooks` GitHub repository
+    ![image](https://github.com/iri-pycpt/pycpt/assets/766406/c7927b3f-18f6-4929-a5b9-76fc1c4c9aef)
+- Under `Workflows`, click `main.yaml`
+    ![image](https://github.com/iri-pycpt/pycpt/assets/766406/7e7385d9-1413-4d0b-ad54-b40fd26ac4b5)
+- Click `Run workflow`, enter the version number of the new release, preceded by the letter `v`, then click the green `Run workflow` button.
+    ![image](https://github.com/iri-pycpt/pycpt/assets/766406/ecd7f04b-334a-432b-bc34-65173f96b1a7)
+- Return to the `Code` tab, click `Releases`
+    ![image](https://github.com/iri-pycpt/pycpt/assets/766406/365c15f5-5e23-45f8-b75f-68baa256ec03)
+- (Make screenshots and more precise instructions for the remaining steps next time we actually do a release)
+- Click the "edit" pencil on the new draft release
+- Set the name to the version number, e.g. `v2.8.2`. As noted above, the convention we're currently following is to name the release after the version of `pycpt` that it includes, but we may want to reconsider that.
+- Click publish
+
+
