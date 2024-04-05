@@ -84,4 +84,23 @@ After modifying any package other than `cpt-bin`, follow these instructions. (Th
 
 ### Updating environment lock files
 
-  
+To update the environment specifications to use newly published PyCPT packages, it usually suffices to edit the lock files by hand and update the version numbers for those packages, e.g. change
+```
+https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptdl-1.1.2-py_0.tar.bz2
+```
+to
+```
+https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptdl-1.1.3-py_0.tar.bz2
+```
+
+If we need to update not only PyCPT packages but also one or more third-party dependencies, it is not a good idea to edit the lock files by hand, as the result may violate compatibility constraints between different packages. The simplest thing to do in this case is usually to
+- Create a new environment from scratch: `conda create -n pycpt-new -c iri-nextgen -c conda-forge pycpt`
+- `conda activate pycpt-new`
+- `conda list` and verify that the desired versions have been installed for the PyCPT packages and any third-party packages for which we need particular versions
+- Test PyCPT thoroughly in the new environment
+- Recreate the lock file from the new environment: `conda list --explicit > notebooks/Operations/conda-linux-64.lock`
+
+If this process results in the wrong versions of some packages being installed, or in an environment where PyCPT doesn't work, then we need to be more explicit about versions. (TODO go into more detail.)
+
+When recreating the environment from scratch, this process must be repeated on each platform (Windows, macOS, Linux).
+
