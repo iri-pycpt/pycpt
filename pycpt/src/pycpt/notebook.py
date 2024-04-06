@@ -220,6 +220,7 @@ def evaluate_models(hindcast_data, MOS, Y, forecast_data, cpt_args, domain_dir, 
             fcsts.append(pcr_rtf)
             skill.append(pcr_s.where(pcr_s > -999, other=np.nan))
             pxs.append(pcr_px)
+            pys.append(pcr_px)	# dummy assignment since there are Y PCs in PCR (awr 04/06/24)
         else:
             # simply compute deterministic skill scores of non-corrected ensemble means
             nomos_skill = cc.deterministic_skill(model_hcst, Y, **cpt_args)
@@ -591,7 +592,7 @@ def plot_eof_modes(
 
                 map1_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree())
                 ts_ax = fig.add_subplot(gs01[1:3, 1:])
-                map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())
+                # map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())	# Commented out AWR 04/06/23
 
                 (
                     pxs[i]
