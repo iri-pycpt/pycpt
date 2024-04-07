@@ -592,7 +592,7 @@ def plot_eof_modes(
 
                 map1_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree())
                 ts_ax = fig.add_subplot(gs01[1:3, 1:])
-                # map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())	# Commented out AWR 04/06/23
+                # map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())	# Commented out AWR 04/06/24
 
                 (
                     pxs[i]
