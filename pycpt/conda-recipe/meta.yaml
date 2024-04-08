@@ -9,8 +9,8 @@ build:
   number: 0
   noarch: python
   entry_points:
-    - generate-forecasts = pycpt.commands:generate_forecasts
-    - upload-forecasts = pycpt.commands:upload_forecasts
+    - generate-forecasts-from-config = pycpt.commands:generate_forecasts
+    - upload-forecasts-from-config = pycpt.commands:upload_forecasts
 
 requirements:
   host:
