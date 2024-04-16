@@ -107,3 +107,15 @@ def test_canonical_correlation():
     )
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
     assert xarray_equals(open_cptdataset(testfile), x)
+
+
+@pytest.mark.fileio
+def test_station_data():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(
+        Path(__file__).absolute().parents[0] / "data/GHCN_Jun_cptv10.tsv"
+    )
+    print(x)
+    testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
+    assert xarray_equals(open_cptdataset(testfile), x)
