@@ -1,7 +1,7 @@
 
 from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
 from ..base import CPT
-from cptio import open_cptdataset, to_cptv10, guess_cptv10_coords, is_valid_cptv10,  convert_np64_datetime
+from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt,  convert_np64_datetime
 import xarray as xr 
 
 import numpy as np 
@@ -24,18 +24,6 @@ def principal_components_regression(
         skillmask=False,	# added by AWR 04/06/24
         skillmask_value=0, 	# added by AWR 04/06/24
         scree=False, 
-        x_lat_dim=None, 
-        x_lon_dim=None, 
-        x_sample_dim=None, 
-        x_feature_dim=None, 
-        y_lat_dim=None, 
-        y_lon_dim=None, 
-        y_sample_dim=None, 
-        y_feature_dim=None, 
-        f_lat_dim=None, 
-        f_lon_dim=None, 
-        f_sample_dim=None, 
-        f_feature_dim=None, 
         **kwargs
     ):
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
@@ -43,18 +31,13 @@ def principal_components_regression(
     assert 0 < retroactive_initial_training_period < 100, 'retroactive_initial_training_period must be a percentage between 0 and 100'
     assert 0 < retroactive_step < 100, 'retroactive_step must be a percentage between 0 and 100'
 
-    x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
-    is_valid_cptv10(X)
-
-    y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim = guess_cptv10_coords(Y, y_lat_dim, y_lon_dim, y_sample_dim,  y_feature_dim )
-    is_valid_cptv10(Y)
-
+    is_valid_cptv10_xyt(X)
+    is_valid_cptv10_xyt(Y)
     if F is not None: 
-        f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
-        is_valid_cptv10(F)
+        is_valid_cptv10_xyt(F)
 
-    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index('T')])
+    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index('T')])
 
 
     cpt = CPT(**cpt_kwargs)
@@ -107,32 +90,30 @@ def principal_components_regression(
         cpt.write(541) #activate transform 
     
     # Load X dataset 
-    to_cptv10(X, cpt.outputs['original_predictor'], row=x_lat_dim, col=x_lon_dim, T=x_sample_dim)
+    to_cptv10(X, cpt.outputs['original_predictor'])
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
-    if len(X.coords) >= 3: # then this is gridded data
-        cpt.write( max(X.coords[x_lat_dim].values)) # North
-        cpt.write( min(X.coords[x_lat_dim].values)) # South
-        cpt.write( min(X.coords[x_lon_dim].values)) # West
-        cpt.write( max(X.coords[x_lon_dim].values)) # East 
+    cpt.write( max(X.coords['Y'].values)) # North
+    cpt.write( min(X.coords['Y'].values)) # South
+    cpt.write( min(X.coords['X'].values)) # West
+    cpt.write( max(X.coords['X'].values)) # East
     cpt.write(x_eof_modes[0])
     cpt.write(x_eof_modes[1])
 
     # load F dataset if present 
     if F is not None: 
-        to_cptv10(F, cpt.outputs['out_of_sample_predictor'], row=f_lat_dim, col=f_lon_dim, T=f_sample_dim)
+        to_cptv10(F, cpt.outputs['out_of_sample_predictor'])
         cpt.write(3)
         cpt.write(cpt.outputs['out_of_sample_predictor'].absolute())
 
     # load Y Dataset 
-    to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
+    to_cptv10(Y, cpt.outputs['original_predictand'])
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
-    if len(Y.coords) >= 3: # then this is gridded data
-        cpt.write( max(Y.coords[y_lat_dim].values)) # North
-        cpt.write( min(Y.coords[y_lat_dim].values)) # South
-        cpt.write( min(Y.coords[y_lon_dim].values)) # West
-        cpt.write( max(Y.coords[y_lon_dim].values)) # East 
+    cpt.write( max(Y.coords['Y'].values)) # North
+    cpt.write( min(Y.coords['Y'].values)) # South
+    cpt.write( min(Y.coords['X'].values)) # West
+    cpt.write( max(Y.coords['X'].values)) # East
 
     # set up cpt missing values and goodness index 
     cpt.write(131) # set output fmt to text for goodness index because grads doesnot makes sense
@@ -308,7 +289,7 @@ def principal_components_regression(
         pattern_values = [ x_eof_scores, x_eof_loadings]
 
     pattern_values = xr.merge(pattern_values)
-    pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in pattern_values.coords[x_sample_dim].values]
+    pattern_values.coords['T'] = [convert_np64_datetime(i) for i in pattern_values.coords['T'].values]
 
     return hcsts, fcsts, skill_values, pattern_values 
 
