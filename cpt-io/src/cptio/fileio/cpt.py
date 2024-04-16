@@ -605,11 +605,11 @@ def to_cptv10(
                 ]
                 tcoords = np.asarray(tcoords_temp, dtype="object")
             if col != "T":
-                f.write(
-                    "\t" + "\t".join([f"{crd:#g}" for crd in da.coords[col].values]) + "\n"
-                )
+                vals = da.coords[col].values
             else:
-                f.write("\t" + "\t".join([f"{crd:#g}" for crd in tcoords]) + "\n")
+                vals = tcoords
+            f.write("\t" + "\t".join(format_coord_values(vals)) + "\n")
+
             if row != "T":
                 temp = np.hstack([da.coords[row].values.reshape(-1, 1), temp])
             else:
@@ -619,6 +619,12 @@ def to_cptv10(
             else:
                 np.savetxt(f, temp, fmt="%s", delimiter="\t")
     return opfile
+
+
+def format_coord_values(array):
+    if np.issubdtype(array.dtype, np.floating):
+        return [f"{x:#g}" for x in array]
+    return [f"{x}" for x in array]
 
 
 def format_date(t):
