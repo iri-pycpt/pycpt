@@ -63,8 +63,15 @@ def open_cptdataset(filename):
                 else np.squeeze(columns)
             )
 
+            # Non-dimension coordinates. These are typically present
+            # with station data, where column = station.
             linenum = header[0] + 2
+            non_dim_coords = {}
             while content[linenum].startswith('cpt:'):
+                vals = content[linenum].split('\t')
+                varname = vals[0][4:] # strip 'cpt:'
+                vals = np.array(vals[1:])
+                non_dim_coords[varname] = vals
                 linenum += 1
 
             block = "\n".join(
