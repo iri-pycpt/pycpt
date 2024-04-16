@@ -51,12 +51,16 @@ def open_cptdataset(filename):
                 StringIO(content[header[0] + 1]), delimiter="\t", dtype=str
             )
             try:
-                columns = columns.astype(float)
-            except:
+                columns = columns.astype(int)
+            except ValueError:
                 try:
-                    columns = np.asarray([read_cpt_date(ii) for ii in columns])
-                except:
-                    pass
+                    columns = columns.astype(float)
+                except ValueError:
+                    try:
+                        columns = np.asarray([read_cpt_date(ii) for ii in columns])
+                    # ValueError as above, or TypeError when columns isn't iterable
+                    except Exception:
+                        pass
             columns = (
                 np.expand_dims(columns, 0)
                 if len(columns.shape) < 1
@@ -71,6 +75,18 @@ def open_cptdataset(filename):
                 vals = content[linenum].split('\t')
                 varname = vals[0][4:] # strip 'cpt:'
                 vals = np.array(vals[1:])
+                # If elev is all NaNs, the .strip() above removes all
+                # the tab delimiters. Put the NaNs back by hand so it
+                # has the right shape.
+                if len(vals) == 0:
+                    vals = np.full(len(columns), np.nan)
+                try:
+                    vals = vals.astype(float)
+                except ValueError:
+                    try:
+                        vals = np.asarray([read_cpt_date(ii) for ii in vals])
+                    except ValueError:
+                        pass
                 non_dim_coords[varname] = vals
                 linenum += 1
 
@@ -93,10 +109,10 @@ def open_cptdataset(filename):
             rows = np.expand_dims(rows, 0) if len(rows.shape) < 1 else np.squeeze(rows)
             try:
                 rows = rows.astype(float)
-            except:
+            except ValueError:
                 try:
                     rows = np.asarray([read_cpt_date(ii) for ii in rows])
-                except:
+                except ValueError:
                     pass
             data = array[:, 1:].astype(float)
 
@@ -282,6 +298,10 @@ def open_cptdataset(filename):
             m: ("T" if m in ["S", "Ti", "Tf"] else m, data_vars[f]["coords"][m])
             for m in data_vars[f]["coords"].keys()
         }
+        data_vars[f]["coords"].update({
+            name: (coldim, values)
+            for name, values in non_dim_coords.items()
+        })
     dataarrays = {
         f.replace(" ", "_"): xr.DataArray(
             data_vars[f]["data"],
