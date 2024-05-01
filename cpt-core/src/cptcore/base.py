@@ -67,6 +67,9 @@ default_output_files = {
 
 class CPT:
     def __init__(self, interactive=False,  log=None, project_file=None,  record=None, output_files=default_output_files, outputdir=None, **kwargs):
+        # TODO why is **kwargs here? It's not used, but removing it
+        # could be a breaking change for anyone who's currently
+        # passing in kwargs that are being ignored.
         self.interactive = interactive
         self.last_message = 'has not started yet'
 
