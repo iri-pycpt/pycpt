@@ -635,13 +635,19 @@ def to_cptv10(
                 temp = da.values
             f.write(header)
             if row == "T" or col == "T":
-                tcoords_temp = [
-                    format_date_range(ti, tf)
-                    for ti, tf in zip(
-                        da.coords["Ti"].values,
-                        da.coords["Tf"].values
-                    )
-                ]
+                if 'Ti' in da.coords:
+                    tcoords_temp = [
+                        format_date_range(ti, tf)
+                        for ti, tf in zip(
+                            da.coords["Ti"].values,
+                            da.coords["Tf"].values
+                        )
+                    ]
+                else:
+                    tcoords_temp = [
+                        format_date(ti)
+                        for ti in da.coords["T"].values
+                    ]
                 tcoords = np.asarray(tcoords_temp, dtype="object")
             if col != "T":
                 vals = da.coords[col].values
