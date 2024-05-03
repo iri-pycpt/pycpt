@@ -383,7 +383,7 @@ def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
     ret = {"row": row, "col": col, "T": T, "C": C}
     guesses = {
         "row": ["Y", "T", "Mode"],
-        "col": ["X", "index"],
+        "col": ["X", "index", "station"],
         "T": ["T", "Mode"],
         "C": ["C", "M"],
     }
