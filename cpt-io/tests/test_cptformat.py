@@ -118,7 +118,7 @@ def test_station_data():
     )
     print(x)
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), x)
+    assert open_cptdataset(testfile).equals(x)
 
 
 @pytest.mark.fileio

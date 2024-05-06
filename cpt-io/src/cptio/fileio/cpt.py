@@ -661,6 +661,16 @@ def to_cptv10(
                 vals = tcoords
             f.write("\t" + "\t".join(format_coord_values(vals)) + "\n")
 
+            # column non-dimension coordinate values
+            non_dim_coords = [c for c in da.coords if c not in da.dims]
+            for c in non_dim_coords:
+                coord = da.coords[c]
+                assert len(coord.dims) == 1
+                if coord.dims[0] == col:
+                    f.write(f"cpt:{c}\t")
+                    f.write("\t".join(format_coord_values(da.coords[c].values)))
+                    f.write("\n")
+
             # rows, including row coordinate headings and data variable values
             if assertmissing:
                 temp = da.fillna(float(da.attrs["missing"])).values
