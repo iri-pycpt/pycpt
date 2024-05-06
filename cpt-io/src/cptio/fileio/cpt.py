@@ -627,17 +627,8 @@ def to_cptv10(
                 else:
                     np.savetxt(f, temp, fmt="%s", delimiter="\t")
         else:
+            # preprocessing
             da = da.transpose(row, col)
-            header = (
-                f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]},"
-                f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
-                f" cpt:col={col}{unitsblurb}{missingblurb}\n"
-            )
-            if assertmissing:
-                temp = da.fillna(float(da.attrs["missing"])).values
-            else:
-                temp = da.values
-            f.write(header)
             if row == "T" or col == "T":
                 if 'Ti' in da.coords:
                     tcoords_temp = [
@@ -653,12 +644,28 @@ def to_cptv10(
                         for ti in da.coords["T"].values
                     ]
                 tcoords = np.asarray(tcoords_temp, dtype="object")
+
+
+            # header
+            header = (
+                f"cpt:field={da.name}, cpt:nrow={da.shape[list(da.dims).index(row)]},"
+                f" cpt:ncol={da.shape[list(da.dims).index(col)]}, cpt:row={row},"
+                f" cpt:col={col}{unitsblurb}{missingblurb}\n"
+            )
+            f.write(header)
+
+            # column dimension coordinate values
             if col != "T":
                 vals = da.coords[col].values
             else:
                 vals = tcoords
             f.write("\t" + "\t".join(format_coord_values(vals)) + "\n")
 
+            # rows, including row coordinate headings and data variable values
+            if assertmissing:
+                temp = da.fillna(float(da.attrs["missing"])).values
+            else:
+                temp = da.values
             if row != "T":
                 temp = np.hstack([da.coords[row].values.reshape(-1, 1), temp])
             else:
