@@ -390,7 +390,11 @@ def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
     found = []
     for dim in ["row", "col", "T", "C"]:
         for guess in guesses[dim]:
-            if guess in da.dims and ret[dim] is None and guess not in found:
+            if (
+                    guess in da.dims and 
+                    (ret[dim] is None or ret[dim] == guess) and
+                    guess not in found
+            ):
                 ret[dim] = guess
                 found.append(guess)
     guesses = [ret[i] for i in ret.keys() if ret[i] is not None]

@@ -119,3 +119,18 @@ def test_station_data():
     print(x)
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
     assert xarray_equals(open_cptdataset(testfile), x)
+
+
+@pytest.mark.fileio
+def test_station_data_known():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(
+        Path(__file__).absolute().parents[0] / "data/GHCN_Jun_cptv10.tsv"
+    )
+    print(x)
+    row, col, T, C = guess_cptv10_coords(x, row='T', col='station')
+    assert row == 'T'
+    assert col == 'station'
+    assert T == None
+    assert C == None
