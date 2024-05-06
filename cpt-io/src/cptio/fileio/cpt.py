@@ -687,9 +687,15 @@ def to_cptv10(
     return opfile
 
 
+def format_float_value(f):
+    if np.isnan(f):
+        return ''
+    return f"{f:#g}"
+
+
 def format_coord_values(array):
     if np.issubdtype(array.dtype, np.floating):
-        return [f"{x:#g}" for x in array]
+        return [format_float_value(x) for x in array]
     return [f"{x}" for x in array]
 
 
