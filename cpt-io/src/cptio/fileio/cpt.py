@@ -67,7 +67,7 @@ def open_cptdataset(filename):
                 else np.squeeze(column_labels)
             )
 
-            # Non-dimension coordinates. These are typically present
+            # Non-dimension coordinates from header. These are typically present
             # with station data, where column = station.
             linenum = header[0] + 2
             non_dim_coords = {}
@@ -105,6 +105,8 @@ def open_cptdataset(filename):
 
             if len(array.shape) < 2:
                 array = array.reshape(1, -1)
+
+            # Separate row labels from data var values
             row_labels = np.squeeze(array[:, 0])
             row_labels = np.expand_dims(row_labels, 0) if len(row_labels.shape) < 1 else np.squeeze(row_labels)
             try:
@@ -114,7 +116,20 @@ def open_cptdataset(filename):
                     row_labels = np.asarray([read_cpt_date(ii) for ii in row_labels])
                 except ValueError:
                     pass
-            data = array[:, 1:].astype(float)
+            array = np.squeeze(array[:, 1:])
+
+            # For lat/lon data there's no column label on the first column (the latitudes column),
+            # but for station data the first column has the label "Station".
+            if len(column_labels) >= array.shape[1]:
+                assert column_labels[0] == 'Station'
+                assert column_labels[1] == 'Latitude'
+                assert column_labels[2] == 'Longitude'
+                column_labels = column_labels[3:]
+                lat_vals = np.squeeze(array[:, 0])
+                lon_vals = np.squeeze(array[:, 1])
+                array = array[:, 2:]
+
+            data = array.astype(float)
 
             # The first CPT header always has a 'field' field
             # indicating the variable stored. It is assumed to be the

@@ -134,3 +134,17 @@ def test_station_data_known():
     assert col == 'station'
     assert T == None
     assert C == None
+
+
+@pytest.mark.fileio
+def test_skill_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/pearson-station.txt")
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    assert xarray_equals(open_cptdataset(testfile), x)

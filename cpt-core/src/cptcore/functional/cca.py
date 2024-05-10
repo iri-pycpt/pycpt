@@ -126,11 +126,11 @@ def canonical_correlation_analysis(
     to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
-    if len(Y.coords) >= 3: # then this is gridded data
-        cpt.write( max(Y.coords[y_lat_dim].values)) # North
-        cpt.write( min(Y.coords[y_lat_dim].values)) # South
-        cpt.write( min(Y.coords[y_lon_dim].values)) # West
-        cpt.write( max(Y.coords[y_lon_dim].values)) # East 
+    if 'X' in Y.coords and 'Y' in Y.coords: # then this is spatial data
+        cpt.write( max(Y.coords['Y'].values)) # North
+        cpt.write( min(Y.coords['Y'].values)) # South
+        cpt.write( min(Y.coords['X'].values)) # West
+        cpt.write( max(Y.coords['X'].values)) # East 
     cpt.write(y_eof_modes[0])
     cpt.write(y_eof_modes[1])
     cpt.write(cca_modes[0])
