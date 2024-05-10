@@ -47,24 +47,24 @@ def open_cptdataset(filename):
             }
             attrs.update(attrs_at_row)
 
-            columns = np.genfromtxt(
+            column_labels = np.genfromtxt(
                 StringIO(content[header[0] + 1]), delimiter="\t", dtype=str
             )
             try:
-                columns = columns.astype(int)
+                column_labels = column_labels.astype(int)
             except ValueError:
                 try:
-                    columns = columns.astype(float)
+                    column_labels = column_labels.astype(float)
                 except ValueError:
                     try:
-                        columns = np.asarray([read_cpt_date(ii) for ii in columns])
+                        column_labels = np.asarray([read_cpt_date(ii) for ii in column_labels])
                     # ValueError as above, or TypeError when columns isn't iterable
                     except Exception:
                         pass
-            columns = (
-                np.expand_dims(columns, 0)
-                if len(columns.shape) < 1
-                else np.squeeze(columns)
+            column_labels = (
+                np.expand_dims(column_labels, 0)
+                if len(column_labels.shape) < 1
+                else np.squeeze(column_labels)
             )
 
             # Non-dimension coordinates. These are typically present
@@ -79,7 +79,7 @@ def open_cptdataset(filename):
                 # the tab delimiters. Put the NaNs back by hand so it
                 # has the right shape.
                 if len(vals) == 0:
-                    vals = np.full(len(columns), np.nan)
+                    vals = np.full(len(column_labels), np.nan)
                 try:
                     vals = vals.astype(float)
                 except ValueError:
@@ -105,13 +105,13 @@ def open_cptdataset(filename):
 
             if len(array.shape) < 2:
                 array = array.reshape(1, -1)
-            rows = np.squeeze(array[:, 0])
-            rows = np.expand_dims(rows, 0) if len(rows.shape) < 1 else np.squeeze(rows)
+            row_labels = np.squeeze(array[:, 0])
+            row_labels = np.expand_dims(row_labels, 0) if len(row_labels.shape) < 1 else np.squeeze(row_labels)
             try:
-                rows = rows.astype(float)
+                row_labels = row_labels.astype(float)
             except ValueError:
                 try:
-                    rows = np.asarray([read_cpt_date(ii) for ii in rows])
+                    row_labels = np.asarray([read_cpt_date(ii) for ii in row_labels])
                 except ValueError:
                     pass
             data = array[:, 1:].astype(float)
@@ -161,7 +161,7 @@ def open_cptdataset(filename):
                                 coords["Tf"] = [date_coord[2]]
                         else:
                             coords[jj] = [header[2][jj]]
-                temp = {rowdim: rows, coldim: columns}
+                temp = {rowdim: row_labels, coldim: column_labels}
                 if "T" in [rowdim, coldim]:
                     date_coords = temp["T"]
                     if len(date_coords[0]) == 1:
