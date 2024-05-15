@@ -404,7 +404,7 @@ def canonical_correlation_analysis(
     x_pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in x_pattern_values.coords[x_sample_dim].values]
 
     y_pattern_values = xr.merge(y_pattern_values)
-    y_pattern_values.coords[y_sample_dim] = [convert_np64_datetime(i) for i in y_pattern_values.coords[y_sample_dim].values]
+    y_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in y_pattern_values.coords['T'].values]
 
     return hcsts, fcsts, skill_values, x_pattern_values, y_pattern_values  
 

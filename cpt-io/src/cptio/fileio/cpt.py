@@ -50,24 +50,14 @@ def open_cptdataset(filename):
             column_labels = np.genfromtxt(
                 StringIO(content[header[0] + 1]), delimiter="\t", dtype=str
             )
-            try:
-                column_labels = column_labels.astype(int)
-            except ValueError:
-                try:
-                    column_labels = column_labels.astype(float)
-                except ValueError:
-                    try:
-                        column_labels = np.asarray([read_cpt_date(ii) for ii in column_labels])
-                    # ValueError as above, or TypeError when columns isn't iterable
-                    except Exception:
-                        pass
+
             column_labels = (
                 np.expand_dims(column_labels, 0)
                 if len(column_labels.shape) < 1
                 else np.squeeze(column_labels)
             )
 
-            # Non-dimension coordinates from header. These are typically present
+            # Non-dimension coordinates that vary with column. These are typically present
             # with station data, where column = station.
             linenum = header[0] + 2
             non_dim_coords = {}
@@ -87,9 +77,9 @@ def open_cptdataset(filename):
                         vals = np.asarray([read_cpt_date(ii) for ii in vals])
                     except ValueError:
                         pass
-                non_dim_coords[varname] = vals
+                non_dim_coords[varname] = (attrs["col"], vals)
                 linenum += 1
-
+            
             block = "\n".join(
                 content[linenum : linenum + int(attrs["nrow"])]
             )
@@ -116,20 +106,48 @@ def open_cptdataset(filename):
                     row_labels = np.asarray([read_cpt_date(ii) for ii in row_labels])
                 except ValueError:
                     pass
-            array = np.squeeze(array[:, 1:])
+            array = array[:, 1:]
 
             # For lat/lon data there's no column label on the first column (the latitudes column),
             # but for station data the first column has the label "Station".
-            if len(column_labels) >= array.shape[1]:
+
+            if len(column_labels) > array.shape[1]:
                 assert column_labels[0] == 'Station'
                 assert column_labels[1] == 'Latitude'
                 assert column_labels[2] == 'Longitude'
                 column_labels = column_labels[3:]
                 lat_vals = np.squeeze(array[:, 0])
                 lon_vals = np.squeeze(array[:, 1])
+                non_dim_coords['Y'] = ('station', lat_vals)
+                non_dim_coords['X'] = ('station', lon_vals)
                 array = array[:, 2:]
 
             data = array.astype(float)
+
+            for k, (dim, vals) in non_dim_coords.items():
+                try:
+                    non_dim_coords[k] = (dim, vals.astype(int))
+                except ValueError:
+                    try:
+                        non_dim_coords[k] = (dim, vals.astype(float))
+                    except ValueError:
+                        try:
+                            non_dim_coords[k] = (dim, np.asarray([read_cpt_date(ii) for ii in vals]))
+                        # ValueError as above, or TypeError when columns isn't iterable
+                        except Exception:
+                            pass                
+
+            try:
+                column_labels = column_labels.astype(int)
+            except ValueError:
+                try:
+                    column_labels = column_labels.astype(float)
+                except ValueError:
+                    try:
+                        column_labels = np.asarray([read_cpt_date(ii) for ii in column_labels])
+                    # ValueError as above, or TypeError when columns isn't iterable
+                    except Exception:
+                        pass
 
             # The first CPT header always has a 'field' field
             # indicating the variable stored. It is assumed to be the
@@ -314,8 +332,8 @@ def open_cptdataset(filename):
             for m in data_vars[f]["coords"].keys()
         }
         data_vars[f]["coords"].update({
-            name: (coldim, values)
-            for name, values in non_dim_coords.items()
+            name: (dim, values)
+            for name, (dim, values) in non_dim_coords.items()
         })
     dataarrays = {
         f.replace(" ", "_"): xr.DataArray(
@@ -397,8 +415,8 @@ convert_np64_datetime = pd.Timestamp
 def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
     ret = {"row": row, "col": col, "T": T, "C": C}
     guesses = {
-        "row": ["Y", "T", "Mode"],
-        "col": ["X", "index", "station"],
+        "row": ["Y", "T", "station"],
+        "col": ["X", "index", "Mode", "station"],
         "T": ["T", "Mode"],
         "C": ["C", "M"],
     }
@@ -612,16 +630,23 @@ def to_cptv10(
                 if assertmissing:
                     temp = da.isel({C: j}).fillna(float(da.attrs["missing"])).values
                 else:
-                    temp = da.isel({T: i}).values
+                    temp = da.isel({C: j}).values
+                temp = np.vectorize(str)(temp)
                 f.write(header)
                 if row == "T" or col == "T":
-                    tcoords_temp = [
-                        format_date_range(ti, tf)
-                        for ti, tf in zip(
-                            da.coords["Ti"].values,
-                            da.coords["Tf"].values
-                        )
-                    ]
+                    if 'Ti' in da.coords:
+                        tcoords_temp = [
+                            format_date_range(ti, tf)
+                            for ti, tf in zip(
+                                da.coords["Ti"].values,
+                                da.coords["Tf"].values
+                            )
+                        ]
+                    else:
+                        tcoords_temp = [
+                            format_date(ti)
+                            for ti in da.coords["T"].values
+                        ]
                     tcoords = np.asarray(tcoords_temp, dtype="object")
                 if col != "T":
                     vals = da.coords[col].values
@@ -632,6 +657,16 @@ def to_cptv10(
                     + "\t".join(format_coord_values(vals))
                     + "\n"
                 )
+
+                # column non-dimension coordinate values
+                non_dim_coords = [c for c in da.coords if c not in da.dims]
+                for c in non_dim_coords:
+                    coord = da.coords[c]
+                    assert len(coord.dims) == 1
+                    if coord.dims == (col,):
+                        f.write(f"cpt:{c}\t")
+                        f.write("\t".join(format_coord_values(da.coords[c].values)))
+                        f.write("\n")
 
                 if row != "T":
                     temp = np.hstack([da.coords[row].values.reshape(-1, 1), temp])
@@ -681,24 +716,32 @@ def to_cptv10(
             for c in non_dim_coords:
                 coord = da.coords[c]
                 assert len(coord.dims) == 1
-                if coord.dims[0] == col:
+                if coord.dims == (col,):
                     f.write(f"cpt:{c}\t")
                     f.write("\t".join(format_coord_values(da.coords[c].values)))
                     f.write("\n")
 
-            # rows, including row coordinate headings and data variable values
             if assertmissing:
                 temp = da.fillna(float(da.attrs["missing"])).values
             else:
                 temp = da.values
+            temp = np.vectorize(str)(temp)
+            
+            # row dimension coordinate values
             if row != "T":
-                temp = np.hstack([da.coords[row].values.reshape(-1, 1), temp])
+                row_labels = np.array([f"{x:#g}" for x in da[row].values]).reshape(-1, 1)
             else:
-                temp = np.hstack([tcoords.reshape(-1, 1), temp.astype("object")])
-            if row != "T":
-                np.savetxt(f, temp, fmt="%#g", delimiter="\t")
-            else:
-                np.savetxt(f, temp, fmt="%s", delimiter="\t")
+                row_labels = np.array([str(x) for x in tcoords]).reshape(-1, 1)
+
+            # row non-dim coordinate values
+            col_strs = {}
+            for col in [c for c in non_dim_coords if da.coords[c].dims == (row,)]:
+                col_strs[col] = np.array([f"{x:#g}" for x in da[col].values]).reshape(-1, 1)
+
+            # concatenate coord and data var representations
+            temp = np.hstack([row_labels] + [v for v in col_strs.values()] + [temp])
+
+            np.savetxt(f, temp, fmt="%s", delimiter="\t")
     return opfile
 
 

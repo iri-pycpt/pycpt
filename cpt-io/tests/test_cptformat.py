@@ -148,3 +148,19 @@ def test_skill_station():
         assert_units=False,
     )
     assert xarray_equals(open_cptdataset(testfile), x)
+
+@pytest.mark.fileio
+def test_prob_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/forecast_probabilities_station.txt")
+    print(x)
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    result = open_cptdataset(testfile)
+    print(result)
+    assert result.equals(x)
