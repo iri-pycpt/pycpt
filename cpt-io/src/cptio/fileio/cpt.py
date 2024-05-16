@@ -126,10 +126,10 @@ def open_cptdataset(filename):
 
             for k, (dim, vals) in non_dim_coords.items():
                 try:
-                    non_dim_coords[k] = (dim, vals.astype(int))
+                    non_dim_coords[k] = (dim, vals.astype(float))
                 except ValueError:
                     try:
-                        non_dim_coords[k] = (dim, vals.astype(float))
+                        non_dim_coords[k] = (dim, vals.astype(int))
                     except ValueError:
                         try:
                             non_dim_coords[k] = (dim, np.asarray([read_cpt_date(ii) for ii in vals]))
@@ -138,10 +138,10 @@ def open_cptdataset(filename):
                             pass                
 
             try:
-                column_labels = column_labels.astype(int)
+                column_labels = column_labels.astype(float)
             except ValueError:
                 try:
-                    column_labels = column_labels.astype(float)
+                    column_labels = column_labels.astype(int)
                 except ValueError:
                     try:
                         column_labels = np.asarray([read_cpt_date(ii) for ii in column_labels])
@@ -415,7 +415,7 @@ convert_np64_datetime = pd.Timestamp
 def guess_cptv10_coords(da, row=None, col=None, T=None, C=None):
     ret = {"row": row, "col": col, "T": T, "C": C}
     guesses = {
-        "row": ["Y", "T", "station"],
+        "row": ["Y", "T", "station", "Mode"],
         "col": ["X", "index", "Mode", "station"],
         "T": ["T", "Mode"],
         "C": ["C", "M"],

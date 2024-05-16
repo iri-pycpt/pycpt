@@ -56,8 +56,8 @@ def canonical_correlation_analysis(
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         is_valid_cptv10(F)
         
-    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index('T')])
+    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index('T')])
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
@@ -401,7 +401,7 @@ def canonical_correlation_analysis(
         y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings ]
 
     x_pattern_values = xr.merge(x_pattern_values)
-    x_pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in x_pattern_values.coords[x_sample_dim].values]
+    x_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in x_pattern_values.coords['T'].values]
 
     y_pattern_values = xr.merge(y_pattern_values)
     y_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in y_pattern_values.coords['T'].values]
