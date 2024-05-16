@@ -56,8 +56,8 @@ def canonical_correlation_analysis(
         f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim = guess_cptv10_coords(F, f_lat_dim, f_lon_dim, f_sample_dim,  f_feature_dim )
         is_valid_cptv10(F)
         
-    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index(x_sample_dim)])
-    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index(x_sample_dim)])
+    retroactive_initial_training_period = int(retroactive_initial_training_period / 100 * X.shape[list(X.dims).index('T')])
+    retroactive_step = int(retroactive_step / 100 * X.shape[list(X.dims).index('T')])
 
     cpt = CPT(**cpt_kwargs)
     cpt.write(611) # activate CCA MOS 
@@ -126,11 +126,11 @@ def canonical_correlation_analysis(
     to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
-    if len(Y.coords) >= 3: # then this is gridded data
-        cpt.write( max(Y.coords[y_lat_dim].values)) # North
-        cpt.write( min(Y.coords[y_lat_dim].values)) # South
-        cpt.write( min(Y.coords[y_lon_dim].values)) # West
-        cpt.write( max(Y.coords[y_lon_dim].values)) # East 
+    if 'X' in Y.coords and 'Y' in Y.coords: # then this is spatial data
+        cpt.write( max(Y.coords['Y'].values)) # North
+        cpt.write( min(Y.coords['Y'].values)) # South
+        cpt.write( min(Y.coords['X'].values)) # West
+        cpt.write( max(Y.coords['X'].values)) # East 
     cpt.write(y_eof_modes[0])
     cpt.write(y_eof_modes[1])
     cpt.write(cca_modes[0])
@@ -401,10 +401,10 @@ def canonical_correlation_analysis(
         y_pattern_values = [y_cca_scores, y_eof_scores, y_cca_loadings,   y_eof_loadings ]
 
     x_pattern_values = xr.merge(x_pattern_values)
-    x_pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in x_pattern_values.coords[x_sample_dim].values]
+    x_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in x_pattern_values.coords['T'].values]
 
     y_pattern_values = xr.merge(y_pattern_values)
-    y_pattern_values.coords[y_sample_dim] = [convert_np64_datetime(i) for i in y_pattern_values.coords[y_sample_dim].values]
+    y_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in y_pattern_values.coords['T'].values]
 
     return hcsts, fcsts, skill_values, x_pattern_values, y_pattern_values  
 

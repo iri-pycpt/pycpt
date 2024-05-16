@@ -50,10 +50,10 @@ def probabilistic_forecast_verification(
     cpt.write(cpt.outputs['original_predictor'].absolute())
 
     if len(X.coords) >= 3: # then this is gridded data
-        cpt.write( max(X.coords[x_lat_dim].values)) # North
-        cpt.write( min(X.coords[x_lat_dim].values)) # South
-        cpt.write( min(X.coords[x_lon_dim].values)) # West
-        cpt.write( max(X.coords[x_lon_dim].values)) # East 
+        cpt.write( max(X.coords['Y'].values)) # North
+        cpt.write( min(X.coords['Y'].values)) # South
+        cpt.write( min(X.coords['X'].values)) # West
+        cpt.write( max(X.coords['X'].values)) # East
     
     # load Y Dataset 
     to_cptv10(Y, cpt.outputs['original_predictand'], row=y_lat_dim, col=y_lon_dim, T=y_sample_dim)
@@ -61,10 +61,10 @@ def probabilistic_forecast_verification(
     cpt.write(cpt.outputs['original_predictand'].absolute())
 
     if len(Y.coords) >= 3: # then this is gridded data
-        cpt.write( max(Y.coords[y_lat_dim].values)) # North
-        cpt.write( min(Y.coords[y_lat_dim].values)) # South
-        cpt.write( min(Y.coords[y_lon_dim].values)) # West
-        cpt.write( max(Y.coords[y_lon_dim].values)) # East 
+        cpt.write( max(Y.coords['Y'].values)) # North
+        cpt.write( min(Y.coords['Y'].values)) # South
+        cpt.write( min(Y.coords['X'].values)) # West
+        cpt.write( max(Y.coords['X'].values)) # East
 
     # set up cpt missing values and goodness index 
     cpt.write(131) # set output fmt to text for goodness index because grads doesnot makes sense

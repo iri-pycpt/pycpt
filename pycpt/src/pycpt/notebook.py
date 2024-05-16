@@ -275,11 +275,18 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
     for i, model in enumerate(predictor_names):
         for j, skill_metric in enumerate(skill_metrics):
             metric = SKILL_METRICS[skill_metric]
-            n = (
+            vals = (
                 getattr(skill[i], skill_metric)
                 .where(getattr(skill[i], skill_metric) > missing_value_flag)
-                .plot(ax=ax[i][j], cmap=metric[0], vmin=metric[1], vmax=metric[2])
             )
+
+            if vals['X'].dims == ('station',):
+                ax[i][j].scatter(
+                    vals['X'].values, vals['Y'].values,
+                    c=vals.values, cmap=metric[0], vmin=metric[1], vmax=metric[2]
+                )
+            else:
+                vals.plot(ax=ax[i][j], cmap=metric[0], vmin=metric[1], vmax=metric[2])
             ax[i][j].coastlines()
             ax[i][j].add_feature(cartopy.feature.BORDERS)
             ax[0][j].set_title(skill_metric.upper())
@@ -365,14 +372,18 @@ def plot_cca_modes(
                 ts_ax = fig.add_subplot(gs01[1:3, 1:])
                 map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())
 
-                art = (
+                vals = (
                     pxs[i]
                     .x_cca_loadings.isel(Mode=mode)
                     .where(pxs[i].x_cca_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map1_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
+                if vals['X'].dims == ('station',):
+                    art = map1_ax.scatter(
+                        vals['X'].values, vals['Y'].values,
+                        c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
+                    )
+                else:
+                    art = vals.plot(ax=map1_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)
 
                 graph_orientation = ce.graphorientation(
                     len(pys[0]["X"]),
@@ -383,17 +394,26 @@ def plot_cca_modes(
                 cb.set_label(label="x_cca_loadings", size=14)
                 cb.ax.tick_params(labelsize=12)
 
-                art = (
+                vals = (
                     pys[i]
                     .y_cca_loadings.isel(Mode=mode)
                     .where(pys[i].y_cca_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
-                cb = plt.colorbar(art, orientation=graph_orientation)
-                cb.set_label(label="y_cca_loadings", size=14)
-                cb.ax.tick_params(labelsize=12)
+                if vals['X'].dims == ('station',):
+                    if vals.notnull().any():
+                        art = map2_ax.scatter(
+                            vals['X'].values, vals['Y'].values,
+                            c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
+                        )
+                    else:
+                        art = None
+                else:
+                    art = vals.plot(ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)
+                
+                if art is not None:
+                    cb = plt.colorbar(art, orientation=graph_orientation)
+                    cb.set_label(label="y_cca_loadings", size=14)
+                    cb.ax.tick_params(labelsize=12)
 
                 primitive = ts.plot.line(
                     marker="x", ax=ts_ax, markersize=12, hue="M", add_legend=False
@@ -515,16 +535,17 @@ def plot_eof_modes(
                 cb.ax.tick_params(labelsize=12)
                 if graph_orientation == "horizontal":
                     cb.ax.tick_params(axis="x", which="major", rotation=-45)
-                # cb.ax.set_xticks(len(6))
-                pxs[i].x_explained_variance
-                art = (
+                vals = (
                     pys[i]
                     .y_eof_loadings.isel(Mode=mode)
                     .where(pys[i].y_eof_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
+                if pys[i]['X'].dims == ('station',):
+                    art = map2_ax.scatter(
+                        pys[i]['X'], pys[i]['Y'], c=vals, vmin=Vmin, vmax=Vmax, cmap=cmap
+                    )
+                else:
+                    art = vals.plot(ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)                
 
                 canvarY = round(
                     float(

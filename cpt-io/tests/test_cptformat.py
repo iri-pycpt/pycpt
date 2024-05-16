@@ -83,6 +83,26 @@ def test_spatial_loadings():
 
 
 @pytest.mark.fileio
+def test_spatial_loadings():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(
+        Path(__file__).absolute().parents[0]
+        / "data/predictand_cca_spatial_loadings_station.txt"
+    )
+    print(x)
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    result = open_cptdataset(testfile)
+    print(result)
+    assert result.equals(x)
+
+
+@pytest.mark.fileio
 def test_eof_timeseries():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -107,3 +127,92 @@ def test_canonical_correlation():
     )
     testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
     assert xarray_equals(open_cptdataset(testfile), x)
+
+
+@pytest.mark.fileio
+def test_station_data():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(
+        Path(__file__).absolute().parents[0] / "data/GHCN_Jun_cptv10.tsv"
+    )
+    print(x)
+    testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
+    assert open_cptdataset(testfile).equals(x)
+
+
+@pytest.mark.fileio
+def test_station_data_known():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(
+        Path(__file__).absolute().parents[0] / "data/GHCN_Jun_cptv10.tsv"
+    )
+    print(x)
+    row, col, T, C = guess_cptv10_coords(x, row='T', col='station')
+    assert row == 'T'
+    assert col == 'station'
+    assert T == None
+    assert C == None
+
+
+@pytest.mark.fileio
+def test_skill_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/pearson-station.txt")
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    assert xarray_equals(open_cptdataset(testfile), x)
+
+@pytest.mark.fileio
+def test_prob_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/forecast_probabilities_station.txt")
+    print(x)
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    result = open_cptdataset(testfile)
+    print(result)
+    assert result.equals(x)
+
+@pytest.mark.fileio
+def test_canonical_correlation_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/cca_canonical_correlation_station.txt")
+    print(x)
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    result = open_cptdataset(testfile)
+    print(result)
+    assert result.equals(x)
+
+@pytest.mark.fileio
+def test_forecast_values_station():
+    if Path("test.tsv").is_file():
+        Path("test.tsv").unlink()
+    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/forecast_values_station.txt")
+    print(x)
+    testfile = to_cptv10(
+        getattr(x, [i for i in x.data_vars][0]),
+        opfile="test.tsv",
+        assertmissing=False,
+        assert_units=False,
+    )
+    result = open_cptdataset(testfile)
+    print(result)
+    assert result.equals(x)
