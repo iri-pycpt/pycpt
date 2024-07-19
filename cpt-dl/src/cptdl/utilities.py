@@ -13,7 +13,6 @@ def read_dlauth():
         return None
     else: 
         try:
-            print(str(Path.home().absolute() / '.pycpt_dlauth'))
             with open(str(Path.home().absolute() / '.pycpt_dlauth'), 'rb') as f: 
                 auth_dict = json.loads(f.read())
             return auth_dict['key']
@@ -25,7 +24,6 @@ def read_dlauth():
                     print("Your existing ~/.pycpt_dlauth file looked like an 'incorrect username/password' message!")
                     return None
             except: 
-                print('Pepe 2')
                 print('Unable to read text from ~/.pycpt_dlauth - it might be binary spaghetti; broken download? delete it and set up again!')
                 return None 
 
