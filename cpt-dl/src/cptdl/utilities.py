@@ -7,10 +7,13 @@ import cptio as cio
 
 def read_dlauth():
     if not (Path.home().absolute() / '.pycpt_dlauth').is_file():
-        print('You need to set up an IRIDLAUTH! Please set up an IRI account here (https://iridl.ldeo.columbia.edu/auth/signup), then use cptdl.setup_dlauth("your_iri_login_email") to setup the cookie. This only needs to happen once!  ')
+        print('You need to set up an IRIDLAUTH! Please set up an IRI account here (https://iridl.ldeo.columbia.edu/auth/signup), then use cptdl.setup_dlauth("your_iri_login_email")')
+        print('It is possible that after gaining access, you will need to generate your ID from https://iridl.ldeo.columbia.edu/auth/genkey. Please copy the JSON obtained into your ".pycpt_dlauth" file to setup the cookie.')
+        print('This only needs to happen once!  ')
         return None
     else: 
         try:
+            print(str(Path.home().absolute() / '.pycpt_dlauth'))
             with open(str(Path.home().absolute() / '.pycpt_dlauth'), 'rb') as f: 
                 auth_dict = json.loads(f.read())
             return auth_dict['key']
@@ -22,6 +25,7 @@ def read_dlauth():
                     print("Your existing ~/.pycpt_dlauth file looked like an 'incorrect username/password' message!")
                     return None
             except: 
+                print('Pepe 2')
                 print('Unable to read text from ~/.pycpt_dlauth - it might be binary spaghetti; broken download? delete it and set up again!')
                 return None 
 
