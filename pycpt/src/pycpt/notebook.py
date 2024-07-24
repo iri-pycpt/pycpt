@@ -637,7 +637,12 @@ def plot_forecasts(
     files_root,
     predictor_names,
     MOS,
+    vmin=None,
+    vmax=None,
 ):
+    if predictand_name is None:
+        predictand_name='PRCP'
+
     prob_missing_value_flag = -1
     my_dpi = 100
 
@@ -647,7 +652,7 @@ def plot_forecasts(
     )
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
