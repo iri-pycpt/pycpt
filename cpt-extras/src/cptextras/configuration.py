@@ -32,7 +32,7 @@ def check_cpt_args(args):
     keys = [
         'transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes',
         'crossvalidation_window', 'synchronous_predictors', 'scree',
-        'drymask', 'drymask_value','skillmask','skillmask_value',
+        'drymask_threshold', 'skillmask_threshold',
         'validation'
     ]
     keytypes = {
@@ -43,10 +43,8 @@ def check_cpt_args(args):
         'y_eof_modes': tuple,
         'crossvalidation_window': int,
         'synchronous_predictors': bool,
-        'drymask': bool,
-        'drymask_value': float,
-        'skillmask': bool,
-        'skillmask_value': float,
+        'drymask_threshold': float,
+        'skillmask_threshold': float,
         'scree': bool,
         'validation': str
     }

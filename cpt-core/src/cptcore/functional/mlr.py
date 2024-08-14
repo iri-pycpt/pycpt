@@ -19,7 +19,8 @@ def multiple_regression(
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
         regression='OLS',
         link='identity',
-        drymask=False,
+        drymask_threshold=None,
+        skillmask_threshold=None,
         scree=False,
         synchronous_predictors=False,
         x_lat_dim=None, 
@@ -92,10 +93,15 @@ def multiple_regression(
     cpt.write(1) # climatologicial probability thresholds 
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
-    if drymask:
+    if drymask_threshold is not None:
         cpt.write(5371)
         cpt.write('Y')
-        cpt.write(Y.attrs['missing'])
+        cpt.write(drymask_threshold)
+    if skillmask_threshold is not None:
+        cpt.write(5372)
+        cpt.write('Y')
+        cpt.write(1)	# for Pearson
+        cpt.write(skillmask_threshold)
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
     cpt.write(534)
