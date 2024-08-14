@@ -29,10 +29,27 @@ def check_tuple(tup):
 
 def check_cpt_args(args):
     args = copy.copy(args)
-    keys = ['transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes', 'crossvalidation_window', 'synchronous_predictors', 'scree', 'drymask', 'drymask_value','skillmask','skillmask_value','validation'] # AWR 04/06/24
-#    keys = ['transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes', 'crossvalidation_window', 'synchronous_predictors', 'scree', 'drymask', 'validation']
-    keytypes = {'transform_predictand': str, 'tailoring': str, 'cca_modes': tuple, 'x_eof_modes': tuple, 'y_eof_modes': tuple, 'crossvalidation_window': int, 'synchronous_predictors': bool, 'drymask': bool, 'drymask_value': float, 'skillmask': bool, 'skillmask_value': float, 'scree': bool, 'validation': str}
-#    keytypes = {'transform_predictand': str, 'tailoring': str, 'cca_modes': tuple, 'x_eof_modes': tuple, 'y_eof_modes': tuple, 'crossvalidation_window': int, 'synchronous_predictors': bool, 'drymask': bool, 'scree': bool, 'validation': str}
+    keys = [
+        'transform_predictand', 'tailoring', 'cca_modes', 'x_eof_modes', 'y_eof_modes',
+        'crossvalidation_window', 'synchronous_predictors', 'scree',
+        'drymask', 'drymask_value','skillmask','skillmask_value',
+        'validation'
+    ]
+    keytypes = {
+        'transform_predictand': str,
+        'tailoring': str,
+        'cca_modes': tuple,
+        'x_eof_modes': tuple,
+        'y_eof_modes': tuple,
+        'crossvalidation_window': int,
+        'synchronous_predictors': bool,
+        'drymask': bool,
+        'drymask_value': float,
+        'skillmask': bool,
+        'skillmask_value': float,
+        'scree': bool,
+        'validation': str
+    }
     for key in args.keys():
         assert key in keys, 'illegal extent key - {}'.format(key)
         if args[key] is None: 

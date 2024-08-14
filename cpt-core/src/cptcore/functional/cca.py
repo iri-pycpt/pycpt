@@ -21,9 +21,9 @@ def canonical_correlation_analysis(
         retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
         drymask=False,
-        drymask_value=0, 	# added by AWR 04/06/24
-        skillmask=False,	# added by AWR 04/06/24
-        skillmask_value=0, 	# added by AWR 04/06/24
+        drymask_value=0,
+        skillmask=False,
+        skillmask_value=0,
         scree=False,
         synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
@@ -88,10 +88,9 @@ def canonical_correlation_analysis(
     if drymask:
         cpt.write(5371)
         cpt.write('Y')
-        cpt.write(drymask_value)		# added by AWR 04/06/24
-#        cpt.write(Y.attrs['missing'])
+        cpt.write(drymask_value)
 
-    if skillmask:	# added by AWR 04/06/24
+    if skillmask:
         cpt.write(5372)
         cpt.write('Y')
         cpt.write(1)	# for Pearson

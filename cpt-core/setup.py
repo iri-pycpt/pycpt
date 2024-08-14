@@ -8,7 +8,7 @@ long_description = readme_path.read_text(encoding='utf-8')
 setup(
     name = "cptcore",
     version = "2.2.1",
-    author = "Kyle Hall",
+    author = "IRI",
     author_email = "pycpt-help@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),
     license = "MIT",
