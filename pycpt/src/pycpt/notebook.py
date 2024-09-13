@@ -77,20 +77,77 @@ def download_data(
     return Y, hindcast_data, forecast_data
 
 
+def target_midpoint(target):
+    '''Given a season expressed as e.g. 'Jan-Mar', return the month number (Jan = 1) of the month containing the midpoint of the season. Can have a fractional part If the season midpoint is in the middle of a month.
+
+    >>> target_midpoint('Dec-Feb')  # middle of January
+    1.5
+
+    >>> target_midpoint('May-May')  # middle of May
+    5.5
+
+    >>> target_midpoint('Oct-Nov')  # November 1
+    11.0
+
+    '''
+    start_mo, end_mo = cio.utilities.parse_target(target)
+    length = (end_mo - start_mo) % 12 + 1
+    mid_mo = (start_mo - 1 + length / 2) % 12 + 1
+    return mid_mo
+
+
+def issue_year_delta(issue_month, target):
+    '''When issuing forecasts in month `issue_month` for the `target` season, the issue date of the forecast for the year `y` season is in the year `y + year_delta(issue_month, target). The year of a season is the year of its midpoint.
+    >>> issue_year_delta(11, 'Dec-Feb')
+    -1
+
+    >>> issue_year_delta(9, 'Oct-Dec')
+    0
+    '''
+    target_mid = target_midpoint(target)
+    if issue_month > target_mid:
+        result = -1
+    else:
+        result = 0
+    return result
+
+
 def _preprocess_download_args(download_args):
-    lead_low, lead_high = dl.leads_from_target(download_args['fdate'], download_args['target'])
+    result = dict(download_args)
+    # lead_low and lead_high: legacy redundant configuration option,
+    # still tolerated for backwards compatibility
     user_lead_low = download_args.get('lead_low')
     user_lead_high = download_args.get('lead_high')
+    lead_low, lead_high = \
+        dl.leads_from_target(download_args['fdate'], download_args['target'])
     assert (
             (user_lead_low is None or user_lead_low == lead_low) and
             (user_lead_high is None or user_lead_high == lead_high)
     ), "lead_low and lead_high are not consistent with fdate and target."
-    result = dict(
-        download_args,
-        lead_low=lead_low,
-        lead_high=lead_high,
-    )
+    result['lead_low'] = lead_low
+    result['lead_high'] = lead_high
+
+    # Legacy config options first_year and final_year refer to the
+    # year of the initialization date, not the year of the
+    # season. target_first_year and target_final_year are the newer,
+    # recommend options that refer to the year of the target season.
+    # Legacy option is still accepted for backwards compatibility.
+    if 'target_first_year' in download_args and 'target_final_year' in download_args:
+        if 'first_year' in download_args or 'final_year' in download_args:
+            raise Exception('Provide either first_year/final_year or target_first_year/target_final_year, not both')
+        issue_month = download_args['fdate'].month
+        target = download_args['target']
+        delta = issue_year_delta(issue_month, target)
+        result['first_year'] = download_args['target_first_year'] + delta
+        result['final_year'] = download_args['target_final_year'] + delta
+        del result['target_first_year']
+        del result['target_final_year']
+    elif 'first_year' in download_args and 'final_year' in download_args:
+        if 'target_first_year' in download_args or 'target_final_year' in download_args:
+            raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
+
     return result
+
 
 def download_observations(download_args, files_root, predictand_name, force_download):
     download_args_obs = _preprocess_download_args(download_args)
