@@ -1388,9 +1388,9 @@ def plot_domains(predictor_extent, predictand_extent):
             ax.add_feature(cartopy.feature.COASTLINE)
             ax.set_title(f"{title} domain")
             pl=ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                              linewidth=2, color='gray', alpha=0.5, linestyle='--')
-            pl.xlabels_top = False
-            pl.ylabels_left = False
+                            linewidth=2, color='gray', alpha=0.5, linestyle='--')
+            pl.top_labels = False
+            pl.left_labels = False
             pl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
             pl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
             ax.add_feature(states_provinces, edgecolor='gray')
