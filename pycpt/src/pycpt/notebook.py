@@ -1384,8 +1384,6 @@ def plot_domains(predictor_extent, predictand_extent):
             # Put a background image on for nice sea rendering.
             ax.stock_img()
 
-            ax.add_feature(cartopy.feature.LAND)
-            ax.add_feature(cartopy.feature.COASTLINE)
             ax.set_title(f"{title} domain")
             pl=ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
                             linewidth=2, color='gray', alpha=0.5, linestyle='--')
