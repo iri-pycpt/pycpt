@@ -1372,13 +1372,13 @@ def plot_domains(predictor_extent, predictand_extent):
                 scale='10m',
                 facecolor='none')
 
-        fig = plt.subplots(figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
+        _, axes = plt.subplots(1, 2, figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
         titles = ['Predictor', 'Predictand']
         extents = [predictor_extent, predictand_extent]
         for i in range(2):
             title = titles[i]
             e = extents[i]
-            ax = plt.subplot(1, 2, i+1, projection=ccrs.PlateCarree())
+            ax = axes[i]
             ax.set_extent([e['west'], e['east'], e['north'], e['south']], ccrs.PlateCarree())
 
             # Put a background image on for nice sea rendering.
