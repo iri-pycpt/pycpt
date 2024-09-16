@@ -443,5 +443,9 @@ metadata = {
     'NNRP': {'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/', 'info': 'https://doi.org/10.1175/1520-0477(1996)077%3C0437:TNYRP%3E2.0.CO;2/', 'institution': 'NOAA/NCAR', 'dlauth_required': False, 'limits': {'start': '1949-01-01', 'end': -1}}, 	
 }
 
+SEAS51_doc = 'https://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.ECMWF/.dataset_documentation.html'
 
-
+deprecations = {
+    f'SEAS51.{var}': (f'SEAS51b.{var}', SEAS51_doc)
+    for var in ('PRCP', 'T2M', 'GPH', 'SST', 'UA', 'UV')
+}
