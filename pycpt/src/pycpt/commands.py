@@ -65,6 +65,16 @@ def load_config(filename):
     spec = importlib.util.spec_from_file_location('config', filename)
     config = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(config)
+    cpt_args = config.cpt_args
+
+    # The AA application doesn't know how to invert transformations.
+    assert cpt_args['transform_predictand'] is None, \
+        'generate_forecasts requires transform_predictand: None'
+
+    # The AA application assumes forecasts are expressed as full field
+    assert cpt_args['tailoring'] is None, \
+        'generate_forecasts requires tailoring: None'
+
     return config
 
 
