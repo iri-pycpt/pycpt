@@ -20,10 +20,8 @@ def canonical_correlation_analysis(
         retroactive_initial_training_period=45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='crossvalidation', #type of leave-n-out crossvalidation to use
-        drymask=False,
-        drymask_value=0, 	# added by AWR 04/06/24
-        skillmask=False,	# added by AWR 04/06/24
-        skillmask_value=0, 	# added by AWR 04/06/24
+        drymask_threshold=None,
+        skillmask_threshold=None,
         scree=False,
         synchronous_predictors=False,
         cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
@@ -85,17 +83,16 @@ def canonical_correlation_analysis(
     cpt.write(1) # climatologicial probability thresholds 
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
-    if drymask:
+    if drymask_threshold is not None:
         cpt.write(5371)
         cpt.write('Y')
-        cpt.write(drymask_value)		# added by AWR 04/06/24
-#        cpt.write(Y.attrs['missing'])
+        cpt.write(drymask_threshold)
 
-    if skillmask:	# added by AWR 04/06/24
+    if skillmask_threshold is not None:
         cpt.write(5372)
         cpt.write('Y')
         cpt.write(1)	# for Pearson
-        cpt.write(skillmask_value)	
+        cpt.write(skillmask_threshold)
 
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 

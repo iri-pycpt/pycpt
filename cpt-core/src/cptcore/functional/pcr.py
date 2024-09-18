@@ -19,10 +19,8 @@ def principal_components_regression(
         retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='CROSSVALIDATION', #type of leave-n-out crossvalidation to use
         synchronous_predictors=False,
-        drymask=False,
-        drymask_value=0, 	# added by AWR 04/06/24
-        skillmask=False,	# added by AWR 04/06/24
-        skillmask_value=0, 	# added by AWR 04/06/24
+        drymask_threshold=None,
+        skillmask_threshold=None,
         scree=False, 
         x_lat_dim=None, 
         x_lon_dim=None, 
@@ -84,16 +82,16 @@ def principal_components_regression(
     cpt.write(0.33) # size of AN category 
     cpt.write(0.33) # size of BN category  
 
-    if drymask:		# added by AWR 04/06/24
+    if drymask_threshold is not None:
         cpt.write(5371)
         cpt.write('Y')
-        cpt.write(drymask_value)	
+        cpt.write(drymask_threshold)
       
-    if skillmask:	# added by AWR 04/06/24
+    if skillmask_threshold is not None:
         cpt.write(5372)
         cpt.write('Y')
         cpt.write(1)	# for Pearson
-        cpt.write(skillmask_value)	
+        cpt.write(skillmask_threshold)
          
     # set cross validation window
     assert type(crossvalidation_window) == int and crossvalidation_window % 2 == 1 # xval window must be an odd integer 
@@ -234,7 +232,6 @@ def principal_components_regression(
         pev = getattr(pev, [i for i in pev.data_vars][0])
         pev.name = 'prediction_error_variance'
         fcsts = xr.merge([det_fcst, prob_fcst, pev])
-        # The following lines were added from cca.py by AWR 04/06/24
         # CPT doesn't pass through the S coordinate, so put it back on
         # if we have it.  (We don't have it yet in the subseasonal
         # case. Have to get rid of the fake T grid hack first in order

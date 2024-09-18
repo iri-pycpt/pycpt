@@ -7,5 +7,5 @@ from .dlcolors import *
 from .configuration import load_configuration, save_configuration
 
 __version__ = "1.2.1"
-__author__ = "Kyle Hall"
+__author__ = "IRI"
 __license__ = "MIT"
