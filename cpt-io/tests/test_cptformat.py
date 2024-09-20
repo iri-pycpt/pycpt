@@ -1,4 +1,4 @@
-from cptio import *
+from cptio import open_cptdataset, to_cptv10
 import numpy as np
 from pathlib import Path
 import pytest
