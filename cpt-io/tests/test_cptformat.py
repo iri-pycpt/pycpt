@@ -21,8 +21,9 @@ def roundtrip(file_name, assertmissing=True, assert_units=True, exact=True):
     assert len(das) == 1
     da = das[0]
     testfile = to_cptv10(da, opfile=out_name, assertmissing=assertmissing, assert_units=assert_units)
-    assert xarray_equals(open_cptdataset(testfile), da)
- 
+    new_ds = open_cptdataset(testfile)
+    assert xarray_equals(next(iter(new_ds.data_vars.values())), da)
+
 def test_gcm_input():
     roundtrip("SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv")
 
