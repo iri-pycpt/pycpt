@@ -6,9 +6,6 @@ import xarray as xr
 
 datadir = Path(__file__).absolute().parents[0] / 'data'
 
-def xarray_equals(x, y):
-    return (x - y).sum() == 0
-
 out_name = "test.tsv"
 
 def prep():
@@ -25,7 +22,7 @@ def roundtrip(file_name, data_var=None, assertmissing=True, assert_units=True, e
     new_ds = open_cptdataset(testfile)
     new_da = next(iter(new_ds.data_vars.values()))
     if exact:
-        assert xarray_equals(new_da, da)
+        assert new_da.equals(da)
     else:
         xr.testing.assert_allclose(new_da, da)
 
