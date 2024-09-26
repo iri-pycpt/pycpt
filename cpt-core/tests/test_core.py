@@ -30,8 +30,8 @@ def test_deterministic_skill(**kwargs):
     # TODO make assertions
 
 def test_pfv(**kwargs):
-    y = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').replace('.egg', '')).prec
-    x = cptio.open_cptdataset( str(Path( __file__).absolute().parents[0] / 'data/seasonal/prob_rfcsts.tsv').replace('.egg', '')).probabilistic
+    y = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv')).prec
+    x = cptio.open_cptdataset( str(Path( __file__).absolute().parents[0] / 'data/seasonal/prob_rfcsts.tsv')).probabilistic
     skill = probabilistic_forecast_verification(x, y,  **kwargs)
     print(skill)
     assert set(skill.data_vars) == set(['generalized_roc', 'ignorance', 'rank_probability_skill_score'])
