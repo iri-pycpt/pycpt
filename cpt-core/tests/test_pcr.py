@@ -1,4 +1,4 @@
-from .. import principal_components_regression
+from cptcore import principal_components_regression
 from .load_data import load_southasia_nmme
 
 def test_pcr(**kwargs):

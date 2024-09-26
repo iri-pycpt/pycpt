@@ -1,4 +1,4 @@
-from .. import deterministic_skill
+from cptcore import deterministic_skill
 from .load_data import load_southasia_nmme
 
 def test_deterministic_skill(**kwargs):

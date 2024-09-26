@@ -1,6 +1,6 @@
 import numpy as np
 
-from .. import canonical_correlation_analysis
+from cptcore import canonical_correlation_analysis
 from .load_data import load_southasia_nmme
 
 def test_cca(**kwargs):

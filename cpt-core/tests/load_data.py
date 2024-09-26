@@ -1,6 +1,4 @@
 import cptio as ct 
-from .. import canonical_correlation_analysis
-import xarray as xr 
 from pathlib import Path 
 
 def load_southasia_nmme():

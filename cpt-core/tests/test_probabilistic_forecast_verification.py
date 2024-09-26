@@ -1,5 +1,5 @@
 import cptio as ct 
-from .. import probabilistic_forecast_verification
+from cptcore import probabilistic_forecast_verification
 import numpy as np
 from pathlib import Path 
 

@@ -1,4 +1,4 @@
-from .. import multiple_regression
+from cptcore import multiple_regression
 from .load_data import load_southasia_nmme
 
 def test_mlr(**kwargs):
