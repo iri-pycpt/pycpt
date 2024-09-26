@@ -737,7 +737,6 @@ def to_cptv10(
                 temp = da.fillna(float(da.attrs["missing"])).values
             else:
                 temp = da.values
-            temp = np.vectorize(str)(temp)
             
             # row dimension coordinate values
             if row != "T":
