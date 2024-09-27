@@ -1439,25 +1439,23 @@ def plot_domains(predictor_extent, predictand_extent):
                 scale='10m',
                 facecolor='none')
 
-        fig = plt.subplots(figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
+        _, axes = plt.subplots(1, 2, figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
         titles = ['Predictor', 'Predictand']
         extents = [predictor_extent, predictand_extent]
         for i in range(2):
             title = titles[i]
             e = extents[i]
-            ax = plt.subplot(1, 2, i+1, projection=ccrs.PlateCarree())
+            ax = axes[i]
             ax.set_extent([e['west'], e['east'], e['north'], e['south']], ccrs.PlateCarree())
 
             # Put a background image on for nice sea rendering.
             ax.stock_img()
 
-            ax.add_feature(cartopy.feature.LAND)
-            ax.add_feature(cartopy.feature.COASTLINE)
             ax.set_title(f"{title} domain")
             pl=ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                              linewidth=2, color='gray', alpha=0.5, linestyle='--')
-            pl.xlabels_top = False
-            pl.ylabels_left = False
+                            linewidth=2, color='gray', alpha=0.5, linestyle='--')
+            pl.top_labels = False
+            pl.left_labels = False
             pl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
             pl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
             ax.add_feature(states_provinces, edgecolor='gray')
