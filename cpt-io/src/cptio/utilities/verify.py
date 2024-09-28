@@ -23,8 +23,8 @@ def ax_to_2d(ax, T, M):
 
 
 def is_valid_cptv10(da, assertmissing=True, assert_units=True):
-    valid_dims = ["T", "X", "Y", "Mode", "index", "C", "M"]
-    valid_coords = ["T", "Ti", "Tf", "S", "X", "Y", "Mode", "index", "C", "M"]
+    valid_dims = ["T", "X", "Y", "Mode", "index", "C", "M", "station"]
+    valid_coords = ["T", "Ti", "Tf", "S", "X", "Y", "Mode", "index", "C", "M", "station", "elev", "Name"]
     assert type(da) == xr.DataArray, "CPTv10 only deals with data arrays, not datasets"
     assert (
         len(list(da.dims)) >= 2 and len(list(da.dims)) <= 4
@@ -79,3 +79,16 @@ def is_valid_cptv10(da, assertmissing=True, assert_units=True):
         assert (
             "units" in da.attrs.keys()
         ), 'CPTv10 is required to have a "units" attribute'
+
+
+SENTINEL = object()
+def is_valid_cptv10_xyt(da, assertmissing=SENTINEL, assert_units=SENTINEL):
+    kwargs = {}
+    if assertmissing is not SENTINEL:
+        kwargs['assertmissing'] = assertmissing
+    if assert_units is not SENTINEL:
+        kwargs['assert_units'] = assert_units
+    assert 'X' in da.coords
+    assert 'Y' in da.coords
+    assert 'T' in da.coords
+    is_valid_cptv10(da, **kwargs)

@@ -2,7 +2,6 @@ from .fileio import (
     open_cptdataset,
     open_cptdataarray,
     to_cptv10,
-    guess_cptv10_coords,
     convert_np64_datetime,
 )
 from .utilities import (
@@ -14,7 +13,7 @@ from .utilities import (
     seasonal_target_length,
     target_from_leads,
     leads_from_target,
-    is_valid_cptv10,
+    is_valid_cptv10_xyt,
 )
 
 

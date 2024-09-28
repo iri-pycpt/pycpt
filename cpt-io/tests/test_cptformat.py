@@ -1,7 +1,6 @@
 from cptio import open_cptdataset, to_cptv10
 import numpy as np
 from pathlib import Path
-import pytest
 import xarray as xr
 
 datadir = Path(__file__).absolute().parents[0] / 'data'
@@ -49,6 +48,18 @@ def test_spatial_loadings():
     # See earlier comment on exact=False
     roundtrip("predictand_cca_spatial_loadings.txt", assertmissing=False, assert_units=False, exact=False)
 
+def test_spatial_loadings_station():
+    ds = open_cptdataset(datadir / "predictand_cca_spatial_loadings_station.txt")
+    print(ds)
+    # don't need to round-trip spatial loadings
+    assert set(ds.data_vars) == {"prcp_Y_CCA_loadings"}
+    da = ds["prcp_Y_CCA_loadings"]
+    assert set(da.dims) == {'station', 'Mode'}
+    assert set(da.coords) == {'station', 'Mode', 'Y', 'X'}
+    assert da['station'][0] == '300042'
+    assert len(da['Mode']) == 2
+    assert da['Y'][0] == 42.0
+
 def test_eof_timeseries():
     roundtrip("predictand_eof_timeseries.txt", assertmissing=False, assert_units=False)
 
@@ -60,3 +71,24 @@ def test_canonical_correlation():
     np.testing.assert_array_equal(da['Mode'], [1, 2, 3, 4, 5])
     np.testing.assert_array_equal(da['index'], ['correlation'])
     assert da.dtype == np.float64
+
+def test_station_data():
+    roundtrip("GHCN_Jun_cptv10.tsv")
+
+def test_skill_station():
+    ds = open_cptdataset(datadir / "pearson-station.txt")
+    # skill data doesn't have to round-trip, we only need to be able to read it.
+    print(ds)
+    assert set(ds.data_vars) == {"prcp_Pearson's_correlation"}
+    da = ds["prcp_Pearson's_correlation"]
+    assert set(da.dims) == {'station', 'Mode'}
+    assert set(da.coords) == {'station', 'Mode', 'Y', 'X'}
+
+def test_prob_station():
+    roundtrip("forecast_probabilities_station.txt")
+
+def test_canonical_correlation_station():
+    roundtrip("cca_canonical_correlation_station.txt", assertmissing=False, assert_units=False)
+
+def test_forecast_values_station():
+    roundtrip("forecast_values_station.txt")
