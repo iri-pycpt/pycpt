@@ -8,7 +8,6 @@ def xarray_equals(x, y):
     return (x - y).sum() == 0
 
 
-@pytest.mark.fileio
 def test_gcm_input():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -20,7 +19,6 @@ def test_gcm_input():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_cpc_input():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -32,7 +30,6 @@ def test_cpc_input():
     assert xarray_equals(open_cptdataset(testfile), y)
 
 
-@pytest.mark.fileio
 def test_missing_data():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -43,7 +40,6 @@ def test_missing_data():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_probabilistic_data():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -52,7 +48,6 @@ def test_probabilistic_data():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_skill():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -66,7 +61,6 @@ def test_skill():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_spatial_loadings():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -83,7 +77,6 @@ def test_spatial_loadings():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_eof_timeseries():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
@@ -99,7 +92,6 @@ def test_eof_timeseries():
     assert xarray_equals(open_cptdataset(testfile), x)
 
 
-@pytest.mark.fileio
 def test_canonical_correlation():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
