@@ -3,101 +3,49 @@ import numpy as np
 from pathlib import Path
 import pytest
 
+datadir = Path(__file__).absolute().parents[0] / 'data'
 
 def xarray_equals(x, y):
     return (x - y).sum() == 0
 
+out_name = "test.tsv"
 
+def prep():
+    if Path(out_name).is_file():
+        Path(out_name).unlink()
+
+def roundtrip(file_name, assertmissing=True, assert_units=True, exact=True):
+    prep()
+    ds = open_cptdataset(datadir / file_name)
+    das = list(ds.data_vars.values())
+    assert len(das) == 1
+    da = das[0]
+    testfile = to_cptv10(da, opfile=out_name, assertmissing=assertmissing, assert_units=assert_units)
+    assert xarray_equals(open_cptdataset(testfile), da)
+ 
 def test_gcm_input():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(
-        Path(__file__).absolute().parents[0]
-        / "data/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv"
-    ).prec
-    testfile = to_cptv10(x, opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv")
 
 def test_cpc_input():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    y = open_cptdataset(
-        Path(__file__).absolute().parents[0]
-        / "data/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv"
-    ).prate
-    testfile = to_cptv10(y, opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), y)
-
+    roundtrip("SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv")
 
 def test_missing_data():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(
-        Path(__file__).absolute().parents[0] / "data/lesotho_ond.tsv"
-    ).rfe
-    testfile = to_cptv10(x, opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("lesotho_ond.tsv")
 
 def test_probabilistic_data():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/prob_rfcsts.tsv")
-    testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("prob_rfcsts.tsv")
 
 def test_skill():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(Path(__file__).absolute().parents[0] / "data/pearson.txt")
-    testfile = to_cptv10(
-        getattr(x, [i for i in x.data_vars][0]),
-        opfile="test.tsv",
-        assertmissing=False,
-        assert_units=False,
-    )
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("pearson.txt", assertmissing=False, assert_units=False)
 
 def test_spatial_loadings():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(
-        Path(__file__).absolute().parents[0]
-        / "data/predictand_cca_spatial_loadings.txt"
-    )
-    testfile = to_cptv10(
-        getattr(x, [i for i in x.data_vars][0]),
-        opfile="test.tsv",
-        assertmissing=False,
-        assert_units=False,
-    )
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("predictand_cca_spatial_loadings.txt", assertmissing=False, assert_units=False)
 
 def test_eof_timeseries():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    x = open_cptdataset(
-        Path(__file__).absolute().parents[0] / "data/predictand_eof_timeseries.txt"
-    )
-    testfile = to_cptv10(
-        getattr(x, [i for i in x.data_vars][0]),
-        opfile="test.tsv",
-        assertmissing=False,
-        assert_units=False,
-    )
-    assert xarray_equals(open_cptdataset(testfile), x)
-
+    roundtrip("predictand_eof_timeseries.txt", assertmissing=False, assert_units=False)
 
 def test_canonical_correlation():
-    if Path("test.tsv").is_file():
-        Path("test.tsv").unlink()
-    ds = open_cptdataset(
-        Path(__file__).absolute().parents[0] / "data/cca_canonical_correlation.txt"
-    )
+    ds = open_cptdataset(datadir / "cca_canonical_correlation.txt")
     print(ds)
     da = ds['correlation']
     assert da.dims == ("Mode", "index")
