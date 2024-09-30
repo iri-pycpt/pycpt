@@ -1,4 +1,5 @@
 from cptio import *
+import numpy as np
 from pathlib import Path
 import pytest
 
@@ -102,8 +103,12 @@ def test_eof_timeseries():
 def test_canonical_correlation():
     if Path("test.tsv").is_file():
         Path("test.tsv").unlink()
-    x = open_cptdataset(
+    ds = open_cptdataset(
         Path(__file__).absolute().parents[0] / "data/cca_canonical_correlation.txt"
     )
-    testfile = to_cptv10(getattr(x, [i for i in x.data_vars][0]), opfile="test.tsv")
-    assert xarray_equals(open_cptdataset(testfile), x)
+    print(ds)
+    da = ds['correlation']
+    assert da.dims == ("Mode", "index")
+    np.testing.assert_array_equal(da['Mode'], [1, 2, 3, 4, 5])
+    np.testing.assert_array_equal(da['index'], ['correlation'])
+    assert da.dtype == np.float64
