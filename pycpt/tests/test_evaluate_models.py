@@ -4,6 +4,7 @@ import netCDF4  # noqa: F401
 import datetime as dt
 import numpy as np
 from pathlib import Path
+import shutil
 import tempfile
 
 import cptio
@@ -46,6 +47,23 @@ DEFAULT_CPT_ARGS = {
     'synchronous_predictors': True,
 }
 
+SAVED_DATA_DIR = Path( __file__ ).absolute().parents[0] / 'data'
+
+def download_test_data():
+    '''Run this by hand, then track the downloaded files in version control
+    so that tests can run without hitting the network.'''
+    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    with tempfile.TemporaryDirectory() as case_dir_name:
+        domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
+        Y, hindcast_data, forecast_data = pycpt.download_data(
+            DEFAULT_PREDICTAND_NAME, None, PREDICTOR_NAMES, DOWNLOAD_ARGS,
+            domain_dir, force_download=True
+        )
+        data_dir = domain_dir / 'data'
+        for f in data_dir.glob('*.tsv'):
+            print(f'copy {data_dir / f} to {SAVED_DATA_DIR}')
+            shutil.copy(data_dir / f, SAVED_DATA_DIR)
+
 def open_cptdataarray(path):
     'Like cptio.open_cptdataset but returns a DataArray instead of a Dataset'
     ds = cptio.open_cptdataset(path)
@@ -54,7 +72,7 @@ def open_cptdataarray(path):
     return das[0]
                 
 def get_test_data(predictor_names, predictand_name):
-    datadir = Path( __file__ ).absolute().parents[0] / 'data'
+    datadir = SAVED_DATA_DIR
     hindcast_data = []
     forecast_data = []
     for p in predictor_names:
@@ -175,3 +193,7 @@ def test_evaluate_models_nomos():
     assert fcsts == []
     print(skill)
     check_deterministic_skill(Y, skill)
+
+
+if __name__ == '__main__':
+    download_test_data()
