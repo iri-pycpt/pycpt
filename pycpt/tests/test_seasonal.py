@@ -127,28 +127,24 @@ def check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
 
 
 def check_skill(Y, skill, metrics):
-    assert len(skill)  == len(PREDICTOR_NAMES)
-    for s in skill:
-        assert set(metrics) <= set(s.data_vars)
-        assert s[metrics[0]].dims == ('Y', 'X')
-        for dim in ('Y', 'X'):
-            assert s[dim].equals(Y[dim])
+    assert set(metrics) <= set(skill.data_vars)
+    assert skill[metrics[0]].dims == ('Y', 'X')
+    for dim in ('Y', 'X'):
+        assert skill[dim].equals(Y[dim])
 
+DETERMINISTIC_SKILL_METRICS = [
+    'pearson', 'spearman', 'two_alternative_forced_choice',
+    'roc_area_below_normal', 'roc_area_above_normal'
+]
 
-def check_deterministic_skill(Y, skill):
-    metrics = [
-        'pearson', 'spearman', 'two_alternative_forced_choice',
-        'roc_area_below_normal', 'roc_area_above_normal'
-    ]
-    check_skill(Y, skill, metrics)
+PROBABILISTIC_SKILL_METRICS = [
+    'generalized_roc', 'ignorance', 'rank_probability_skill_score'
+]
 
-
-def check_probabilistic_skill(Y, skill):
-    metrics= [
-        'generalized_roc', 'ignorance', 'rank_probability_skill_score'
-    ]
-    check_skill(Y, skill, metrics)
-
+def check_model_skills(Y, skills, metrics):
+    assert len(skills) == len(PREDICTOR_NAMES)
+    for s in skills:
+        check_skill(Y, s, metrics)
 
 def test_evaluate_models_cca():
     MOS = 'CCA'
@@ -156,8 +152,7 @@ def test_evaluate_models_cca():
     Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
     hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
     check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
-    check_deterministic_skill(Y, skill)
-    check_probabilistic_skill(Y, skill)
+    check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
     # additional data specific to CCA
     for p in pxs:
         assert 'x_cca_scores' in p.data_vars
@@ -180,8 +175,7 @@ def test_evaluate_models_pcr():
     Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
     hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
     check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
-    check_deterministic_skill(Y, skill)
-    check_probabilistic_skill(Y, skill)
+    check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
     assert pys == [None, None]
 
 def test_evaluate_models_nomos():
@@ -192,7 +186,12 @@ def test_evaluate_models_nomos():
     assert hcsts == []
     assert fcsts == []
     print(skill)
-    check_deterministic_skill(Y, skill)
+    # TODO harmonize nomos skill metric names with those used by CCA, PCR
+    skill_metrics = [
+        'pearson', 'spearman', '2afc',
+        'roc_below', 'roc_above'
+    ]
+    check_model_skills(Y, skill, skill_metrics)
 
 def test_evaluate_models_gamma():
     MOS = 'CCA'
@@ -240,6 +239,34 @@ def test_evaluate_models_skillmask():
     assert (f.sel(C='1') == 33).where(mask).sum() == 4
     assert (f.sel(C='2') == 34).where(mask).sum() == 4
     assert (f.sel(C='3') == 33).where(mask).sum() == 4
+
+def test_construct_mme():
+    MOS = 'CCA'
+    cpt_args = DEFAULT_CPT_ARGS
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    with tempfile.TemporaryDirectory() as case_dir_name:
+        domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
+        interactive = False
+        hcsts, fcsts, skill, pxs, pys = pycpt.evaluate_models(
+            original_hcsts, MOS, Y, original_fcsts, cpt_args, domain_dir, PREDICTOR_NAMES, interactive
+        )
+        det_fcst, pr_fcst, pev_fcst, nextgen_skill = pycpt.construct_mme(
+            fcsts, hcsts, Y, PREDICTOR_NAMES, PREDICTOR_NAMES, cpt_args, domain_dir
+        )
+    assert det_fcst.dims == ('T', 'Y', 'X')
+    assert det_fcst.shape == (1, 4, 4)
+    assert pr_fcst.dims == ('C', 'T', 'Y', 'X')
+    assert pr_fcst.shape == (3, 1, 4, 4)
+    assert pev_fcst.dims == ('T', 'Y', 'X')
+    assert pev_fcst.shape == (1, 4, 4)
+    # TODO harmonize nomos skill metric names with those used by CCA, PCR
+    skill_metrics = [
+        'pearson', 'spearman', '2afc',
+        'roc_below', 'roc_above'
+    ]
+    check_skill(Y, nextgen_skill, skill_metrics + PROBABILISTIC_SKILL_METRICS)
+
 
 if __name__ == '__main__':
     download_test_data()
