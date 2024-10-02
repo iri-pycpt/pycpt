@@ -45,11 +45,8 @@ SKILL_METRICS = {
     "pearson": (ce.cmaps["cpt_correlation"], -1, 1),
     "spearman": (ce.cmaps["cpt_correlation"], -1, 1),
     "two_alternative_forced_choice": (ce.cmaps["pycpt_roc"], 0, 100),
-    "2afc": (ce.cmaps["pycpt_roc"], 0, 100),
     "roc_area_below_normal": (ce.cmaps["pycpt_roc"], 0, 1),
-    "roc_below": (ce.cmaps["pycpt_roc"], 0, 1),
     "roc_area_above_normal": (ce.cmaps["pycpt_roc"], 0, 1),
-    "roc_above": (ce.cmaps["pycpt_roc"], 0, 1),
 
     # probabilistic (in sample):
     "generalized_roc": (ce.cmaps["pycpt_roc"], 0, 100),

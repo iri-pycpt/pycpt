@@ -338,12 +338,9 @@ SKILL_METRICS = {
     "pearson": (ce.cmaps["cpt_correlation"], -1, 1),
     "spearman": (ce.cmaps["cpt_correlation"], -1, 1),
     "two_alternative_forced_choice": (ce.cmaps["pycpt_roc"], 0, 100),
-    "2afc": (ce.cmaps["pycpt_roc"], 0, 100),
     "root_mean_squared_error": (ce.cmaps["pycpt_probability_red_temp"], 0, 300),
     "roc_area_below_normal": (ce.cmaps["pycpt_roc"], 0, 1),
-    "roc_below": (ce.cmaps["pycpt_roc"], 0, 1),
     "roc_area_above_normal": (ce.cmaps["pycpt_roc"], 0, 1),
-    "roc_above": (ce.cmaps["pycpt_roc"], 0, 1),
 
     # probabilistic (in sample):
     "generalized_roc": (ce.cmaps["pycpt_roc"], 0, 100),
@@ -865,6 +862,14 @@ def plot_forecasts(
         )
         plt.close()
 
+# For a while we used different skill metric names in plot_mme_skill than in plot_skill.
+# We have now standardized on the names formerly used by plot_skill, but we continue
+# to accept the old plot_mme_skill names for backwards compatibility.
+SKILL_ALIASES = {
+    '2afc': 'two_alternative_forced_choice',
+    'roc_above': 'roc_area_above_normal',
+    'roc_below': 'roc_area_below_normal',
+}
 
 def plot_mme_skill(
         predictor_names, nextgen_skill, MOS, files_root, skill_metrics
@@ -884,6 +889,8 @@ def plot_mme_skill(
 
     for i in [0]:
         for j, skill_metric in enumerate(skill_metrics):
+            # aliases. TODO deprecate
+            skill_metric = SKILL_ALIASES.get(skill_metric, skill_metric)
             metric = SKILL_METRICS[skill_metric]
             ax[i][j].set_title(skill_metric)
             n = (
