@@ -1,5 +1,6 @@
 from .fileio import (
     open_cptdataset,
+    open_cptdataarray,
     to_cptv10,
     guess_cptv10_coords,
     convert_np64_datetime,

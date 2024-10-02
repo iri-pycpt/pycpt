@@ -64,21 +64,14 @@ def download_test_data():
             print(f'copy {data_dir / f} to {SAVED_DATA_DIR}')
             shutil.copy(data_dir / f, SAVED_DATA_DIR)
 
-def open_cptdataarray(path):
-    'Like cptio.open_cptdataset but returns a DataArray instead of a Dataset'
-    ds = cptio.open_cptdataset(path)
-    das = list(ds.data_vars.values())
-    assert len(das) == 1
-    return das[0]
-                
 def get_test_data(predictor_names, predictand_name):
     datadir = SAVED_DATA_DIR
     hindcast_data = []
     forecast_data = []
     for p in predictor_names:
-        hindcast_data.append(open_cptdataarray(datadir / f'{p}.tsv'))
-        forecast_data.append(open_cptdataarray(datadir / f'{p}_f2023.tsv'))
-    Y = open_cptdataarray(datadir / f'{predictand_name}.tsv')
+        hindcast_data.append(cptio.open_cptdataarray(datadir / f'{p}.tsv'))
+        forecast_data.append(cptio.open_cptdataarray(datadir / f'{p}_f2023.tsv'))
+    Y = cptio.open_cptdataarray(datadir / f'{predictand_name}.tsv')
     return Y, hindcast_data, forecast_data
 
 def call_evaluate_models(original_hindcasts, original_forecasts, Y, MOS, cpt_args_override):

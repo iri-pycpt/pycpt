@@ -3,7 +3,6 @@ from ..utilities import is_valid_cptv10
 import datetime as dt
 from io import StringIO
 import numpy as np
-import os
 import pandas as pd
 from pathlib import Path
 import re
@@ -285,6 +284,14 @@ def open_cptdataset(filename):
                 dataarrays[k] != float(dataarrays[k].attrs["missing"]), other=np.nan
             )
     return xr.Dataset(dataarrays)
+
+
+def open_cptdataarray(path):
+    'Like cptio.open_cptdataset but returns a DataArray instead of a Dataset'
+    ds = open_cptdataset(path)
+    das = list(ds.data_vars.values())
+    assert len(das) == 1
+    return das[0]
 
 
 def datetime_timestamp(date):
