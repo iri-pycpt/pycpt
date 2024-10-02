@@ -47,7 +47,7 @@ DEFAULT_CPT_ARGS = {
     'synchronous_predictors': True,
 }
 
-SAVED_DATA_DIR = Path( __file__ ).absolute().parents[0] / 'data'
+SAVED_DATA_DIR = Path( __file__ ).absolute().parents[0] / 'data' / 'seasonal'
 
 def download_test_data():
     '''Run this by hand, then track the downloaded files in version control
