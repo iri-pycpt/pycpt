@@ -194,6 +194,52 @@ def test_evaluate_models_nomos():
     print(skill)
     check_deterministic_skill(Y, skill)
 
+def test_evaluate_models_gamma():
+    MOS = 'CCA'
+    cpt_args = {'transform_predictand': 'Gamma'}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    # TODO what should we assert? Something about the magnitude of the prediction error variance?
+
+def test_evaluate_models_empirical():
+    MOS = 'CCA'
+    cpt_args = {'transform_predictand': 'Empirical'}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    # TODO what should we assert? Something about the magnitude of the prediction error variance?
+
+def test_evaluate_models_anomaly():
+    MOS = 'CCA'
+    cpt_args = {'tailoring': 'Anomaly'}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    # TODO what should we assert? Something about the magnitude of the prediction error variance?
+
+def test_evaluate_models_drymask():
+    MOS = 'CCA'
+    thresh = 451
+    cpt_args = {'drymask_threshold': thresh}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    mask = Y.mean('T') < thresh
+    assert mask.sum() == 4  # four out of sixteen points fall below the threshold
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    f = fcsts[0]['deterministic'].isel(T=0).drop_vars(['T', 'Ti', 'Tf', 'S'])
+    # forecast is null at points that average less than the threshold, and only there.
+    assert f.isnull().equals(mask)
+
+def test_evaluate_models_skillmask():
+    MOS = 'CCA'
+    thresh = 0.3
+    cpt_args = {'skillmask_threshold': thresh}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    mask = skill[0]['pearson'] < thresh
+    assert mask.sum() == 4  # four pixels are masked
+    f = fcsts[0]['probabilistic']
+    # climatological forecast at the masked locations
+    assert (f.sel(C='1') == 33).where(mask).sum() == 4
+    assert (f.sel(C='2') == 34).where(mask).sum() == 4
+    assert (f.sel(C='3') == 33).where(mask).sum() == 4
 
 if __name__ == '__main__':
     download_test_data()
