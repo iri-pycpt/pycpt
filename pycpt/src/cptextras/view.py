@@ -6,7 +6,21 @@ import xarray as xr
 import numpy as np
 
 
-def view_probabilistic(X, cmap_an=plt.get_cmap('cpt.pr_blue_r', 9), cmap_bn=plt.get_cmap('cpt.pr_red', 9), cmap_nn=plt.get_cmap("cpt.pr_green_r", 4), orientation='horizontal'):
+def view_coords_stations(domain,vals):
+    factor=5
+    if domain is None:
+        e = (vals['X'].values.max()+factor)
+        w = (vals['X'].values.min()-factor)
+        n = (vals['Y'].values.max()+factor)
+        s = (vals['Y'].values.min()-factor) 
+    else:    
+        e = domain['east']
+        w = domain['west']
+        n = domain['north']
+        s = domain['south']
+    return e,w,n,s
+
+def view_probabilistic(X, cmap_an=plt.get_cmap('cpt.pr_blue_r', 9), cmap_bn=plt.get_cmap('cpt.pr_red', 9), cmap_nn=plt.get_cmap("cpt.pr_green_r", 4), orientation='horizontal', domain=None):
 	assert 'T' not in X.coords or X['T'].shape == (), \
 		 'view_probabilistic requires you to select across sample dim to eliminate that dimension first'
 	assert 'C' in X.coords, 'view_probabilistic requires C to be a coordinate on X'
@@ -30,6 +44,11 @@ def view_probabilistic(X, cmap_an=plt.get_cmap('cpt.pr_blue_r', 9), cmap_bn=plt.
 
 
 	if 'station' in X.dims:
+		#station adjustment Map
+		Xmax,Xmin,Ymax,Ymin=view_coords_stations(domain,flat)
+		ax.set_xlim(Xmin,Xmax)  
+		ax.set_ylim(Ymin,Ymax) 
+
 		CS3 = ax.scatter(flat['X'], flat['Y'], c=flat.where(argmax == 2, other=np.nan), vmin=0.35, vmax=0.85, cmap=cmap_an)
 		CS1 = ax.scatter(flat['X'], flat['Y'], c=flat.where(argmax == 0, other=np.nan), vmin=0.35, vmax=0.85, cmap=cmap_bn)
 		CS2 = ax.scatter(flat['X'], flat['Y'], c=flat.where(argmax == 1, other=np.nan), vmin=0.35, vmax=0.55, cmap=cmap_nn)
