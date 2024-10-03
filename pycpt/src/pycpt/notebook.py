@@ -352,7 +352,8 @@ SKILL_METRICS = {
 SKILL_METRICS["generalized_roc"][0].set_under("lightgray")
 SKILL_METRICS["rank_probability_skill_score"][0].set_under("lightgray")
 
-def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
+
+def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics, domain=None):
     fig, ax = plt.subplots(
         nrows=len(predictor_names),
         ncols=len(skill_metrics),
@@ -369,6 +370,10 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
             )
 
             if vals['X'].dims == ('station',):
+                #station adjustment Map
+                Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                ax[i][j].set_xlim(Xmin,Xmax)  
+                ax[i][j].set_ylim(Ymin,Ymax) 
                 ax[i][j].scatter(
                     vals['X'].values, vals['Y'].values,
                     c=vals.values, cmap=metric[0], vmin=metric[1], vmax=metric[2]
@@ -399,7 +404,7 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
 
 
 def plot_cca_modes(
-    MOS, predictor_names, pxs, pys, files_root
+    MOS, predictor_names, pxs, pys, files_root, domain=None
 ):
     nmodes = 3
     cmap = plt.get_cmap("cpt.loadings", 11)
@@ -466,6 +471,10 @@ def plot_cca_modes(
                     .where(pxs[i].x_cca_loadings.isel(Mode=mode) > missing_value_flag)
                 )
                 if vals['X'].dims == ('station',):
+                    #station adjustment Map
+                    Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                    map1_ax.set_xlim(Xmin,Xmax) 
+                    map1_ax.set_ylim(Ymin,Ymax) 
                     art = map1_ax.scatter(
                         vals['X'].values, vals['Y'].values,
                         c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
@@ -489,6 +498,10 @@ def plot_cca_modes(
                 )
                 if vals['X'].dims == ('station',):
                     if vals.notnull().any():
+                        #station adjustment Map
+                        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                        map2_ax.set_xlim(Xmin,Xmax) 
+                        map2_ax.set_ylim(Ymin,Ymax) 
                         art = map2_ax.scatter(
                             vals['X'].values, vals['Y'].values,
                             c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
@@ -535,7 +548,7 @@ def plot_cca_modes(
 
 
 def plot_eof_modes(
-    MOS, predictor_names, pxs, pys, files_root
+    MOS, predictor_names, pxs, pys, files_root, domain=None
 ):
     nmodes = 5
     cmap = plt.get_cmap("cpt.loadings", 11)
@@ -629,6 +642,10 @@ def plot_eof_modes(
                     .where(pys[i].y_eof_loadings.isel(Mode=mode) > missing_value_flag)
                 )
                 if pys[i]['X'].dims == ('station',):
+                    #station adjustment Map
+                    Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                    map2_ax.set_xlim(Xmin,Xmax) 
+                    map2_ax.set_ylim(Ymin,Ymax) 
                     art = map2_ax.scatter(
                         pys[i]['X'], pys[i]['Y'], c=vals, vmin=Vmin, vmax=Vmax, cmap=cmap
                     )
@@ -743,6 +760,7 @@ def plot_forecasts(
     files_root,
     predictor_names,
     MOS,
+    domain=None
 ):
     prob_missing_value_flag = -1
     my_dpi = 100
@@ -774,7 +792,9 @@ def plot_forecasts(
             cmap_bn=cmapB,
             cmap_nn=cmapN,
             orientation=graph_orientation,
+            domain=domain 
         )
+        
         cartopyInstance.add_feature(cartopy.feature.BORDERS, edgecolor="black")
         cartopyInstance.set_title("")
         # cartopyInstance.axis("off")
@@ -828,6 +848,10 @@ def plot_forecasts(
                 vmin=vmin,
                 vmax=vmax,
             )
+            #station adjustment Map
+            Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,datart)
+            art.axes.set_xlim(Xmin,Xmax) 
+            art.axes.set_ylim(Ymin,Ymax) 
         else:
             art = datart.plot(
                 figsize=(12, 10),
@@ -901,7 +925,7 @@ SKILL_ALIASES = {
 }
 
 def plot_mme_skill(
-        predictor_names, nextgen_skill, MOS, files_root, skill_metrics
+        predictor_names, nextgen_skill, MOS, files_root, skill_metrics, domain=None
 ):
     graph_orientation = ce.graphorientation(
         len(nextgen_skill["X"]),
@@ -926,6 +950,10 @@ def plot_mme_skill(
                 .where(getattr(nextgen_skill, skill_metric) > missing_value_flag)
             )
             if vals['X'].dims == ('station',):
+                #station adjustment Map
+                Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                ax[i][j].set_xlim(Xmin,Xmax)   
+                ax[i][j].set_ylim(Ymin,Ymax) 
                 art = ax[i][j].scatter(
                     vals['X'].values, vals['Y'].values,
                     c=vals.values, cmap=metric[0], vmin=metric[1], vmax=metric[2],
@@ -956,6 +984,7 @@ def plot_mme_forecasts(
     MOS,
     files_root,
     det_fcst,
+    domain=None,
 ):
     missing_value_flag = -999
     prob_missing_value_flag = -1
@@ -986,6 +1015,7 @@ def plot_mme_forecasts(
         cmap_bn=cmapB,
         cmap_nn=cmapN,
         orientation=graph_orientation,
+        domain=domain
     )
     cartopyInstance.add_feature(cartopy.feature.BORDERS)
     cartopyInstance.set_title("")
@@ -1031,6 +1061,10 @@ def plot_mme_forecasts(
             vmin=vmin,
             vmax=vmax,
         )
+        #station adjustment Map
+        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,datart)
+        art.axes.set_xlim(Xmin,Xmax) 
+        art.axes.set_ylim(Ymin,Ymax) 
     else:
         art = datart.plot(
             figsize=(12, 10),
@@ -1144,6 +1178,7 @@ def plot_mme_flex_forecast_station(
     MOS,
     files_root,
     color_bar,
+    domain=None
 ):
     # TODO: get X and Y coords onto exceedance_prob when it's created so we
     # don't have to do it here.
@@ -1202,6 +1237,7 @@ def plot_mme_flex_forecast_new(
     MOS,
     files_root,
     color_bar,
+    domain=None
 ):
     '''To be renamed plot_mme_flex_forecast in v3.'''
     ymin = forecast_ds['Y'].min().values
@@ -1235,6 +1271,7 @@ def plot_mme_flex_forecast_new(
             location_selector = {'station': forecast_ds['station'][0].values}
         point_latitude = forecast_ds['Y'].sel(location_selector)
         point_longitude = forecast_ds['X'].sel(location_selector)
+        
 
     graph_orientation = ce.graphorientation(xmax - xmin, ymax - ymin)
 
@@ -1267,6 +1304,9 @@ def plot_mme_flex_forecast_new(
             cmap=barcolor, ax=map_ax, vmin=vmin, vmax=vmax,
             s=300,
         )
+        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,forecast_ds)
+        art.axes.set_xlim(Xmin,Xmax) 
+        art.axes.set_ylim(Ymin,Ymax) 
     else:
         art = forecast_ds['exceedance_prob'].plot(
             cmap=barcolor, ax=map_ax, vmin=vmin, vmax=vmax
