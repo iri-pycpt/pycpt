@@ -7,7 +7,11 @@ import cptio as cio
 
 def read_dlauth():
     if not (Path.home().absolute() / '.pycpt_dlauth').is_file():
-        print('You need to set up an IRIDLAUTH! Please set up an IRI account here (https://iridl.ldeo.columbia.edu/auth/signup), then use cptdl.setup_dlauth("your_iri_login_email") to setup the cookie. This only needs to happen once!  ')
+        #Information for both possible options is added so that anyone who needs it can explore another option in case one of them fails.
+        print("You need to set up an IRIDLAUTH!....... There are two ways you can do this:")
+        print('1) Please set up an IRI account here (https://iridl.ldeo.columbia.edu/auth/signup), then use cptdl.setup_dlauth("your_iri_login_email")')
+        print('2) Generate your ID from https://iridl.ldeo.columbia.edu/auth/genkey. Please copy the JSON obtained into your ".pycpt_dlauth" file to setup the cookie.')
+        print('This only needs to happen once!  ')
         return None
     else: 
         try:

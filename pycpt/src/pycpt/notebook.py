@@ -313,7 +313,10 @@ def plot_cca_modes(
     MOS, predictor_names, pxs, pys, files_root
 ):
     nmodes = 3
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if any(sub in name for sub in ["TMAX", "TMIN", "TMEAN", "TMED", "T2M"] for name in predictor_names):
+       cmap = plt.get_cmap("cpt.loadings", 11).reversed()
+    else:
+       cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
     missing_value_flag = -999
@@ -447,9 +450,12 @@ def plot_cca_modes(
 
 def plot_eof_modes(
     MOS, predictor_names, pxs, pys, files_root
-):
+): 
     nmodes = 5
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if any(sub in name for sub in ["TMAX", "TMIN", "TMEAN", "TMED", "T2M"] for name in predictor_names):
+       cmap = plt.get_cmap("cpt.loadings", 11).reversed()
+    else:
+       cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
 
@@ -660,6 +666,7 @@ def plot_forecasts(
     vmin=None,
     vmax=None,
 ):
+
     if predictand_name is None:
         predictand_name='PRCP'
 
@@ -728,6 +735,7 @@ def plot_forecasts(
         if (
             any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"])
             and i == 0
+            and vmin is None
         ):
             vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
@@ -865,6 +873,8 @@ def plot_mme_forecasts(
     MOS,
     files_root,
     det_fcst,
+    vmin=None,
+    vmax=None,
 ):
     missing_value_flag = -999
     prob_missing_value_flag = -1
@@ -884,7 +894,7 @@ def plot_mme_forecasts(
         fig = plt.figure(figsize=(15, 12), dpi=my_dpi)
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
@@ -920,7 +930,7 @@ def plot_mme_forecasts(
     ax1.imshow(pil_img)
 
     datart = det_fcst.where(det_fcst > missing_value_flag).isel(T=-1)
-    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]):
+    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]) and vmin is None and vmax is None:
         vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
 
