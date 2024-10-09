@@ -42,20 +42,20 @@ def probabilistic_forecast_verification(
     cpt.write(1)
     cpt.write(cpt.outputs['original_predictor'].absolute())
 
-    cpt.write( max(X.coords['Y'].values)) # North
-    cpt.write( min(X.coords['Y'].values)) # South
-    cpt.write( min(X.coords['X'].values)) # West
-    cpt.write( max(X.coords['X'].values)) # East
+    cpt.write( "{:#g}".format(max(X.coords['Y'].values))) # North
+    cpt.write( "{:#g}".format(min(X.coords['Y'].values))) # South
+    cpt.write( "{:#g}".format(min(X.coords['X'].values))) # West
+    cpt.write( "{:#g}".format(max(X.coords['X'].values))) # East
     
     # load Y Dataset 
     to_cptv10(Y, cpt.outputs['original_predictand'])
     cpt.write(2)
     cpt.write(cpt.outputs['original_predictand'].absolute())
 
-    cpt.write( max(Y.coords['Y'].values)) # North
-    cpt.write( min(Y.coords['Y'].values)) # South
-    cpt.write( min(Y.coords['X'].values)) # West
-    cpt.write( max(Y.coords['X'].values)) # East
+    cpt.write( "{:#g}".format(max(Y.coords['Y'].values))) # North
+    cpt.write( "{:#g}".format(min(Y.coords['Y'].values))) # South
+    cpt.write( "{:#g}".format(min(Y.coords['X'].values))) # West
+    cpt.write( "{:#g}".format(max(Y.coords['X'].values))) # East
 
     # set up cpt missing values and goodness index 
     cpt.write(131) # set output fmt to text for goodness index because grads doesnot makes sense
