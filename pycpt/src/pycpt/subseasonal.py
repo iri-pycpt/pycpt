@@ -77,7 +77,7 @@ def download_hindcasts(predictor_names, download_args, files_root, force_downloa
         for lead_name, lead_low, lead_high in download_args['leads']:
             basename = f"{model}-{lead_low}-{lead_high}"
             nc_file = dataDir / f"{basename}.nc"
-            tsv_file = dataDir / f"{basename}].tsv"
+            tsv_file = dataDir / f"{basename}.tsv"
             hindcast_download_args = dict(
                 download_args,
                 day1=lead_low + .5, # TODO .5 is model-specific?
