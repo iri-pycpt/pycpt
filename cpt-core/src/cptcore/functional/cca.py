@@ -24,7 +24,7 @@ def canonical_correlation_analysis(
         skillmask_threshold=None,
         scree=False,
         synchronous_predictors=False,
-        cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
+        cpt_kwargs=None, # a dict of kwargs that will be passed to CPT
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -37,8 +37,11 @@ def canonical_correlation_analysis(
         f_lon_dim=None, 
         f_sample_dim=None, 
         f_feature_dim=None, 
-        **kwargs
+        **_
     ):
+    if cpt_kwargs is None:
+        cpt_kwargs = {}
+
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
     assert 0 < retroactive_initial_training_period < 100, 'retroactive_initial_training_period must be a percentage between 0 and 100'
