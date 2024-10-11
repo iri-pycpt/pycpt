@@ -12,6 +12,7 @@ import pandas as pd
 from pathlib import Path
 from PIL import Image
 from scipy.stats import norm, t
+import warnings
 import xarray as xr
 
 
@@ -184,7 +185,17 @@ def download_observations(download_args, files_root, predictand_name, force_down
     )
 
 
+def warn_if_deprecated(v):
+    if v in dl.catalog.deprecations:
+        replacement, doc = dl.catalog.deprecations[v]
+        warnings.warn(
+            f'{v} is deprecated. New configurations should use {replacement} '
+            f'instead. See {doc} .'
+        )
+
 def download_hindcasts(predictor_names, files_root, force_download, download_args):
+    for v in predictor_names:
+        warn_if_deprecated(v)
     return [
         cached_download(
             dl.hindcasts[model], files_root, f'{model}',
@@ -195,6 +206,8 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
 
 
 def download_forecasts(predictor_names, files_root, force_download, download_args):
+    for v in predictor_names:
+        warn_if_deprecated(v)
     return [
         cached_download(
             dl.forecasts[model], files_root,
