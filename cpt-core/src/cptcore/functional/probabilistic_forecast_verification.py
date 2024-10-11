@@ -10,7 +10,7 @@ def probabilistic_forecast_verification(
         X,  # Predictor Dataset in an Xarray DataArray with three dimensions, XYT 
         Y,  # Predictand Dataset in an Xarray DataArray with three dimensions, XYT 
         synchronous_predictors=False,
-        cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
+        cpt_kwargs=None, # a dict of kwargs that will be passed to CPT
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -21,6 +21,8 @@ def probabilistic_forecast_verification(
         y_feature_dim=None, 
         **kwargs
     ):
+    if cpt_kwargs is None:
+        cpt_kwargs = {}
     x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim = guess_cptv10_coords(X, x_lat_dim, x_lon_dim, x_sample_dim,  x_feature_dim )
     is_valid_cptv10(X)
 

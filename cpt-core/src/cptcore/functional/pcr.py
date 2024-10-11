@@ -14,7 +14,7 @@ def principal_components_regression(
         transform_predictand=None,  # transformation to apply to the predictand dataset - None, 'Empirical', 'Gamma'
         tailoring=None,  # tailoring None, Anomaly, StdAnomaly, or SPI (SPI only available on Gamma)
         x_eof_modes=(1,5), # minimum and maximum of allowed X Principal Componenets 
-        cpt_kwargs={}, # a dict of kwargs that will be passed to CPT 
+        cpt_kwargs=None, # a dict of kwargs that will be passed to CPT
         retroactive_initial_training_period=45, # percent of samples to be used as initial training period for retroactive validation
         retroactive_step=10, # percent of samples to increment retroactive training period by each time. 
         validation='CROSSVALIDATION', #type of leave-n-out crossvalidation to use
@@ -36,6 +36,9 @@ def principal_components_regression(
         f_feature_dim=None, 
         **kwargs
     ):
+    if cpt_kwargs is None:
+        cpt_kwargs = {}
+
     assert validation.upper() in ['DOUBLE-CROSSVALIDATION', 'CROSSVALIDATION', 'RETROACTIVE'], "validation must be one of ['CROSSVALIDATION', 'DOUBLE-CROSSVALIDATION', 'RETROACTIVE']"
     assert isinstance(crossvalidation_window, int) and crossvalidation_window %2 == 1, "crossvalidation window must be odd integer"
     assert 0 < retroactive_initial_training_period < 100, 'retroactive_initial_training_period must be a percentage between 0 and 100'
