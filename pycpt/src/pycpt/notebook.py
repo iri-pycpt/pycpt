@@ -667,9 +667,6 @@ def plot_forecasts(
     vmax=None,
 ):
 
-    if predictand_name is None:
-        predictand_name='PRCP'
-
     prob_missing_value_flag = -1
     my_dpi = 100
 
