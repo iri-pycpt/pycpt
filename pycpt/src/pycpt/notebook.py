@@ -251,31 +251,36 @@ def evaluate_models(
     outputDir = domain_dir / "output"
     hcsts, fcsts, skill, pxs, pys = [], [], [], [], []
 
-    cpt_kwargs = {
-        "interactive": interactive,
-        "log": log,
-        "project_file": project_file,
-        "outputdir": outputdir,
-    }
+    if 'cpt_kwargs' not in cpt_args:
+        cpt_args['cpt_kwargs'] = {
+            "interactive": interactive,
+            "log": log,
+            "project_file": project_file,
+            "outputdir": outputdir,
+        }
+
     for i, model_hcst in enumerate(hindcast_data):
 
 
         if str(MOS).upper() == 'CCA':
 
             # fit CCA model between X & Y and produce real-time forecasts for F
-            cca_h, cca_rtf, cca_s, cca_px, cca_py = cc.canonical_correlation_analysis(model_hcst, Y, \
-            F=forecast_data[i] ,**cpt_args, cpt_kwargs=cpt_kwargs )
+            cca_h, cca_rtf, cca_s, cca_px, cca_py = cc.canonical_correlation_analysis(
+                model_hcst, Y, F=forecast_data[i], **cpt_args
+            )
 
     #         fit CCA model again between X & Y, and produce in-sample probabilistic hindcasts
     #         this is using X in place of F, with the year coordinates changed to n+100 years
     #         because CPT does not allow you to make forecasts for in-sample data
-            cca_h, cca_f, cca_s, cca_px, cca_py = cc.canonical_correlation_analysis(model_hcst, Y, \
-            F=ce.redate(model_hcst, yeardelta=48), **cpt_args, cpt_kwargs= cpt_kwargs)
+            cca_h, cca_f, cca_s, cca_px, cca_py = cc.canonical_correlation_analysis(
+                model_hcst, Y, \
+                F=ce.redate(model_hcst, yeardelta=48), **cpt_args
+            )
             cca_h = xr.merge([cca_h, ce.redate(cca_f.probabilistic, yeardelta=-48), ce.redate(cca_f.prediction_error_variance, yeardelta=-48)])
 
     #         # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
     #         # warning - this produces unrealistically optimistic values
-            cca_pfv = cc.probabilistic_forecast_verification(cca_h.probabilistic, Y, **cpt_args, cpt_kwargs=cpt_kwargs)
+            cca_pfv = cc.probabilistic_forecast_verification(cca_h.probabilistic, Y, **cpt_args)
             cca_s = xr.merge([cca_s, cca_pfv])
 
             hcsts.append(cca_h)
@@ -287,17 +292,17 @@ def evaluate_models(
         elif str(MOS).upper() == 'PCR':
 
             # fit PCR model between X & Y and produce real-time forecasts for F
-            pcr_h, pcr_rtf, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=forecast_data[i], **cpt_args, cpt_kwargs=cpt_kwargs)
+            pcr_h, pcr_rtf, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=forecast_data[i], **cpt_args)
 
             # fit PCR model again between X & Y, and produce in-sample probabilistic hindcasts
             # this is using X in place of F, with the year coordinates changed to n+100 years
             # because CPT does not allow you to make forecasts for in-sample data
-            pcr_h, pcr_f, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=ce.redate(model_hcst, yeardelta=48), **cpt_args, cpt_kwargs=cpt_kwargs)
+            pcr_h, pcr_f, pcr_s, pcr_px = cc.principal_components_regression(model_hcst, Y, F=ce.redate(model_hcst, yeardelta=48), **cpt_args)
             pcr_h = xr.merge([pcr_h, ce.redate(pcr_f.probabilistic, yeardelta=-48), ce.redate(pcr_f.prediction_error_variance, yeardelta=-48)])
 
             # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
             # warning - this produces unrealistically optimistic values
-            pcr_pfv = cc.probabilistic_forecast_verification(pcr_h.probabilistic, Y, **cpt_args, cpt_kwargs=cpt_kwargs)
+            pcr_pfv = cc.probabilistic_forecast_verification(pcr_h.probabilistic, Y, **cpt_args)
             pcr_s = xr.merge([pcr_s, pcr_pfv])
             hcsts.append(pcr_h)
             fcsts.append(pcr_rtf)
@@ -306,7 +311,7 @@ def evaluate_models(
             pys.append(pcr_px)	# dummy assignment since there are no Y PCs in PCR
         else:
             # simply compute deterministic skill scores of non-corrected ensemble means
-            nomos_skill = cc.deterministic_skill(model_hcst, Y, **cpt_args, cpt_kwargs=cpt_kwargs)
+            nomos_skill = cc.deterministic_skill(model_hcst, Y, **cpt_args)
             skill.append(nomos_skill.where(nomos_skill > -999, other=np.nan))
 
         # choose what data to export here (any of the above results data arrays can be saved to netcdf)
