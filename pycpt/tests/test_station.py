@@ -172,6 +172,19 @@ def test_evaluate_models_cca():
         assert p['y_cca_scores']['T'].equals(Y['T'])
         np.testing.assert_array_equal(p['y_cca_scores']['Mode'].values, range(1,14))
 
+def test_coordinate_precision():
+    '''Regression test for a bug where station on the boundary of the domain gets
+    dropped because of inconsistency in the handling of floating point values'''
+    MOS = 'CCA'
+    cpt_args = {}
+    predictor_names = PREDICTOR_NAMES[:1] # speed it up; no point using multiple here
+    Y, original_hcsts, original_fcsts = get_test_data(predictor_names, PREDICTAND_NAME)
+    assert Y['X'].min().item() == -79.3
+    assert len(Y['station']) == 115
+    Y['X'] = Y['X'].where(Y['X'] != -79.3, -79.299999)
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    assert len(hcsts[0]['station']) == 115
+
 def test_evaluate_models_pcr():
     MOS = 'PCR'
     cpt_args = {}
