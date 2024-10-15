@@ -4,6 +4,7 @@ import netCDF4  # noqa: F401
 import datetime as dt
 import numpy as np
 from pathlib import Path
+import pandas as pd
 import pytest
 import shutil
 import tempfile

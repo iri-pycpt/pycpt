@@ -71,12 +71,15 @@ def open_cptdataset(filename):
                 if len(vals) == 0:
                     pass
                 else:
+                    # TODO these nested try/excepts give confusing stack traces when
+                    # something goes wrong, and they're too error-prone. We actually know
+                    # what type each variable is supposed to be, so stop guessing.
                     try:
                         vals = vals.astype(float)
                     except ValueError:
                         try:
-                            vals = np.asarray([read_cpt_date(ii) for ii in vals])
-                        except ValueError:
+                            vals = np.asarray([read_cpt_date_range(ii) for ii in vals])
+                        except Exception:
                             pass
                     non_dim_coords[varname] = (attrs["col"], vals)
                 linenum += 1
@@ -108,8 +111,8 @@ def open_cptdataset(filename):
                     row_labels = row_labels.astype(float)
                 except ValueError:
                     try:
-                        row_labels = np.asarray([read_cpt_date(ii) for ii in row_labels])
-                    except ValueError:
+                        row_labels = np.asarray([read_cpt_date_range(ii) for ii in row_labels])
+                    except Exception:
                         pass
             array = array[:, 1:]
 
@@ -134,7 +137,7 @@ def open_cptdataset(filename):
                     non_dim_coords[k] = (dim, vals.astype(float))
                 except ValueError:
                     try:
-                        non_dim_coords[k] = (dim, np.asarray([read_cpt_date(ii) for ii in vals]))
+                        non_dim_coords[k] = (dim, np.asarray([read_cpt_date_range(ii) for ii in vals]))
                     # ValueError as above, or TypeError when columns isn't iterable
                     except Exception:
                         pass
@@ -146,7 +149,7 @@ def open_cptdataset(filename):
                     column_labels = column_labels.astype(float)
                 except ValueError:
                     try:
-                        column_labels = np.asarray([read_cpt_date(ii) for ii in column_labels])
+                        column_labels = np.asarray([read_cpt_date_range(ii) for ii in column_labels])
                     # ValueError as above, or TypeError when columns isn't iterable
                     except Exception:
                         pass
@@ -187,13 +190,10 @@ def open_cptdataset(filename):
                 for jj in alldims:
                     if jj not in [rowdim, coldim]:
                         if jj == "T":
-                            date_coord = read_cpt_date(header[2][jj])
-                            if len(date_coord) == 1:
-                                coords[jj] = [date_coord[0]]
-                            else:
-                                coords["T"] = [date_coord[1]]
-                                coords["Ti"] = [date_coord[0]]
-                                coords["Tf"] = [date_coord[2]]
+                            date_coord = read_cpt_date_range(header[2][jj])
+                            coords["T"] = [date_coord[1]]
+                            coords["Ti"] = [date_coord[0]]
+                            coords["Tf"] = [date_coord[2]]
                         else:
                             coords[jj] = [header[2][jj]]
                 temp = {rowdim: row_labels, coldim: column_labels}
@@ -207,7 +207,7 @@ def open_cptdataset(filename):
                         temp["Tf"] = [date_coords[ii][2] for ii in range(len(date_coords))]
                 coords.update(temp)
                 if "S" in header[2].keys():  # S is always a length-1 situation
-                    coords.update({"S": [read_cpt_date(header[2]["S"])[0]]})
+                    coords.update({"S": [read_cpt_date(header[2]["S"])]})
                 ndims = len(alldims)
                 if (
                     "C" in alldims and ndims == 4
@@ -241,25 +241,19 @@ def open_cptdataset(filename):
                 for dim in data_vars[field]["coords"].keys():
                     if dim in header[2].keys():
                         if dim == "T":
-                            date_coord = read_cpt_date(header[2][dim])
-                            if len(date_coord) == 1:
-                                if date_coord[0] not in data_vars[field]["coords"][dim]:
-                                    data_vars[field]["coords"][dim].append(
-                                        date_coord[0]
-                                    )
-                            else:
-                                if date_coord[1] not in data_vars[field]["coords"][dim]:
-                                    data_vars[field]["coords"]["T"].append(
-                                        date_coord[1]
-                                    )
-                                    data_vars[field]["coords"]["Ti"].append(
-                                        date_coord[0]
-                                    )
-                                    data_vars[field]["coords"]["Tf"].append(
-                                        date_coord[2]
+                            date_coord = read_cpt_date_range(header[2][dim])
+                            if date_coord[1] not in data_vars[field]["coords"][dim]:
+                                data_vars[field]["coords"]["T"].append(
+                                    date_coord[1]
+                                )
+                                data_vars[field]["coords"]["Ti"].append(
+                                    date_coord[0]
+                                )
+                                data_vars[field]["coords"]["Tf"].append(
+                                    date_coord[2]
                                     )
                         elif dim == "S":
-                            date_coord = read_cpt_date(header[2][dim])[0]
+                            date_coord = read_cpt_date(header[2][dim])
                             if date_coord not in data_vars[field]["coords"][dim]:
                                 data_vars[field]["coords"][dim].append(date_coord)
                         else:
@@ -363,12 +357,10 @@ def open_cptdataarray(path):
     return das[0]
 
 
-def datetime_timestamp(date):
+def datetime_timestamp_start(date):
     if "T" in date:
-        ymd, hms = date.split("T")
-    else:
-        ymd = date
-
+        raise Exception(f'Unexpected T in date range: {date}')
+    ymd = date
     fields = [int(i) for i in ymd.split("-")]
     while len(fields) < 3:
         fields.append(1)
@@ -377,9 +369,8 @@ def datetime_timestamp(date):
 
 def datetime_timestamp_end(date):
     if "T" in date:
-        ymd, hms = date.split("T")
-    else:
-        ymd = date
+        raise Exception(f'Unexpected T in date range: {date}')
+    ymd = date
     fields = [int(i) for i in ymd.split("-")]
     y = fields[0]
     m = fields[1]
@@ -399,11 +390,24 @@ def datetime_timestamp_end(date):
 
 def read_cpt_date(date_original):
     if "/" in date_original:
+        raise Exception('Date must not contain /')
+    if "T" not in date_original:
+        raise Exception(f'Timestamp missing T: {date_original}')
+    ymd, hms = date_original.split("T")
+    assert hms == '00:00', f"Timestamp that's not at midnight is unprecedented: {date_original}"
+    fields = [int(i) for i in ymd.split("-")]
+    if len(fields) != 3:
+        raise Exception(f"Timestamp doesn't have three parts before the T: {date_original}")
+    return dt.datetime(*fields)
+
+
+def read_cpt_date_range(date_original):
+    if "/" in date_original:
         date1, date2 = date_original.split("/")
         date1, date2 = date1.split("T")[0], date2.split("T")[0]
         date1, date2 = date1.split(" ")[0], date2.split(" ")[0]
         if len(date1.split("-")) == len(date2.split("-")):
-            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp_end(date2)
+            ret1, ret2 = datetime_timestamp_start(date1), datetime_timestamp_end(date2)
         else:
             assert len(date1.split("-")) > len(
                 date2.split("-")
@@ -411,12 +415,15 @@ def read_cpt_date(date_original):
             ymd = date1.split("-")
             ymd2 = date2.split("-")
             ymd2 = ymd[: len(ymd) - len(ymd2)] + ymd2
-            ret1, ret2 = datetime_timestamp(date1), datetime_timestamp_end(
+            ret1, ret2 = datetime_timestamp_start(date1), datetime_timestamp_end(
                 "-".join(ymd2) if len(ymd2) > 1 else ymd2[0]
             )
-        return [ret1, ret1 + (ret2 - ret1) / 2, ret2]
     else:
-        return [datetime_timestamp(date_original)]
+        ret1 = datetime_timestamp_start(date_original)
+        ret2 = datetime_timestamp_end(date_original)
+    if ret2 - ret1 == dt.timedelta(0):
+        raise Exception('Zero or sub-day date range')
+    return [ret1, ret1 + (ret2 - ret1) / 2, ret2]
 
 
 convert_np64_datetime = pd.Timestamp

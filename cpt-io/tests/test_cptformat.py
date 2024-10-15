@@ -1,6 +1,9 @@
-from cptio import open_cptdataset, to_cptv10
+import cptio
+from cptio import open_cptdataset, open_cptdataarray, to_cptv10
+import datetime as dt
 import numpy as np
 from pathlib import Path
+import pytest
 import xarray as xr
 
 datadir = Path(__file__).absolute().parents[0] / 'data'
@@ -92,3 +95,68 @@ def test_canonical_correlation_station():
 
 def test_forecast_values_station():
     roundtrip("forecast_values_station.txt")
+
+def test_onemonth_season():
+    prep()
+    def check(da):
+        assert da['Ti'][0].values == np.datetime64('1960-06-01')
+        assert da['T'][0].values == np.datetime64('1960-06-15T12:00')
+        assert da['Tf'][0].values == np.datetime64('1960-06-30')
+
+    da = open_cptdataarray(datadir / "GHCN_Jun_cptv10.tsv")
+    check(da)
+    testfile = to_cptv10(da, opfile=out_name)
+    new_da = open_cptdataarray(testfile)
+    check(new_da)
+
+def test_read_cpt_date_midnight():
+    d = cptio.fileio.cpt.read_cpt_date('2015-03-26T00:00')
+    assert d == dt.datetime(2015, 3, 26)
+
+def test_read_cpt_date_4am():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date('2015-03-26T04:00')
+
+def test_read_cpt_date_day():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date('2015-03-26')
+
+def test_read_cpt_date_month():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date('2015-03')
+
+def test_read_cpt_date_threemonth():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date('2015-03/05')
+
+def test_read_cpt_date_range_midnight():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date_range('2015-03-26T00:00')
+
+def test_read_cpt_date_range_day():
+    with pytest.raises(Exception):
+        cptio.fileio.cpt.read_cpt_date_range('2015-03-26')
+
+def test_read_cpt_date_range_month():
+    d = cptio.fileio.cpt.read_cpt_date_range('2015-03')
+    assert d == [
+        dt.datetime(2015, 3, 1),
+        dt.datetime(2015, 3, 16),
+        dt.datetime(2015, 3, 31)
+    ]
+
+def test_read_cpt_date_range_threemonth():
+    d = cptio.fileio.cpt.read_cpt_date_range('2015-03/05')
+    assert d == [
+        dt.datetime(2015, 3, 1),
+        dt.datetime(2015, 4, 15, 12),
+        dt.datetime(2015, 5, 31)
+    ]
+
+def test_read_cpt_date_range_wrap():
+    d = cptio.fileio.cpt.read_cpt_date_range('2015-12/2016-02')
+    assert d == [
+        dt.datetime(2015, 12, 1),
+        dt.datetime(2016, 1, 15),
+        dt.datetime(2016, 2, 29)
+    ]
