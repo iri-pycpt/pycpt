@@ -22,7 +22,6 @@ requirements:
     - dask
     - cptio
     - cptdl 
-    - cptcore 
     - cptextras>=1.1.0
     - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
     - cartopy
@@ -36,6 +35,9 @@ requirements:
     - ipykernel 
     - numpy 
     - ftputil
+    - cptbin
+    - psutil
+    - python
     
     # Temporarily pinning tornado because it seems to fix occasional
     # crashes of the jupyter kernel.  See
@@ -46,6 +48,8 @@ requirements:
 
 test:
   imports:
+    - cptcore
+    - cptcore.functional
     - pycpt
 
 about:

@@ -13,7 +13,11 @@ setup(
     license = "MIT",
     keywords = ["climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'],
     url = "https://iri.columbia.edu/our-expertise/climate/tools/",
-    packages=[  'pycpt' ],
+    packages=[
+        'cptcore',
+        'cptcore.functional',
+        'pycpt',
+    ],
     package_data={},
     package_dir={
         '': 'src',
