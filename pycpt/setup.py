@@ -16,6 +16,7 @@ setup(
     packages=[
         'cptcore',
         'cptcore.functional',
+        'cptdl',
         'cptextras',
         'pycpt',
     ],

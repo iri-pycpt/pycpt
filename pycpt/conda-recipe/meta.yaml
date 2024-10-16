@@ -21,7 +21,6 @@ requirements:
     - bottleneck
     - cartopy
     - cptbin
-    - cptdl
     - cptio
     - dask
     - ftputil
@@ -31,6 +30,7 @@ requirements:
     - netcdf4
     - numpy
     - psutil
+    - requests
     - scikit-learn
     - scipy
     - statsmodels
@@ -41,12 +41,17 @@ requirements:
     # https://github.com/jupyter/notebook/issues/6721
     - tornado<6.2
 
-
+    # requests depends on urllib3; urllib3 v2 removes all the old,
+    # unsafe ciphers that are currently supported by the ancient
+    # version of squid on iridl.ldeo.columbia.edu, causing all https
+    # downloads to fail.
+    - urllib3<2
 
 test:
   imports:
     - cptcore
     - cptcore.functional
+    - cptdl
     - cptextras
     - pycpt
 
