@@ -22,7 +22,6 @@ requirements:
     - cartopy
     - cptbin
     - cptdl
-    - cptextras>=1.1.0
     - cptio
     - dask
     - ftputil
@@ -48,6 +47,7 @@ test:
   imports:
     - cptcore
     - cptcore.functional
+    - cptextras
     - pycpt
 
 about:
