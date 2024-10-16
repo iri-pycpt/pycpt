@@ -14,13 +14,7 @@ setup(
     license = "MIT",
     keywords = ["climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'],
     url = "https://iri.columbia.edu/our-expertise/climate/tools/",
-    packages=[  'cptcore', 'cptcore.functional', 'cptcore.tests' ],
-    package_data={ 
-        'cptcore.tests': [
-            'data/seasonal/*',
-            'data/subseasonal/*',
-        ]
-    },
+    packages=[  'cptcore', 'cptcore.functional' ],
     package_dir={ 
         '': 'src'
     },

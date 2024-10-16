@@ -1,0 +1,184 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	1992-06/09	1993-06/09	1994-06/09	1995-06/09	1996-06/09	1997-06/09	1998-06/09	1999-06/09	2000-06/09	2001-06/09	2002-06/09	2003-06/09	2004-06/09	2005-06/09	2006-06/09	2007-06/09	2008-06/09	2009-06/09	2010-06/09	2011-06/09	2012-06/09	2013-06/09	2014-06/09	2015-06/09	2016-06/09	2017-06/09	2018-06/09	2019-06/09	2020-06/09	2021-06/09
+cpt:field=prcp, cpt:T=1992-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  417.100    	  419.470    	  412.809    	  408.129    
+40.125	  346.404    	  374.815    	  431.425    	  412.242    
+39.875	  360.383    	  370.971    	  410.365    	  430.752    
+39.625	  419.966    	  436.211    	  430.109    	  427.027    
+cpt:field=prcp, cpt:T=1993-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  490.700    	  534.412    	  502.203    	  436.786    
+40.125	  440.399    	  481.698    	  544.410    	  466.178    
+39.875	  369.892    	  424.058    	  473.683    	  407.004    
+39.625	  320.724    	  340.140    	  355.314    	  329.164    
+cpt:field=prcp, cpt:T=1994-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  487.292    	  514.960    	  493.519    	  492.287    
+40.125	  448.240    	  479.116    	  495.033    	  463.376    
+39.875	  434.452    	  443.093    	  493.659    	  454.546    
+39.625	  444.635    	  465.511    	  457.397    	  405.505    
+cpt:field=prcp, cpt:T=1995-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  337.499    	  338.823    	  384.393    	  380.508    
+40.125	  296.590    	  305.478    	  321.949    	  321.048    
+39.875	  325.405    	  302.528    	  295.419    	  317.612    
+39.625	  333.313    	  330.337    	  342.431    	  352.188    
+cpt:field=prcp, cpt:T=1996-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  474.466    	  529.105    	  566.004    	  518.696    
+40.125	  568.337    	  546.419    	  558.078    	  591.630    
+39.875	  484.292    	  497.083    	  566.870    	  545.914    
+39.625	  494.069    	  493.257    	  541.936    	  505.484    
+cpt:field=prcp, cpt:T=1997-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  349.841    	  340.434    	  338.531    	  363.399    
+40.125	  312.888    	  311.367    	  344.288    	  357.619    
+39.875	  269.314    	  310.846    	  313.892    	  371.388    
+39.625	  294.633    	  310.378    	  380.270    	  452.147    
+cpt:field=prcp, cpt:T=1998-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  314.546    	  293.239    	  293.014    	  299.228    
+40.125	  309.535    	  286.845    	  310.651    	  304.154    
+39.875	  275.978    	  271.464    	  269.259    	  310.278    
+39.625	  255.676    	  268.856    	  274.843    	  276.886    
+cpt:field=prcp, cpt:T=1999-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  468.111    	  466.465    	  475.135    	  477.740    
+40.125	  509.109    	  495.232    	  477.653    	  444.045    
+39.875	  524.443    	  456.078    	  450.206    	  456.104    
+39.625	  528.495    	  445.816    	  430.517    	  445.235    
+cpt:field=prcp, cpt:T=2000-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  464.706    	  493.136    	  531.602    	  545.105    
+40.125	  504.897    	  548.924    	  572.045    	  537.144    
+39.875	  504.624    	  528.169    	  527.106    	  508.665    
+39.625	  484.183    	  498.439    	  504.995    	  535.767    
+cpt:field=prcp, cpt:T=2001-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  435.425    	  454.032    	  431.223    	  405.351    
+40.125	  358.292    	  360.899    	  384.896    	  373.747    
+39.875	  341.627    	  350.830    	  372.991    	  366.440    
+39.625	  374.263    	  381.027    	  387.888    	  376.385    
+cpt:field=prcp, cpt:T=2002-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  348.745    	  392.349    	  375.936    	  361.039    
+40.125	  325.687    	  340.320    	  373.202    	  364.799    
+39.875	  326.880    	  351.047    	  365.913    	  369.281    
+39.625	  329.601    	  331.271    	  327.373    	  319.834    
+cpt:field=prcp, cpt:T=2003-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  678.569    	  582.943    	  552.964    	  557.297    
+40.125	  585.994    	  489.377    	  499.043    	  532.095    
+39.875	  566.083    	  509.579    	  525.503    	  564.628    
+39.625	  585.380    	  546.468    	  526.641    	  536.979    
+cpt:field=prcp, cpt:T=2004-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  685.236    	  616.507    	  581.639    	  566.682    
+40.125	  659.935    	  604.216    	  610.581    	  536.450    
+39.875	  648.014    	  584.298    	  578.469    	  519.584    
+39.625	  581.228    	  488.138    	  469.312    	  423.444    
+cpt:field=prcp, cpt:T=2005-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  333.710    	  378.599    	  383.144    	  374.794    
+40.125	  314.220    	  366.580    	  396.220    	  383.792    
+39.875	  293.873    	  330.404    	  376.107    	  373.521    
+39.625	  273.755    	  305.122    	  330.517    	  333.732    
+cpt:field=prcp, cpt:T=2006-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  675.540    	  643.903    	  597.450    	  587.194    
+40.125	  648.902    	  598.736    	  604.685    	  575.056    
+39.875	  616.845    	  615.309    	  607.580    	  580.622    
+39.625	  625.345    	  592.526    	  597.756    	  553.220    
+cpt:field=prcp, cpt:T=2007-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  358.540    	  369.567    	  373.236    	  380.775    
+40.125	  310.635    	  304.458    	  320.441    	  312.035    
+39.875	  303.696    	  290.458    	  286.927    	  285.155    
+39.625	  279.102    	  277.019    	  285.604    	  289.559    
+cpt:field=prcp, cpt:T=2008-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  422.758    	  423.842    	  434.629    	  454.161    
+40.125	  414.805    	  388.849    	  393.959    	  399.585    
+39.875	  382.857    	  364.219    	  372.038    	  375.987    
+39.625	  366.676    	  352.075    	  354.524    	  353.880    
+cpt:field=prcp, cpt:T=2009-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  609.929    	  652.721    	  667.121    	  666.885    
+40.125	  604.791    	  614.828    	  620.468    	  625.066    
+39.875	  585.329    	  590.742    	  594.580    	  603.653    
+39.625	  592.583    	  580.829    	  604.663    	  617.920    
+cpt:field=prcp, cpt:T=2010-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  334.801    	  332.661    	  314.379    	  297.446    
+40.125	  341.546    	  329.492    	  309.494    	  285.608    
+39.875	  395.922    	  338.460    	  312.000    	  297.656    
+39.625	  375.227    	  323.662    	  316.169    	  303.938    
+cpt:field=prcp, cpt:T=2011-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  696.433    	  758.312    	  736.616    	  741.229    
+40.125	  706.302    	  730.074    	  732.973    	  699.413    
+39.875	  717.486    	  732.195    	  712.531    	  675.189    
+39.625	  709.840    	  766.746    	  685.638    	  601.561    
+cpt:field=prcp, cpt:T=2012-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  448.767    	  458.720    	  441.128    	  414.320    
+40.125	  453.270    	  458.052    	  454.321    	  427.431    
+39.875	  449.523    	  431.945    	  444.737    	  450.848    
+39.625	  461.449    	  440.984    	  418.601    	  450.700    
+cpt:field=prcp, cpt:T=2013-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  544.527    	  583.211    	  573.677    	  576.788    
+40.125	  580.101    	  598.167    	  601.404    	  595.652    
+39.875	  659.759    	  641.255    	  613.495    	  562.595    
+39.625	  627.287    	  598.204    	  551.263    	  496.301    
+cpt:field=prcp, cpt:T=2014-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  361.945    	  363.164    	  369.579    	  386.306    
+40.125	  350.414    	  364.852    	  381.230    	  391.787    
+39.875	  397.801    	  412.367    	  414.251    	  440.729    
+39.625	  432.820    	  449.967    	  486.264    	  495.130    
+cpt:field=prcp, cpt:T=2015-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  503.697    	  484.972    	  456.528    	  423.697    
+40.125	  510.839    	  486.172    	  456.520    	  412.379    
+39.875	  534.102    	  495.030    	  452.183    	  427.470    
+39.625	  523.687    	  508.384    	  491.924    	  482.451    
+cpt:field=prcp, cpt:T=2016-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  344.745    	  367.505    	  395.852    	  400.623    
+40.125	  345.685    	  349.393    	  379.695    	  389.079    
+39.875	  390.340    	  366.187    	  387.116    	  384.343    
+39.625	  430.578    	  403.208    	  425.421    	  415.124    
+cpt:field=prcp, cpt:T=2017-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  479.480    	  467.451    	  441.801    	  454.969    
+40.125	  429.377    	  428.293    	  437.462    	  423.866    
+39.875	  438.077    	  429.750    	  428.376    	  417.210    
+39.625	  448.819    	  450.257    	  450.913    	  440.022    
+cpt:field=prcp, cpt:T=2018-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  705.666    	  627.877    	  585.003    	  551.708    
+40.125	  660.044    	  610.220    	  593.149    	  534.432    
+39.875	  599.434    	  542.382    	  504.412    	  488.772    
+39.625	  538.497    	  500.434    	  487.479    	  464.806    
+cpt:field=prcp, cpt:T=2019-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  433.848    	  428.196    	  440.602    	  471.614    
+40.125	  429.732    	  463.203    	  506.135    	  481.913    
+39.875	  411.729    	  419.599    	  487.455    	  489.163    
+39.625	  388.719    	  410.944    	  449.642    	  431.590    
+cpt:field=prcp, cpt:T=2020-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  497.762    	  503.008    	  470.434    	  459.279    
+40.125	  534.467    	  518.977    	  491.141    	  431.237    
+39.875	  596.952    	  575.642    	  518.478    	  472.911    
+39.625	  641.795    	  645.508    	  613.394    	  570.259    
+cpt:field=prcp, cpt:T=2021-06/09, cpt:nrow=4, cpt:ncol=4, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.125	-74.875	-74.625
+40.375	  646.521    	  632.755    	  644.835    	  655.138    
+40.125	  632.852    	  618.639    	  642.428    	  610.251    
+39.875	  594.154    	  571.061    	  565.202    	  547.299    
+39.625	  532.507    	  523.477    	  533.634    	  545.055    

@@ -1,5 +1,5 @@
 
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_SKILL_R
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10, guess_cptv10_coords
 import xarray as xr 

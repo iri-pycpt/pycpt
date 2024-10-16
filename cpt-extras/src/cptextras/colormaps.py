@@ -1,6 +1,5 @@
-import matplotlib.cm as cm 
+import matplotlib as mpl
 from matplotlib.colors import LinearSegmentedColormap
-import matplotlib.pyplot as plt 
 
 def make_cmap(colors, name, reverse=True):
     colors = [ (colors[i][0] / 255.0, colors[i][1] / 255.0, colors[i][2] / 255.0) for i in range(len(colors))]
@@ -31,6 +30,6 @@ cmaps = {
 }
 
 for key in cmaps.keys():
-    cm.register_cmap(name=key, cmap=make_cmap(cmaps[key], key), override_builtin=True)
-    cm.register_cmap(name=key+'_r', cmap= make_cmap(cmaps[key], key+'_r', reverse=False), override_builtin=True)
+    mpl.colormaps.register(make_cmap(cmaps[key], key), name=key)
+    mpl.colormaps.register(make_cmap(cmaps[key], f"{key}_r", reverse=False), name=f"{key}_r")
 

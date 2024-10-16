@@ -1,0 +1,154 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	1992-06/09	1993-06/09	1994-06/09	1995-06/09	1996-06/09	1997-06/09	1998-06/09	1999-06/09	2000-06/09	2001-06/09	2002-06/09	2003-06/09	2004-06/09	2005-06/09	2006-06/09	2007-06/09	2008-06/09	2009-06/09	2010-06/09	2011-06/09	2012-06/09	2013-06/09	2014-06/09	2015-06/09	2016-06/09	2017-06/09	2018-06/09	2019-06/09	2020-06/09	2021-06/09
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1992-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1992-06/09
+	-76.0	-75.0	-74.0
+41.0	  463.154    	  462.660    	  446.109    
+40.0	  430.071    	  429.452    	  377.954    
+39.0	  449.305    	  435.682    	  398.531    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1993-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1993-06/09
+	-76.0	-75.0	-74.0
+41.0	  470.614    	  470.149    	  462.930    
+40.0	  427.825    	  435.378    	  387.592    
+39.0	  442.334    	  405.062    	  332.523    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1994-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1994-06/09
+	-76.0	-75.0	-74.0
+41.0	  465.691    	  446.453    	  419.837    
+40.0	  434.006    	  436.138    	  381.799    
+39.0	  407.528    	  379.832    	  335.754    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1995-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1995-06/09
+	-76.0	-75.0	-74.0
+41.0	  459.970    	  462.696    	  469.684    
+40.0	  423.297    	  440.466    	  427.133    
+39.0	  415.670    	  386.615    	  331.759    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1996-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1996-06/09
+	-76.0	-75.0	-74.0
+41.0	  452.511    	  440.072    	  421.710    
+40.0	  420.660    	  425.680    	  391.915    
+39.0	  418.268    	  397.847    	  371.498    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1997-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1997-06/09
+	-76.0	-75.0	-74.0
+41.0	  471.528    	  470.342    	  455.486    
+40.0	  420.892    	  408.926    	  373.066    
+39.0	  377.855    	  362.117    	  338.260    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1998-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1998-06/09
+	-76.0	-75.0	-74.0
+41.0	  440.177    	  436.018    	  407.654    
+40.0	  400.962    	  390.294    	  360.579    
+39.0	  427.222    	  377.956    	  341.622    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=1999-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=1999-06/09
+	-76.0	-75.0	-74.0
+41.0	  481.671    	  482.411    	  487.043    
+40.0	  457.984    	  446.393    	  404.425    
+39.0	  434.577    	  404.362    	  357.070    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2000-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2000-06/09
+	-76.0	-75.0	-74.0
+41.0	  480.678    	  487.263    	  472.769    
+40.0	  457.788    	  450.063    	  393.430    
+39.0	  449.012    	  409.307    	  353.140    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2001-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2001-06/09
+	-76.0	-75.0	-74.0
+41.0	  452.702    	  447.754    	  438.879    
+40.0	  438.101    	  442.799    	  401.569    
+39.0	  438.652    	  396.749    	  365.972    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2002-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2002-06/09
+	-76.0	-75.0	-74.0
+41.0	  513.375    	  519.417    	  491.257    
+40.0	  480.889    	  465.314    	  422.971    
+39.0	  471.595    	  456.543    	  431.426    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2003-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2003-06/09
+	-76.0	-75.0	-74.0
+41.0	  479.674    	  472.900    	  472.901    
+40.0	  447.776    	  451.511    	  398.734    
+39.0	  432.643    	  410.586    	  347.007    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2004-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2004-06/09
+	-76.0	-75.0	-74.0
+41.0	  439.121    	  432.615    	  436.774    
+40.0	  410.116    	  416.649    	  396.910    
+39.0	  402.927    	  369.119    	  349.251    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/09
+	-76.0	-75.0	-74.0
+41.0	  499.090    	  467.519    	  429.035    
+40.0	  434.728    	  422.553    	  368.788    
+39.0	  408.453    	  377.218    	  356.461    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/09
+	-76.0	-75.0	-74.0
+41.0	  445.247    	  427.964    	  407.400    
+40.0	  429.859    	  442.662    	  396.060    
+39.0	  413.685    	  403.415    	  375.915    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/09
+	-76.0	-75.0	-74.0
+41.0	  441.297    	  441.858    	  427.658    
+40.0	  411.236    	  430.421    	  387.877    
+39.0	  428.295    	  411.983    	  367.031    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2008-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2008-06/09
+	-76.0	-75.0	-74.0
+41.0	  480.439    	  485.037    	  475.365    
+40.0	  464.722    	  476.861    	  438.928    
+39.0	  479.388    	  452.111    	  403.469    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2009-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2009-06/09
+	-76.0	-75.0	-74.0
+41.0	  475.531    	  467.159    	  448.038    
+40.0	  455.822    	  456.728    	  405.437    
+39.0	  450.206    	  444.280    	  412.824    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2010-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2010-06/09
+	-76.0	-75.0	-74.0
+41.0	  558.408    	  539.407    	  502.020    
+40.0	  462.749    	  462.053    	  408.107    
+39.0	  412.251    	  406.877    	  378.691    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2011-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2011-06/09
+	-76.0	-75.0	-74.0
+41.0	  490.663    	  485.710    	  482.880    
+40.0	  498.010    	  510.160    	  478.958    
+39.0	  524.164    	  503.406    	  469.083    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2012-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2012-06/09
+	-76.0	-75.0	-74.0
+41.0	  447.114    	  439.469    	  448.859    
+40.0	  401.446    	  414.008    	  396.374    
+39.0	  408.606    	  388.143    	  365.480    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2013-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2013-06/09
+	-76.0	-75.0	-74.0
+41.0	  476.839    	  483.713    	  471.718    
+40.0	  434.297    	  461.365    	  442.683    
+39.0	  459.891    	  449.446    	  399.935    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2014-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2014-06/09
+	-76.0	-75.0	-74.0
+41.0	  468.918    	  483.513    	  465.206    
+40.0	  423.202    	  444.931    	  418.311    
+39.0	  435.495    	  443.625    	  414.196    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2015-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2015-06/09
+	-76.0	-75.0	-74.0
+41.0	  475.615    	  471.604    	  455.103    
+40.0	  471.806    	  470.130    	  416.314    
+39.0	  469.725    	  450.307    	  399.304    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2016-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2016-06/09
+	-76.0	-75.0	-74.0
+41.0	  426.126    	  449.091    	  466.287    
+40.0	  426.043    	  432.396    	  396.681    
+39.0	  414.313    	  398.083    	  367.526    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2017-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2017-06/09
+	-76.0	-75.0	-74.0
+41.0	  483.122    	  488.440    	  477.761    
+40.0	  505.805    	  508.411    	  431.292    
+39.0	  483.518    	  437.725    	  371.816    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2018-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2018-06/09
+	-76.0	-75.0	-74.0
+41.0	  457.821    	  459.283    	  460.257    
+40.0	  466.183    	  470.791    	  437.028    
+39.0	  454.819    	  446.555    	  404.165    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2019-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2019-06/09
+	-76.0	-75.0	-74.0
+41.0	  477.244    	  485.631    	  484.614    
+40.0	  479.945    	  478.171    	  419.808    
+39.0	  482.244    	  443.771    	  390.680    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2020-06/09
+	-76.0	-75.0	-74.0
+41.0	  455.567    	  464.006    	  466.233    
+40.0	  445.188    	  458.683    	  430.751    
+39.0	  416.631    	  399.326    	  367.724    
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2021-06/09
+	-76.0	-75.0	-74.0
+41.0	  492.840    	  500.930    	  492.438    
+40.0	  474.066    	  480.950    	  422.177    
+39.0	  470.076    	  445.942    	  406.472    

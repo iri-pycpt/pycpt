@@ -301,13 +301,13 @@ def canonical_correlation_analysis(
         hcst_pev = getattr(hcst_pev, [i for i in hcst_pev.data_vars][0])
         hcst_pev.name = 'prediction_error_variance' 
         if 'T' in hcst_pev.coords:
-            hcst_pev = hcst_pev.drop('T')
+            hcst_pev = hcst_pev.drop_vars('T')
         if 'S' in hcst_pev.coords: 
-            hcst_pev = hcst_pev.drop('S')
+            hcst_pev = hcst_pev.drop_vars('S')
         if 'Ti' in hcst_pev.coords: 
-            hcst_pev = hcst_pev.drop('Ti')
+            hcst_pev = hcst_pev.drop_vars('Ti')
         if 'Tf' in hcst_pev.coords: 
-            hcst_pev = hcst_pev.drop('Tf')
+            hcst_pev = hcst_pev.drop_vars('Tf')
         hcst_pev = hcst_pev.assign_coords({'T': hcst_pr.coords['T']})
 
         hcsts = xr.merge([hcsts, hcst_pr, hcst_pev])

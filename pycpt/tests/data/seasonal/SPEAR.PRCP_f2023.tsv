@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2023-06/09
+cpt:field=prec, cpt:L=3.0 months, cpt:S=2023-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2023-06/09
+	-76.0	-75.0	-74.0
+41.0	  513.426    	  512.438    	  490.725    
+40.0	  477.795    	  487.582    	  427.993    
+39.0	  457.653    	  434.159    	  382.597    
