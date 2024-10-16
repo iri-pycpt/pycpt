@@ -566,6 +566,7 @@ def plot_forecasts(
     vmin=None,
     vmax=None,
 ):
+
     prob_missing_value_flag = -1
     my_dpi = 100
 
