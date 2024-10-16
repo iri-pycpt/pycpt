@@ -18,26 +18,24 @@ requirements:
     - pip
     - setuptools
   run:
-    - xarray 
-    - dask
-    - cptio
-    - cptdl 
-    - cptextras>=1.1.0
-    - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
-    - cartopy
-    - netcdf4
-    - scipy
-    - numpy 
-    - scikit-learn
-    - statsmodels
     - bottleneck
-    - jupyter 
-    - ipykernel 
-    - numpy 
-    - ftputil
+    - cartopy
     - cptbin
+    - cptdl
+    - cptextras>=1.1.0
+    - cptio
+    - dask
+    - ftputil
+    - ipykernel
+    - jupyter
+    - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
+    - netcdf4
+    - numpy
     - psutil
-    - python
+    - scikit-learn
+    - scipy
+    - statsmodels
+    - xarray
     
     # Temporarily pinning tornado because it seems to fix occasional
     # crashes of the jupyter kernel.  See
