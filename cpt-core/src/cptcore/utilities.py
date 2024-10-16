@@ -52,7 +52,7 @@ CPT_OUTPUT_FMT_R = {CPT_OUTPUT_FMT[k]:k for k in CPT_OUTPUT_FMT.keys()}
 CPT_SKILL = {
     1: 'PEARSON', 
     2: 'SPEARMAN', 
-    3: '2AFC', 
+    3: 'TWO_ALTERNATIVE_FORCED_CHOICE',
     4: 'PCT_VARIANCE', 
     5: 'VARIANCE_RATIO', 
     6: 'MEAN_BIAS', 
@@ -64,8 +64,8 @@ CPT_SKILL = {
     12: 'GERRITY_SCORE', 
     13: '2AFC_FCST_CATEGORIES', 
     14: '2AFC_CONTINUOUS_FCSTS', 
-    16: 'ROC_ABOVE', 
-    15: 'ROC_BELOW',
+    16: 'ROC_AREA_ABOVE_NORMAL',
+    15: 'ROC_AREA_BELOW_NORMAL',
 } 
 CPT_SKILL_R = {CPT_SKILL[k]:k for k in CPT_SKILL.keys()}
 

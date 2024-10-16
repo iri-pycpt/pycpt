@@ -179,12 +179,7 @@ def test_evaluate_models_nomos():
     assert hcsts == []
     assert fcsts == []
     print(skill)
-    # TODO harmonize nomos skill metric names with those used by CCA, PCR
-    skill_metrics = [
-        'pearson', 'spearman', '2afc',
-        'roc_below', 'roc_above'
-    ]
-    check_model_skills(Y, skill, skill_metrics)
+    check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS)
 
 def test_evaluate_models_gamma():
     MOS = 'CCA'
@@ -253,12 +248,7 @@ def test_construct_mme():
     assert pr_fcst.shape == (3, 1, 4, 4)
     assert pev_fcst.dims == ('T', 'Y', 'X')
     assert pev_fcst.shape == (1, 4, 4)
-    # TODO harmonize nomos skill metric names with those used by CCA, PCR
-    skill_metrics = [
-        'pearson', 'spearman', '2afc',
-        'roc_below', 'roc_above'
-    ]
-    check_skill(Y, nextgen_skill, skill_metrics + PROBABILISTIC_SKILL_METRICS)
+    check_skill(Y, nextgen_skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
 
 
 if __name__ == '__main__':

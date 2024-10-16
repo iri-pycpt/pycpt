@@ -167,7 +167,7 @@ def multiple_regression(
         assert False, 'INVALID VALIDATION OPTION'
 
     # save all deterministic skill scores 
-    for skill in ['pearson', 'spearman', '2afc', 'roc_below', 'roc_above', 'root_mean_squared_error']:
+    for skill in ['pearson', 'spearman', 'two_alternative_forced_choice', 'roc_area_below_normal', 'roc_area_above_normal', 'root_mean_squared_error']: 
         cpt.write(413)
         cpt.write(CPT_SKILL_R[skill.upper()])
         cpt.write(cpt.outputs[skill].absolute())
@@ -262,13 +262,13 @@ def multiple_regression(
     spearman = open_cptdataset(str(cpt.outputs['spearman'].absolute()) + '.txt')
     spearman = getattr(spearman, [i for i in spearman.data_vars][0])
     spearman.name = 'spearman'
-    two_afc = open_cptdataset(str(cpt.outputs['2afc'].absolute()) + '.txt')
+    two_afc = open_cptdataset(str(cpt.outputs['two_alternative_forced_choice'].absolute()) + '.txt')
     two_afc = getattr(two_afc, [i for i in two_afc.data_vars][0])
     two_afc.name = 'two_alternative_forced_choice'
-    roc_below = open_cptdataset(str(cpt.outputs['roc_below'].absolute()) + '.txt') 
+    roc_below = open_cptdataset(str(cpt.outputs['roc_area_below_normal'].absolute()) + '.txt') 
     roc_below = getattr(roc_below, [i for i in roc_below.data_vars][0])
     roc_below.name = 'roc_area_below_normal'
-    roc_above = open_cptdataset(str(cpt.outputs['roc_above'].absolute()) + '.txt')
+    roc_above = open_cptdataset(str(cpt.outputs['roc_area_above_normal'].absolute()) + '.txt')
     roc_above = getattr(roc_above, [i for i in roc_above.data_vars][0])
     roc_above.name = 'roc_area_above_normal'
     rmse = open_cptdataset(str(cpt.outputs['root_mean_squared_error'].absolute()) + '.txt')
