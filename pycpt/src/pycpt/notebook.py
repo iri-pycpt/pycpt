@@ -1210,6 +1210,7 @@ def plot_mme_flex_forecast_station(
         ntrain,
         MOS, files_root,
         color_bar,
+        domain=domain,
     )
 
 def snap_to(reference, other):
