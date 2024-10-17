@@ -1293,7 +1293,7 @@ def plot_mme_flex_forecast_new(
     gs01 = gridspec.GridSpecFromSubplotSpec(5, 5, subplot_spec=gs11[0])
     gs02 = gridspec.GridSpecFromSubplotSpec(5, 5, subplot_spec=gs11[1])
 
-    map_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree(), aspect="auto")
+    map_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree())
     cdf_ax = fig.add_subplot(gs01[:, :], aspect="auto")
     pdf_ax = fig.add_subplot(gs02[:, :], aspect="auto")
 
