@@ -5,8 +5,8 @@ from cptcore import canonical_correlation_analysis, deterministic_skill, probabi
 import cptio
 
 def load_southasia_nmme():
-    x = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').replace('.egg', '')).prec
-    y = cptio.open_cptdataset(str( Path( __file__).absolute().parents[0] / 'data/seasonal/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv').replace('.egg', '')).prate
+    x = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal-core/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv').replace('.egg', '')).prec
+    y = cptio.open_cptdataset(str( Path( __file__).absolute().parents[0] / 'data/seasonal-core/SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv').replace('.egg', '')).prate
     return x, y
 
 def test_cca(**kwargs):
@@ -30,8 +30,8 @@ def test_deterministic_skill(**kwargs):
     # TODO make assertions
 
 def test_pfv(**kwargs):
-    y = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv')).prec
-    x = cptio.open_cptdataset( str(Path( __file__).absolute().parents[0] / 'data/seasonal/prob_rfcsts.tsv')).probabilistic
+    y = cptio.open_cptdataset(str(Path( __file__ ).absolute().parents[0] / 'data/seasonal-core/SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv')).prec
+    x = cptio.open_cptdataset( str(Path( __file__).absolute().parents[0] / 'data/seasonal-core/prob_rfcsts.tsv')).probabilistic
     skill = probabilistic_forecast_verification(x, y,  **kwargs)
     print(skill)
     assert set(skill.data_vars) == set(['generalized_roc', 'ignorance', 'rank_probability_skill_score'])

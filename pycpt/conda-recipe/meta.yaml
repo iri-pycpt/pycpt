@@ -18,34 +18,41 @@ requirements:
     - pip
     - setuptools
   run:
-    - xarray 
-    - dask
-    - cptio
-    - cptdl 
-    - cptcore 
-    - cptextras>=1.1.0
-    - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
-    - cartopy
-    - netcdf4
-    - scipy
-    - numpy 
-    - scikit-learn
-    - statsmodels
     - bottleneck
-    - jupyter 
-    - ipykernel 
-    - numpy 
+    - cartopy
+    - cptbin
+    - cptio
+    - dask
     - ftputil
+    - ipykernel
+    - jupyter
+    - matplotlib<3.7.2  # 3.7.2 gives error in subseasonal.py:plot_forecasts
+    - netcdf4
+    - numpy
+    - psutil
+    - requests
+    - scikit-learn
+    - scipy
+    - statsmodels
+    - xarray
     
     # Temporarily pinning tornado because it seems to fix occasional
     # crashes of the jupyter kernel.  See
     # https://github.com/jupyter/notebook/issues/6721
     - tornado<6.2
 
-
+    # requests depends on urllib3; urllib3 v2 removes all the old,
+    # unsafe ciphers that are currently supported by the ancient
+    # version of squid on iridl.ldeo.columbia.edu, causing all https
+    # downloads to fail.
+    - urllib3<2
 
 test:
   imports:
+    - cptcore
+    - cptcore.functional
+    - cptdl
+    - cptextras
     - pycpt
 
 about:
