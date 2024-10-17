@@ -7,21 +7,25 @@ import numpy as np
 
 
 def view_coords_stations(domain,vals):
-    factor = .1
+    step=0.1
+    horizontal = len( np.arange(vals['X'].values.min(), vals['X'].values.max() + step, step) )
+    vertical = len( np.arange(vals['Y'].values.min(), vals['Y'].values.max() + step, step) )
     
-    xmin = vals['X'].values.min()
-    xmax = vals['X'].values.max()
-    xpad = (xmax - xmin) * factor
+    if horizontal>=vertical:
+       factor_percent_h=0.10
+       factor_percent_v=0.50
+    else:
+       factor_percent_h=0.50
+       factor_percent_v=0.10
 
-    ymin = vals['Y'].values.min()
-    ymax = vals['Y'].values.max()
-    ypad = (ymax - ymin) * factor
-    
     if domain is None:
-        w = xmin - xpad
-        e = xmax + xpad
-        s = ymin - ypad
-        n = ymax + ypad
+        x_range = vals['X'].values.max() - vals['X'].values.min()
+        y_range = vals['Y'].values.max() - vals['Y'].values.min()
+
+        e = vals['X'].values.max() + (x_range * factor_percent_h)
+        w = vals['X'].values.min() - (x_range * factor_percent_h)
+        n = vals['Y'].values.max() + (y_range * factor_percent_v)
+        s = vals['Y'].values.min() - (y_range * factor_percent_v)
     else:    
         e = domain['east']
         w = domain['west']
