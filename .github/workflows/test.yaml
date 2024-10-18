@@ -67,4 +67,4 @@ jobs:
         if: steps.restore-env.outputs.cache-hit != 'true'
 
       - name: install packages and run tests
-        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && conda activate ${{env.ENV_NAME}} && for p in cpt-core cpt-dl cpt-extras cpt-io pycpt; do pip install ./$p; done && pytest
+        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && conda activate ${{env.ENV_NAME}} && for p in cpt-io pycpt; do pip install ./$p; done && pytest
