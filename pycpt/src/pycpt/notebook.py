@@ -147,6 +147,9 @@ def _preprocess_download_args(download_args):
         if 'target_first_year' in download_args or 'target_final_year' in download_args:
             raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
 
+    if download_args.get('filetype') is None:
+        result['filetype'] = 'cptv10.tsv'
+
     return result
 
 

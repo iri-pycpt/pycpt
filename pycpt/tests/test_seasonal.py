@@ -30,7 +30,6 @@ DOWNLOAD_ARGS = {
         'south': 39.5,
         'north': 40.5,
       },
-    'filetype': 'cptv10.tsv'
 }
 
 DEFAULT_CPT_ARGS = { 
@@ -42,7 +41,6 @@ DEFAULT_CPT_ARGS = {
     'validation': 'crossvalidation',
     'drymask_threshold': None,
     'skillmask_threshold': None,
-    'scree': True,
     'crossvalidation_window': 5,
     'synchronous_predictors': True,
 }

@@ -21,7 +21,6 @@ def multiple_regression(
         link='identity',
         drymask_threshold=None,
         skillmask_threshold=None,
-        scree=False,
         synchronous_predictors=False,
         x_lat_dim=None, 
         x_lon_dim=None, 

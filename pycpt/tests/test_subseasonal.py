@@ -30,7 +30,6 @@ download_args = {
         'north': 21,
         'south': 19, 
     },
-    'filetype': 'cptv10.tsv'
 }
 
 cpt_args = { 
@@ -41,7 +40,6 @@ cpt_args = {
     'y_eof_modes': (1,6),
     'validation': 'retroactive',
     'drymask': False,
-    'scree': True,
     'crossvalidation_window': 5,
     'synchronous_predictors': True,
     'retroactive_initial_training_period': 45,

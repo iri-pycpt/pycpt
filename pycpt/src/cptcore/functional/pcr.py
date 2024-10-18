@@ -21,7 +21,6 @@ def principal_components_regression(
         synchronous_predictors=False,
         drymask_threshold=None,
         skillmask_threshold=None,
-        scree=False, 
         x_lat_dim=None, 
         x_lon_dim=None, 
         x_sample_dim=None, 
@@ -214,11 +213,10 @@ def principal_components_regression(
         cpt.write(cpt.outputs[data].absolute())
         cpt.write(0)
     
-    if scree: 
-        cpt.write('111')
-        cpt.write(CPT_OUTPUT_NEW['eof_x_explained_variance'])
-        cpt.write(cpt.outputs['eof_x_explained_variance'].absolute())
-        cpt.write(0)
+    cpt.write('111')
+    cpt.write(CPT_OUTPUT_NEW['eof_x_explained_variance'])
+    cpt.write(cpt.outputs['eof_x_explained_variance'].absolute())
+    cpt.write(0)
 
     cpt.wait_for_files()
     fcsts = None
@@ -303,12 +301,9 @@ def principal_components_regression(
     x_eof_loadings.coords['Mode'] = x_eof_scores.coords['Mode'].values
 
 
-    if scree:
-        x_varfile = np.genfromtxt(str(cpt.outputs['eof_x_explained_variance']) + '.txt', skip_header=3, delimiter='\t', dtype=float)
-        x_explained_variance = xr.DataArray(name='x_explained_variance', data=x_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
-        pattern_values = [ x_eof_scores, x_eof_loadings, x_explained_variance]
-    else: 
-        pattern_values = [ x_eof_scores, x_eof_loadings]
+    x_varfile = np.genfromtxt(str(cpt.outputs['eof_x_explained_variance']) + '.txt', skip_header=3, delimiter='\t', dtype=float)
+    x_explained_variance = xr.DataArray(name='x_explained_variance', data=x_varfile[:,-2].squeeze(), dims=('Mode'), coords={'Mode': x_varfile[:, 0].squeeze()})
+    pattern_values = [ x_eof_scores, x_eof_loadings, x_explained_variance]
 
     pattern_values = xr.merge(pattern_values)
     pattern_values.coords[x_sample_dim] = [convert_np64_datetime(i) for i in pattern_values.coords[x_sample_dim].values]
