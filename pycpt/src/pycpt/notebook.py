@@ -1450,6 +1450,7 @@ def plot_mme_flex_forecast_new(
             rotation=0,
         )
 
+    plt.tight_layout()
     # save plot
     figName = MOS + "_flexForecast_probExceedence.png"
     plt.savefig(
