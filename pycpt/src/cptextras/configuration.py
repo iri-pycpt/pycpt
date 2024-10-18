@@ -57,6 +57,11 @@ def check_cpt_args(args):
         if keytypes[key] == tuple: 
             check_tuple(arg)
 
+    # scree = False never worked, and now the option has been removed,
+    # but we still allow scree = True in cpt_args for backwards compatibility.
+    if args.get('scree') not in (None, True):
+        raise Exception('scree = False is not supported.')
+
 
 def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predictand, local_predictand_file):
     tosave = {}

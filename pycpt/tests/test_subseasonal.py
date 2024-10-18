@@ -41,7 +41,6 @@ cpt_args = {
     'y_eof_modes': (1,6),
     'validation': 'retroactive',
     'drymask': False,
-    'scree': True,
     'crossvalidation_window': 5,
     'synchronous_predictors': True,
     'retroactive_initial_training_period': 45,
