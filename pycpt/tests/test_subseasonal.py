@@ -30,7 +30,6 @@ download_args = {
         'north': 21,
         'south': 19, 
     },
-    'filetype': 'cptv10.tsv'
 }
 
 cpt_args = { 

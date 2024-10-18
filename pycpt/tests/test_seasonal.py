@@ -30,7 +30,6 @@ DOWNLOAD_ARGS = {
         'south': 39.5,
         'north': 40.5,
       },
-    'filetype': 'cptv10.tsv'
 }
 
 DEFAULT_CPT_ARGS = { 
