@@ -6,7 +6,7 @@ This README is directed at PyCPT developers. Users of PyCPT should see [the home
 
 ## Package structure
 
-PyCPT is made up of six conda packages: `cpt-bin`, `cpt-core`, `cpt-dl`, `cpt-extras`, `cpt-io`, and `pycpt`, plus a Jupyter Notebook that imports and uses these libraries.
+PyCPT is made up of three conda packages: `cpt-bin`, `cpt-io`, and `pycpt`, plus a Jupyter Notebook that imports and uses these libraries.
 
 `cpt-bin` contains the CPT executable. This is a platform-specific package that we build separately for Windows, Linux, and macOS, all on x86-64 processors. It works on Apple silicon via Rosetta. The other packages are pure python and thus platform-independent; we build one package and it works on all three platforms. (Earlier in the lifetime of this project, precompiled linux binaries were not provided, and installing PyCPT on Linux involved a time-consuming and unreliable compilation step. That was based on a misunderstanding; conda does in fact support building a single executable that runs on any linux system where conda is installed.)
 
@@ -23,7 +23,7 @@ In addition to the `pycpt` repositiory, there is a second repository called `not
 - `config-example.py`, a template config file to be customized and then used with the `generate-forecasts` operational command
 - `conda-linux64.lock`, `conda-osx-64.lock`, and `conda-win-64.lock`, the frozen conda environment specifications described in the previous section.
 
-A "release" of PyCPT consists of a compatible set of the above files. Releases are published through the `notebooks` repository in GitHub, at https://github.com/iri-pycpt/notebooks/releases . Releases are currently identified by the version of the `pycpt` package they include. This numbering system can be inconvenient: in order to publish a change to a package like `cptdl`, we need to increment the version number of `pycpt` and publish a new `pycpt` package, even though the contents of that package are identical to those of the previous version. Merging packages as suggested in [Package structure](#package-structure) may resolve this.
+A "release" of PyCPT consists of a compatible set of the above files. Releases are published through the `notebooks` repository in GitHub, at https://github.com/iri-pycpt/notebooks/releases . Releases are currently identified by the version of the `pycpt` package they include. This numbering system can be inconvenient: in order to publish a change to a package like `cptio`, we need to increment the version number of `pycpt` and publish a new `pycpt` package, even though the contents of that package are identical to those of the previous version. Merging packages as suggested in [Package structure](#package-structure) may resolve this.
 
 I (Aaron) find the separation between the `pycpt` and `notebooks` repositories confusing. I think we should move the Operational subdir of `notebooks` into `pycpt`, and then publish subsequent releases from that repo instead.
 
@@ -36,11 +36,12 @@ All of the PyCPT python packages support pip's [development mode](https://setupt
 - `conda create -n pycpt-dev --file conda-linux-64.lock`
 - `conda activate pycpt-dev`
 - clone the `pycpt` repository and `cd` into it
-- `pip install -e cpt-bin`
-- `pip install -e cpt-core`
-- ... similarly for the other packages
+- `pip install -e cptbin`
+- `pip install -e cptio`
+- `pip install -e pycpt`
+- `conda install -c conda-forge --override-channels pytest=8.3.3`
 
-Then you can activate the development environment (`conda activate pycpt-dev`) and run PyCPT in it. When you make changes to the PyCPT code, restart the jupyter kernel to load the modified version.
+Then you can run PyCPT in the pycpt-dev environment. When you make changes to the PyCPT code, restart the jupyter kernel to load the modified version.
 
 ## Publishing changes
 
@@ -60,8 +61,8 @@ We will now go into more detail on some of these steps.
 
 After modifying any package other than `cpt-bin`, follow these instructions. (The process for `cpt-bin` is more complicated because that package contains Fortran code that must be compiled for each platform. Instructions for that are in the next section.)
 
-- `cd` to the subdirectory of `pycpt` for the package you want to build, e.g. `cd cpt-dl`.
-- Increment the version number. Currently the version number is found in three different files, all of which must be kept in lock step: `setup.py`, `conda-recipe/meta.yaml`, and `src/<package name>/__init__.py`, e.g. `src/cptdl/__init__.py`. See [About version numbers](#about-version-numbers) below.
+- `cd` to the subdirectory of `pycpt` for the package you want to build, e.g. `cd cpt-io`.
+- Increment the version number. Currently the version number is found in three different files, all of which must be kept in lock step: `setup.py`, `conda-recipe/meta.yaml`, and `src/<package name>/__init__.py`, e.g. `src/cptio/__init__.py`. See [About version numbers](#about-version-numbers) below.
 - Commit and push your changes, including the changed version number. Have your changes reviewed and approved, then merge them.
 - If you have never built a conda package before, start by creating a conda environment called `build` that contains the tools for building conda packages: `conda create -n build -c conda-forge boa`. Once you have this environment you can use it for all package builds.
 - Activate your `build` environment: `conda activate build`
@@ -69,12 +70,12 @@ After modifying any package other than `cpt-bin`, follow these instructions. (Th
 - Wait a long time. Watch the log messages for errors.
 - If there are no errors, near the end of the log it will show the path of the newly built package, e.g.
     ```
-    /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptdl-1.1.3-py_0.tar.bz2
+    /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptio-1.1.3-py_0.tar.bz2
     ```
 - If there were packaging-related changes, test that built package in a new conda environment. When only changing python code I generally skip this step.
 - Upload the new package file, whose path we noted above, to anaconda.org, e.g.
     ```
-    anaconda upload -u iri-nextgen /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptdl-1.1.3-py_0.tar.bz2
+    anaconda upload -u iri-nextgen /home/aaron/miniconda3/envs/build/conda-bld/noarch/cptio-1.1.3-py_0.tar.bz2
     ```
   Get the password from another PyCPT developer.
 
@@ -88,11 +89,11 @@ After modifying any package other than `cpt-bin`, follow these instructions. (Th
 
 To update the environment specifications to use newly published PyCPT packages, it usually suffices to edit the lock files by hand and update the version numbers for those packages, e.g. change
 ```
-https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptdl-1.1.2-py_0.tar.bz2
+https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptio-1.1.2-py_0.tar.bz2
 ```
 to
 ```
-https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptdl-1.1.3-py_0.tar.bz2
+https://conda.anaconda.org/t/ir-777bcf3a-3147-44d2-9fa2-dccca9b8d3ed/iri-nextgen/noarch/cptio-1.1.3-py_0.tar.bz2
 ```
 
 If we need to update not only PyCPT packages but also one or more third-party dependencies, it is not a good idea to edit the lock files by hand, as the result may violate compatibility constraints between different packages. The simplest thing to do in this case is usually to
