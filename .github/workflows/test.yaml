@@ -53,17 +53,17 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: ${{env.CONDA_PATH}}/envs/${{env.ENV_NAME}}
-          key: ${{env.ENV_NAME}}-env-${{ hashFiles('environment/conda-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
+          key: ${{env.ENV_NAME}}-env-${{ hashFiles('test-environment-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
 
       - name: install dependencies
-        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && mamba create -n ${{env.ENV_NAME}} --file environment/conda-linux-64.lock
+        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && mamba create -n ${{env.ENV_NAME}} --file test-environment-linux-64.lock
         if: steps.restore-env.outputs.cache-hit != 'true'
 
       - name: save conda environment cache
         uses: actions/cache/save@v3
         with:
           path: ${{env.CONDA_PATH}}/envs/${{env.ENV_NAME}}
-          key: ${{env.ENV_NAME}}-env-${{ hashFiles('environment/conda-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
+          key: ${{env.ENV_NAME}}-env-${{ hashFiles('test-environment-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
         if: steps.restore-env.outputs.cache-hit != 'true'
 
       - name: install packages and run tests
