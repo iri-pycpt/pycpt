@@ -13,8 +13,9 @@ def view_coords_stations(domain,vals):
     
     if horizontal>=vertical:
        factor_percent_h=0.10
-       factor_percent_v=0.50
+       factor_percent_v=0.20
     else:
+	   #50% seems like a lot in general, but it manages to cover Chile's borders well.
        factor_percent_h=0.50
        factor_percent_v=0.10
 
