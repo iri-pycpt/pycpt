@@ -313,8 +313,10 @@ def plot_cca_modes(
     MOS, predictor_names, pxs, pys, files_root
 ):
     nmodes = 3
-    
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if any(sub in name for sub in ["TMAX", "TMIN", "TMEAN", "TMED", "T2M"] for name in predictor_names):
+       cmap = plt.get_cmap("cpt.loadings", 11).reversed()
+    else:
+       cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
     missing_value_flag = -999
@@ -450,8 +452,10 @@ def plot_eof_modes(
     MOS, predictor_names, pxs, pys, files_root
 ): 
     nmodes = 5
-    
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if any(sub in name for sub in ["TMAX", "TMIN", "TMEAN", "TMED", "T2M"] for name in predictor_names):
+       cmap = plt.get_cmap("cpt.loadings", 11).reversed()
+    else:
+       cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
 
