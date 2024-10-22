@@ -147,9 +147,6 @@ def _preprocess_download_args(download_args):
         if 'target_first_year' in download_args or 'target_final_year' in download_args:
             raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
 
-    if download_args.get('filetype') is None:
-        result['filetype'] = 'cptv10.tsv'
-
     return result
 
 
@@ -404,10 +401,13 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics, domain=No
 
 
 def plot_cca_modes(
-    MOS, predictor_names, pxs, pys, files_root, domain=None
+    MOS, predictor_names, pxs, pys, files_root, domain=None,color_bar=None
 ):
     nmodes = 3
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if color_bar is not None:
+        cmap = ce.cmaps[color_bar]
+    else:
+        cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
     missing_value_flag = -999
@@ -548,10 +548,13 @@ def plot_cca_modes(
 
 
 def plot_eof_modes(
-    MOS, predictor_names, pxs, pys, files_root, domain=None
+    MOS, predictor_names, pxs, pys, files_root, domain=None,color_bar=None
 ):
     nmodes = 5
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if color_bar is not None:
+        cmap = ce.cmaps[color_bar]
+    else:
+        cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
 
@@ -760,7 +763,9 @@ def plot_forecasts(
     files_root,
     predictor_names,
     MOS,
-    domain=None
+    domain=None,
+    vmin=None,
+    vmax=None,
 ):
     prob_missing_value_flag = -1
     my_dpi = 100
@@ -771,8 +776,9 @@ def plot_forecasts(
     )
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
+
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
     from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -829,6 +835,8 @@ def plot_forecasts(
         if (
             any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"])
             and i == 0
+            and vmin is None
+
         ):
             vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
@@ -985,6 +993,8 @@ def plot_mme_forecasts(
     files_root,
     det_fcst,
     domain=None,
+    vmin=None,
+    vmax=None,
 ):
     missing_value_flag = -999
     prob_missing_value_flag = -1
@@ -1004,7 +1014,7 @@ def plot_mme_forecasts(
         fig = plt.figure(figsize=(15, 12), dpi=my_dpi)
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
@@ -1041,7 +1051,7 @@ def plot_mme_forecasts(
     ax1.imshow(pil_img)
 
     datart = det_fcst.where(det_fcst > missing_value_flag).isel(T=-1)
-    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]):
+    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]) and vmin is None and vmax is None:
         vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
 
@@ -1395,7 +1405,7 @@ def plot_mme_flex_forecast_new(
     cdf_ax.plot(point_forecast_ds['threshold'], fprobth, "ok")
     cdf_ax.plot(point_forecast_ds['threshold'], cprobth, "ok")
     cdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
-    cdf_ax.set_title(f" (b) Point Probabilities of Exceedance\nat {location_selector}")
+    cdf_ax.set_title(f" (b) Point Probabilities of Exceedance at {location_selector}")
     cdf_ax.set_xlabel(varname)
     cdf_ax.set_ylabel("Probability (%)")
     cdf_ax.legend(loc="best", frameon=False)
@@ -1418,7 +1428,7 @@ def plot_mme_flex_forecast_new(
 
     pdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
     pdf_ax.legend(loc="best", frameon=False)
-    pdf_ax.set_title(f"(c) Point Probability Density Functions\nat {location_selector}")
+    pdf_ax.set_title(f"(c) Point Probability Density Functions at {location_selector}")
     pdf_ax.set_xlabel(varname)
     pdf_ax.set_ylabel("")
 
@@ -1450,7 +1460,6 @@ def plot_mme_flex_forecast_new(
             rotation=0,
         )
 
-    plt.tight_layout()
     # save plot
     figName = MOS + "_flexForecast_probExceedence.png"
     plt.savefig(
