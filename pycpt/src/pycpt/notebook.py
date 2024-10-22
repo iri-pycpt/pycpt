@@ -147,6 +147,9 @@ def _preprocess_download_args(download_args):
         if 'target_first_year' in download_args or 'target_final_year' in download_args:
             raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
 
+    if download_args.get('filetype') is None:
+        result['filetype'] = 'cptv10.tsv'
+
     return result
 
 
@@ -1405,7 +1408,7 @@ def plot_mme_flex_forecast_new(
     cdf_ax.plot(point_forecast_ds['threshold'], fprobth, "ok")
     cdf_ax.plot(point_forecast_ds['threshold'], cprobth, "ok")
     cdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
-    cdf_ax.set_title(f" (b) Point Probabilities of Exceedance at {location_selector}")
+    cdf_ax.set_title(f" (b) Point Probabilities of Exceedance\nat {location_selector}")
     cdf_ax.set_xlabel(varname)
     cdf_ax.set_ylabel("Probability (%)")
     cdf_ax.legend(loc="best", frameon=False)
@@ -1428,7 +1431,7 @@ def plot_mme_flex_forecast_new(
 
     pdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
     pdf_ax.legend(loc="best", frameon=False)
-    pdf_ax.set_title(f"(c) Point Probability Density Functions at {location_selector}")
+    pdf_ax.set_title(f"(c) Point Probability Density Functions\nat {location_selector}")
     pdf_ax.set_xlabel(varname)
     pdf_ax.set_ylabel("")
 
@@ -1460,6 +1463,7 @@ def plot_mme_flex_forecast_new(
             rotation=0,
         )
 
+    plt.tight_layout()
     # save plot
     figName = MOS + "_flexForecast_probExceedence.png"
     plt.savefig(
