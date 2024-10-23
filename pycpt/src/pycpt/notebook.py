@@ -1611,7 +1611,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
     for coord in ['Y', 'X']:
-        if not adjusted_fcst_mu[coord].equals(threshold[coord]) or fcst_scale[coord].equals(threshold[coord]):
+        if not adjusted_fcst_mu[coord].equals(threshold[coord]) or not fcst_scale[coord].equals(threshold[coord]):
             adjusted_fcst_mu[coord] = threshold[coord]
             fcst_scale[coord] = threshold[coord]
     
