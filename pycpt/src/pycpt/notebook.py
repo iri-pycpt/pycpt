@@ -1610,6 +1610,11 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
+    for coord in ['Y', 'X']:
+        if not adjusted_fcst_mu[coord].equals(threshold[coord]) or fcst_scale[coord].equals(threshold[coord]):
+            adjusted_fcst_mu[coord] = threshold[coord]
+            fcst_scale[coord] = threshold[coord]
+    
     exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale,keep_attrs=True, kwargs={'dof1':ntrain})
 
     return exceedance_prob, fcst_scale, climo_scale, adjusted_fcst_mu, climo_mu, Y2, ntrain, threshold
