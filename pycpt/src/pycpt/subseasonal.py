@@ -597,7 +597,6 @@ def plot_forecasts(
             matplotlibInstance, cartopyInstance = ce.view_probabilistic(
                 f
                 .probabilistic.where(lambda x: x > prob_missing_value_flag)
-                .rename({"C": "M"})
                 .isel(T=-1)
                 / 100,
                 cmap_an=cmapA,
