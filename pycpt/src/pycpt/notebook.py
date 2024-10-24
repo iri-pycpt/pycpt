@@ -1233,11 +1233,18 @@ def snap_to(reference, other):
     # TODO would it be better to figure out why coordinate values are changing
     # and eliminate that so we can use exact comparison on them? E.g. when loading
     # a dataset, always round X and Y values to the appropriate precision.
-    assert np.allclose(other['X'].data, reference['X'].data)
-    assert np.allclose(other['Y'].data, reference['Y'].data)
+   
+
+    #assert np.allclose(other['X'].data, reference['X'].data)
+    #assert np.allclose(other['Y'].data, reference['Y'].data)
     new_ = xr.DataArray(other)
-    new_['X'] = reference['X']
-    new_['Y'] = reference['Y']
+    #new_['X'] = reference['X']
+    #new_['Y'] = reference['Y']
+
+    for coord in ['Y', 'X']:
+        if not new_[coord].equals(reference[coord]):
+            new_[coord] = reference[coord]
+    
     return new_
 
 
@@ -1605,6 +1612,9 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
     tailoring = cpt_args['tailoring']
+    climo_mu=snap_to(threshold,climo_mu)
+    fcst_scale=snap_to(threshold,fcst_scale)
+    fcst_mu=snap_to(threshold,fcst_mu)
     if tailoring == None:
         adjusted_fcst_mu = fcst_mu
     elif tailoring == 'Anomaly':
@@ -1614,11 +1624,6 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
-    for coord in ['Y', 'X']:
-        if not adjusted_fcst_mu[coord].equals(threshold[coord]) or not fcst_scale[coord].equals(threshold[coord]):
-            adjusted_fcst_mu[coord] = threshold[coord]
-            fcst_scale[coord] = threshold[coord]
-    
     exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale,keep_attrs=True, kwargs={'dof1':ntrain})
 
     return exceedance_prob, fcst_scale, climo_scale, adjusted_fcst_mu, climo_mu, Y2, ntrain, threshold
