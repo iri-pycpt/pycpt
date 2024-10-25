@@ -1200,15 +1200,13 @@ def plot_mme_flex_forecast_station(
         'Y': ('station', threshold['Y'].data)
     })
 
-    # Align coordinates that are off by just floating point rounding error,
-    # so we can then put them together in a Dataset and .sel them all at once.
     forecast_ds = xr.Dataset(dict(
         threshold=threshold,
         exceedance_prob=exceedance_prob,
-        fcst_scale=snap_to(threshold, fcst_scale),
-        climo_scale=snap_to(threshold, climo_scale),
-        fcst_mu=snap_to(threshold, fcst_mu),
-        climo_mu=snap_to(threshold, climo_mu),
+        fcst_scale=fcst_scale,
+        climo_scale=climo_scale,
+        fcst_mu=fcst_mu,
+        climo_mu=climo_mu,
     ))
     obs_ds = xr.Dataset({
         'original': Y, 
@@ -1225,27 +1223,6 @@ def plot_mme_flex_forecast_station(
         color_bar,
         domain=domain,
     )
-
-def snap_to(reference, other):
-    '''Return a new DataArray that's a copy of `other` but with the `X` and
-        `Y` coords replaced with those of `reference`. Raises an AssertionError
-        if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''
-    # TODO would it be better to figure out why coordinate values are changing
-    # and eliminate that so we can use exact comparison on them? E.g. when loading
-    # a dataset, always round X and Y values to the appropriate precision.
-   
-
-    #assert np.allclose(other['X'].data, reference['X'].data)
-    #assert np.allclose(other['Y'].data, reference['Y'].data)
-    new_ = xr.DataArray(other)
-    #new_['X'] = reference['X']
-    #new_['Y'] = reference['Y']
-
-    for coord in ['Y', 'X']:
-        if not new_[coord].equals(reference[coord]):
-            new_[coord] = reference[coord]
-    
-    return new_
 
 
 def plot_mme_flex_forecast_new(
@@ -1612,10 +1589,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
     tailoring = cpt_args['tailoring']
-    climo_mu=snap_to(threshold,climo_mu)
-    fcst_scale=snap_to(threshold,fcst_scale)
-    fcst_mu=snap_to(threshold,fcst_mu)
-    if tailoring == None:
+    if tailoring is None:
         adjusted_fcst_mu = fcst_mu
     elif tailoring == 'Anomaly':
         adjusted_fcst_mu = fcst_mu + climo_mu

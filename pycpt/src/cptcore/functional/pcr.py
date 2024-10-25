@@ -1,5 +1,5 @@
 
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R, snap_to
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt,  convert_np64_datetime
 import xarray as xr 
@@ -289,5 +289,10 @@ def principal_components_regression(
     pattern_values = xr.merge(pattern_values)
     pattern_values.coords['T'] = [convert_np64_datetime(i) for i in pattern_values.coords['T'].values]
 
-    return hcsts, fcsts, skill_values, pattern_values 
+    return (
+        snap_to(Y, hcsts),
+        snap_to(Y, fcsts),
+        snap_to(Y, skill_values),
+        snap_to(X, pattern_values),
+    )
 

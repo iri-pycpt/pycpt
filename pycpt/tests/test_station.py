@@ -205,6 +205,17 @@ def test_evaluate_models_nomos():
     print(skill)
     check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS)
 
+def test_evaluate_models_coordinate_precision():
+    MOS = 'CCA'
+    cpt_args = {}
+    predictor_names = PREDICTOR_NAMES[:1]
+    Y, original_hcsts, original_fcsts = get_test_data(predictor_names, PREDICTAND_NAME)
+    Y['X'][0] += .000001
+    Y['Y'][0] -= .000001
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    assert hcsts[0]['X'].equals(Y['X'])
+    assert hcsts[0]['Y'].equals(Y['Y'])
+
 def test_construct_mme():
     MOS = 'CCA'
     cpt_args = DEFAULT_CPT_ARGS

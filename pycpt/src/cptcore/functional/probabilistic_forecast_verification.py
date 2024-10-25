@@ -1,5 +1,5 @@
 
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_PFV_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_PFV_R, snap_to
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt
 import xarray as xr 
@@ -81,5 +81,4 @@ def probabilistic_forecast_verification(
     for i in range(len(skill_values)):
         skill_values[i].name = ['generalized_roc', 'ignorance', 'rank_probability_skill_score'][i] 
     skill_values = xr.merge(skill_values).mean('Mode')
-    return skill_values 
-
+    return snap_to(Y, skill_values)

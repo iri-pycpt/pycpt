@@ -1,8 +1,14 @@
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R, CPT_PFV_R
+from ..utilities import (
+    CPT_TAILORING_R,
+    CPT_OUTPUT_NEW,
+    CPT_SKILL_R,
+    CPT_TRANSFORMATIONS_R,
+    CPT_PFV_R,
+    snap_to,
+)
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt, convert_np64_datetime
 import xarray as xr 
-import datetime as dt 
 import numpy as np 
 
 PFV_METRICS = ['generalized_roc', 'ignorance', 'rank_probability_skill_score']
@@ -384,5 +390,11 @@ def canonical_correlation_analysis(
     y_pattern_values = xr.merge(y_pattern_values)
     y_pattern_values.coords['T'] = [convert_np64_datetime(i) for i in y_pattern_values.coords['T'].values]
 
-    return hcsts, fcsts, skill_values, x_pattern_values, y_pattern_values  
-
+    result = (
+        snap_to(Y, hcsts),
+        snap_to(Y, fcsts),
+        snap_to(Y, skill_values),
+        snap_to(X, x_pattern_values),
+        snap_to(Y, y_pattern_values),
+    )
+    return result

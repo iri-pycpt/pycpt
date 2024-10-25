@@ -1,8 +1,11 @@
-import  os, time, copy 
-from pathlib import Path 
+import copy
 import datetime as dt 
-import subprocess, platform 
-import shutil
+import numpy as np
+import os
+from pathlib import Path
+import platform
+import time
+import xarray as xr
 
 CPT_SECRET  = 'C\bP\bT\b \b'
 
@@ -273,3 +276,17 @@ def find_cpt(version=CPT_DEFAULT_VERSION):
         CPT_BIN_DIR =  CPT_SPACE / 'CPT' / f'{version}'
         CPT_EXECUTABLE = CPT_BIN_DIR / 'CPT.x'
     return CPT_EXECUTABLE.parents[0] if CPT_EXECUTABLE.is_file() else False 
+
+
+def snap_to(reference, other):
+    '''Return a new DataArray that's a copy of `other` but with the `X` and
+        `Y` coords replaced with those of `reference`. Raises an AssertionError
+        if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''
+    assert np.allclose(other['X'].data, reference['X'].data)
+    assert np.allclose(other['Y'].data, reference['Y'].data)
+    new_ = other.copy()
+    # Using assignment instead of xr.align because the latter only aligns dimension
+    # coordinates. With station data, X and Y are non-dimension coordinates.
+    new_['X'] = reference['X']
+    new_['Y'] = reference['Y']
+    return new_

@@ -1,5 +1,4 @@
-
-from ..utilities import CPT_GOODNESS_INDICES_R, CPT_DEFAULT_VERSION, CPT_REGRESSIONS_R, CPT_LINKS_R, CPT_TAILORING_R, CPT_OUTPUT_NEW,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R
+from ..utilities import CPT_REGRESSIONS_R, CPT_LINKS_R, CPT_TAILORING_R,  CPT_SKILL_R, CPT_TRANSFORMATIONS_R, snap_to
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt
 import xarray as xr 
@@ -256,5 +255,8 @@ def multiple_regression(
     rmse.name = 'root_mean_squared_error'
     skill_values = [pearson, spearman, two_afc, roc_below, roc_above, rmse]
     skill_values = xr.merge(skill_values).mean('Mode')
-    return hcsts, fcsts, skill_values
-
+    return (
+        snap_to(Y, hcsts),
+        snap_to(Y, fcsts),
+        snap_to(Y, skill_values),
+    )

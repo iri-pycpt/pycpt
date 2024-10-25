@@ -1,5 +1,4 @@
-
-from ..utilities import CPT_SKILL_R
+from ..utilities import CPT_SKILL_R, snap_to
 from ..base import CPT
 from cptio import open_cptdataset, to_cptv10, is_valid_cptv10_xyt
 import xarray as xr 
@@ -104,5 +103,4 @@ def deterministic_skill(
     for i in range(len(skill_values)):
         skill_values[i].name = metrics[i] 
     skill_values = xr.merge(skill_values).mean('Mode')
-    return  skill_values
-
+    return  snap_to(Y, skill_values)
