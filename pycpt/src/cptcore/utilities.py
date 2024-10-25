@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import platform
 import time
+import warnings
 import xarray as xr
 
 CPT_SECRET  = 'C\bP\bT\b \b'
@@ -284,9 +285,20 @@ def snap_to(reference, other):
         if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''
     assert np.allclose(other['X'].data, reference['X'].data)
     assert np.allclose(other['Y'].data, reference['Y'].data)
-    new_ = other.copy()
-    # Using assignment instead of xr.align because the latter only aligns dimension
-    # coordinates. With station data, X and Y are non-dimension coordinates.
-    new_['X'] = reference['X']
-    new_['Y'] = reference['Y']
-    return new_
+    if ('station' in reference.dims):
+        reference_stations = len(reference['station'])
+        other_stations = len(other['station'])
+        if other_stations != reference_stations:
+            warnings.warn(f"CPT dropped {reference_stations - other_stations} stations.")
+
+    _, result = xr.align(reference, other, join='override', exclude='T')
+
+    if 'station' in reference.dims:
+        # xr.align only aligns dimension coordinates. With station data,
+        # X and Y are non-dimension coordinates so we have to replace them
+        # explicitly.
+        result['X'] = reference['X']
+        result['Y'] = reference['Y']
+        result['Name'] = reference['Name']
+
+    return result
