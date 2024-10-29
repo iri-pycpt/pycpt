@@ -1254,7 +1254,13 @@ def plot_mme_flex_forecast_new(
     else:
         assert 'station' in forecast_ds.dims
         if location_selector is None:
-            location_selector = {'station': forecast_ds['station'][0].values}
+            # pick a station for which we managed to generate a forecast
+            for station in forecast_ds['station'].values:
+                location_selector = {'station': station}
+                if not forecast_ds['exceedance_prob'].sel(location_selector).isnull().all().item():
+                    break
+            else:
+                assert False, "We didn't generate forecasts for any points?"
         point_latitude = forecast_ds['Y'].sel(location_selector)
         point_longitude = forecast_ds['X'].sel(location_selector)
         
