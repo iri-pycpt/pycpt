@@ -1190,13 +1190,6 @@ def plot_mme_flex_forecast_station(
     color_bar,
     domain=None
 ):
-    # TODO: get X and Y coords onto exceedance_prob when it's created so we
-    # don't have to do it here.
-    exceedance_prob = exceedance_prob.assign_coords({
-        'X': ('station', threshold['X'].data),
-        'Y': ('station', threshold['Y'].data)
-    })
-
     forecast_ds = xr.Dataset(dict(
         threshold=threshold,
         exceedance_prob=exceedance_prob,
