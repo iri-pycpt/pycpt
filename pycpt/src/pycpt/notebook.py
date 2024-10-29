@@ -1137,14 +1137,57 @@ def plot_mme_flex_forecasts(
     fcst_mu,
     climo_mu,
     Y2,
+    transform_predictand,  # ignored until we fix Y transform
     ntrain,
     Y,
     MOS,
     files_root,
-    color_bar,
+    color_bar=None
 ):
-    '''Deprecated, retained For backwards compatibility.'''
+    '''Deprecated, retained for backwards compatibility.'''
 
+    if point_latitude is None or point_longitude is None:
+        location_selector = None
+    else:
+        location_selector = {'Y': point_latitude, 'X': point_longitude}
+
+    return plot_mme_flex_forecast_v2(
+        predictand_name,
+        exceedance_prob,
+        threshold,
+        fcst_scale,
+        climo_scale,
+        fcst_mu,
+        climo_mu,
+        Y,
+        Y2,
+        ntrain,
+        MOS,
+        files_root,
+        location_selector=location_selector,
+        domain=predictand_extent,
+        color_bar=color_bar,
+    )
+
+
+def plot_mme_flex_forecast_v2(
+    predictand_name,
+    exceedance_prob,
+    threshold,
+    fcst_scale,
+    climo_scale,
+    fcst_mu,
+    climo_mu,
+    Y,
+    Y_transformed,
+    ntrain,
+    MOS,
+    files_root,
+    *,
+    location_selector=None,
+    domain=None,
+    color_bar=None
+):
     forecast_ds = xr.Dataset({
         'exceedance_prob': exceedance_prob,
         'threshold': threshold,
@@ -1154,78 +1197,10 @@ def plot_mme_flex_forecasts(
         'climo_mu': climo_mu,
     })
     obs_ds = xr.Dataset({
-        'original': Y, 
-        'transformed': Y2,
+        'original': Y,
+        'transformed': Y_transformed,
     })
-    if point_latitude is None or point_longitude is None:
-        location_selector = None
-    else:
-        location_selector = {'Y': point_latitude, 'X': point_longitude}
 
-    return plot_mme_flex_forecast_new(
-        forecast_ds,
-        obs_ds,
-        predictand_name,
-        location_selector,
-        ntrain,
-        MOS, files_root,
-        color_bar,
-    )
-
-
-def plot_mme_flex_forecast_station(
-    predictand_name,
-    exceedance_prob,
-    location_selector,
-    threshold,
-    fcst_scale,
-    climo_scale,
-    fcst_mu,
-    climo_mu,
-    Y2,
-    ntrain,
-    Y,
-    MOS,
-    files_root,
-    color_bar,
-    domain=None
-):
-    forecast_ds = xr.Dataset(dict(
-        threshold=threshold,
-        exceedance_prob=exceedance_prob,
-        fcst_scale=fcst_scale,
-        climo_scale=climo_scale,
-        fcst_mu=fcst_mu,
-        climo_mu=climo_mu,
-    ))
-    obs_ds = xr.Dataset({
-        'original': Y, 
-        'transformed': Y2,
-    })
-    return plot_mme_flex_forecast_new(
-        forecast_ds,
-        obs_ds,
-        predictand_name,
-        location_selector,
-        ntrain,
-        MOS, files_root,
-        color_bar,
-        domain=domain,
-    )
-
-
-def plot_mme_flex_forecast_new(
-    forecast_ds,
-    obs_ds,
-    predictand_name,
-    location_selector,
-    ntrain,
-    MOS,
-    files_root,
-    color_bar,
-    domain=None
-):
-    '''To be renamed plot_mme_flex_forecast in v3.'''
     ymin = forecast_ds['Y'].min().values
     ymax = forecast_ds['Y'].max().values
     xmin = forecast_ds['X'].min().values
