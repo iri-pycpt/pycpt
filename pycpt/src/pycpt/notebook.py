@@ -1137,7 +1137,6 @@ def plot_mme_flex_forecasts(
     fcst_mu,
     climo_mu,
     Y2,
-    is_transformed,
     ntrain,
     Y,
     MOS,
@@ -1168,7 +1167,6 @@ def plot_mme_flex_forecasts(
         obs_ds,
         predictand_name,
         location_selector,
-        is_transformed,
         ntrain,
         MOS, files_root,
         color_bar,
@@ -1185,7 +1183,6 @@ def plot_mme_flex_forecast_station(
     fcst_mu,
     climo_mu,
     Y2,
-    is_transformed,
     ntrain,
     Y,
     MOS,
@@ -1217,7 +1214,6 @@ def plot_mme_flex_forecast_station(
         obs_ds,
         predictand_name,
         location_selector,
-        is_transformed,
         ntrain,
         MOS, files_root,
         color_bar,
@@ -1230,7 +1226,6 @@ def plot_mme_flex_forecast_new(
     obs_ds,
     predictand_name,
     location_selector,
-    is_transformed,
     ntrain,
     MOS,
     files_root,
@@ -1419,6 +1414,8 @@ def plot_mme_flex_forecast_new(
     pdf_ax.set_xlabel(varname)
     pdf_ax.set_ylabel("")
 
+    # This is dead code until we fix the Y transform functionality
+    is_transformed = False
     if is_transformed:
         original_mu = point_obs_ds['original'].mean('T').values
         original_std = point_obs_ds['original'].std('T').values
