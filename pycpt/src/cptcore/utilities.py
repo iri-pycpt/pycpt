@@ -1,8 +1,12 @@
-import  os, time, copy 
-from pathlib import Path 
+import copy
 import datetime as dt 
-import subprocess, platform 
-import shutil
+import numpy as np
+import os
+from pathlib import Path
+import platform
+import time
+import warnings
+import xarray as xr
 
 CPT_SECRET  = 'C\bP\bT\b \b'
 
@@ -273,3 +277,28 @@ def find_cpt(version=CPT_DEFAULT_VERSION):
         CPT_BIN_DIR =  CPT_SPACE / 'CPT' / f'{version}'
         CPT_EXECUTABLE = CPT_BIN_DIR / 'CPT.x'
     return CPT_EXECUTABLE.parents[0] if CPT_EXECUTABLE.is_file() else False 
+
+
+def snap_to(reference, other):
+    '''Return a new DataArray that's a copy of `other` but with the `X` and
+        `Y` coords replaced with those of `reference`. Raises an AssertionError
+        if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''
+    assert np.allclose(other['X'].data, reference['X'].data)
+    assert np.allclose(other['Y'].data, reference['Y'].data)
+    if ('station' in reference.dims):
+        reference_stations = len(reference['station'])
+        other_stations = len(other['station'])
+        if other_stations != reference_stations:
+            warnings.warn(f"CPT dropped {reference_stations - other_stations} stations.")
+
+    _, result = xr.align(reference, other, join='override', exclude='T')
+
+    if 'station' in reference.dims:
+        # xr.align only aligns dimension coordinates. With station data,
+        # X and Y are non-dimension coordinates so we have to replace them
+        # explicitly.
+        result['X'] = reference['X']
+        result['Y'] = reference['Y']
+        result['Name'] = reference['Name']
+
+    return result

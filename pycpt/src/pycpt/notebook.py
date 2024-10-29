@@ -233,7 +233,6 @@ def cached_download(url_pattern, files_root, basename, force_download, download_
             tsvfile,
             **full_download_args,
             verbose=True,
-            use_dlauth=False,
         )
         ds.to_netcdf(ncfile)
     else:
@@ -353,22 +352,34 @@ SKILL_METRICS = {
 SKILL_METRICS["generalized_roc"][0].set_under("lightgray")
 SKILL_METRICS["rank_probability_skill_score"][0].set_under("lightgray")
 
-def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
+
+def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics, domain=None):
     fig, ax = plt.subplots(
         nrows=len(predictor_names),
         ncols=len(skill_metrics),
         subplot_kw={"projection": cartopy.crs.PlateCarree()},
-        figsize=(5 * len(skill_metrics), 2.5 * len(predictor_names)),
+        figsize=(5 * len(skill_metrics), 5 * len(predictor_names)),
         squeeze=False,
     )
     for i, model in enumerate(predictor_names):
         for j, skill_metric in enumerate(skill_metrics):
             metric = SKILL_METRICS[skill_metric]
-            n = (
+            vals = (
                 getattr(skill[i], skill_metric)
                 .where(getattr(skill[i], skill_metric) > missing_value_flag)
-                .plot(ax=ax[i][j], cmap=metric[0], vmin=metric[1], vmax=metric[2])
             )
+
+            if vals['X'].dims == ('station',):
+                #station adjustment Map
+                Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                ax[i][j].set_xlim(Xmin,Xmax)  
+                ax[i][j].set_ylim(Ymin,Ymax) 
+                ax[i][j].scatter(
+                    vals['X'].values, vals['Y'].values,
+                    c=vals.values, cmap=metric[0], vmin=metric[1], vmax=metric[2]
+                )
+            else:
+                vals.plot(ax=ax[i][j], cmap=metric[0], vmin=metric[1], vmax=metric[2])
             ax[i][j].coastlines()
             ax[i][j].add_feature(cartopy.feature.BORDERS)
             ax[0][j].set_title(skill_metric.upper())
@@ -393,10 +404,13 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics):
 
 
 def plot_cca_modes(
-    MOS, predictor_names, pxs, pys, files_root
+    MOS, predictor_names, pxs, pys, files_root, domain=None,color_bar=None
 ):
     nmodes = 3
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if color_bar is not None:
+        cmap = ce.cmaps[color_bar]
+    else:
+        cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
     missing_value_flag = -999
@@ -454,14 +468,22 @@ def plot_cca_modes(
                 ts_ax = fig.add_subplot(gs01[1:3, 1:])
                 map2_ax = fig.add_subplot(gs02[:, :], projection=ccrs.PlateCarree())
 
-                art = (
+                vals = (
                     pxs[i]
                     .x_cca_loadings.isel(Mode=mode)
                     .where(pxs[i].x_cca_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map1_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
+                if vals['X'].dims == ('station',):
+                    #station adjustment Map
+                    Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                    map1_ax.set_xlim(Xmin,Xmax) 
+                    map1_ax.set_ylim(Ymin,Ymax) 
+                    art = map1_ax.scatter(
+                        vals['X'].values, vals['Y'].values,
+                        c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
+                    )
+                else:
+                    art = vals.plot(ax=map1_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)
 
                 graph_orientation = ce.graphorientation(
                     len(pys[0]["X"]),
@@ -472,17 +494,30 @@ def plot_cca_modes(
                 cb.set_label(label="x_cca_loadings", size=14)
                 cb.ax.tick_params(labelsize=12)
 
-                art = (
+                vals = (
                     pys[i]
                     .y_cca_loadings.isel(Mode=mode)
                     .where(pys[i].y_cca_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
-                cb = plt.colorbar(art, orientation=graph_orientation)
-                cb.set_label(label="y_cca_loadings", size=14)
-                cb.ax.tick_params(labelsize=12)
+                if vals['X'].dims == ('station',):
+                    if vals.notnull().any():
+                        #station adjustment Map
+                        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                        map2_ax.set_xlim(Xmin,Xmax) 
+                        map2_ax.set_ylim(Ymin,Ymax) 
+                        art = map2_ax.scatter(
+                            vals['X'].values, vals['Y'].values,
+                            c=vals.values, cmap=cmap, vmin=Vmin, vmax=Vmax
+                        )
+                    else:
+                        art = None
+                else:
+                    art = vals.plot(ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)
+                
+                if art is not None:
+                    cb = plt.colorbar(art, orientation=graph_orientation)
+                    cb.set_label(label="y_cca_loadings", size=14)
+                    cb.ax.tick_params(labelsize=12)
 
                 primitive = ts.plot.line(
                     marker="x", ax=ts_ax, markersize=12, hue="M", add_legend=False
@@ -516,10 +551,13 @@ def plot_cca_modes(
 
 
 def plot_eof_modes(
-    MOS, predictor_names, pxs, pys, files_root
+    MOS, predictor_names, pxs, pys, files_root, domain=None,color_bar=None
 ):
     nmodes = 5
-    cmap = plt.get_cmap("cpt.loadings", 11)
+    if color_bar is not None:
+        cmap = ce.cmaps[color_bar]
+    else:
+        cmap = plt.get_cmap("cpt.loadings", 11)
     vmin = -10
     vmax = 10
 
@@ -604,16 +642,21 @@ def plot_eof_modes(
                 cb.ax.tick_params(labelsize=12)
                 if graph_orientation == "horizontal":
                     cb.ax.tick_params(axis="x", which="major", rotation=-45)
-                # cb.ax.set_xticks(len(6))
-                pxs[i].x_explained_variance
-                art = (
+                vals = (
                     pys[i]
                     .y_eof_loadings.isel(Mode=mode)
                     .where(pys[i].y_eof_loadings.isel(Mode=mode) > missing_value_flag)
-                    .plot(
-                        ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap
-                    )
                 )
+                if pys[i]['X'].dims == ('station',):
+                    #station adjustment Map
+                    Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                    map2_ax.set_xlim(Xmin,Xmax) 
+                    map2_ax.set_ylim(Ymin,Ymax) 
+                    art = map2_ax.scatter(
+                        pys[i]['X'], pys[i]['Y'], c=vals, vmin=Vmin, vmax=Vmax, cmap=cmap
+                    )
+                else:
+                    art = vals.plot(ax=map2_ax, add_colorbar=False, vmin=Vmin, vmax=Vmax, cmap=cmap)                
 
                 canvarY = round(
                     float(
@@ -723,6 +766,9 @@ def plot_forecasts(
     files_root,
     predictor_names,
     MOS,
+    domain=None,
+    vmin=None,
+    vmax=None,
 ):
     prob_missing_value_flag = -1
     my_dpi = 100
@@ -733,13 +779,13 @@ def plot_forecasts(
     )
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
+
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-    iidx = 1
     for i in range(len(fcsts)):
         if graph_orientation == "horizontal":
             fig = plt.figure(figsize=(18, 10), facecolor="w", dpi=my_dpi)
@@ -749,18 +795,18 @@ def plot_forecasts(
         matplotlibInstance, cartopyInstance = ce.view_probabilistic(
             fcsts[i]
             .probabilistic.where(fcsts[i].probabilistic > prob_missing_value_flag)
-            .rename({"C": "M"})
             .isel(T=-1)
             / 100,
             cmap_an=cmapA,
             cmap_bn=cmapB,
             cmap_nn=cmapN,
             orientation=graph_orientation,
+            domain=domain 
         )
+        
         cartopyInstance.add_feature(cartopy.feature.BORDERS, edgecolor="black")
         cartopyInstance.set_title("")
         # cartopyInstance.axis("off")
-        allaxes = matplotlibInstance.get_axes()
 
         cartopyInstance.spines["left"].set_color("blue")
 
@@ -784,8 +830,6 @@ def plot_forecasts(
         ax1.set_yticks([])
         ax1.imshow(pil_img)
 
-        iidx = iidx + 1
-
         datart = (
             fcsts[i]
             .deterministic.where(fcsts[i].deterministic > missing_value_flag)
@@ -794,25 +838,44 @@ def plot_forecasts(
         if (
             any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"])
             and i == 0
+            and vmin is None
+
         ):
             vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
-        art = datart.plot(
-            figsize=(12, 10),
-            aspect="equal",
-            yincrease=True,
-            subplot_kws={"projection": ccrs.PlateCarree()},
-            # cbar_kwargs={'location': 'bottom',
-            # "label": "Temperature (°C)"
-            #'xticklabels':{'fontsize':100},
-            #            },
-            extend="neither",
-            add_colorbar=False,
-            transform=ccrs.PlateCarree(),
-            cmap=barcolor,
-            vmin=vmin,
-            vmax=vmax,
-        )
+        if 'station' in datart.coords:
+            art = xr.plot.scatter(
+                datart.to_dataset(),
+                x='X', y='Y', hue=datart.name,
+                s=300, # weird scaling going on, default size is too small here.
+                figsize=(12, 10),
+                aspect="equal",
+                yincrease=True,
+                subplot_kws={"projection": ccrs.PlateCarree()},
+                extend="neither",
+                add_colorbar=False,
+                transform=ccrs.PlateCarree(),
+                cmap=barcolor,
+                vmin=vmin,
+                vmax=vmax,
+            )
+            #station adjustment Map
+            Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,datart)
+            art.axes.set_xlim(Xmin,Xmax) 
+            art.axes.set_ylim(Ymin,Ymax) 
+        else:
+            art = datart.plot(
+                figsize=(12, 10),
+                aspect="equal",
+                yincrease=True,
+                subplot_kws={"projection": ccrs.PlateCarree()},
+                extend="neither",
+                add_colorbar=False,
+                transform=ccrs.PlateCarree(),
+                cmap=barcolor,
+                vmin=vmin,
+                vmax=vmax,
+            )
 
         plt.title("")
         # plt.axis("off")
@@ -847,8 +910,6 @@ def plot_forecasts(
         ax2.set_yticks([])
         ax2.imshow(pil_img)  # , aspect=4 1.45 , extent=[0, 1.45, 1.5, 0],
 
-        iidx = iidx + 1
-
         # save plots
         figName = (
             MOS
@@ -875,7 +936,7 @@ SKILL_ALIASES = {
 }
 
 def plot_mme_skill(
-        predictor_names, nextgen_skill, MOS, files_root, skill_metrics
+        predictor_names, nextgen_skill, MOS, files_root, skill_metrics, domain=None
 ):
     graph_orientation = ce.graphorientation(
         len(nextgen_skill["X"]),
@@ -886,7 +947,7 @@ def plot_mme_skill(
         nrows=1,
         ncols=len(skill_metrics),
         subplot_kw={"projection": ccrs.PlateCarree()},
-        figsize=(5 * len(skill_metrics), 1 * len(predictor_names)),
+        figsize=(5 * len(skill_metrics), 5 * len(predictor_names)),
         squeeze=False,
     )
 
@@ -895,24 +956,27 @@ def plot_mme_skill(
             # aliases. TODO deprecate
             skill_metric = SKILL_ALIASES.get(skill_metric, skill_metric)
             metric = SKILL_METRICS[skill_metric]
-            ax[i][j].set_title(skill_metric)
-            n = (
+            vals = (
                 getattr(nextgen_skill, skill_metric)
                 .where(getattr(nextgen_skill, skill_metric) > missing_value_flag)
-                .plot(
-                    ax=ax[i][j],
-                    cmap=metric[0],
-                    vmin=metric[1],
-                    vmax=metric[2],
-                    add_colorbar=False,
-                )
             )
+            if vals['X'].dims == ('station',):
+                #station adjustment Map
+                Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,vals)
+                ax[i][j].set_xlim(Xmin,Xmax)   
+                ax[i][j].set_ylim(Ymin,Ymax) 
+                art = ax[i][j].scatter(
+                    vals['X'].values, vals['Y'].values,
+                    c=vals.values, cmap=metric[0], vmin=metric[1], vmax=metric[2],
+                )
+            else:
+                art = vals.plot(ax=ax[i][j], cmap=metric[0], vmin=metric[1], vmax=metric[2], add_colorbar=False)
 
             ax[i][j].coastlines()
             ax[i][j].add_feature(cartopy.feature.BORDERS)
             ax[i][j].set_title(skill_metric.upper())
 
-            cb = plt.colorbar(n, orientation=graph_orientation)  # location='bottom')
+            cb = plt.colorbar(art, orientation=graph_orientation)  # location='bottom')
             cb.set_label(label=skill_metric, size=15)
             cb.ax.tick_params(labelsize=12)
 
@@ -931,6 +995,9 @@ def plot_mme_forecasts(
     MOS,
     files_root,
     det_fcst,
+    domain=None,
+    vmin=None,
+    vmax=None,
 ):
     missing_value_flag = -999
     prob_missing_value_flag = -1
@@ -950,17 +1017,18 @@ def plot_mme_forecasts(
         fig = plt.figure(figsize=(15, 12), dpi=my_dpi)
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
-        cpt_args["tailoring"], predictand_name
+        cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
 
     matplotlibInstance, cartopyInstance = ce.view_probabilistic(
-        pr_fcst.where(pr_fcst > prob_missing_value_flag).rename({"C": "M"}).isel(T=-1)
+        pr_fcst.where(pr_fcst > prob_missing_value_flag).isel(T=-1)
         / 100,
         cmap_an=cmapA,
         cmap_bn=cmapB,
         cmap_nn=cmapN,
         orientation=graph_orientation,
+        domain=domain
     )
     cartopyInstance.add_feature(cartopy.feature.BORDERS)
     cartopyInstance.set_title("")
@@ -986,22 +1054,44 @@ def plot_mme_forecasts(
     ax1.imshow(pil_img)
 
     datart = det_fcst.where(det_fcst > missing_value_flag).isel(T=-1)
-    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]):
+    if any(x in predictand_name for x in ["TMAX", "TMIN", "TMEAN", "TMED"]) and vmin is None and vmax is None:
         vmin = round(float(datart.min()) - 0.5 * 2) / 2
 
-    art = datart.plot(
-        figsize=(12, 10),
-        aspect="equal",
-        yincrease=True,
-        # size=45,
-        subplot_kws={"projection": ccrs.PlateCarree()},
-        extend="neither",
-        add_colorbar=False,
-        transform=ccrs.PlateCarree(),
-        cmap=barcolor,
-        vmin=vmin,
-        vmax=vmax,
-    )
+
+    if 'station' in datart.coords:
+        art = xr.plot.scatter(
+            datart.to_dataset(),
+            x='X', y='Y', hue=datart.name,
+            s=300, # weird scaling going on, default size is too small here.
+            figsize=(12, 10),
+            aspect="equal",
+            yincrease=True,
+            subplot_kws={"projection": ccrs.PlateCarree()},
+            extend="neither",
+            add_colorbar=False,
+            transform=ccrs.PlateCarree(),
+            cmap=barcolor,
+            vmin=vmin,
+            vmax=vmax,
+        )
+        #station adjustment Map
+        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,datart)
+        art.axes.set_xlim(Xmin,Xmax) 
+        art.axes.set_ylim(Ymin,Ymax) 
+    else:
+        art = datart.plot(
+            figsize=(12, 10),
+            aspect="equal",
+            yincrease=True,
+            # size=45,
+            subplot_kws={"projection": ccrs.PlateCarree()},
+            extend="neither",
+            add_colorbar=False,
+            transform=ccrs.PlateCarree(),
+            cmap=barcolor,
+            vmin=vmin,
+            vmax=vmax,
+        )
 
     plt.title("")
     art.axes.coastlines()
@@ -1054,72 +1144,134 @@ def plot_mme_flex_forecasts(
     files_root,
     color_bar,
 ):
-    if point_latitude is None:
-        point_latitude = round(
-            (
-                predictand_extent['south'] +
-                predictand_extent['north']
-            )/2,
-            2
-        )
-    elif (
-            point_latitude  < float(predictand_extent['south'])
-            or
-            point_latitude > float(predictand_extent['north'])
-    ):
-        raise Exception(
-            f"point_latitude {point_latitude} is outside predictor domain "
-            f"{predictand_extent['south']} to "
-            f"{predictand_extent['north']}"
-        )
+    '''Deprecated, retained For backwards compatibility.'''
 
-    if point_longitude is None:
-        point_longitude = round(
-            (
-                predictand_extent['west'] +
-                predictand_extent['east']
-            )/2,
-            2
-        )
-    elif (
-            point_longitude < float(predictand_extent['west'])
-            or
-            point_longitude > float(predictand_extent['east'])
-    ):
-        raise Exception(
-            f"point_longitude {point_longitude} is outside predictor domain "
-            f"{predictand_extent['west']} to "
-            f"{predictand_extent['east']}"
-        )
+    forecast_ds = xr.Dataset({
+        'exceedance_prob': exceedance_prob,
+        'threshold': threshold,
+        'fcst_scale': fcst_scale,
+        'climo_scale': climo_scale,
+        'fcst_mu': fcst_mu,
+        'climo_mu': climo_mu,
+    })
+    obs_ds = xr.Dataset({
+        'original': Y, 
+        'transformed': Y2,
+    })
+    if point_latitude is None or point_longitude is None:
+        location_selector = None
+    else:
+        location_selector = {'Y': point_latitude, 'X': point_longitude}
 
-    graph_orientation = ce.graphorientation(
-        len(Y["X"]),
-        len(Y["Y"])
+    return plot_mme_flex_forecast_new(
+        forecast_ds,
+        obs_ds,
+        predictand_name,
+        location_selector,
+        is_transformed,
+        ntrain,
+        MOS, files_root,
+        color_bar,
     )
 
-    if point_latitude < float(
-        predictand_extent["south"]
-    ) or point_latitude > float(predictand_extent["north"]):
-        point_latitude = round(
-            (
-                predictand_extent["south"]
-                + predictand_extent["north"]
-            )
-            / 2,
-            2,
-        )
 
-    if point_longitude < float(
-        predictand_extent["west"]
-    ) or point_longitude > float(predictand_extent["east"]):
-        point_longitude = round(
-            (
-                predictand_extent["west"]
-                + predictand_extent["east"]
-            )
-            / 2,
-            2,
-        )
+def plot_mme_flex_forecast_station(
+    predictand_name,
+    exceedance_prob,
+    location_selector,
+    threshold,
+    fcst_scale,
+    climo_scale,
+    fcst_mu,
+    climo_mu,
+    Y2,
+    is_transformed,
+    ntrain,
+    Y,
+    MOS,
+    files_root,
+    color_bar,
+    domain=None
+):
+    # TODO: get X and Y coords onto exceedance_prob when it's created so we
+    # don't have to do it here.
+    exceedance_prob = exceedance_prob.assign_coords({
+        'X': ('station', threshold['X'].data),
+        'Y': ('station', threshold['Y'].data)
+    })
+
+    forecast_ds = xr.Dataset(dict(
+        threshold=threshold,
+        exceedance_prob=exceedance_prob,
+        fcst_scale=fcst_scale,
+        climo_scale=climo_scale,
+        fcst_mu=fcst_mu,
+        climo_mu=climo_mu,
+    ))
+    obs_ds = xr.Dataset({
+        'original': Y, 
+        'transformed': Y2,
+    })
+    return plot_mme_flex_forecast_new(
+        forecast_ds,
+        obs_ds,
+        predictand_name,
+        location_selector,
+        is_transformed,
+        ntrain,
+        MOS, files_root,
+        color_bar,
+        domain=domain,
+    )
+
+
+def plot_mme_flex_forecast_new(
+    forecast_ds,
+    obs_ds,
+    predictand_name,
+    location_selector,
+    is_transformed,
+    ntrain,
+    MOS,
+    files_root,
+    color_bar,
+    domain=None
+):
+    '''To be renamed plot_mme_flex_forecast in v3.'''
+    ymin = forecast_ds['Y'].min().values
+    ymax = forecast_ds['Y'].max().values
+    xmin = forecast_ds['X'].min().values
+    xmax = forecast_ds['X'].max().values
+
+    if 'X' in forecast_ds.dims:
+        assert 'Y' in forecast_ds.dims
+        if location_selector is None:
+            point_latitude = round((ymin + ymax) / 2, 2)
+            point_longitude = round((xmin + xmax) / 2, 2)
+            location_selector = {
+                'Y': point_latitude,
+                'X': point_longitude
+            }
+        else:
+            if location_selector['Y'] < ymin or location_selector['Y'] > ymax:
+                raise Exception(
+                    f"location_selector['Y'] is outside predictor domain {ymin} to {ymax}"
+                )
+            if location_selector['X'] < xmin or location_selector['X'] > xmax:
+                raise Exception(
+                    f"location_selector['X'] is outside predictor domain {xmin} to {xmax}"
+                )
+            point_latitude = location_selector['Y']
+            point_longitude = location_selector['X']
+    else:
+        assert 'station' in forecast_ds.dims
+        if location_selector is None:
+            location_selector = {'station': forecast_ds['station'][0].values}
+        point_latitude = forecast_ds['Y'].sel(location_selector)
+        point_longitude = forecast_ds['X'].sel(location_selector)
+        
+
+    graph_orientation = ce.graphorientation(xmax - xmin, ymax - ymin)
 
     # plot exceedance probability map
 
@@ -1132,21 +1284,31 @@ def plot_mme_flex_forecasts(
     else:
         fig = plt.figure(figsize=(10, 20))
 
-    # fig = plt.figure()
     gs0 = gridspec.GridSpec(4, 1, figure=fig)
     gs00 = gridspec.GridSpecFromSubplotSpec(5, 5, subplot_spec=gs0[:3])
     gs11 = gridspec.GridSpecFromSubplotSpec(1, 2, subplot_spec=gs0[3])
     gs01 = gridspec.GridSpecFromSubplotSpec(5, 5, subplot_spec=gs11[0])
     gs02 = gridspec.GridSpecFromSubplotSpec(5, 5, subplot_spec=gs11[1])
 
-    map_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree(), aspect="auto")
+    map_ax = fig.add_subplot(gs00[:, :], projection=ccrs.PlateCarree())
     cdf_ax = fig.add_subplot(gs01[:, :], aspect="auto")
     pdf_ax = fig.add_subplot(gs02[:, :], aspect="auto")
 
     # plot the map
-    art = exceedance_prob.transpose("Y", "X", ...).plot(
-        cmap=barcolor, ax=map_ax, vmin=vmin, vmax=vmax
-    )
+    if 'station' in forecast_ds.dims:
+        art = xr.plot.scatter(
+            forecast_ds['exceedance_prob'].to_dataset(),
+            x='X', y='Y', hue=forecast_ds['exceedance_prob'].name,
+            cmap=barcolor, ax=map_ax, vmin=vmin, vmax=vmax,
+            s=300,
+        )
+        Xmax,Xmin,Ymax,Ymin=ce.view_coords_stations(domain,forecast_ds)
+        art.axes.set_xlim(Xmin,Xmax) 
+        art.axes.set_ylim(Ymin,Ymax) 
+    else:
+        art = forecast_ds['exceedance_prob'].plot(
+            cmap=barcolor, ax=map_ax, vmin=vmin, vmax=vmax
+        )
     map_ax.scatter(
         [point_longitude],
         [point_latitude],
@@ -1173,55 +1335,27 @@ def plot_mme_flex_forecasts(
     title = map_ax.set_title("(a) Probabilities of Exceedance")
 
     # point calculations - select the nearest point to the lat/lon the user wanted to plot curves
-    point_threshold = float(
-        threshold.sel(
-            **{"X": point_longitude, "Y": point_latitude}, method="nearest"
-        ).values
-    )
-    point_fcst_scale = float(
-        fcst_scale.sel(
-            **{"X": point_longitude, "Y": point_latitude}, method="nearest"
-        ).values
-    )
-    point_climo_scale = float(
-        climo_scale.sel(
-            **{"X": point_longitude, "Y": point_latitude}, method="nearest"
-        ).values
-    )
-    point_fcst_mu = float(
-        fcst_mu.sel(
-            **{"X": point_longitude, "Y": point_latitude}, method="nearest"
-        ).values
-    )
-    point_climo_mu = float(
-        climo_mu.sel(
-            **{"X": point_longitude, "Y": point_latitude}, method="nearest"
-        ).values
-    )
-    point_climo = np.squeeze(
-        Y2.sel(**{"X": point_longitude, "Y": point_latitude}, method="nearest").values
-    )
-    point_climo.sort()
+    if 'station' in forecast_ds.dims:
+        method = None
+    else:
+        method = 'nearest'
 
-    if is_transformed:
-        point_climo_mu_nontransformed = float(
-            Y.mean("T")
-            .sel(**{"X": point_longitude, "Y": point_latitude}, method="nearest")
-            .values
-        )
-        point_climo_std_nontransformed = float(
-            Y.std("T")
-            .sel(**{"X": point_longitude, "Y": point_latitude}, method="nearest")
-            .values
-        )
+    point_forecast_ds = forecast_ds.sel(location_selector, method=method).squeeze()
+    point_obs_ds = obs_ds.sel(location_selector, method=method).squeeze()
 
-    x = point_climo
+    x = np.sort(point_obs_ds['transformed'])
     x1 = np.linspace(x.min(), x.max(), 1000)
     cprobth = (
-        sum(x >= point_threshold) / x.shape[0]
-    )  # round(t.sf(point_threshold, ntrain, loc=point_climo_mu, scale=point_climo_scale),2)
+        (x >= point_forecast_ds['threshold'].values).sum() / x.shape[0]
+    )
     fprobth = round(
-        t.sf(point_threshold, ntrain, loc=point_fcst_mu, scale=point_fcst_scale), 2
+        t.sf(
+            point_forecast_ds['threshold'].item(),
+            ntrain,
+            loc=point_forecast_ds['fcst_mu'].item(),
+            scale=point_forecast_ds['fcst_scale'].item()
+        ),
+        2
     )
 
     # POE plot
@@ -1236,7 +1370,7 @@ def plot_mme_flex_forecasts(
     )
     cdf_ax.plot(
         x1,
-        t.sf(x1, ntrain, loc=point_fcst_mu, scale=point_fcst_scale),
+        t.sf(x1, ntrain, loc=point_forecast_ds['fcst_mu'], scale=point_forecast_ds['fcst_scale']),
         "r-",
         lw=1,
         alpha=0.8,
@@ -1244,51 +1378,58 @@ def plot_mme_flex_forecasts(
     )
     cdf_ax.plot(
         x1,
-        norm.sf(x1, loc=point_climo_mu, scale=point_fcst_scale),
+        norm.sf(x1, loc=point_forecast_ds['climo_mu'], scale=point_forecast_ds['fcst_scale']),
         "b-",
         lw=1,
         alpha=0.8,
         label="clim (fitted)",
     )
 
-    cdf_ax.plot(point_threshold, fprobth, "ok")
-    cdf_ax.plot(point_threshold, cprobth, "ok")
-    cdf_ax.axvline(x=point_threshold, color="k", linestyle="--")
-    cdf_ax.set_title(" (b) Point Probabilities of Exceedance")
-    cdf_ax.set_xlabel(Y.name.upper())
+    varname = point_obs_ds['original'].attrs.get('field')
+    if varname is None:
+        varname = predictand_name
+
+    cdf_ax.plot(point_forecast_ds['threshold'], fprobth, "ok")
+    cdf_ax.plot(point_forecast_ds['threshold'], cprobth, "ok")
+    cdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
+    cdf_ax.set_title(f" (b) Point Probabilities of Exceedance\nat {location_selector}")
+    cdf_ax.set_xlabel(varname)
     cdf_ax.set_ylabel("Probability (%)")
     cdf_ax.legend(loc="best", frameon=False)
 
     # PDF plot
     # fpdf=t.pdf(x1, ntrain, loc=point_fcst_mu, scale=np.sqrt(point_fcst_scale))
-    fpdf = t.pdf(x1, ntrain, loc=point_fcst_mu, scale=point_fcst_scale)
+    fpdf = t.pdf(x1, ntrain, loc=point_forecast_ds['fcst_mu'], scale=point_forecast_ds['fcst_scale'])
 
     pdf_ax.plot(
         x1,
-        norm.pdf(x1, loc=point_climo_mu, scale=point_climo_scale),
+        norm.pdf(x1, loc=point_forecast_ds['climo_mu'], scale=point_forecast_ds['climo_scale']),
         "b-",
         alpha=0.8,
         label="clim (fitted)",
     )  # clim pdf in blue
     pdf_ax.plot(x1, fpdf, "r-", alpha=0.8, label="fcst")  # fcst PDF in red
     pdf_ax.hist(
-        point_climo, density=True, histtype="step", label="clim (empirical)"
+        point_obs_ds['transformed'], density=True, histtype="step", label="clim (empirical)"
     )  # want this in GREEN
 
-    pdf_ax.axvline(x=point_threshold, color="k", linestyle="--")
+    pdf_ax.axvline(x=point_forecast_ds['threshold'], color="k", linestyle="--")
     pdf_ax.legend(loc="best", frameon=False)
-    pdf_ax.set_title("(c) Point Probability Density Functions")
-    pdf_ax.set_xlabel(Y.name.upper())
+    pdf_ax.set_title(f"(c) Point Probability Density Functions\nat {location_selector}")
+    pdf_ax.set_xlabel(varname)
     pdf_ax.set_ylabel("")
 
     if is_transformed:
+        original_mu = point_obs_ds['original'].mean('T').values
+        original_std = point_obs_ds['original'].std('T').values
+
         newticks = [-2, -1, 0, 1, 2]
         pdf_ax.set_xticks(
             newticks,
             [
                 round(
-                    i * point_climo_std_nontransformed + point_climo_mu_nontransformed,
-                    2,
+                    i * original_std + original_mu,
+                    2
                 )
                 for i in newticks
             ],
@@ -1298,14 +1439,15 @@ def plot_mme_flex_forecasts(
             newticks,
             [
                 round(
-                    i * point_climo_std_nontransformed + point_climo_mu_nontransformed,
-                    2,
+                    i * original_std + original_mu,
+                    2
                 )
                 for i in newticks
             ],
             rotation=0,
         )
 
+    plt.tight_layout()
     # save plot
     figName = MOS + "_flexForecast_probExceedence.png"
     plt.savefig(
@@ -1447,7 +1589,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     climo_scale = np.sqrt( (ntrain -2)/ntrain * climo_var )
 
     tailoring = cpt_args['tailoring']
-    if tailoring == None:
+    if tailoring is None:
         adjusted_fcst_mu = fcst_mu
     elif tailoring == 'Anomaly':
         adjusted_fcst_mu = fcst_mu + climo_mu
@@ -1456,7 +1598,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
     # we calculate here, the probability of exceedance by taking 1 - t.cdf()
     # after having transformed the forecast mean to match the units of the
     # prediction error variance, if necessary.
-    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale, input_core_dims=[['X', 'Y'], ['X', 'Y'], ['X', 'Y']], output_core_dims=[['X', 'Y']],keep_attrs=True, kwargs={'dof1':ntrain})
+    exceedance_prob = xr.apply_ufunc( _xr_tsf, threshold, adjusted_fcst_mu, fcst_scale,keep_attrs=True, kwargs={'dof1':ntrain})
 
     return exceedance_prob, fcst_scale, climo_scale, adjusted_fcst_mu, climo_mu, Y2, ntrain, threshold
 

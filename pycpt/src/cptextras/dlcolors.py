@@ -45,6 +45,10 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmin= -2
                 vmax=None
                 barcolor=cmaps['DL_TEMP_ANOMALY_COLORS']
+            elif any(x in predictand for x in ['SST']):
+                vmin= -5
+                vmax=5
+                barcolor=cmaps['DL_SSTA_COLORSCALE']
             for_title='('+tailoring+')'
 
         elif tailoring ==  'StdAnomaly':
@@ -57,6 +61,10 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmin= -2
                 vmax=None
                 barcolor=cmaps['DL_TEMP_ANOMALY_COLORS']
+            elif any(x in predictand for x in ['SST']):
+                vmin= -5
+                vmax=5
+                barcolor=cmaps['DL_SSTA_COLORSCALE']
 
         elif tailoring ==  'SPI':
             for_title='(Standardized Anomaly)'
@@ -76,7 +84,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmax= 1
                 mark='red'
                 barcolor=cmaps['DL_RAIN_POE_COLORMAP']
-            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','SST']):
                 vmin= 0
                 vmax= 1
                 mark='black'
@@ -109,7 +117,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
             cmapB=cmaps['pycpt_probability_red_prec']
             cmapN=cmaps['pycpt_probability_green_prec']
             cmapA=cmaps['pycpt_probability_blue_prec']
-        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','SST']):
             cmapB=cmaps['pycpt_probability_blue_temp']
             cmapN=cmaps['pycpt_probability_grey_temp']
             cmapA=cmaps['pycpt_probability_red_temp']
@@ -124,6 +132,10 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
             vmin= -5
             vmax=40
             barcolor=cmaps['DL_TEMP_COLORS']
+        elif any(x in predictand for x in ['SST']):
+            vmin= -5
+            vmax=5
+            barcolor=cmaps['DL_SST_COLORSCALE']
 
         if not user_color is None:
             barcolor=cmaps[user_color]
@@ -224,6 +236,8 @@ color_arrays = {
                   (219, 109, 87),(217, 104, 83),(214, 96, 77),(211, 90, 74),(206, 81, 70),(202, 73, 66),(199, 67, 63),(195, 59, 59),(192, 53, 56),(188, 45, 52),(185, 39, 50),(181, 31, 46),(176, 23, 42),(170, 21, 41),(161, 18, 40),(155, 16, 39),(147, 14, 38),\
                   (138, 11, 36),(132, 9, 35),(123, 6,34),(117, 4, 33),(108, 1, 31),(103, 0, 31)]
 }
+color_arrays["pycpt_loadings_reversed"] =color_arrays["pycpt_loadings"][::-1]
+
 #Sort color_arrays for an intuitive display for the users
 color_arrays = collections.OrderedDict(sorted(color_arrays.items()))
 

@@ -34,7 +34,7 @@ obsclimo_source = {
 monthabbrevs = [None, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 forecasts = {
-    'GEFSv12.PRCP': "https://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/.EMC/.GEFSv12_CPC/.forecast/.pr/S/(0000%20{fdate.day}%20{monthabbrevs[fdate.month]}%20{fdate.year})/VALUES/Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGE/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGE/L/{day1}/{day2}/RANGEEDGES/%5BM%5Daverage/L/{nday}/runningAverage/c%3A/86400/(s%20day-1)/%3Ac/mul/SOURCES/.Models/.SubX/.EMC/.GEFSv12_CPC/.hindcast/.dc0018/.pr/Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGE/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGE/L/{day1}/{day2}/RANGEEDGES/L/{nday}/runningAverage/S/(T)/renameGRID/pentadAverage/pentadmean/T/(S)/renameGRID/%5BS%5DregridLinear/S/1/setgridtype/pop/S/2/index/.S/SAMPLE/sub/c%3A/0.001/(m3%20kg-1)/%3Ac/mul/c%3A/1000/(mm%20m-1)/%3Ac/mul/c%3A/7.0//units//days/def/%3Ac/mul/S/(T)/renameGRID/grid%3A//name/(T)/def//units/(months%20since%201960-01-01)/def//standard_name/(time)/def//pointwidth/1/def/16/Jan/2261/ensotime/12.0/16/Jan/2261/ensotime/%3Agrid/use_as_grid/T//pointwidth/0/def/pop//name/(tp)/def//units/(mm)/def//long_name/(precipitation_amount)/def/-999/setmissing_value/%5BX/Y%5D%5BT%5Dcptv10.tsv",
+    'GEFSv12.PRCP': "https://iridl.ldeo.columbia.edu/SOURCES/.Models/.SubX/.EMC/.GEFSv12_CPC/.forecast/.pr/S/(0000%20{fdate.day}%20{monthabbrevs[fdate.month]}%20{fdate.year})/VALUES/Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGE/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGE/L/{day1}/{day2}/RANGEEDGES/%5BM%5Daverage/L/{nday}/runningAverage/c%3A/86400/(s%20day-1)/%3Ac/mul/SOURCES/.Models/.SubX/.EMC/.GEFSv12_CPC/.hindcast/.dc0018/.pr/Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGE/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGE/L/{day1}/{day2}/RANGEEDGES/L/{nday}/runningAverage/S/(T)/renameGRID/pentadAverage/pentadmean/T/(S)/renameGRID/%5BS%5DregridLinear/S/1/setgridtype/pop/S/2/index/.S/SAMPLE/sub/c%3A/0.001/(m3%20kg-1)/%3Ac/mul/c%3A/1000/(mm%20m-1)/%3Ac/mul/c%3A/7.0//units//days/def/%3Ac/mul/S/(T)/renameGRID/grid%3A//name/(T)/def//units/(months%20since%201960-01-01)/def//standard_name/(time)/def//pointwidth/1/def/16/Jan/2261/ensotime/12.0/16/Jan/2261/ensotime/%3Agrid/use_as_grid/T//pointwidth/1/def/pop//name/(tp)/def//units/(mm)/def//long_name/(precipitation_amount)/def/-999/setmissing_value/%5BX/Y%5D%5BT%5Dcptv10.tsv",
 
 }
 
@@ -597,7 +597,6 @@ def plot_forecasts(
             matplotlibInstance, cartopyInstance = ce.view_probabilistic(
                 f
                 .probabilistic.where(lambda x: x > prob_missing_value_flag)
-                .rename({"C": "M"})
                 .isel(T=-1)
                 / 100,
                 cmap_an=cmapA,
