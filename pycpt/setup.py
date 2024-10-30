@@ -6,7 +6,7 @@ long_description = readme_path.read_text(encoding='utf-8')
 
 setup(
     name = "pycpt",
-    version = "2.8.1",
+    version = "2.9.0",
     author = "IRI",
     author_email = "pycpt-help@iri.columbia.edu",
     description = ("Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool "),
