@@ -24,7 +24,7 @@ setup(
     package_dir={
         '': 'src',
     },
-    python_requires=">=3.0",
+    python_requires=">=3.8",
     long_description=long_description,
     long_description_content_type='text/markdown',
     classifiers=[
