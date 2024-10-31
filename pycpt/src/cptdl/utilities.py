@@ -113,7 +113,7 @@ def simple_download(url, dest, verbose=False, use_dlauth=False):
     return path 
 
 
-def download(baseurl, dest, verbose=False, use_dlauth=True, **kwargs):
+def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     if 'filetype' in kwargs.keys():
         format = kwargs['filetype']
     else: 
