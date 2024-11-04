@@ -66,6 +66,9 @@ def download_data(
         files_root,
         force_download,
 ):
+    download_args = download_args.copy()
+    download_args.setdefault('filetype', 'cptv10.tsv')
+
     print('Downloading predictor model hindcast datasets')
     hindcasts = download_hindcasts(
         predictor_names, download_args, files_root, force_download
