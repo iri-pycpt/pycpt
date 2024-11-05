@@ -914,9 +914,9 @@ def plot_forecasts(
         figName = (
             MOS
             + ForTitle.replace(" ", "_")
-            + "["
-            + ",".join(predictor_names)
-            + "]"
+            + "_"
+            + predictor_names[i]
+            + "_"
             + "[determinstic-probabilistic]-Forecast"
             + ".png"
         )

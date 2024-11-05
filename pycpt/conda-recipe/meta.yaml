@@ -1,12 +1,12 @@
 package:
   name: pycpt
-  version: "2.9.0"
+  version: "2.9.1"
 
 source:
   path: ..
 
 build:
-  number: 2
+  number: 0
   noarch: python
   script: "{{ PYTHON }} -m pip install --no-deps ."
   entry_points:
