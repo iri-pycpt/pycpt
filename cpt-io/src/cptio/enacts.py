@@ -48,11 +48,11 @@ total because it weights dekads by their length.
     '''
     lengths = (ds['Tf'] - ds['Ti']).dt.days
     weighted = ds * lengths
-    groups = weighted.resample(T='1MS')
+    groups = weighted.resample(Ti='1MS')
     aggregated = getattr(groups, agg)(skipna=False)
     ds = (
         aggregated /
-        lengths.resample(T='1MS').sum()
+        lengths.resample(Ti='1MS').sum()
     ) * 3 # 3 dekads per month
     return ds
 
@@ -78,8 +78,8 @@ def season_start(date, season_months):
 def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final_year=None):
     months = month_range(first_month, last_month)
 
-    ti = ds['T'].to_pandas().apply(lambda d: season_start(d, months))
-    ds = ds.assign_coords(Ti=('T', ti))
+    ti = ds['Ti'].to_pandas().apply(lambda d: season_start(d, months))
+    ds = ds.assign_coords(Ti=ti)
     groups = ds.groupby('Ti')
     ds = getattr(groups, agg)(skipna=False)
     ti = ds['Ti'].to_pandas()
