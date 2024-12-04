@@ -91,7 +91,7 @@ def deterministic_skill(
     cpt.write(311)
 
     # save all deterministic skill scores
-    metrics = ['pearson', 'spearman', 'two_alternative_forced_choice', 'roc_area_below_normal', 'roc_area_above_normal']
+    metrics = ['pearson', 'spearman', 'two_alternative_forced_choice', 'roc_area_below_normal', 'roc_area_above_normal', 'root_mean_squared_error']
     for skill in metrics:
         cpt.write(413)
         cpt.write(CPT_SKILL_R[skill.upper()])
