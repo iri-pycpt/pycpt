@@ -116,7 +116,7 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                     print(f'skipping issue date {issue_date}')
                 else:
                     print(f"generate forecast initialized {issue_date}")
-                    issue_download_args = dict(modified_download_args, fdate=issue_date)
+                    issue_download_args = dict(download_args, fdate=issue_date)
                     pycpt_dir = Path(persistent_dir or tempdir)
                     try:
                         update_one_issue(
