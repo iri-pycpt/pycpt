@@ -27,6 +27,7 @@ def open_enacts_dekadal(dekadal_dir):
     assert len(ds.data_vars) == 1
     da = next(iter(ds.data_vars.values()))
     da = da.rename(Lon='X', Lat='Y')
+
     # CPT seems to round off coordinate values. If we don't round them
     # off ahead of time, then the forecasts that come back from CPT
     # don't align with the obs. Had this problem with the Lesotho
@@ -34,6 +35,7 @@ def open_enacts_dekadal(dekadal_dir):
     # values too or if they did something wrong in Lesotho.
     da['X'] = da['X'].round(6)
     da['Y'] = da['Y'].round(6)
+
     return da
 
 def dekadal_to_monthly(ds, agg):
@@ -95,7 +97,7 @@ def monthly_to_seasonal(ds, first_month, last_month, agg, first_year=None, final
 
     return ds
 
-def satisfy_pycpt(da, missing="-999"):
+def satisfy_pycpt(da):
     '''Make it a dataset that PyCPT can handle'''
 
     assert 'missing' in da.attrs
