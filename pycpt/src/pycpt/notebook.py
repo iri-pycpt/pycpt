@@ -401,6 +401,7 @@ def plot_skill(predictor_names, skill, MOS, files_root, skill_metrics, domain=No
         files_root / "figures" / figName,
         bbox_inches="tight",
     )
+    plt.close()
 
 
 def plot_cca_modes(
@@ -546,6 +547,7 @@ def plot_cca_modes(
                 # save plots
                 figName = MOS + "_" + str(model) + "_CCA_mode_" + str(mode + 1) + ".png"
                 fig.savefig(files_root / "figures" / figName, bbox_inches="tight")
+                plt.close()
     else:
         print("You will need to set MOS=CCA in order to see CCA Modes")
 
@@ -708,6 +710,7 @@ def plot_eof_modes(
                 # save plots
                 figName = MOS + "_" + str(model) + "_EOF_mode_" + str(mode + 1) + ".png"
                 fig.savefig(files_root / "figures" / figName, bbox_inches="tight")
+                plt.close()
     elif MOS == "PCR":
         for i, model in enumerate(predictor_names):
             for mode in range(nmodes):
@@ -755,6 +758,7 @@ def plot_eof_modes(
                 # save plots
                 figName = MOS + "_" + str(model) + "_EOF_mode_" + str(mode + 1) + ".png"
                 fig.savefig(files_root / "figures" / figName, bbox_inches="tight")
+                plt.close()
     else:
         print("You will need to set MOS=CCA in order to see CCA Modes")
 
@@ -814,6 +818,7 @@ def plot_forecasts(
             files_root / "figures" / "Test.png",
             bbox_inches="tight",
         )  # ,pad_inches = 0)
+        plt.close()
 
         matplotlibInstance.clf()
         cartopyInstance.cla()
@@ -896,6 +901,7 @@ def plot_forecasts(
             bbox_inches="tight",
             pad_inches=0,
         )
+        plt.close()
 
         ax2 = fig.add_subplot(2, 2, 2)
         ax2.set_axis_off()
