@@ -1,6 +1,6 @@
 package:
   name: pycpt
-  version: "2.9.4"
+  version: "2.9.5dev"
 
 source:
   path: ..
