@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=soilw, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=kg/m2, cf:standard_name=soil_moisture_content, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  1344.69    	  1337.88    	  1345.90    
+40.0	  1290.27    	  1283.27    	  1238.96    
+39.0	  1249.74    	  1192.11    	 -999.000    
+cpt:field=soilw, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=kg/m2, cf:standard_name=soil_moisture_content, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  1325.33    	  1320.94    	  1333.61    
+40.0	  1275.63    	  1267.85    	  1227.19    
+39.0	  1230.23    	  1183.55    	 -999.000    
+cpt:field=soilw, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=kg/m2, cf:standard_name=soil_moisture_content, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  1330.98    	  1322.88    	  1327.50    
+40.0	  1271.48    	  1266.20    	  1211.32    
+39.0	  1222.08    	  1159.28    	 -999.000    
