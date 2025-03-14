@@ -1,12 +1,15 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
 cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=1, cpt:ncol=1, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2005-06/08
-	-75.0
-40.0	  296.137    
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=1, cpt:ncol=1, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2006-06/08
-	-75.0
-40.0	  296.115    
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=1, cpt:ncol=1, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2007-06/08
-	-75.0
-40.0	  296.259    
+cpt:field=t2m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2005-06/08
+	-77.5	-75.0
+40.0	  295.586    	  296.137    
+37.5	  297.741    	  297.301    
+cpt:field=t2m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2006-06/08
+	-77.5	-75.0
+40.0	  295.518    	  296.115    
+37.5	  297.738    	  297.249    
+cpt:field=t2m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2007-06/08
+	-77.5	-75.0
+40.0	  295.716    	  296.259    
+37.5	  297.909    	  297.372    
