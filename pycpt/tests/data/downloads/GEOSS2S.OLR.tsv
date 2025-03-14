@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=olr, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cf:standard_name=toa_outgoing_longwave_flux, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  243.535    	  244.878    	  246.586    
+40.0	  246.797    	  247.666    	  246.455    
+39.0	  248.745    	  248.617    	  250.096    
+cpt:field=olr, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cf:standard_name=toa_outgoing_longwave_flux, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  247.867    	  247.909    	  249.685    
+40.0	  252.139    	  251.936    	  249.608    
+39.0	  253.898    	  252.271    	  251.155    
+cpt:field=olr, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cf:standard_name=toa_outgoing_longwave_flux, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  244.455    	  245.050    	  246.337    
+40.0	  247.072    	  247.842    	  246.835    
+39.0	  248.552    	  248.630    	  249.446    

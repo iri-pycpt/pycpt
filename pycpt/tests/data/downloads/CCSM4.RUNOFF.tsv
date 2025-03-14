@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=runoff, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/s, cf:standard_name=runoff_flux, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	 1.390696E-05	 1.582969E-05	 1.648597E-05
+40.0	 1.242512E-05	 1.248538E-05	 8.309406E-06
+39.0	 1.087570E-05	 7.260233E-06	 -999.000    
+cpt:field=runoff, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/s, cf:standard_name=runoff_flux, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	 1.182866E-05	 1.292817E-05	 1.505696E-05
+40.0	 1.161194E-05	 1.166604E-05	 8.368328E-06
+39.0	 1.027568E-05	 7.536506E-06	 -999.000    
+cpt:field=runoff, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/s, cf:standard_name=runoff_flux, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	 1.257903E-05	 1.318939E-05	 1.392007E-05
+40.0	 1.122429E-05	 1.121016E-05	 7.330927E-06
+39.0	 9.826796E-06	 6.693740E-06	 -999.000    

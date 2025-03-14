@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=t2mmax, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  24.7388    	  25.4385    	  26.9478    
+40.0	  27.3624    	  27.7377    	  23.0540    
+39.0	  29.0174    	  24.5214    	  20.8037    
+cpt:field=t2mmax, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  27.5506    	  27.8912    	  29.2722    
+40.0	  30.9332    	  30.6087    	  24.9295    
+39.0	  31.7932    	  26.8704    	  22.6100    
+cpt:field=t2mmax, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  25.1079    	  25.6024    	  26.8449    
+40.0	  28.0651    	  28.0248    	  24.0379    
+39.0	  29.5899    	  25.7087    	  22.3778    

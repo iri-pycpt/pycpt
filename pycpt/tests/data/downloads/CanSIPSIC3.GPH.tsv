@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=hgt, cpt:L=2.5 months, cpt:P2=200.0 hPa, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  12278.2    	  12273.2    	  12268.6    
+40.0	  12300.9    	  12296.4    	  12292.1    
+39.0	  12321.0    	  12317.0    	  12313.2    
+cpt:field=hgt, cpt:L=2.5 months, cpt:P2=200.0 hPa, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  12265.2    	  12260.9    	  12256.9    
+40.0	  12289.5    	  12285.7    	  12282.1    
+39.0	  12311.4    	  12308.1    	  12305.0    
+cpt:field=hgt, cpt:L=2.5 months, cpt:P2=200.0 hPa, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  12260.5    	  12256.1    	  12252.0    
+40.0	  12284.9    	  12281.1    	  12277.4    
+39.0	  12306.9    	  12303.4    	  12300.3    

@@ -1,0 +1,18 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=aprod, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	 5.248643E-04	 5.342449E-04	 5.415117E-04
+40.0	 5.084918E-04	 5.164103E-04	 5.228970E-04
+39.0	 4.892593E-04	 4.949645E-04	 4.995602E-04
+cpt:field=aprod, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	 4.972519E-04	 5.056923E-04	 5.112055E-04
+40.0	 4.907327E-04	 4.991976E-04	 5.058745E-04
+39.0	 4.803850E-04	 4.886193E-04	 4.952090E-04
+cpt:field=aprod, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	 5.013162E-04	 5.112353E-04	 5.190870E-04
+40.0	 4.919377E-04	 5.025390E-04	 5.117856E-04
+39.0	 4.799784E-04	 4.910404E-04	 5.007294E-04
