@@ -1,0 +1,8 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=mrsov, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	  1222.70    	  1058.25    	  959.939    
+40.0	  933.732    	  952.823    	 -999.000    
+39.0	  919.369    	  1146.09    	 -999.000    

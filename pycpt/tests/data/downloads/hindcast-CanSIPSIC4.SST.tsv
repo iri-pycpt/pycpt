@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-09/11	2006-09/11	2007-09/11
+cpt:field=sst, cpt:L=2.5 months, cpt:S=2005-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2005-09/11
+	-76.0	-75.0	-74.0
+41.0	  289.912    	  289.957    	  290.399    
+40.0	  290.964    	  291.726    	  293.432    
+39.0	  292.003    	  293.562    	  295.108    
+cpt:field=sst, cpt:L=2.5 months, cpt:S=2006-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2006-09/11
+	-76.0	-75.0	-74.0
+41.0	  290.039    	  290.073    	  290.547    
+40.0	  291.075    	  291.853    	  293.650    
+39.0	  292.108    	  293.660    	  295.149    
+cpt:field=sst, cpt:L=2.5 months, cpt:S=2007-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2007-09/11
+	-76.0	-75.0	-74.0
+41.0	  289.952    	  289.995    	  290.495    
+40.0	  290.980    	  291.808    	  293.700    
+39.0	  291.993    	  293.640    	  295.230    

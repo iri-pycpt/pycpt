@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2022-06/08
+cpt:field=prec, cpt:L=2.5 months, cpt:S=2022-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_pecipitation_rate, cpt:missing=-999, cpt:T=2022-06/08
+	-76.0	-75.0	-74.0
+41.0	  359.247    	  377.650    	  372.867    
+40.0	  338.613    	  347.227    	  341.765    
+39.0	  332.440    	  337.667    	  374.646    

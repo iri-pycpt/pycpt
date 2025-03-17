@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	 4.228322E-02	 5.294166E-02	 3.020459E-02
+40.0	 1.713711E-02	 8.804460E-04	-7.416712E-03
+39.0	-4.383908E-03	-1.183401E-02	-6.546421E-03

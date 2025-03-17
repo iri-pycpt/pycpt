@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=runoff, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/s, cf:standard_name=runoff_flux, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	 1.310265E-05	 1.427693E-05	 1.554237E-05
+40.0	 1.207485E-05	 1.206978E-05	 9.029077E-06
+39.0	 1.030711E-05	 6.922009E-06	 -999.000    
