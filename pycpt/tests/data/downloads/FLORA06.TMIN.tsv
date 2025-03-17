@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=t_ref_min, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  282.128    	  282.821    	  285.205    
+40.0	  284.238    	  284.325    	  286.941    
+39.0	  285.440    	  286.703    	  289.010    
+cpt:field=t_ref_min, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  282.455    	  283.146    	  285.750    
+40.0	  284.539    	  284.668    	  287.737    
+39.0	  285.921    	  287.508    	  289.727    
+cpt:field=t_ref_min, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  282.312    	  282.972    	  284.955    
+40.0	  284.413    	  284.619    	  286.765    
+39.0	  285.698    	  287.046    	  289.283    

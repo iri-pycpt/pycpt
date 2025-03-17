@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=tauy, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_northward_stress, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	 8.243711E-03	 6.460628E-03	 1.346078E-02
+40.0	 3.278305E-03	 8.511976E-03	 2.146956E-02
+39.0	 3.369238E-02	 9.867871E-03	 3.636949E-03
+cpt:field=tauy, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_northward_stress, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	-2.131252E-03	 1.220775E-03	 1.197704E-02
+40.0	 1.263702E-02	 1.518594E-02	 2.800702E-02
+39.0	 7.677428E-02	 2.247405E-02	 1.458076E-02
+cpt:field=tauy, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_northward_stress, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	-6.406044E-04	-5.972208E-04	 5.486781E-03
+40.0	 6.674913E-04	 6.263252E-03	 1.550801E-02
+39.0	 3.554230E-02	 1.032265E-02	 6.860287E-03

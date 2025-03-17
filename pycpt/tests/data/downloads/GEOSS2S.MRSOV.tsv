@@ -1,0 +1,18 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=mrsov, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  1333.32    	  1304.61    	  981.586    
+40.0	  1047.63    	  681.006    	 -999.000    
+39.0	  1019.32    	  1003.54    	 -999.000    
+cpt:field=mrsov, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  910.361    	  921.456    	  836.610    
+40.0	  837.191    	  562.673    	 -999.000    
+39.0	  899.728    	  835.865    	 -999.000    
+cpt:field=mrsov, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  1152.98    	  1196.19    	  1021.17    
+40.0	  967.174    	  739.170    	 -999.000    
+39.0	  985.836    	  980.287    	 -999.000    

@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2005-06/08
+	-76.0	-75.0	-74.0
+41.0	  101412.    	  101413.    	  101411.    
+40.0	  101396.    	  101402.    	  101407.    
+39.0	  101391.    	  101406.    	  101420.    
+cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2006-06/08
+	-76.0	-75.0	-74.0
+41.0	  101390.    	  101394.    	  101393.    
+40.0	  101360.    	  101368.    	  101376.    
+39.0	  101340.    	  101358.    	  101373.    
+cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2007-06/08
+	-76.0	-75.0	-74.0
+41.0	  101431.    	  101428.    	  101419.    
+40.0	  101410.    	  101413.    	  101414.    
+39.0	  101401.    	  101414.    	  101424.    

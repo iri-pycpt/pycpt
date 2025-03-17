@@ -1,0 +1,15 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=u, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=ms-1, cpt:missing=-999, cpt:T=2005-06/08
+	-77.5	-75.0
+40.0	 0.271825    	 0.332079    
+37.5	 0.102896    	 0.929280    
+cpt:field=u, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=ms-1, cpt:missing=-999, cpt:T=2006-06/08
+	-77.5	-75.0
+40.0	 0.277404    	 0.376476    
+37.5	 8.661604E-02	 0.868696    
+cpt:field=u, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=ms-1, cpt:missing=-999, cpt:T=2007-06/08
+	-77.5	-75.0
+40.0	 0.253111    	 0.347089    
+37.5	 9.448455E-02	 0.878029    

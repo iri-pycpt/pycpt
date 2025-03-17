@@ -1,0 +1,15 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=slp, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2005-06/08
+	-77.5	-75.0
+40.0	  101435.    	  101458.    
+37.5	  101491.    	  101542.    
+cpt:field=slp, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2006-06/08
+	-77.5	-75.0
+40.0	  101473.    	  101497.    
+37.5	  101527.    	  101583.    
+cpt:field=slp, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2007-06/08
+	-77.5	-75.0
+40.0	  101529.    	  101559.    
+37.5	  101589.    	  101645.    
