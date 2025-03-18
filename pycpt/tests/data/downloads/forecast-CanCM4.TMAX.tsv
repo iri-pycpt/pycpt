@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2019-06/08
+cpt:field=tmax, cpt:L=2.5 months, cpt:S=2019-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2019-06/08
+	-76.0	-75.0	-74.0
+41.0	  302.789    	  301.578    	  300.308    
+40.0	  303.546    	  302.185    	  300.745    
+39.0	  304.396    	  303.070    	  301.664    

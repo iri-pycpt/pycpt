@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2023-06/08
+cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2023-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2023-06/08
+	-76.0	-75.0	-74.0
+41.0	 -2.29331    	 -1.97859    	 -1.65024    
+40.0	 -1.93411    	 -1.65271    	 -1.38384    
+39.0	 -1.65314    	 -1.41621    	 -1.19185    

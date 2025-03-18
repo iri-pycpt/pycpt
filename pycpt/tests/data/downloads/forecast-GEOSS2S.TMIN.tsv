@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=t2mmin, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	  15.2031    	  15.5552    	  16.4480    
+40.0	  17.0519    	  16.8503    	  16.4673    
+39.0	  19.2436    	  18.4727    	  17.9780    

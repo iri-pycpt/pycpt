@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	  101401.    	  101404.    	  101409.    
+40.0	  101418.    	  101425.    	  101435.    
+39.0	  101434.    	  101447.    	  101462.    

@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2022-06/08
+cpt:field=tmin, cpt:L=2.5 months, cpt:S=2022-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2022-06/08
+	-76.0	-75.0	-74.0
+41.0	  292.367    	  292.659    	  293.282    
+40.0	  293.776    	  294.423    	  295.408    
+39.0	  295.156    	  296.089    	  296.873    

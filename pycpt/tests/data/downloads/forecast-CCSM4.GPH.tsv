@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-06/08
+cpt:field=gz, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2020-06/08
+	-76.0	-75.0	-74.0
+41.0	  12309.1    	  12308.3    	  12308.1    
+40.0	  12332.5    	  12331.6    	  12330.3    
+39.0	  12353.5    	  12352.2    	  12351.0    
