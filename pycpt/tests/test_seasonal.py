@@ -96,14 +96,21 @@ def check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
             assert h[dim].equals(Y[dim])
 
     assert len(fcsts) == len(PREDICTOR_NAMES)
-    for f in fcsts:
-        assert set(f.data_vars) == set(['deterministic', 'probabilistic', 'prediction_error_variance'])
-        assert f['deterministic'].dims == ('T', 'Y', 'X')
-        assert f['prediction_error_variance'].dims == ('T', 'Y', 'X')
-        assert f['probabilistic'].dims == ('C', 'T', 'Y', 'X')
-        assert f['T'].equals(original_fcsts[0]['T'])
-        for dim in ('Y', 'X'):
-            assert f[dim].equals(Y[dim])
+    for i, f in enumerate(fcsts):
+        t = None
+        if original_fcsts[i] is None:
+            assert f is None
+        else:
+            assert set(f.data_vars) == set(['deterministic', 'probabilistic', 'prediction_error_variance'])
+            assert f['deterministic'].dims == ('T', 'Y', 'X')
+            assert f['prediction_error_variance'].dims == ('T', 'Y', 'X')
+            assert f['probabilistic'].dims == ('C', 'T', 'Y', 'X')
+            if t is None:
+                t = f['T']
+            else:
+                assert f['T'].equals(t)
+            for dim in ('Y', 'X'):
+                assert f[dim].equals(Y[dim])
 
     assert len(pxs) == len(PREDICTOR_NAMES)
     print(pxs)
@@ -226,10 +233,53 @@ def test_evaluate_models_skillmask():
     assert (f.sel(C='2') == 34).where(mask).sum() == 4
     assert (f.sel(C='3') == 33).where(mask).sum() == 4
 
+def test_evaluate_models_missing_cca():
+    MOS = 'CCA'
+    cpt_args = {}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    original_fcsts[0] = None
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
+    check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
+    assert pys == [None, None]
+
+def test_evaluate_models_missing_pcr():
+    MOS = 'PCR'
+    cpt_args = {}
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    original_fcsts[0] = None
+    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
+    check_model_skills(Y, skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
+    assert pys == [None, None]
+
 def test_construct_mme():
     MOS = 'CCA'
     cpt_args = DEFAULT_CPT_ARGS
     Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    with tempfile.TemporaryDirectory() as case_dir_name:
+        domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
+        interactive = False
+        hcsts, fcsts, skill, pxs, pys = pycpt.evaluate_models(
+            original_hcsts, MOS, Y, original_fcsts, cpt_args, domain_dir, PREDICTOR_NAMES, interactive
+        )
+        det_fcst, pr_fcst, pev_fcst, nextgen_skill = pycpt.construct_mme(
+            fcsts, hcsts, Y, PREDICTOR_NAMES, PREDICTOR_NAMES, cpt_args, domain_dir
+        )
+    assert det_fcst.dims == ('T', 'Y', 'X')
+    assert det_fcst.shape == (1, 4, 4)
+    assert pr_fcst.dims == ('C', 'T', 'Y', 'X')
+    assert pr_fcst.shape == (3, 1, 4, 4)
+    assert pev_fcst.dims == ('T', 'Y', 'X')
+    assert pev_fcst.shape == (1, 4, 4)
+    check_skill(Y, nextgen_skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
+
+def test_construct_mme_missing():
+    MOS = 'CCA'
+    cpt_args = DEFAULT_CPT_ARGS
+    Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, DEFAULT_PREDICTAND_NAME)
+    original_fcsts[0] = None
     fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
     with tempfile.TemporaryDirectory() as case_dir_name:
         domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
