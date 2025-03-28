@@ -15,13 +15,13 @@ DEFAULT_PREDICTAND_NAME = 'UCSB.PRCP'
 
 DOWNLOAD_ARGS = {
     'fdate':  dt.datetime(2023, 5, 1),
-    'first_year': 1992,  
-    'final_year': 2021,  
+    'first_year': 1992,
+    'final_year': 2021,
     'target': 'Jun-Sep',
     'predictor_extent': {
-        'west': -76, 
+        'west': -76,
         'east':  -74,
-        'south': 39, 
+        'south': 39,
         'north': 41,
     }, 
     'predictand_extent': {

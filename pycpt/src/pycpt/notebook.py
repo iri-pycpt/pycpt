@@ -271,17 +271,17 @@ def evaluate_models(
                 model_hcst, Y, F=forecast_data[i], **cpt_args
             )
 
-    #         fit CCA model again between X & Y, and produce in-sample probabilistic hindcasts
-    #         this is using X in place of F, with the year coordinates changed to n+100 years
-    #         because CPT does not allow you to make forecasts for in-sample data
+            # fit CCA model again between X & Y, and produce in-sample probabilistic hindcasts
+            # this is using X in place of F, with the year coordinates changed to n+100 years
+            # because CPT does not allow you to make forecasts for in-sample data
             cca_h, cca_f, cca_s, cca_px, cca_py = cc.canonical_correlation_analysis(
                 model_hcst, Y, \
                 F=ce.redate(model_hcst, yeardelta=48), **cpt_args
             )
             cca_h = xr.merge([cca_h, ce.redate(cca_f.probabilistic, yeardelta=-48), ce.redate(cca_f.prediction_error_variance, yeardelta=-48)])
 
-    #         # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
-    #         # warning - this produces unrealistically optimistic values
+            # use the in-sample probabilistic hindcasts to perform probabilistic forecast verification
+            # warning - this produces unrealistically optimistic values
             cca_pfv = cc.probabilistic_forecast_verification(cca_h.probabilistic, Y, **cpt_args)
             cca_s = xr.merge([cca_s, cca_pfv])
 
