@@ -5,6 +5,9 @@ import cptcore as cc
 import cptdl as dl
 import cptextras as ce
 import cptio as cio
+from IPython.core.interactiveshell import InteractiveShell
+import IPython.display
+from IPython.display import HTML
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
@@ -82,7 +85,64 @@ def download_data(
     hindcast_data = download_hindcasts(
         predictor_names, files_root, force_download, download_args
     )
+    summarize_available_years(predictand_name, predictor_names, Y, hindcast_data, forecast_data)
     return Y, hindcast_data, forecast_data
+
+
+def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts):
+    df = pd.DataFrame(
+        {predictand_name: pd.Series(Y['T'], Y['T'])} |
+        {
+            predictor_names[i]: pd.Series(h['T'], h['T'])
+            for i, h in enumerate(hcsts)
+        }
+    )
+    df = df.set_index(df.index.to_series().dt.year).notna()
+    if df.all(axis=None):
+        display(HTML(
+            'Observations and hindcasts were retrieved for all '
+            'years of the training period.'
+        ))
+    else:
+        display(HTML(
+            "Some hindcasts were missing for some years of "
+            "the training period. "
+            "Missing hindcasts are noted below. "
+            "If you continue, missing hindcasts will be replaced "
+            "with the missing model's climatology. "
+        ))
+        sdf = (
+            df.style
+            .format(lambda x: 'ok' if x else 'missing')
+            .map(lambda x: 'background: red' if not x else '')
+        )
+        display(sdf)
+
+    # This can't be written as `if None in fcsts` because that
+    # compares with `==` instead of `is`, which leads to evaluating a
+    # DataArray in boolean context, which is an error.
+    if any(f is None for f in fcsts):
+        display(HTML(
+            "The following forecasts were not available and will "
+            "be replaced with the missing model's climatology:"
+        ))
+        for name, fcst in zip(predictor_names, fcsts):
+            if fcst is None:
+                print(name, end=' ')
+        print()
+    else:
+        print("All forecasts were retrieved.")
+
+
+def display(o):
+    if InteractiveShell.initialized():
+        IPython.display.display(o)
+    elif hasattr(o, 'to_string'):
+        print(o.to_string())
+    elif hasattr(o, 'data'):
+        print(o.data)
+    else:
+        print(o)
 
 
 def target_midpoint(target):
@@ -1452,53 +1512,81 @@ def plot_mme_flex_forecast_v2(
 # construct_mme in 3.0.
 def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
     outputDir = domain_dir / "output"
-    det_fcst = []
-    det_hcst = []
-    pr_fcst = []
-    pr_hcst = []
-    pev_fcst = []
-    pev_hcst = []
-    for model in ensemble:
-        assert model in predictor_names, "all members of the nextgen ensemble must be in predictor_names - {} is not".format(model)
-        ndx = predictor_names.index(model)
 
-        det_hcst.append(hcsts[ndx].deterministic)
-        pr_hcst.append(hcsts[ndx].probabilistic)
-        pev_hcst.append(hcsts[ndx].prediction_error_variance)
-        if fcsts[ndx]:
-            det_fcst.append(fcsts[ndx].deterministic)
-            pr_fcst.append(fcsts[ndx].probabilistic)
-            pev_fcst.append(fcsts[ndx].prediction_error_variance)
+    unknown_members = set(ensemble) - set(predictor_names)
+    assert len(unknown_members) == 0, \
+        f"The following are in ensemble but not in predictor_names: " \
+        f"{unknown_members}"
 
-    det_fcst = xr.concat(det_fcst, 'model', compat='no_conflicts').mean('model')
-    det_hcst = xr.concat(det_hcst, 'model', compat='no_conflicts').mean('model')
-    pr_fcst = xr.concat(pr_fcst, 'model', compat='no_conflicts').mean('model')
-    pr_hcst = xr.concat(pr_hcst, 'model', compat='no_conflicts').mean('model')
-    pev_fcst = xr.concat(pev_fcst, 'model', compat='no_conflicts').mean('model')
-    pev_hcst = xr.concat(pev_hcst, 'model', compat='no_conflicts').mean('model')
 
-    det_hcst.attrs['missing'] = hcsts[0].attrs['missing']
-    det_hcst.attrs['units'] = hcsts[0].attrs['units']
+    # Hindcasts
+    hcsts_ds = xr.concat(
+        (hcsts[predictor_names.index(name)] for name in ensemble),
+        xr.Variable('model', ensemble),
+        compat='no_conflicts',
+    )
+    mu = hcsts_ds['deterministic']
+    climo_mu = mu.mean('T')
+    hcsts_ds['deterministic'] = mu.fillna(climo_mu)
 
-    pr_hcst.attrs['missing'] = hcsts[0].attrs['missing']
-    pr_hcst.attrs['units'] = hcsts[0].attrs['units']
+    var = hcsts_ds['prediction_error_variance']
+    climo_var = mu.var('T') # variance of the deterministic forecast
+    hcsts_ds['prediction_error_variance'] = var.fillna(climo_var)
 
-    nextgen_skill_deterministic = cc.deterministic_skill(det_hcst, Y, **cpt_args)
-    nextgen_skill_probabilistic = cc.probabilistic_forecast_verification(pr_hcst, Y, **cpt_args)
+    climo_prob = xr.DataArray([33, 34, 33], coords={'C': ['1', '2', '3']})
+    # TODO only fill in missing years, not missing locations?
+    hcsts_ds['probabilistic'] = hcsts_ds['probabilistic'].fillna(climo_prob)
+
+    mme_hcst = hcsts_ds.mean('model')
+    mme_hcst['deterministic'].attrs['missing'] = hcsts[0].attrs['missing']
+    mme_hcst['deterministic'].attrs['units'] = hcsts[0].attrs['units']
+    mme_hcst['probabilistic'].attrs['missing'] = hcsts[0].attrs['missing']
+    mme_hcst['probabilistic'].attrs['units'] = hcsts[0].attrs['units']
+
+    mme_hcst['deterministic'].to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
+    mme_hcst['prediction_error_variance'].to_netcdf(outputDir / ('MME_hindcast_prediction_error_variance.nc'))
+    mme_hcst['probabilistic'].to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
+
+
+    # Skill scores
+    nextgen_skill_deterministic = cc.deterministic_skill(mme_hcst['deterministic'], Y, **cpt_args)
+    nextgen_skill_probabilistic = cc.probabilistic_forecast_verification(mme_hcst['probabilistic'], Y, **cpt_args)
     nextgen_skill = xr.merge([nextgen_skill_deterministic, nextgen_skill_probabilistic])
-
-    # write out files to outputs directory (NB: generic filenaming neeeds improving)
-    assert len(det_fcst['S']) == 1
-    year = pd.Timestamp(det_fcst['S'].values[0]).year
-    det_fcst.to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
-    det_hcst.to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
-    pev_fcst.to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
-    pev_hcst.to_netcdf(outputDir / ('MME_hindcast_prediction_error_variance.nc'))
-    pr_fcst.to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
-    pr_hcst.to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
     nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
 
-    return det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill
+
+    # Forecasts
+    def forecast_or_climo(name):
+        f = fcsts[predictor_names.index(name)]
+        if f is None:
+            return xr.Dataset({
+                'deterministic': climo_mu.sel(model=name, drop=True),
+                'prediction_error_variance': climo_var.sel(model=name, drop=True),
+                'probabilistic': climo_prob,
+            })
+        else:
+            return f
+
+    mme_fcst = xr.concat(
+        [forecast_or_climo(name) for name in ensemble],
+        xr.Variable('model', ensemble),
+        compat='no_conflicts',
+    ).mean('model')
+    assert len(mme_fcst['S']) == 1
+    year = pd.Timestamp(mme_fcst['S'].values[0]).year
+    mme_fcst['deterministic'].to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
+    mme_fcst['prediction_error_variance'].to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
+    mme_fcst['probabilistic'].to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
+
+    # TODO in 3.0, return whole Datasets instead of the individual DataArrays
+    return (
+        mme_hcst['deterministic'],
+        mme_hcst['prediction_error_variance'],
+        mme_fcst['deterministic'],
+        mme_fcst['probabilistic'],
+        mme_fcst['prediction_error_variance'],
+        nextgen_skill,
+    )
 
 
 # Backwards-compatible version of construct_mme_new, to avoid breaking existing

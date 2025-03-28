@@ -4,11 +4,12 @@ import importlib.util
 from pathlib import Path
 
 
-def generate_forecasts():
+def generate_forecasts(missing_ok=False):
     import pycpt.automation
     parser = argparse.ArgumentParser(
         description='Generates PyCPT forecasts from a predetermined configuration',
     )
+    parser.add_argument('--allow-missing', action='store_true')
     parser.add_argument('configfile')
     args = parser.parse_args()
 
@@ -37,6 +38,7 @@ def generate_forecasts():
         config.local_predictand_file,
         config.download_args,
         config.cpt_args,
+        args.allow_missing,
     )
 
 

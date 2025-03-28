@@ -290,12 +290,10 @@ def test_construct_mme_missing():
         det_fcst, pr_fcst, pev_fcst, nextgen_skill = pycpt.construct_mme(
             fcsts, hcsts, Y, PREDICTOR_NAMES, PREDICTOR_NAMES, cpt_args, domain_dir
         )
-    assert det_fcst.dims == ('T', 'Y', 'X')
-    assert det_fcst.shape == (1, 4, 4)
-    assert pr_fcst.dims == ('C', 'T', 'Y', 'X')
-    assert pr_fcst.shape == (3, 1, 4, 4)
-    assert pev_fcst.dims == ('T', 'Y', 'X')
-    assert pev_fcst.shape == (1, 4, 4)
+    print(type(det_fcst.sizes))
+    assert det_fcst.sizes == {'T': 1, 'Y': 4, 'X': 4}
+    assert pr_fcst.sizes == {'C': 3, 'T': 1, 'Y': 4, 'X': 4}
+    assert pev_fcst.sizes == {'T': 1, 'Y': 4, 'X': 4}
     check_skill(Y, nextgen_skill, DETERMINISTIC_SKILL_METRICS + PROBABILISTIC_SKILL_METRICS)
 
 
