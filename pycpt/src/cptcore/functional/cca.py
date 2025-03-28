@@ -392,7 +392,7 @@ def canonical_correlation_analysis(
 
     result = (
         snap_to(Y, hcsts),
-        snap_to(Y, fcsts),
+        snap_to(Y, fcsts) if fcsts is not None else None,
         snap_to(Y, skill_values),
         snap_to(X, x_pattern_values),
         snap_to(Y, y_pattern_values),

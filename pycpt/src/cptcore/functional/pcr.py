@@ -291,7 +291,7 @@ def principal_components_regression(
 
     return (
         snap_to(Y, hcsts),
-        snap_to(Y, fcsts),
+        snap_to(Y, fcsts) if fcsts is not None else None,
         snap_to(Y, skill_values),
         snap_to(X, pattern_values),
     )

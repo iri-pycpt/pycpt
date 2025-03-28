@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from PIL import Image
+import requests
 from scipy.stats import norm, t
 import warnings
 import xarray as xr
@@ -52,10 +53,16 @@ def setup_domain_dir(files_root):
 
 
 def download_data(
-        predictand_name, local_predictand_file, predictor_names, download_args, files_root, force_download
+        predictand_name,
+        local_predictand_file,
+        predictor_names,
+        download_args,
+        files_root,
+        force_download,
+        missing_ok=False,
 ):
     forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args
+        predictor_names, files_root, force_download, download_args, missing_ok
     )
     if local_predictand_file is None:
         Y = download_observations(
@@ -208,17 +215,27 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
     ]
 
 
-def download_forecasts(predictor_names, files_root, force_download, download_args):
-    for v in predictor_names:
-        warn_if_deprecated(v)
-    return [
-        cached_download(
-            dl.forecasts[model], files_root,
-            f'{model}_f{download_args["fdate"].year}',
-            force_download, download_args
-        )
-        for model in predictor_names
-    ]
+def download_forecasts(predictor_names, files_root, force_download, download_args, missing_ok=False):
+    results = []
+    for model in predictor_names:
+        warn_if_deprecated(model)
+        try:
+            da = cached_download(
+                dl.forecasts[model],
+                files_root,
+                f'{model}_f{download_args["fdate"].year}',
+                force_download,
+                download_args,
+            )
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 404 and missing_ok:
+                print('Not found. Continuing without it.')
+                da = None
+            else:
+                raise
+        results.append(da)
+
+    return results
 
 
 def cached_download(url_pattern, files_root, basename, force_download, download_args):
@@ -319,13 +336,15 @@ def evaluate_models(
         # choose what data to export here (any of the above results data arrays can be saved to netcdf)
         if str(MOS).upper() == 'CCA':
             cca_h.to_netcdf(outputDir /  (predictor_names[i] + '_crossvalidated_cca_hindcasts.nc'))
-            cca_rtf.to_netcdf(outputDir / (predictor_names[i] + '_realtime_cca_forecasts.nc'))
+            if cca_rtf is not None:
+                cca_rtf.to_netcdf(outputDir / (predictor_names[i] + '_realtime_cca_forecasts.nc'))
             cca_s.to_netcdf(outputDir / (predictor_names[i] + '_skillscores_cca.nc'))
             cca_px.to_netcdf(outputDir / (predictor_names[i] + '_cca_x_spatial_loadings.nc'))
             cca_py.to_netcdf(outputDir / (predictor_names[i] + '_cca_y_spatial_loadings.nc'))
         elif str(MOS).upper() == 'PCR':
             pcr_h.to_netcdf(outputDir /  (predictor_names[i] + '_crossvalidated_pcr_hindcasts.nc'))
-            pcr_rtf.to_netcdf(outputDir / (predictor_names[i] + '_realtime_pcr_forecasts.nc'))
+            if pcr_rtf is not None:
+                pcr_rtf.to_netcdf(outputDir / (predictor_names[i] + '_realtime_pcr_forecasts.nc'))
             pcr_s.to_netcdf(outputDir / (predictor_names[i] + '_skillscores_pcr.nc'))
             pcr_px.to_netcdf(outputDir / (predictor_names[i] + '_pcr_x_spatial_loadings.nc'))
         else:
@@ -773,11 +792,6 @@ def plot_forecasts(
     prob_missing_value_flag = -1
     my_dpi = 100
 
-    graph_orientation = ce.graphorientation(
-        len(fcsts[0]["X"]),
-        len(fcsts[0]["Y"])
-    )
-
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
         cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
     )
@@ -787,6 +801,13 @@ def plot_forecasts(
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
     for i in range(len(fcsts)):
+        if fcsts[i] is None:
+            continue
+
+        graph_orientation = ce.graphorientation(
+            len(fcsts[i]["X"]),
+            len(fcsts[i]["Y"])
+        )
         if graph_orientation == "horizontal":
             fig = plt.figure(figsize=(18, 10), facecolor="w", dpi=my_dpi)
         else:
@@ -1441,12 +1462,13 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
         assert model in predictor_names, "all members of the nextgen ensemble must be in predictor_names - {} is not".format(model)
         ndx = predictor_names.index(model)
 
-        det_fcst.append(fcsts[ndx].deterministic)
         det_hcst.append(hcsts[ndx].deterministic)
-        pr_fcst.append(fcsts[ndx].probabilistic)
         pr_hcst.append(hcsts[ndx].probabilistic)
-        pev_fcst.append(fcsts[ndx].prediction_error_variance)
         pev_hcst.append(hcsts[ndx].prediction_error_variance)
+        if fcsts[ndx]:
+            det_fcst.append(fcsts[ndx].deterministic)
+            pr_fcst.append(fcsts[ndx].probabilistic)
+            pev_fcst.append(fcsts[ndx].prediction_error_variance)
 
     det_fcst = xr.concat(det_fcst, 'model', compat='no_conflicts').mean('model')
     det_hcst = xr.concat(det_hcst, 'model', compat='no_conflicts').mean('model')
