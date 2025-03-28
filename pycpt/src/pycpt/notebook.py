@@ -1448,12 +1448,12 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
         pev_fcst.append(fcsts[ndx].prediction_error_variance)
         pev_hcst.append(hcsts[ndx].prediction_error_variance)
 
-    det_fcst = xr.concat(det_fcst, 'model').mean('model')
-    det_hcst = xr.concat(det_hcst, 'model').mean('model')
-    pr_fcst = xr.concat(pr_fcst, 'model').mean('model')
-    pr_hcst = xr.concat(pr_hcst, 'model').mean('model')
-    pev_fcst = xr.concat(pev_fcst, 'model').mean('model')
-    pev_hcst = xr.concat(pev_hcst, 'model').mean('model')
+    det_fcst = xr.concat(det_fcst, 'model', compat='no_conflicts').mean('model')
+    det_hcst = xr.concat(det_hcst, 'model', compat='no_conflicts').mean('model')
+    pr_fcst = xr.concat(pr_fcst, 'model', compat='no_conflicts').mean('model')
+    pr_hcst = xr.concat(pr_hcst, 'model', compat='no_conflicts').mean('model')
+    pev_fcst = xr.concat(pev_fcst, 'model', compat='no_conflicts').mean('model')
+    pev_hcst = xr.concat(pev_hcst, 'model', compat='no_conflicts').mean('model')
 
     det_hcst.attrs['missing'] = hcsts[0].attrs['missing']
     det_hcst.attrs['units'] = hcsts[0].attrs['units']
