@@ -1,10 +1,11 @@
 import cptdl as dl
 import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 from pathlib import Path
+import requests.exceptions
 import shutil
 import tempfile
-import numpy as np
-import requests.exceptions
 import xarray as xr
 
 from . import notebook
@@ -78,6 +79,7 @@ def update_one_issue(
         domain_dir,
         det_fcst,
     )
+    plt.close('all')
     figfile = domain_dir / 'figures' / f"{MOS}_ensemble_probabilistic-deterministicForecast.png"
     figname = f"forecast_{download_args['target']}_ini-{issue_year}-{issue_month:02}.png"
     # Using shutil.move rather than figfile.rename because the latter
