@@ -85,7 +85,6 @@ def evaluate_url(url, ensemblemean=True, **kwargs):
 def simple_download(url, dest, verbose=False, use_dlauth=False):
     if verbose:
         print('URL: {}'.format(url))
-        print()
     if str(use_dlauth) == 'True':
         dlauthid = read_dlauth()
         assert dlauthid is not None, "You need to use cpttools.setup_dlauth('your_email') to get a cookie before you can download this data! or, you can try setting use_dlauth=False"

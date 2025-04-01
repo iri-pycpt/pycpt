@@ -316,6 +316,7 @@ def cached_download(url_pattern, files_root, basename, force_download, download_
         print(f'Reusing already-downloaded {basename}')
         ds = xr.open_dataset(ncfile)
 
+    print()
     return getattr(ds, [i for i in ds.data_vars][0])
 
 
