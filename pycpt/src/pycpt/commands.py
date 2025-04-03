@@ -4,7 +4,7 @@ import importlib.util
 from pathlib import Path
 
 
-def generate_forecasts(missing_ok=False):
+def generate_forecasts(allow_missing=False):
     import pycpt.automation
     parser = argparse.ArgumentParser(
         description='Generates PyCPT forecasts from a predetermined configuration',

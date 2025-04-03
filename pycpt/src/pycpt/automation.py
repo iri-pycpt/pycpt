@@ -12,12 +12,12 @@ from . import notebook
 
 def generate_forecast(
         domain_dir, MOS, predictor_names, predictand_name, local_predictand_file,
-        download_args, cpt_args, missing_ok
+        download_args, cpt_args, allow_missing
 ):
     notebook.setup_domain_dir(domain_dir)
     Y, hindcast_data, forecast_data = notebook.download_data(
         predictand_name, local_predictand_file, predictor_names, download_args,
-        domain_dir, force_download=False, missing_ok=missing_ok
+        domain_dir, force_download=False, allow_missing=allow_missing
         # force_download=False is safe because the directory starts out
         # empty unless we explicitly used the -g flag for debugging.
     )
@@ -51,12 +51,12 @@ def ensure_file_monthdir(src_ds, dest_dir, name):
 def update_one_issue(
         dest_dir,
         domain_dir, MOS, predictor_names, predictand_name, local_predictand_file,
-        download_args, cpt_args, missing_ok
+        download_args, cpt_args, allow_missing
 ):
     Y, det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill = (
         generate_forecast(
             domain_dir, MOS, predictor_names, predictand_name, local_predictand_file,
-            download_args, cpt_args, missing_ok
+            download_args, cpt_args, allow_missing
         )
     )
     issue_year = det_fcst['S'].dt.year.item()
@@ -90,7 +90,7 @@ def update_one_issue(
 
 def update_all(dest_dir, issue_months, skip_issue_dates,
                MOS, predictor_names, predictand_name, local_predictand_file,
-               download_args, cpt_args, missing_ok,
+               download_args, cpt_args, allow_missing,
                *,
                now=None, persistent_dir=None):
     if now is None:
@@ -130,7 +130,7 @@ def update_all(dest_dir, issue_months, skip_issue_dates,
                             local_predictand_file,
                             issue_download_args,
                             cpt_args,
-                            missing_ok,
+                            allow_missing,
                         )
                     except Exception as e:
                         # Treat most exceptions as fatal, but if we
