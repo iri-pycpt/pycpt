@@ -13,6 +13,10 @@ cptbin = "==17.8.3"
 [feature.dev.dependencies]
 pytest = "*"
 
+[feature.dev.pypi-dependencies]
+cptio = {path = "./cpt-io", editable = true}
+pycpt = {path = "./pycpt", editable = true}
+
 [environments]
 default = {features = ["dev"], solve-group = "prod"}
 prod = {features = [], solve-group = "prod"}
