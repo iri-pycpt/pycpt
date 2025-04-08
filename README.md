@@ -31,17 +31,19 @@ Instructions for creating a release are given in the [Publishing new versions](#
 
 ## Development setup
 
-All of the PyCPT python packages support pip's [development mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html), which allows you to edit the python code and test it in place, without building and installing a new package each time. To create a conda environment for testing changes, start with the environment from the latest release, and then replace each of the pycpt packages with your editable copy. That is,
-- Download the release file for your platform, e.g. `conda-linux-64.lock`
-- `conda create -n pycpt-dev --file conda-linux-64.lock`
-- `conda activate pycpt-dev`
-- clone the `pycpt` repository and `cd` into it
-- `pip install -e cptbin`
-- `pip install -e cptio`
-- `pip install -e pycpt`
-- `conda install -c conda-forge --override-channels pytest=8.3.3`
+We are now using [`pixi`](https://pixi.sh/) instead of `conda` to manage the
+development environment. After installing pixi and checking out this repository,
+you can run jupyter notebook with the command
+```
+pixi run jupyter notebook --notebook-dir ~/src/notebooks
+```
+replacing `~/src/notebooks` with the path to the directory containing the
+notebook you want to edit. The first time you run this command, `pixi` will
+automatically download and install the necessary packages, based on the contents
+of `pixi.toml`.
 
-Then you can run PyCPT in the pycpt-dev environment. When you make changes to the PyCPT code, restart the jupyter kernel to load the modified version.
+Unlike with `conda`, you must cd to this project's directory to use
+`pixi run` (hence the use of `--notebook-dir`).
 
 ## Publishing changes
 
