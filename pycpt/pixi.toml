@@ -1,0 +1,45 @@
+[workspace]
+authors = ["IRI <pycpt-help@iri.columbia.edu>"]
+channels = ["iri-nextgen", "conda-forge"]
+platforms = ["linux-64"]
+preview = ["pixi-build"]
+
+[dependencies]
+pycpt = {path = "."}
+
+[package]
+name = "pycpt"
+version = "2.9.5.dev0"
+
+[package.build]
+backend = {name = "pixi-build-python", version = "0.1.*"}
+channels = [
+  "https://prefix.dev/pixi-build-backends",
+  "https://prefix.dev/conda-forge",
+]
+
+[package.host-dependencies]
+setuptools = "78.1.*"
+
+[package.run-dependencies]
+# 3.13 changes undefined behavior on which cptdl relies.
+python = ">=3.8,<3.13"
+bottleneck = "*"
+cartopy = "*"
+cptbin = "*"
+cptio = "*"
+dask = "*"
+ftputil = "*"
+netcdf4 = "*"
+notebook = "*"
+numpy = "*"
+psutil = "*"
+requests = "*"
+scipy = "*"
+statsmodels = "*"
+xarray = "*"
+# requests depends on urllib3; urllib3 v2 removes all the old,
+# unsafe ciphers that are currently supported by the ancient
+# version of squid on iridl.ldeo.columbia.edu, causing all https
+# downloads to fail.
+urllib3 = "<2"
