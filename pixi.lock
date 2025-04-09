@@ -4,8 +4,6 @@ environments:
     channels:
     - url: https://conda.anaconda.org/iri-nextgen/
     - url: https://conda.anaconda.org/conda-forge/
-    indexes:
-    - https://pypi.org/simple
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -60,7 +58,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/comm-0.2.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/contourpy-1.2.1-py312h8572e83_0.conda
       - conda: https://conda.anaconda.org/iri-nextgen/linux-64/cptbin-17.8.3-h3d0eb6f_0.tar.bz2
-      - conda: https://conda.anaconda.org/iri-nextgen/noarch/cptio-1.3.1-py_2.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/cytoolz-0.12.3-py312h98912ed_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/dask-2024.10.0-pyhd8ed1ab_0.conda
@@ -281,8 +278,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.20.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zlib-1.3.1-h4ab18f5_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
-      - pypi: ./cpt-io
-      - pypi: ./pycpt
+      - conda: ./cpt-io
+      - conda: ./pycpt
       osx-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/appnope-0.1.4-pyhd8ed1ab_0.conda
@@ -335,7 +332,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/comm-0.2.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/contourpy-1.3.0-py312h2a50410_2.conda
       - conda: https://conda.anaconda.org/iri-nextgen/osx-64/cptbin-17.8.3-hae5c3c8_0.tar.bz2
-      - conda: https://conda.anaconda.org/iri-nextgen/noarch/cptio-1.3.1-py_2.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/cytoolz-1.0.0-py312hb553811_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/dask-2024.10.0-pyhd8ed1ab_0.conda
@@ -552,8 +548,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.20.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/zlib-1.3.1-hd23fc13_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/zstd-1.5.6-h915ae27_0.conda
-      - pypi: ./cpt-io
-      - pypi: ./pycpt
+      - conda: ./cpt-io
+      - conda: ./pycpt
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/argon2-cffi-23.1.0-pyhd8ed1ab_0.conda
@@ -600,7 +596,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/comm-0.2.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/contourpy-1.3.0-py312hd5eb7cc_2.conda
       - conda: https://conda.anaconda.org/iri-nextgen/win-64/cptbin-17.8.3-0.tar.bz2
-      - conda: https://conda.anaconda.org/iri-nextgen/noarch/cptio-1.3.1-py_2.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/cytoolz-1.0.0-py312h4389bb4_1.conda
@@ -820,8 +815,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.20.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/zlib-1.3.1-h2466b09_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.6-h0ea2cb4_0.conda
-      - pypi: ./cpt-io
-      - pypi: ./pycpt
+      - conda: ./cpt-io
+      - conda: ./pycpt
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
   sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
@@ -2381,21 +2376,18 @@ packages:
   md5: 3b301106ac7119a3c0951a0c6aeb0cf6
   size: 14265270
   timestamp: 1679517745884
-- pypi: ./cpt-io
+- conda: ./cpt-io
   name: cptio
   version: 1.3.2.dev0
-  sha256: 6f233bdbc1b9ec4546afe54481740f47e4dc298e1c50e01d1deea8b5ccc5731b
-  requires_python: '>=3.0'
-  editable: true
-- conda: https://conda.anaconda.org/iri-nextgen/noarch/cptio-1.3.1-py_2.tar.bz2
-  sha256: ab51bf35c40884b5ba16d26e49a590d2073195d4022d5beec2a80f4318c09eaa
-  md5: a9bb0ebb2a7509ffc79af041b77ea14d
+  build: pyhbf21a9e_0
+  subdir: noarch
   depends:
-  - python
   - xarray
-  license: MIT
-  size: 22820
-  timestamp: 1734634732899
+  - python
+  input:
+    hash: e1d4dcb913c571d67a19a010b241bc908195f20bdc80ad42a76404cfdae2909e
+    globs:
+    - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
   noarch: generic
   sha256: 9bbd08c83cc9c3142755b96dc5f3e0f0370d7afdb773c8285359b31e7ce96f0a
@@ -6908,12 +6900,33 @@ packages:
   - pkg:pypi/pycparser?source=hash-mapping
   size: 105098
   timestamp: 1711811634025
-- pypi: ./pycpt
+- conda: ./pycpt
   name: pycpt
   version: 2.9.5.dev0
-  sha256: 18aef10f22f4e08e962a5141ee74f774de83930ca2049fff393b69e2e5c7d1d6
-  requires_python: '>=3.8'
-  editable: true
+  build: pyhbf21a9e_0
+  subdir: noarch
+  depends:
+  - python >=3.8,<3.13
+  - bottleneck
+  - cartopy
+  - cptbin
+  - cptio
+  - dask
+  - ftputil
+  - netcdf4
+  - notebook
+  - numpy
+  - psutil
+  - requests
+  - scipy
+  - statsmodels
+  - xarray
+  - urllib3 <2
+  - python
+  input:
+    hash: 876070babd195975f3f098c25afe93b493885382f4de8eae87a140bb31aa56a3
+    globs:
+    - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
   sha256: 78267adf4e76d0d64ea2ffab008c501156c108bb08fecb703816fb63e279780b
   md5: b7f5c092b8f9800150d998a71b76d5a1
