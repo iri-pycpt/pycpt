@@ -5,25 +5,6 @@ channels = ["iri-nextgen", "conda-forge"]
 platforms = ["linux-64", "win-64", "osx-64"]
 preview = ["pixi-build"]
 
-[dependencies]
-# copied from pycpt/conda-recipe/meta.yaml. See notes there.
-python = ">=3.8,<3.13"
-bottleneck = "*"
-cartopy = "*"
-cptbin = "*"
-cptio = "*"
-dask = "*"
-ftputil = "*"
-netcdf4 = "*"
-notebook = "*"
-numpy = "*"
-psutil = "*"
-requests = "*"
-scipy = "*"
-statsmodels = "*"
-xarray = "*"
-urllib3 = "<2"
-
 [feature.dev.dependencies]
 pytest = "*"
 cptio = {path = "./cpt-io"}
