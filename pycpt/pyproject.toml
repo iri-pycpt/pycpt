@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools >= 78.1.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycpt"
+version = "2.9.5.dev0"
+authors = [{name = "IRI", email = "pycpt-help@iri.columbia.edu"}]
+description = "Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool"
+readme = "README.md"
+license = "MIT"
+keywords = [
+    "climate", 'predictability', 'prediction', 'precipitation', 'temperature', 'data', 'IRI'
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Utilities",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+generate-forecasts-from-config = "pycpt.commands:generate_forecasts"
+upload-forecasts-from-config = "pycpt.commands:upload_forecasts"
+
+[project.urls]
+Homepage = "https://iri.columbia.edu/our-expertise/climate/tools/"
+Documentation = "https://iri-pycpt.github.io/"
+Repository = "https://github.com/iri-pycpt/pycpt"
