@@ -2385,7 +2385,7 @@ packages:
   - xarray
   - python
   input:
-    hash: e1d4dcb913c571d67a19a010b241bc908195f20bdc80ad42a76404cfdae2909e
+    hash: 943958c8015b23c6e5bd047593e5f8453f83edb768848a641c00f9b804c75a2c
     globs:
     - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
@@ -6924,7 +6924,7 @@ packages:
   - urllib3 <2
   - python
   input:
-    hash: 876070babd195975f3f098c25afe93b493885382f4de8eae87a140bb31aa56a3
+    hash: 248d50a47edcd4b043fe337b770589a1a830c1fa3fca4b614b13fb36ddff9382
     globs:
     - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
