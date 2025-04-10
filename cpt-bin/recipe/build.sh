@@ -1,6 +1,10 @@
 set -x
 
-cd "$SRC_DIR/$PKG_VERSION"
+cd "$SRC_DIR"
+# The rattler-build docs say that it automatically unpacks this,
+# but it doesn't.
+tar zxf CPT.$PKG_VERSION.tar.gz
+cd "CPT/$PKG_VERSION"
 # Some files use DOS line endings, some unix. Gnu patch doesn't like patching the DOS ones.
 dos2unix data_io_constants.F95
 patch < "$RECIPE_DIR/patch"

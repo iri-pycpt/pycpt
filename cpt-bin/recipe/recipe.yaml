@@ -1,0 +1,76 @@
+context:
+  name: cptbin
+  version: 17.8.4
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+    #- url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version }}.tar.gz
+    # applying patches in build script, not here.
+    url: https://academiccommons.columbia.edu/doi/10.7916/08zy-yz03/download
+    sha256: fb1f775cd2ec0d1becb9ac06a50f092896944b0e9237257d4497a252c565d95d
+    file_name: CPT.${{ version }}.tar.gz
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - ${{ compiler('fortran') }}
+    - make
+    - if: not win
+      then:
+        # helps with patching source code with inconsistent line
+        # endings
+        - dos2unix
+    - if: linux
+      then:
+        - libgfortran5=13.2
+        - libgcc-ng=13.2
+  host:
+    - if: linux
+      then:
+        - libgfortran5=13.2
+        - libgcc-ng=13.2
+  run:
+    - if: linux
+      then:
+        - libgfortran5=13.2
+        - libgcc-ng=13.2
+
+tests:
+  - script:
+      - if: not win
+        then: "echo 0 | \"$CONDA_PREFIX/bin/CPT.x\" | grep \"International Research Institute\""
+
+      - if: win
+        # Use full path of Windows find to avoid getting the msys2 find
+        then: "echo 0 | \"%CONDA_PREFIX%\\Library\\cpt\\CPT_batch.exe\" | C:\\Windows\\System32\\find.exe \"International Research Institute\""
+
+about:
+  summary: The Climate Predictability Tool
+  description: |
+    The Climate Predictability Tool (CPT) is a software package for
+    constructing a seasonal climate forecast model, performing model
+    validation, and producing forecasts given updated data. Its design
+    has been tailored for producing seasonal climate forecasts using
+    model output statistic (MOS) corrections to climate predictions
+    from general circulation model (GCM), or for producing forecasts
+    using fields of sea-surface temperatures or similar
+    predictors. Although the software is specifically tailored for
+    these applications, it can be used in more general settings to
+    perform canonical correlation analysis (CCA), principal components
+    regression (PCR), or multiple linear regression (MLR) on any data,
+    and for any application.
+  license_file:
+    # Would rather get the licenses directly from the source package,
+    # but conda-build can't automaticaly extract files from the
+    # windows exe installer, so keeping copies of the licenses in the
+    # recipe for now.
+    # - {{ version }}/LICENSE  # [not win]
+    # - {{ version }}/lapack/lapack/LICENSE  # [not win]
+    - LICENSE
+    - vendor-licenses/
+  homepage: https://iri.columbia.edu/our-expertise/climate/tools/cpt/
