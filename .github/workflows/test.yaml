@@ -1,12 +1,6 @@
 on:
+  pull_request:
   workflow_dispatch:
-env:
-  CONDA_TYPE: Miniforge3
-  CONDA_VERSION: 24.7.1-2
-  CONDA_PATH: /opt/conda
-  CONDA_CACHEBUST: 0
-  ENV_CACHEBUST: 3
-  ENV_NAME: pycpt
 jobs:
   test:
     name: test-pycpt
@@ -14,57 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: restore miniconda cache
-        id: restore-miniconda
-        uses: actions/cache/restore@v3
+      - uses: prefix-dev/setup-pixi@v0.8.4
         with:
-          path: ${{env.CONDA_PATH}}
-          key: miniconda-${{env.CONDA_TYPE}}-${{env.CONDA_VERSION}}-${{env.CONDA_CACHEBUST}}
+          pixi-version: v0.45.0
+          cache: true
 
-      # I tried and rejected the existing setup-miniconda action,
-      # because it wipes out a bunch of files like ~/.profile,
-      # ~/.bashrc, ~/.bash_profile in a way that (a) won't interact
-      # well with other actions that also need to modify the shell
-      # environment, and (b) doesn't play well with caching (you can't
-      # cache the deletion of a file). Also this way seems to take
-      # about half the time (though that might just be random
-      # variation).
-      - name: download miniconda
-        run: curl -L --no-progress-meter -o miniconda-installer.sh "https://github.com/conda-forge/miniforge/releases/download/${{env.CONDA_VERSION}}/${{env.CONDA_TYPE}}-${{env.CONDA_VERSION}}-Linux-x86_64.sh"
-        if: steps.restore-miniconda.outputs.cache-hit != 'true'
-
-      - name: run miniconda installer
-        run: bash miniconda-installer.sh -b -p ${{env.CONDA_PATH}}
-        if: steps.restore-miniconda.outputs.cache-hit != 'true'
-
-      - name: clean up miniconda to reduce cache size
-        run: rm miniconda-installer.sh && source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && conda clean -afy
-        if: steps.restore-miniconda.outputs.cache-hit != 'true'
-
-      - name: save miniconda cache
-        uses: actions/cache/save@v3
-        with:
-          path: ${{env.CONDA_PATH}}
-          key: miniconda-${{env.CONDA_TYPE}}-${{env.CONDA_VERSION}}-${{env.CONDA_CACHEBUST}}
-        if: steps.restore-miniconda.outputs.cache-hit != 'true'
-
-      - name: restore conda environment cache
-        id: restore-env
-        uses: actions/cache/restore@v3
-        with:
-          path: ${{env.CONDA_PATH}}/envs/${{env.ENV_NAME}}
-          key: ${{env.ENV_NAME}}-env-${{ hashFiles('test-environment-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
-
-      - name: install dependencies
-        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && mamba create -n ${{env.ENV_NAME}} --file test-environment-linux-64.lock
-        if: steps.restore-env.outputs.cache-hit != 'true'
-
-      - name: save conda environment cache
-        uses: actions/cache/save@v3
-        with:
-          path: ${{env.CONDA_PATH}}/envs/${{env.ENV_NAME}}
-          key: ${{env.ENV_NAME}}-env-${{ hashFiles('test-environment-linux-64.lock') }}-${{env.CONDA_CACHEBUST}}-${{env.ENV_CACHEBUST}}
-        if: steps.restore-env.outputs.cache-hit != 'true'
-
-      - name: install packages and run tests
-        run: source ${{env.CONDA_PATH}}/etc/profile.d/conda.sh && conda activate ${{env.ENV_NAME}} && for p in cpt-io pycpt; do pip install ./$p; done && pytest
+      - run: pixi run pytest

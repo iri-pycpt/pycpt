@@ -1,0 +1,15 @@
+[package]
+name = "cptio"
+version = "1.3.2.dev0"
+
+[package.build]
+backend = {name = "pixi-build-python", version = "0.1.*"}
+channels = [
+  "https://prefix.dev/pixi-build-backends",
+]
+
+[package.host-dependencies]
+setuptools = "78.1.*"
+
+[package.run-dependencies]
+xarray = "*"

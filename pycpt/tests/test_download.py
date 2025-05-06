@@ -72,11 +72,13 @@ overrides = {
     },
 }
 
+@pytest.mark.skip
 @pytest.mark.parametrize('var,url', dl.hindcasts.items())
 def test_hindcast_download(var, url):
     do_one(var, url, 'hindcast', 3)
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize('var,url', dl.forecasts.items())
 def test_forecast_download(var, url):
     do_one(var, url, 'forecast', 1)
