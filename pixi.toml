@@ -9,6 +9,12 @@ platforms = ["linux-64", "win-64", "osx-64"]
 preview = ["pixi-build"]
 
 [dependencies]
-pytest = "*"
 cptio = {path = "./cpt-io"}
 pycpt = {path = "./pycpt"}
+
+[feature.dev.dependencies]
+pytest = "*"
+
+[environments]
+default = {features = ["dev"], solve-group = "prod"}
+prod = {features = [], solve-group = "prod"}
