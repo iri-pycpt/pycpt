@@ -62,10 +62,9 @@ def download_data(
         download_args,
         files_root,
         force_download,
-        allow_missing=False,
 ):
     forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args, allow_missing
+        predictor_names, files_root, force_download, download_args
     )
     if local_predictand_file is None:
         Y = download_observations(
@@ -275,7 +274,7 @@ def download_hindcasts(predictor_names, files_root, force_download, download_arg
     ]
 
 
-def download_forecasts(predictor_names, files_root, force_download, download_args, allow_missing=False):
+def download_forecasts(predictor_names, files_root, force_download, download_args):
     results = []
     for model in predictor_names:
         warn_if_deprecated(model)
@@ -288,7 +287,7 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
                 download_args,
             )
         except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 404 and allow_missing:
+            if e.response.status_code == 404:
                 print('Not found. Continuing without it.')
                 da = None
             else:

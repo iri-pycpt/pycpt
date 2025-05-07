@@ -17,7 +17,7 @@ def generate_forecast(
     notebook.setup_domain_dir(domain_dir)
     Y, hindcast_data, forecast_data = notebook.download_data(
         predictand_name, local_predictand_file, predictor_names, download_args,
-        domain_dir, force_download=False, allow_missing=True
+        domain_dir, force_download=False
         # force_download=False is safe because the directory starts out
         # empty unless we explicitly used the -g flag for debugging.
     )
