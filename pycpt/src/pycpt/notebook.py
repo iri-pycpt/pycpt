@@ -84,7 +84,6 @@ def download_data(
     hindcast_data = download_hindcasts(
         predictor_names, files_root, force_download, download_args
     )
-    summarize_available_years(predictand_name, predictor_names, Y, hindcast_data, forecast_data)
     return Y, hindcast_data, forecast_data
 
 
@@ -97,6 +96,7 @@ def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts)
         }
     )
     df = df.set_index(df.index.to_series().dt.year).notna()
+    display(HTML('<H1>Training data</H1>'))
     if df.all(axis=None):
         display(HTML(
             'Observations and hindcasts were retrieved for all '
@@ -110,28 +110,41 @@ def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts)
             "If you continue, missing hindcasts will be replaced "
             "with the missing model's climatology. "
         ))
-        sdf = (
-            df.style
-            .format(lambda x: 'ok' if x else 'missing')
-            .map(lambda x: 'background: red' if not x else '')
-        )
-        display(sdf)
+    sdf = (
+        df.style
+        .format(lambda x: 'ok' if x else 'missing')
+        .map(_cell_style)
+    )
+    display(sdf)
 
-    # This can't be written as `if None in fcsts` because that
-    # compares with `==` instead of `is`, which leads to evaluating a
-    # DataArray in boolean context, which is an error.
-    if any(f is None for f in fcsts):
-        display(HTML(
-            "The following forecasts were not available and will "
-            "be replaced with the missing model's climatology:"
-        ))
-        for name, fcst in zip(predictor_names, fcsts):
-            if fcst is None:
-                print(name, end=' ')
-        print()
+    df = pd.DataFrame(
+        {
+            predictor_names[i]: f if f is None else pd.Series(f['T'], f['T'])
+            for i, f in enumerate(fcsts)
+        }
+    )
+    df = df.set_index(df.index.to_series().dt.year).notna()
+    display(HTML('<H1>Forecasts</H1>'))
+    if df.all(axis=None):
+        display(HTML("All forecasts were retrieved."))
     else:
-        print("All forecasts were retrieved.")
+        display(HTML(
+            "Some forecasts were not available and will "
+            "be replaced with the missing model's climatology."
+        ))
+    sdf = (
+        df.style
+        .format(lambda x: 'ok' if x else 'missing')
+        .map(_cell_style)
+    )
+    display(sdf)
 
+
+def _cell_style(x):
+    if x:
+        return 'text-align: center'
+    else:
+        return 'background: red; text-align: center'
 
 def display(o):
     if InteractiveShell.initialized():
