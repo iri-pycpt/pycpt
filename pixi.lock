@@ -3184,14 +3184,14 @@ packages:
   timestamp: 1679517745884
 - conda: ./cpt-io
   name: cptio
-  version: 1.3.2.dev0
+  version: 1.4.0beta0
   build: pyhbf21a9e_0
   subdir: noarch
   depends:
   - xarray
   - python
   input:
-    hash: 943958c8015b23c6e5bd047593e5f8453f83edb768848a641c00f9b804c75a2c
+    hash: 22922a26c825ad0631d271478719df4752cae28fb1aa4c39bbf0b0b5def444ad
     globs:
     - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
@@ -7708,7 +7708,7 @@ packages:
   timestamp: 1711811634025
 - conda: ./pycpt
   name: pycpt
-  version: 2.9.5.dev0
+  version: 2.10.0beta0
   build: pyhbf21a9e_0
   subdir: noarch
   depends:
@@ -7730,7 +7730,7 @@ packages:
   - urllib3 <2
   - python
   input:
-    hash: 248d50a47edcd4b043fe337b770589a1a830c1fa3fca4b614b13fb36ddff9382
+    hash: 7a4cd2777a0a82bdb6bb90a1765a529a72ddf7d80d6655e93e481d77677b98c8
     globs:
     - pixi.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
