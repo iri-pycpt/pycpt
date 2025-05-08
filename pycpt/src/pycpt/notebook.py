@@ -87,7 +87,20 @@ def download_data(
     return Y, hindcast_data, forecast_data
 
 
-def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts):
+def summarize_available_years(predictor_names, predictand_name, download_args, Y, hcsts, fcsts):
+    args = _preprocess_download_args(download_args)
+
+    t_year = hcsts[0]['T'][0].dt.year
+    s_year = hcsts[0]['S'][0].dt.year
+    if t_year == s_year:
+        target_first_year = args['first_year']
+        target_final_year = args['final_year']
+    elif t_year == s_year + 1:
+        target_first_year = args['first_year'] + 1
+        target_final_year = args['final_year'] + 1
+    else:
+        assert False
+
     df = pd.DataFrame(
         {predictand_name: pd.Series(Y['T'], Y['T'])} |
         {
@@ -95,11 +108,23 @@ def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts)
             for i, h in enumerate(hcsts)
         }
     )
-    df = df.set_index(df.index.to_series().dt.year).notna()
+    df = df.set_index(df.index.to_series().dt.year)
+    df = df.reindex(range(target_first_year, target_final_year + 1))
+    df = df.notna()
     display(HTML('<H1>Training data</H1>'))
+    if df[predictand_name].all():
+        display(HTML(
+            'Observations were retrieved for all years '
+            'of the training period.'
+        ))
+    else:
+        display(HTML(
+            "Observations are missing for some years of the training period. "
+            "This will cause training to fail."
+        ))
     if df.all(axis=None):
         display(HTML(
-            'Observations and hindcasts were retrieved for all '
+            'Hindcasts were retrieved for all '
             'years of the training period.'
         ))
     else:
@@ -113,7 +138,8 @@ def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts)
     sdf = (
         df.style
         .format(lambda x: 'ok' if x else 'missing')
-        .map(_cell_style)
+        .map(lambda x: _cell_style(x, 'red'), subset=[predictand_name])
+        .map(lambda x: _cell_style(x, 'yellow'), subset=predictor_names)
     )
     display(sdf)
 
@@ -135,16 +161,17 @@ def summarize_available_years(predictand_name, predictor_names, Y, hcsts, fcsts)
     sdf = (
         df.style
         .format(lambda x: 'ok' if x else 'missing')
-        .map(_cell_style)
+        .map(lambda x: _cell_style(x, 'yellow'))
     )
     display(sdf)
 
 
-def _cell_style(x):
+def _cell_style(x, color):
     if x:
         return 'text-align: center'
     else:
-        return 'background: red; text-align: center'
+        return f'background: {color}; text-align: center'
+
 
 def display(o):
     if InteractiveShell.initialized():
