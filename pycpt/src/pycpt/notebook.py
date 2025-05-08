@@ -329,6 +329,7 @@ def download_forecasts(predictor_names, files_root, force_download, download_arg
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 404:
                 print('Not found. Continuing without it.')
+                print()
                 da = None
             else:
                 raise
