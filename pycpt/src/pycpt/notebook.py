@@ -368,6 +368,7 @@ def evaluate_models(
         project_file=None,
         outputdir=None
 ):
+    cpt_args = dict(cpt_args)
     outputDir = domain_dir / "output"
     hcsts, fcsts, skill, pxs, pys = [], [], [], [], []
 
