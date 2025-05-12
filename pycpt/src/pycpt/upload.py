@@ -4,6 +4,9 @@ import ftputil
 from pathlib import Path
 
 
+def _affirmative(s):
+    return s.lower().startswith('y')
+
 def interactive_sync(local_root, host, remote_root, user, password):
     session_factory = ftputil.session.session_factory(base_class=ftplib.FTP_TLS)
     with ftputil.FTPHost(host, user, password, session_factory=session_factory) as ftp:
@@ -18,17 +21,17 @@ def interactive_sync(local_root, host, remote_root, user, password):
             print('    ', relpath)
 
         answer = input("Upload all files? [y/n] ")
-        if answer.lower() == 'y':
+        if _affirmative(answer):
             for relpath in new_files:
                 print('uploading', relpath)
                 upload_file(local_root / relpath, remote_root / relpath, ftp)
             return
 
         answer = input("Upload some files? [y/n] ")
-        if answer.lower() == 'y':
+        if _affirmative(answer):
             for relpath in new_files:
                 answer = input(f"Upload {relpath} ? [y/n] ")
-                if answer.lower() == 'y':
+                if _affirmative(answer):
                     upload_file(local_root / relpath, remote_root / relpath, ftp)
 
 
