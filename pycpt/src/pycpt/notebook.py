@@ -1612,6 +1612,7 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
     mme_fcst = xr.concat(
         [forecast_or_climo(name) for name in ensemble],
         xr.Variable('model', ensemble),
+        coords='minimal',
         compat='no_conflicts',
     ).mean('model')
     assert len(mme_fcst['S']) == 1
