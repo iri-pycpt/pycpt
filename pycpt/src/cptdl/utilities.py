@@ -5,7 +5,7 @@ import datetime as dt
 import xarray as xr 
 import cptio as cio 
 from . import targetleadconv
-import numpy as np
+import pandas as pd
 
 def read_dlauth():
     if not (Path.home().absolute() / '.pycpt_dlauth').is_file():
@@ -132,11 +132,12 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     except Exception as e: 
         raise PyCPT_ERROR("Please check what's downloaded from here, it may be broken: {}".format(url))
 
-    # Check for a download that only covers part of the desired season
-    expected_length = targetleadconv.seasonal_target_length(kwargs['target'])
-    first = ds['Ti'][0].values
-    last = ds['Tf'][0].values
-    downloaded_length = (last - first) / np.timedelta64(1, 'D') + 1
+    # Check for a download that only covers part of the desired season. One reason this may happen
+    # is if the config calls for a lead time longer than what the model provides.
+    expected_length = targetleadconv.seasonal_target_length_monthly(kwargs['target'])
+    first = pd.Timestamp(ds['Ti'][0].values).month
+    last = pd.Timestamp(ds['Tf'][0].values).month
+    downloaded_length = ((last - first) % 12) + 1
     if downloaded_length != expected_length:
         raise PyCPT_ERROR(
             f"Expected data with a {expected_length}-day season but "

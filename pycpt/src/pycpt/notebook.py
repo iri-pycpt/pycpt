@@ -12,7 +12,6 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from PIL import Image
 import requests
 from scipy.stats import norm, t
@@ -143,27 +142,34 @@ def summarize_available_years(predictor_names, predictand_name, download_args, Y
     )
     display(sdf)
 
-    df = pd.DataFrame(
-        {
-            predictor_names[i]: f if f is None else pd.Series(f['T'], f['T'])
-            for i, f in enumerate(fcsts)
-        }
-    )
-    df = df.set_index(df.index.to_series().dt.year).notna()
-    display(HTML('<H1>Forecasts</H1>'))
-    if df.all(axis=None):
-        display(HTML("All forecasts were retrieved."))
-    else:
+    display(HTML('<H1>Forecast data</H1>'))
+    if all(f is None for f in fcsts):
         display(HTML(
-            "Some forecasts were not available and will "
-            "be replaced with the missing model's climatology."
+            '<span style="color: white; background-color: red;">Forecasts are missing '
+            'for all members of the ensemble.</span> Construction of the '
+            'MME will fail.'
         ))
-    sdf = (
-        df.style
-        .format(lambda x: 'ok' if x else 'missing')
-        .map(lambda x: _cell_style(x, 'yellow'))
-    )
-    display(sdf)
+    else:
+        df = pd.DataFrame(
+            {
+                predictor_names[i]: f if f is None else pd.Series(f['T'], f['T'])
+                for i, f in enumerate(fcsts)
+            }
+        )
+        df = df.set_index(df.index.to_series().dt.year).notna()
+        if df.all(axis=None):
+            display(HTML("All forecasts were retrieved."))
+        else:
+            display(HTML(
+                "Some forecasts were not available and will "
+                "be replaced with the missing model's climatology."
+            ))
+        sdf = (
+            df.style
+            .format(lambda x: 'ok' if x else 'missing')
+            .map(lambda x: _cell_style(x, 'yellow'))
+        )
+        display(sdf)
 
 
 def _cell_style(x, color):
@@ -262,7 +268,6 @@ def _preprocess_download_args(download_args):
 def download_observations(download_args, files_root, predictand_name, force_download):
     download_args_obs = _preprocess_download_args(download_args)
 
-    dataDir = files_root / "data"
     # Deal with "Cross-year issues" where either the target season
     # crosses Jan 1 (eg DJF), or where the forecast initialization is
     # in the calendar year before the start of the target season (eg
@@ -285,8 +290,6 @@ def download_observations(download_args, files_root, predictand_name, force_down
     if tmon1 > 12.5:
         download_args_obs["first_year"] += 1
         download_args_obs["final_year"] += 1
-
-    url_pattern = dl.observations[predictand_name]
 
     return cached_download(
         dl.observations[predictand_name], files_root, predictand_name,
@@ -532,8 +535,6 @@ def plot_cca_modes(
         cmap = ce.cmaps[color_bar]
     else:
         cmap = plt.get_cmap("cpt.loadings", 11)
-    vmin = -10
-    vmax = 10
     missing_value_flag = -999
 
     if MOS == "CCA":
@@ -679,15 +680,12 @@ def plot_eof_modes(
         cmap = ce.cmaps[color_bar]
     else:
         cmap = plt.get_cmap("cpt.loadings", 11)
-    vmin = -10
-    vmax = 10
 
     graph_orientation = ce.graphorientation(
         len(pys[0]["X"]),
         len(pys[0]["Y"])
     )
 
-    import matplotlib.ticker as mticker
     import matplotlib.gridspec as gridspec
 
     if MOS == "CCA":
@@ -792,7 +790,6 @@ def plot_eof_modes(
                     1,
                 )
                 cb = plt.colorbar(art, orientation=graph_orientation)
-                ticks_loc = cb.ax.get_xticklabels()
                 cb.set_label(label="y_eof_loadings", size=14)
                 cb.ax.tick_params(labelsize=12)
 
@@ -899,8 +896,6 @@ def plot_forecasts(
     )
 
     cmapB, cmapN, cmapA = ce.prepare_canvas(None, predictand_name, "probabilistic")
-
-    from mpl_toolkits.axes_grid1 import make_axes_locatable
 
     for i in range(len(fcsts)):
         if fcsts[i] is None:
@@ -1121,6 +1116,7 @@ def plot_mme_forecasts(
     domain=None,
     vmin=None,
     vmax=None,
+    model_present=None,
 ):
     missing_value_flag = -999
     prob_missing_value_flag = -1
@@ -1132,12 +1128,20 @@ def plot_mme_forecasts(
         len(det_fcst["Y"])
     )
 
-    # fig = plt.figure( figsize=(9*len(fcsts), 5*len(fcsts)), dpi=my_dpi)
-    # fig = plt.figure( figsize=(18, 10), dpi=my_dpi)
     if graph_orientation == "horizontal":
         fig = plt.figure(figsize=(18, 10), dpi=my_dpi)
     else:
         fig = plt.figure(figsize=(15, 12), dpi=my_dpi)
+
+    suptitle = "MME forecast"
+    if model_present is not None:
+        if model_present.all():
+            suptitle += '\nAll models present'
+        else:
+            missing = [m.item() for m in model_present['model']
+                       if not model_present.sel(model=m)]
+            suptitle += f"\nMissing models replaced by climatology: {', '.join(missing)}"
+    fig.suptitle(suptitle)
 
     ForTitle, vmin, vmax, barcolor = ce.prepare_canvas(
         cpt_args["tailoring"], predictand_name,user_vmin=vmin, user_vmax=vmax
@@ -1155,7 +1159,6 @@ def plot_mme_forecasts(
     )
     cartopyInstance.add_feature(cartopy.feature.BORDERS)
     cartopyInstance.set_title("")
-    # cartopyInstance.axis("off")
 
     figName = MOS + "_ensemble_probabilistic-deterministicForecast.png"
     plt.savefig(
@@ -1409,7 +1412,7 @@ def plot_mme_flex_forecast_v2(
         color=mark,
         transform=ccrs.PlateCarree(),
     )
-    coasts = art.axes.coastlines()
+    art.axes.coastlines()
     art.axes.add_feature(cartopy.feature.BORDERS)
     gl = map_ax.gridlines(
             crs=ccrs.PlateCarree(),
@@ -1424,7 +1427,7 @@ def plot_mme_flex_forecast_v2(
     gl.xformatter = gridliner.LongitudeFormatter()
     gl.yformatter = gridliner.LatitudeFormatter()
 
-    title = map_ax.set_title("(a) Probabilities of Exceedance")
+    map_ax.set_title("(a) Probabilities of Exceedance")
 
     # point calculations - select the nearest point to the lat/lon the user wanted to plot curves
     if 'station' in forecast_ds.dims:
@@ -1550,8 +1553,9 @@ def plot_mme_flex_forecast_v2(
     )
 
 
-# Like construct_mme but also returns hindcasts. This will be renamed
-# construct_mme in 3.0.
+# Like construct_mme but returns Datasets with an extra model_included
+# coordinate instead of DataArrays, and includes hindcasts in the return
+# value. To be renamed construct_mme in 3.0.
 def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
     outputDir = domain_dir / "output"
 
@@ -1560,6 +1564,12 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
         f"The following are in ensemble but not in predictor_names: " \
         f"{unknown_members}"
 
+    if 'station' in hcsts[0].dims:
+        spatial_dims = ['station']
+    elif 'Y' in hcsts[0].dims and 'X' in hcsts[0].dims:
+        spatial_dims = ['Y', 'X']
+    else:
+        assert False
 
     # Hindcasts
     hcsts_ds = xr.concat(
@@ -1576,16 +1586,21 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
     hcsts_ds['prediction_error_variance'] = var.fillna(climo_var)
 
     climo_prob = xr.DataArray([33, 34, 33], coords={'C': ['1', '2', '3']})
-    # TODO only fill in missing years, not missing locations?
     hcsts_ds['probabilistic'] = hcsts_ds['probabilistic'].fillna(climo_prob)
 
     mme_hcst = hcsts_ds.mean('model')
+    mme_hcst['model_present'] = mu.notnull().any(spatial_dims)
+
     mme_hcst['deterministic'].attrs['missing'] = hcsts[0].attrs['missing']
     mme_hcst['deterministic'].attrs['units'] = hcsts[0].attrs['units']
     mme_hcst['probabilistic'].attrs['missing'] = hcsts[0].attrs['missing']
     mme_hcst['probabilistic'].attrs['units'] = hcsts[0].attrs['units']
 
-    mme_hcst['deterministic'].to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
+    (
+        mme_hcst[['deterministic', 'model_present']]
+        .set_coords('model_present')
+        .to_netcdf(outputDir / ('MME_deterministic_hindcasts.nc'))
+    )
     mme_hcst['prediction_error_variance'].to_netcdf(outputDir / ('MME_hindcast_prediction_error_variance.nc'))
     mme_hcst['probabilistic'].to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
 
@@ -1598,36 +1613,51 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
 
 
     # Forecasts
-    def forecast_or_climo(name):
+    def forecast_or_nan(name):
         f = fcsts[predictor_names.index(name)]
         if f is None:
             return xr.Dataset({
-                'deterministic': climo_mu.sel(model=name, drop=True),
-                'prediction_error_variance': climo_var.sel(model=name, drop=True),
-                'probabilistic': climo_prob,
+                'deterministic': np.nan,
+                'prediction_error_variance': np.nan,
+                'probabilistic': np.nan,
             })
         else:
             return f
 
-    mme_fcst = xr.concat(
-        [forecast_or_climo(name) for name in ensemble],
+    fcsts_ds = xr.concat(
+        [forecast_or_nan(name) for name in ensemble],
         xr.Variable('model', ensemble),
         coords='minimal',
         compat='no_conflicts',
-    ).mean('model')
+    )
+
+    mme_fcst = (
+        fcsts_ds
+        .fillna(xr.Dataset({
+            'deterministic': climo_mu,
+            'prediction_error_variance': climo_var,
+            'probabilistic': climo_prob,
+        }))
+        .mean('model')
+    )
+    mme_fcst['model_present'] = (
+        fcsts_ds['deterministic']
+        .notnull().any(spatial_dims)
+    )
+
     assert len(mme_fcst['S']) == 1
     year = pd.Timestamp(mme_fcst['S'].values[0]).year
-    mme_fcst['deterministic'].to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
+    (
+        mme_fcst[['deterministic', 'model_present']]
+        .set_coords('model_present')
+        .to_netcdf(outputDir / (f'MME_deterministic_forecast_{year}.nc'))
+    )
     mme_fcst['prediction_error_variance'].to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
     mme_fcst['probabilistic'].to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
 
-    # TODO in 3.0, return whole Datasets instead of the individual DataArrays
     return (
-        mme_hcst['deterministic'],
-        mme_hcst['prediction_error_variance'],
-        mme_fcst['deterministic'],
-        mme_fcst['probabilistic'],
-        mme_fcst['prediction_error_variance'],
+        mme_hcst,
+        mme_fcst,
         nextgen_skill,
     )
 
@@ -1635,8 +1665,13 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
 # Backwards-compatible version of construct_mme_new, to avoid breaking existing
 # notebooks.
 def construct_mme(*args):
-    det_hcst, pev_hcst, det_fcst, pr_fcst, pev_fcst, nextgen_skill = construct_mme_new(*args)
-    return det_fcst, pr_fcst, pev_fcst, nextgen_skill
+    hcst, fcst, skill = construct_mme_new(*args)
+    return (
+        fcst['deterministic'],
+        fcst['probabilistic'],
+        fcst['prediction_error_variance'],
+        skill,
+    )
 
 
 def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev_fcst):

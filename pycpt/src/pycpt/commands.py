@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import getpass
 import importlib.util
 from pathlib import Path
@@ -9,35 +10,37 @@ def generate_forecasts():
     parser = argparse.ArgumentParser(
         description='Generates PyCPT forecasts from a predetermined configuration',
     )
-    parser.add_argument('configfile')
-    args = parser.parse_args()
-
-    config = load_config(args.configfile)
-
-    dest_dir = Path(config.operational_forecasts_dir) / config.forecast_name
-    print(f'Writing to {dest_dir.absolute()}')
-    if dest_dir.exists():
-        if not dest_dir.is_dir():
-            print('destination is not a directory')
-            exit(1)
-    else:
-        answer = input('Destination directory does not exist. Create it? [y/n] ')
-        if answer.lower() == 'y':
-            Path(dest_dir).mkdir(parents=True)
-        else:
-            exit(1)
-
-    pycpt.automation.update_all(
-        dest_dir,
-        config.issue_months,
-        config.skip_issue_dates,
-        config.MOS,
-        config.ensemble,
-        config.predictand_name,
-        config.local_predictand_file,
-        config.download_args,
-        config.cpt_args,
+    parser.add_argument('config_file')
+    parser.add_argument(
+        'issue_date', nargs='?', type=datetime.datetime.fromisoformat,
+        help="Forecast initialization date in the form YYYY-MM-DD. "
+        "Default is the first of the current month."
     )
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        '--init', action='store_true',
+        help="Generate hindcasts and all possible forecasts"
+    )
+    mode_group.add_argument(
+        '--update', action='store_true',
+        help="Try to replace a previously-generated forecast with "
+        "one that has fewer models missing"
+    )
+    args = parser.parse_args()
+    if args.issue_date is not None and args.issue_date.day != 1:
+        raise Exception("issue date must be the first of the month")
+    config = load_config(args.config_file)
+    if args.init:
+        if args.update:
+            raise Exception('--init and --update are not compatible')
+        pycpt.automation.initialize(config)
+    else:
+        wrote = pycpt.automation.generate_one_issue(config, issue_date=args.issue_date, update=args.update)
+        print()
+        if wrote:
+            print("A new forecast was saved.")
+        else:
+            print("No change was made.")
 
 
 def upload_forecasts():
@@ -76,7 +79,3 @@ def load_config(filename):
         'generate_forecasts requires tailoring: None'
 
     return config
-
-
-if __name__ == '__main__':
-    generate_forecast()
