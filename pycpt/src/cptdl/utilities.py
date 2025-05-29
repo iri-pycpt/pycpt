@@ -4,6 +4,8 @@ import json, getpass, requests, sys
 import datetime as dt 
 import xarray as xr 
 import cptio as cio 
+from . import targetleadconv
+import numpy as np
 
 def read_dlauth():
     if not (Path.home().absolute() / '.pycpt_dlauth').is_file():
@@ -128,6 +130,18 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     try: 
         ds = cio.open_cptdataset(path) if format == 'cptv10.tsv' else xr.open_dataset(path, decode_times=False) 
     except Exception as e: 
-            raise PyCPT_ERROR("Please check what's downloaded from here, it may be a broken: {}".format(url))
+        raise PyCPT_ERROR("Please check what's downloaded from here, it may be broken: {}".format(url))
+
+    # Check for a download that only covers part of the desired season
+    expected_length = targetleadconv.seasonal_target_length(kwargs['target'])
+    first = ds['Ti'][0].values
+    last = ds['Tf'][0].values
+    downloaded_length = (last - first) / np.timedelta64(1, 'D') + 1
+    if downloaded_length != expected_length:
+        raise PyCPT_ERROR(
+            f"Expected data with a {expected_length}-day season but "
+            f"got {downloaded_length}\n{ds}"
+        )
+
     return ds 
 
