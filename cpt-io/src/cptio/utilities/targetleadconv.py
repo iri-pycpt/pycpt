@@ -98,38 +98,6 @@ def target_from_leads(fdate, lead_low, lead_high):
     )
 
 
-def seasonal_target_length(target):
-    # target must be three-letter-abbr style
-    if "-" in target:
-        total = 0
-        start, end = target.split("-")
-        start_ndx, end_ndx = threeletters.index(start), threeletters.index(end)
-        if end_ndx < start_ndx:  # cross-year
-            total += sum(monthlengths[start_ndx:])
-            total += sum(monthlengths[: end_ndx + 1])
-            return total
-        else:
-            return sum(monthlengths[start_ndx : end_ndx + 1])
-    else:
-        return monthlengths[threeletters.index(target)]
-
-
-def seasonal_target_length_monthly(target):
-    # target must be three-letter-abbr style
-    if "-" in target:
-        total = 0
-        start, end = target.split("-")
-        start_ndx, end_ndx = threeletters.index(start), threeletters.index(end)
-        if end_ndx < start_ndx:  # cross-year
-            total += 12 - start_ndx + 1
-            total += end_ndx
-            return total
-        else:
-            return end_ndx - start_ndx + 1
-    else:
-        return monthlengths[threeletters.index(target)]
-
-
 def seasonal_target(fdate, target, lead_low, lead_high):
     if (
         target is not None and lead_high is not None and lead_low is not None

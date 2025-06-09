@@ -10,7 +10,6 @@ from .utilities import (
     ls_files_recursive,
     threeletters,
     recursive_getattr,
-    seasonal_target_length,
     target_from_leads,
     leads_from_target,
     is_valid_cptv10_xyt,
