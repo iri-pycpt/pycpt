@@ -111,6 +111,10 @@ def do_one(var, url, basename, expected_len):
         reference_file = reference_dir / f'{basename}-{var}.tsv'
         if reference_file.exists():
             ds_ref = cptio.open_cptdataset(reference_file)
-            xr.testing.assert_equal(ds, ds_ref)
+            try:
+                xr.testing.assert_equal(ds, ds_ref)
+            except Exception:
+                reference_file.with_suffix(".new").hardlink_to(f.name)
+                raise
         else:
             reference_file.hardlink_to(f.name)
