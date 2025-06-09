@@ -55,6 +55,9 @@ overrides = {
     'METEOFRANCE8': {
         'fdate': dt.datetime(2022, 5, 1),
     },
+    'METEOFRANCE9': {
+        'fdate': dt.datetime(2025, 4, 1),
+    },
     'SEAS51': {
         'fdate': dt.datetime(2023, 5, 1),
     },
