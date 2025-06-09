@@ -66,7 +66,7 @@ def seasonal_target_length_monthly(target):
         else: 
             return end_ndx - start_ndx +1
     else: 
-        return monthlengths[threeletters.index(target)]
+        return 1
 
 def seasonal_target(fdate, target, lead_low, lead_high):
     if target is not None and lead_high is not None and lead_low is not None: # if all are supplied
