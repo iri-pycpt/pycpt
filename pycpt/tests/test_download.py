@@ -36,6 +36,7 @@ overrides = {
     },
     'CanSIPSIC4': {
         'fdate': dt.datetime(2024, 8, 1),
+        'target': 'Sep-Nov',
     },
     'CPS2': {
         # CPS2 has 2.5 degree resolution and some missing values. Need
