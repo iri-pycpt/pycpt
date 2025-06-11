@@ -1,6 +1,6 @@
 [package]
 name = "cptio"
-version = "1.4.0beta0"
+version = "1.4.0"
 
 [package.build]
 backend = {name = "pixi-build-python", version = "0.1.*"}
