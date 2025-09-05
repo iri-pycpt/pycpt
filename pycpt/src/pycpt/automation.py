@@ -30,10 +30,12 @@ def generate_forecast(domain_dir, config, issue_date):
         domain_dir,
         config.ensemble
     )
-    return (Y,) + notebook.construct_mme_new(
+    mme_hcst, mme_fcst = notebook.construct_mme_new(
         fcsts, hcsts, Y, config.ensemble, config.ensemble,
-        config.cpt_args, domain_dir
+        domain_dir
     )
+    mme_skill = notebook.evaluate_mme(mme_hcst, Y, config.cpt_args, domain_dir)
+    return (Y, mme_hcst, mme_fcst, mme_skill)
 
 
 def ensure_file(ds, dest, update=False):

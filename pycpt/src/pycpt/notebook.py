@@ -1556,7 +1556,7 @@ def plot_mme_flex_forecast_v2(
 # Like construct_mme but returns Datasets with an extra model_included
 # coordinate instead of DataArrays, and includes hindcasts in the return
 # value. To be renamed construct_mme in 3.0.
-def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
+def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, domain_dir):
     outputDir = domain_dir / "output"
 
     unknown_members = set(ensemble) - set(predictor_names)
@@ -1605,13 +1605,6 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
     mme_hcst['probabilistic'].to_netcdf(outputDir / ('MME_probabilistic_hindcasts.nc'))
 
 
-    # Skill scores
-    nextgen_skill_deterministic = cc.deterministic_skill(mme_hcst['deterministic'], Y, **cpt_args)
-    nextgen_skill_probabilistic = cc.probabilistic_forecast_verification(mme_hcst['probabilistic'], Y, **cpt_args)
-    nextgen_skill = xr.merge([nextgen_skill_deterministic, nextgen_skill_probabilistic])
-    nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
-
-
     # Forecasts
     def forecast_or_nan(name):
         f = fcsts[predictor_names.index(name)]
@@ -1655,17 +1648,25 @@ def construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, doma
     mme_fcst['prediction_error_variance'].to_netcdf(outputDir / (f'MME_forecast_prediction_error_variance_{year}.nc'))
     mme_fcst['probabilistic'].to_netcdf(outputDir / (f'MME_probabilistic_forecast_{year}.nc'))
 
-    return (
-        mme_hcst,
-        mme_fcst,
-        nextgen_skill,
-    )
+    return mme_hcst, mme_fcst
 
 
-# Backwards-compatible version of construct_mme_new, to avoid breaking existing
-# notebooks.
-def construct_mme(*args):
-    hcst, fcst, skill = construct_mme_new(*args)
+def evaluate_mme(mme_hcst, Y, cpt_args, domain_dir):
+    # Skill scores
+    nextgen_skill_deterministic = cc.deterministic_skill(mme_hcst['deterministic'], Y, **cpt_args)
+    nextgen_skill_probabilistic = cc.probabilistic_forecast_verification(mme_hcst['probabilistic'], Y, **cpt_args)
+    nextgen_skill = xr.merge([nextgen_skill_deterministic, nextgen_skill_probabilistic])
+    outputDir = domain_dir / "output"
+    nextgen_skill.to_netcdf(outputDir / ('MME_skill_scores.nc'))
+
+    return nextgen_skill
+
+
+# Backwards-compatible version of construct_mme_new + evaluate_mme, to
+# avoid breaking existing notebooks.
+def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_dir):
+    hcst, fcst = construct_mme_new(fcsts, hcsts, Y, ensemble, predictor_names, domain_dir)
+    skill = evaluate_mme(hcst, Y, cpt_args, domain_dir)
     return (
         fcst['deterministic'],
         fcst['probabilistic'],
@@ -1713,7 +1714,7 @@ def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev
             threshold = Y.quantile(threshold, dim='T').drop('quantile')
         else:
             # if the user used a transformation and gave a percentile threshold,
-            # we we can set the threshold using the cumulative distribution function
+            # we we can set the threshold using the cumulatived distribution function
             # for the normal distribution N(0, 1)- since thats what the Y data has
             # been transformed to
             threshold = xr.ones_like(fcst_mu).where(~np.isnan(fcst_mu), other=np.nan) * norm.cdf(threshold)
