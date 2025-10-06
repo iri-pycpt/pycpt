@@ -3184,16 +3184,18 @@ packages:
   timestamp: 1679517745884
 - conda: ./cpt-io
   name: cptio
-  version: 1.4.0
-  build: pyhbf21a9e_0
+  version: 1.4.1dev
+  build: pyh4616a5c_0
   subdir: noarch
   depends:
   - xarray
   - python
+  - python *
+  license: MIT
   input:
-    hash: ff6c28f072f1a5fe1ef77fd7092981d0b20dc9881a4f58fd6c613844587ca5de
+    hash: 12d892e17adf150966afe3dfb9c20685bc91f63e8a55ebb8aa17b291b0e96bfb
     globs:
-    - pixi.toml
+    - pyproject.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
   noarch: generic
   sha256: 9bbd08c83cc9c3142755b96dc5f3e0f0370d7afdb773c8285359b31e7ce96f0a
@@ -7708,11 +7710,12 @@ packages:
   timestamp: 1711811634025
 - conda: ./pycpt
   name: pycpt
-  version: 2.10.3
-  build: pyhbf21a9e_0
+  version: 2.10.4dev
+  build: pyh4616a5c_0
   subdir: noarch
   depends:
   - python >=3.8,<3.13
+  - python *
   - bottleneck
   - cartopy
   - cptbin
@@ -7728,11 +7731,11 @@ packages:
   - statsmodels
   - xarray
   - urllib3 <2
-  - python
+  license: MIT
   input:
-    hash: fae8b1d5949a3cfa303ab24f32110227ade272734d65978cc27757c86a19d62d
+    hash: df4bac04a3c525b1ee84106458de363541ba84d90c44e9bd94d6fd4ee172f07f
     globs:
-    - pixi.toml
+    - pyproject.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
   sha256: 78267adf4e76d0d64ea2ffab008c501156c108bb08fecb703816fb63e279780b
   md5: b7f5c092b8f9800150d998a71b76d5a1
