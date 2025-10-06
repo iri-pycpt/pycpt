@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pycpt"
-version = "2.10.3"
+version = "2.10.4dev"
 authors = [{name = "IRI", email = "pycpt-help@iri.columbia.edu"}]
 description = "Python Interface to the International Research Institute for Climate & Society's Climate Predictability Tool"
 readme = "README.md"

@@ -1,6 +1,6 @@
 [package]
 name = "pycpt"
-version = "2.10.3"
+version = "2.10.4dev"
 
 [package.build]
 backend = {name = "pixi-build-python", version = "0.1.*"}

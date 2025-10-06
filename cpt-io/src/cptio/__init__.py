@@ -16,6 +16,6 @@ from .utilities import (
 )
 
 
-__version__ = "1.4.0"
+__version__ = "1.4.1dev"
 __author__ = "IRI (pycpt-help@iri.columbia.edu)"
 __license__ = "MIT"
