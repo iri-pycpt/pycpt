@@ -1,6 +1,6 @@
 context:
   name: cptbin
-  version: 17.8.4
+  version: 18.7.2
 
 package:
   name: ${{ name }}
@@ -9,8 +9,8 @@ package:
 source:
     #- url: https://iri.columbia.edu/~simon/CPT/CPT.{{ version }}.tar.gz
     # applying patches in build script, not here.
-    url: https://academiccommons.columbia.edu/doi/10.7916/08zy-yz03/download
-    sha256: fb1f775cd2ec0d1becb9ac06a50f092896944b0e9237257d4497a252c565d95d
+    url: https://academiccommons.columbia.edu/doi/10.7916/vsmq-xw19/download
+#    sha256: fb1f775cd2ec0d1becb9ac06a50f092896944b0e9237257d4497a252c565d95d
     file_name: CPT.${{ version }}.tar.gz
 
 build:

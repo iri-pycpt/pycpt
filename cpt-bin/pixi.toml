@@ -1,6 +1,6 @@
 [package]
 name = "cptbin"
-version = "17.8.5.dev0"
+version = "18.7.2dev0"
 
 [package.build.backend]
 name = "pixi-build-rattler-build"
