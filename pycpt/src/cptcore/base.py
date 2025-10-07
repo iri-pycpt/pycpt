@@ -109,8 +109,10 @@ class CPT:
         self.last_message = x
         if self.interactive:
             print(x)
-        self.write(571)
-        self.write(3)
+        self.write(572) # don't repeat options listing after every prompt
+        self.write(574) # no progress meter
+        self.write(571) # error handling
+        self.write(3)   #   stop
         
     def read(self):
         output = io.StringIO()
