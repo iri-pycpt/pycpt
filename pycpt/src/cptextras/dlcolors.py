@@ -41,7 +41,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmin= -200
                 vmax=None
                 barcolor=cmaps['DL_PRCP_ANOMALY']
-            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M']):
                 vmin= -2
                 vmax=None
                 barcolor=cmaps['DL_TEMP_ANOMALY_COLORS']
@@ -57,7 +57,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmin= -3
                 vmax=None
                 barcolor=cmaps['DL_PRCP_ANOMALY']
-            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M']):
                 vmin= -2
                 vmax=None
                 barcolor=cmaps['DL_TEMP_ANOMALY_COLORS']
@@ -72,7 +72,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmin= -3
                 vmax=None
                 barcolor=cmaps['DL_DM_SPI_2p5_COLORS']
-            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M']):
                 vmin= -1.5
                 vmax=None
                 barcolor=cmaps['DL_TEMP_ANOMALY_COLORS_GCM']
@@ -84,7 +84,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
                 vmax= 1
                 mark='red'
                 barcolor=cmaps['DL_RAIN_POE_COLORMAP']
-            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','SST']):
+            elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M','SST']):
                 vmin= 0
                 vmax= 1
                 mark='black'
@@ -117,7 +117,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
             cmapB=cmaps['pycpt_probability_red_prec']
             cmapN=cmaps['pycpt_probability_green_prec']
             cmapA=cmaps['pycpt_probability_blue_prec']
-        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','SST']):
+        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M','SST']):
             cmapB=cmaps['pycpt_probability_blue_temp']
             cmapN=cmaps['pycpt_probability_grey_temp']
             cmapA=cmaps['pycpt_probability_red_temp']
@@ -128,7 +128,7 @@ def prepare_canvas(tailoring=None,predictand='PRCP',type=None,user_color=None, u
             vmin= 0
             barcolor=cmaps['DL_RAINFALL_COLORMAP']
             vmax=None
-        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED']):
+        elif any(x in predictand for x in ['TMAX','TMIN','TMEAN','TMED','T2M']):
             vmin= -5
             vmax=40
             barcolor=cmaps['DL_TEMP_COLORS']
