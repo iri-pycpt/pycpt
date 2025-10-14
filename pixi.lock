@@ -7710,7 +7710,7 @@ packages:
   timestamp: 1711811634025
 - conda: ./pycpt
   name: pycpt
-  version: 2.10.4
+  version: 2.10.5dev
   build: pyh4616a5c_0
   subdir: noarch
   depends:
@@ -7733,7 +7733,7 @@ packages:
   - urllib3 <2
   license: MIT
   input:
-    hash: 58746941d68fc35495499c0ecb9079d9f0d7f4ad5c32ef511b8e9089adb4747d
+    hash: 64feb4c66d37954f0a594bd91cabab31ffe057124c944fb87a96d333fbde744f
     globs:
     - pyproject.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
