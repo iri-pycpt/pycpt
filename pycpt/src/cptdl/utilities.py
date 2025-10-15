@@ -122,8 +122,8 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     assert format in ['cptv10.tsv', 'data.nc'], 'invalid download format: {}'.format(format)
     try:
         url = evaluate_url(baseurl, **kwargs)
-    except:
-        raise PyCPT_ERROR("You must pass all the required arguments for this URL as keyword arguments in .download(...). \n URL: {}\n ARGS: {}".format(baseurl, kwargs))
+    except Exception as e:
+        raise PyCPT_ERROR("You must pass all the required arguments for this URL as keyword arguments in .download(...). \n URL: {}\n ARGS: {}".format(baseurl, kwargs)) from e
 
     path = simple_download(url, dest, verbose=verbose, use_dlauth=use_dlauth)
     
