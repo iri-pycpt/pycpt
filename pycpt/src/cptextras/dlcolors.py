@@ -174,9 +174,9 @@ def parse_color_item(vs: List[BGRA], s: str) -> List[BGRA]:
         vs = vs[:-2]
         rs = [
             BGRA(
-                first.blue + (last.blue - first.blue) * i / n,
-                first.green + (last.green - first.green) * i / n,
-                first.red + (last.red - first.red) * i / n,
+                int(first.blue + (last.blue - first.blue) * i / n),
+                int(first.green + (last.green - first.green) * i / n),
+                int(first.red + (last.red - first.red) * i / n),
                 255
             )
             for i in range(n + 1)
@@ -190,7 +190,7 @@ def parse_color(s: str) -> BGRA:
 
 def parse_colormap(s: str) -> np.ndarray:
     "Converts an Ingrid colormap to a cv2 colormap"
-    vs = []
+    vs: List[BGRA] = []
     for x in s[1:-1].split(" "):
         vs = parse_color_item(vs, x)
 

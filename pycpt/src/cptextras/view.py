@@ -1,7 +1,6 @@
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-import matplotlib.colors as colors
 import xarray as xr
 import numpy as np
 
