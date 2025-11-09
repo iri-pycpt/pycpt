@@ -5,6 +5,7 @@ import datetime
 import cptcore as cc
 import cptdl as dl
 import cptextras as ce
+from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
@@ -38,7 +39,7 @@ forecasts = {
 
 }
 
-SKILL_METRICS = {
+SKILL_METRICS: dict[str, tuple[LinearSegmentedColormap, int, int]] = {
     # each entry has the form (colormap, min, max)
 
     # deterministic
@@ -50,7 +51,6 @@ SKILL_METRICS = {
 
     # probabilistic (in sample):
     "generalized_roc": (ce.cmaps["pycpt_roc"], 0, 100),
-    "ignorance": (), # TODO
     # Display RPSS over a range of -20 to 20, compared to -50 to 50 for
     # the seasonal version. TODO: make this change in notebook.py?
     "rank_probability_skill_score": (ce.cmaps["cpt_correlation"], -20, 20),

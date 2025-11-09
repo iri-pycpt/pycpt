@@ -246,7 +246,7 @@ def make_matlab_cmap(name, colors):
     return LinearSegmentedColormap.from_list(name, dash_colorscale, N=len(dash_colorscale))
 
 
-cmaps = {}
+cmaps: dict[str, LinearSegmentedColormap] = {}
 for name, colors in color_arrays.items():
     #Use LinearSegmentedColormap for making colorbar
     if type(colors) == type(str()):

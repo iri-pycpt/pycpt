@@ -8,6 +8,7 @@ import cptio as cio
 from IPython.core.interactiveshell import InteractiveShell
 import IPython.display
 from IPython.display import HTML
+from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
@@ -457,7 +458,7 @@ def evaluate_models(
     return hcsts, fcsts, skill, pxs, pys
 
 
-SKILL_METRICS = {
+SKILL_METRICS: dict[str, tuple[LinearSegmentedColormap, int, int]] = {
     # each entry has the form (colormap, min, max)
 
     # deterministic
@@ -470,7 +471,6 @@ SKILL_METRICS = {
 
     # probabilistic (in sample):
     "generalized_roc": (ce.cmaps["pycpt_roc"], 0, 100),
-    "ignorance": (), # TODO
     "rank_probability_skill_score": (ce.cmaps["cpt_correlation"], -50, 50),
 }
 SKILL_METRICS["generalized_roc"][0].set_under("lightgray")
