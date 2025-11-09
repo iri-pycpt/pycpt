@@ -12,8 +12,23 @@ preview = ["pixi-build"]
 cptio = {path = "./cpt-io"}
 pycpt = {path = "./pycpt"}
 
+# Indirect. statsmodels.distributions fails to import scipy 1.16
+scipy = "1.14.*" 
+
+[target.linux-64.dependencies]
+# Indirect dependencies. CPT doesn't work with newer
+# versions of the gcc runtime.
+libgcc-ng = "13.2.*"
+libgfortran5 = "13.2.*"
+
 [feature.dev.dependencies]
 pytest = "*"
+
+mypy = "*"
+pandas-stubs = "*"
+scipy-stubs = "*"
+types-requests = "*"
+types-psutil = "*"
 
 [environments]
 default = {features = ["dev"], solve-group = "prod"}
