@@ -19,7 +19,7 @@ probability = [(146, 179, 249), (194, 212, 251), (231, 237, 254), (254,254,165),
 loadings = [(0, 18, 134), (0, 35, 241), (66, 116,246), (99, 146, 242), (146, 179, 249), (194, 212, 251), (231, 237, 254), (254,254,165), (255, 253, 84), (248, 203, 70), (242, 157, 57), (237, 111, 45), (188, 39, 26), (117,21,12)]
 pycpt_blue = [(244, 255,255), (187, 252, 255), (160, 235, 255), (123, 210, 255), (89, 179, 238), (63, 136, 254), (52, 86, 254)]
 
-cmaps = {
+_cmaps = {
     'cpt.correlation': correlation,
     'cpt.pr_red': probability_red, 
     'cpt.pr_green': probability_green,
@@ -29,7 +29,7 @@ cmaps = {
     'pycpt.blue': pycpt_blue
 }
 
-for key in cmaps.keys():
-    mpl.colormaps.register(make_cmap(cmaps[key], key), name=key)
-    mpl.colormaps.register(make_cmap(cmaps[key], f"{key}_r", reverse=False), name=f"{key}_r")
+for key in _cmaps.keys():
+    mpl.colormaps.register(make_cmap(_cmaps[key], key), name=key)
+    mpl.colormaps.register(make_cmap(_cmaps[key], f"{key}_r", reverse=False), name=f"{key}_r")
 
