@@ -140,7 +140,7 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     downloaded_length = ((last - first) % 12) + 1
     if downloaded_length != expected_length:
         raise PyCPT_ERROR(
-            f"Expected data with a {expected_length}-day season but "
+            f"Expected data with a {expected_length}-month season but "
             f"got {downloaded_length}\n{ds}"
         )
 
