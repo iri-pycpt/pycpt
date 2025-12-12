@@ -1,6 +1,3 @@
-# TODO figure out why we get a numpy version incompatibility warning if we don't import this first.
-import netCDF4  # noqa: F401
-
 from dataclasses import dataclass, field
 import datetime
 import numpy as np
