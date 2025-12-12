@@ -14,3 +14,17 @@ jobs:
           cache: true
 
       - run: pixi run pytest
+
+      # Running type checker in the same job to avoid incurring the
+      # expense of installing the same pixi environment twice in
+      # parallel.
+
+      # Can't type check both projects with their tests at once
+      # because they each have a package called "tests." The right
+      # solution is to check them independently, but checking pycpt on
+      # its own fails because there are no stubs for cpt-io. Eventual
+      # solution is to publish stubs for cpt-io. In the meantime,
+      # check in two passes, each of which includes one of the two
+      # test packages.
+      - run: pixi run mypy cpt-io/src cpt-io/tests
+      - run: pixi run mypy pycpt/src pycpt/tests cpt-io/src
