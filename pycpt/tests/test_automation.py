@@ -72,7 +72,7 @@ def mock_download_data(
 
 @dataclass
 class Config:
-    operational_forecasts_dir: str
+    operational_forecasts_dir: pathlib.Path
     forecast_name = 'testforecast'
     MOS =  'CCA'
     ensemble: list[str] = field(default_factory=lambda: ['M1.PRCP', 'M2.PRCP'])
