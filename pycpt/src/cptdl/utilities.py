@@ -1,6 +1,9 @@
 
 from pathlib import Path 
-import json, getpass, requests, sys
+import json
+import getpass
+import requests
+import sys
 import datetime as dt 
 import xarray as xr 
 import cptio as cio 
@@ -16,14 +19,14 @@ def read_dlauth():
             with open(str(Path.home().absolute() / '.pycpt_dlauth'), 'rb') as f: 
                 auth_dict = json.loads(f.read())
             return auth_dict['key']
-        except Exception as e: 
+        except Exception:
             try:
                 with open(str(Path.home().absolute() / '.pycpt_dlauth'), 'r') as f: 
                     file = f.read()
                 if 'html' in file: 
                     print("Your existing ~/.pycpt_dlauth file looked like an 'incorrect username/password' message!")
                     return None
-            except: 
+            except Exception:
                 print('Unable to read text from ~/.pycpt_dlauth - it might be binary spaghetti; broken download? delete it and set up again!')
                 return None 
 
@@ -77,7 +80,7 @@ class PyCPT_ERROR(Exception):
     pass    
 
 def evaluate_url(url, ensemblemean=True, **kwargs):
-    from .targetleadconv import seasonal_target, seasonal_target_length_monthly, seasonal_target_length, threeletters
+    from .targetleadconv import seasonal_target, seasonal_target_length_monthly, seasonal_target_length, threeletters  # noqa: F401
     # TODO The python docs say "The contents of [the locals] dictionary
     # should not be modified."
     locals().update(**kwargs)
@@ -129,14 +132,14 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
     
     try: 
         ds = cio.open_cptdataset(path) if format == 'cptv10.tsv' else xr.open_dataset(path, decode_times=False) 
-    except Exception as e: 
+    except Exception:
         raise PyCPT_ERROR("Please check what's downloaded from here, it may be broken: {}".format(url))
 
     # Check for a download that only covers part of the desired season. One reason this may happen
     # is if the config calls for a lead time longer than what the model provides.
     expected_length = targetleadconv.seasonal_target_length_monthly(kwargs['target'])
-    first = pd.Timestamp(ds['Ti'][0].values).month
-    last = pd.Timestamp(ds['Tf'][0].values).month
+    first = pd.Timestamp(ds['Ti'][0].values).month # pyright: ignore[reportArgumentType]
+    last = pd.Timestamp(ds['Tf'][0].values).month # pyright: ignore[reportArgumentType]
     downloaded_length = ((last - first) % 12) + 1
     if downloaded_length != expected_length:
         raise PyCPT_ERROR(
