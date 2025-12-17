@@ -94,7 +94,7 @@ def target_from_leads(fdate, lead_low, lead_high):
     return (
         target_low
         if target_low == target_high
-        else "{}_{}".format(target_low, target_high)
+        else "{}-{}".format(target_low, target_high)
     )
 
 

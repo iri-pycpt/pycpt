@@ -36,7 +36,7 @@ def target_from_leads(fdate, lead_low, lead_high):
     high_ndx = fdate.month + int(lead_high) if fdate.month + int(lead_high) <= 12 else fdate.month + int(lead_high) - 12
     target_low = threeletters[low_ndx]
     target_high = threeletters[high_ndx]  
-    return target_low if target_low == target_high else '{}_{}'.format(target_low, target_high)
+    return target_low if target_low == target_high else '{}-{}'.format(target_low, target_high)
 
 def seasonal_target_length(target): 
     # target must be three-letter-abbr style 
