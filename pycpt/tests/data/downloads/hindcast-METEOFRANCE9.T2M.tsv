@@ -1,16 +1,16 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-05/07	2006-05/07	2007-05/07
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2005-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-05/07
+cpt:T	2005-06/08	2006-06/08	2007-06/08
+cpt:field=t2m, cpt:L=3.5 months, cpt:S=2005-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
 	-75.5	-74.5
-40.5	  293.812    	  293.946    
-39.5	  295.025    	  293.925    
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2006-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-05/07
+40.5	  295.980    	  296.284    
+39.5	  297.283    	  296.754    
+cpt:field=t2m, cpt:L=3.5 months, cpt:S=2006-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
 	-75.5	-74.5
-40.5	  294.394    	  294.655    
-39.5	  295.784    	  294.842    
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2007-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-05/07
+40.5	  296.257    	  296.639    
+39.5	  297.702    	  297.302    
+cpt:field=t2m, cpt:L=3.5 months, cpt:S=2007-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
 	-75.5	-74.5
-40.5	  294.100    	  294.313    
-39.5	  295.434    	  294.502    
+40.5	  296.176    	  296.524    
+39.5	  297.534    	  297.138    
