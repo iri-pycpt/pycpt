@@ -20,9 +20,14 @@ default_download_args = {
         'south': 39,
         'north': 41,
       },
-    'pressure': 200, # I don't know how this would be used in PyCPT
+    'predictand_extent': {
+        'west': -76,
+        'east':  -74,
+        'south': 39,
+        'north': 41,
+      },
+    'pressure': 200,
 }
-default_download_args = pycpt.notebook._preprocess_download_args(default_download_args)
 
 overrides = {
     'CanCM3': {
@@ -74,6 +79,80 @@ overrides = {
     'SPSv3p5': {
         'fdate': dt.datetime(2021, 5, 1),
     },
+    # For some reason the UCSB variables are all 0.05 degree, except PRCP where
+    # UCSB.PRCP is 0.25 degrees and the 0.05 degree variables is called UCBP0p05.PRCP.
+    'UCSB': {
+        'predictand_extent': {
+            'west': -75.375,
+            'east':  -75.475,
+            'south': 40.875,
+            'north': 40.975,
+        },
+        'target': 'Jun-Jul'
+    },
+    'UCSB.PRCP': {
+        'predictand_extent': {
+            'west': -75.375,
+            'east':  -75.875,
+            'south': 40.375,
+            'north': 40.875,
+        },
+        'target': 'Jun-Jul'
+    },
+    'UCSB0p05.PRCP': {
+        'predictand_extent': {
+            'west': -75.375,
+            'east':  -75.475,
+            'south': 40.875,
+            'north': 40.975,
+        },
+        'target': 'Jun-Jul'
+    },
+    'CPCCMAPURD': {
+        'predictand_extent': {
+            'west': 0,
+            'east':  2,
+            'south': 40,
+            'north': 42,
+        },
+        'target': 'Jun-Jul'
+    },
+    'TRMM': {
+        'predictand_extent': {
+            'west': -75,
+            'east':  -72,
+            'south': 40,
+            'north': 43,
+        },
+        'target': 'Jun-Jul'
+    },
+    'ERSSTV5': {
+        'predictand_extent': {
+            'west': -76,
+            'east':  -70,
+            'south': 40,
+            'north': 46,
+        },
+        'target': 'Jun-Jul'
+    },
+    'OISST2p1': {
+        'predictand_extent': {
+            'west': -75.375,
+            'east':  -75.875,
+            'south': 40.375,
+            'north': 40.875,
+        },
+        'target': 'Jun-Jul'
+    },
+    'NNRP': {
+        'predictand_extent': {
+            'west': -76,
+            'east':  -68.5,
+            'south': 39,
+            'north': 46.5,
+        },
+        'target': 'Jun-Jul'
+    },
 }
 
 @pytest.mark.skip
@@ -89,10 +168,30 @@ def test_forecast_download(var):
     url = dl.forecasts[var]
     do_one(var, url, 'forecast', 1)
 
+obs_to_test = {
+    k: v
+    for k, v in dl.observations.items()
+    # Omit private datasets. We plan not to add any more
+    # (private datasets are now added to the catalog in the
+    # notebook rather than in catalog.py), so we just have to
+    # omit those that have already been added.
+    if not (
+        k.startswith('ENACTS') or
+        k.startswith('CHILE')
+    )
+}
+@pytest.mark.skip
+@pytest.mark.parametrize('var', obs_to_test.keys())
+def test_obs_download(var):
+    url = dl.observations[var]
+    do_one(var, url, 'obs', 3)
 
 def do_one(var, url, basename, expected_len):
     model, _ = var.split('.')
-    args = default_download_args | overrides.get(model, {})
+    override = overrides.get(var, overrides.get(model, {}))
+    args = default_download_args | override
+    args = pycpt.notebook._preprocess_download_args(args)
+
 
     with tempfile.NamedTemporaryFile() as f:
         ds = dl.download(

@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=prcp, cpt:T=2005-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.425	-75.47501
+40.975	  187.802    	  188.868    	  189.103    
+40.925	  185.707    	  193.674    	  195.762    
+40.875	  201.019    	  194.861    	  194.645    
+cpt:field=prcp, cpt:T=2006-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.425	-75.47501
+40.975	  402.482    	  406.471    	  403.485    
+40.925	  408.945    	  410.363    	  405.286    
+40.875	  428.437    	  412.231    	  412.492    
+cpt:field=prcp, cpt:T=2007-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999
+	-75.375	-75.425	-75.47501
+40.975	  248.891    	  245.890    	  243.490    
+40.925	  237.262    	  237.889    	  248.296    
+40.875	  245.511    	  237.866    	  243.596    
