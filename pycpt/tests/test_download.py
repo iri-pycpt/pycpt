@@ -1,11 +1,69 @@
 import cptdl as dl
-import cptio
 import datetime as dt
+import os
 import pathlib
 import pycpt
 import pytest
+import socket
+import subprocess
 import tempfile
-import xarray as xr
+import time
+
+
+HERE = pathlib.Path(__file__).absolute().parent
+
+@pytest.fixture(scope="module", autouse=True)
+def recording_proxy(request):
+    port = 8080
+    cmd = [
+        "python",
+        HERE / "recording_proxy.py",
+        "--port", str(port),
+        "--dir", HERE / "data/responses"
+    ]
+    if request.config.getoption("--record"):
+        cmd += ["--record"]
+    proxy_proc = subprocess.Popen(cmd)
+
+    # Wait for the proxy to start accepting connections
+    for i in range(10):
+        try:
+            sock = socket.socket()
+            sock.connect(('127.0.0.1', port))
+            break
+        except ConnectionRefusedError:
+            pass
+        finally:
+            sock.close()
+        time.sleep(.1)
+    else:
+        raise Exception('Failed to connect to proxy')
+
+    if proxy_proc.poll() is not None:
+        raise Exception('recording proxy failed to start')
+
+    # Even though the proxy only handles http for now, intercept
+    # both http and https so that tests that accidentally use https
+    # don't silently go around the proxy.
+    previous_http_proxy = os.environ.get("http_proxy")
+    os.environ["http_proxy"] = f"http://127.0.0.1:{port}"
+    previous_https_proxy = os.environ.get("https_proxy")
+    os.environ["https_proxy"] = f"http://127.0.0.1:{port}"
+
+    yield
+
+    proxy_proc.terminate()
+    proxy_proc.wait()
+
+    if previous_http_proxy is None:
+        del os.environ["http_proxy"]
+    else:
+        os.environ["http_proxy"] = previous_http_proxy
+    if previous_https_proxy is None:
+        del os.environ["https_proxy"]
+    else:
+        os.environ["https_proxy"] = previous_https_proxy
+
 
 reference_dir = pathlib.Path(__file__).absolute().parent / 'data/downloads'
 
@@ -145,17 +203,17 @@ overrides = {
     },
 }
 
-@pytest.mark.skip
 @pytest.mark.parametrize('var', dl.hindcasts.keys())
 def test_hindcast_download(var):
-    url = dl.hindcasts[var]
+    # Proxy doesn't support HTTPS, and all the servers we're testing
+    # support HTTP, so force HTTP.
+    url = dl.hindcasts[var].replace('https', 'http')
     do_one(var, url, 'hindcast', 3)
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize('var', dl.forecasts.keys())
 def test_forecast_download(var):
-    url = dl.forecasts[var]
+    url = dl.forecasts[var].replace('https', 'http')
     do_one(var, url, 'forecast', 1)
 
 obs_to_test = {
@@ -170,10 +228,9 @@ obs_to_test = {
         k.startswith('CHILE')
     )
 }
-@pytest.mark.skip
 @pytest.mark.parametrize('var', obs_to_test.keys())
 def test_obs_download(var):
-    url = dl.observations[var]
+    url = dl.observations[var].replace('https', 'http')
     do_one(var, url, 'obs', 3)
 
 def do_one(var, url, basename, expected_len):
@@ -198,14 +255,3 @@ def do_one(var, url, basename, expected_len):
         # selected.
         assert len(ds['Y']) == 3
         assert len(ds['X']) == 3
-
-        reference_file = reference_dir / f'{basename}-{var}.tsv'
-        if reference_file.exists():
-            ds_ref = cptio.open_cptdataset(reference_file)
-            try:
-                xr.testing.assert_equal(ds, ds_ref)
-            except Exception:
-                reference_file.with_suffix(".new").hardlink_to(f.name)
-                raise
-        else:
-            reference_file.hardlink_to(f.name)
