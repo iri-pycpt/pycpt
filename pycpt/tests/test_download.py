@@ -126,33 +126,6 @@ overrides = {
         },
         'target': 'Jun-Jul'
     },
-    'ERSSTV5': {
-        'predictand_extent': {
-            'west': -76,
-            'east':  -70,
-            'south': 40,
-            'north': 46,
-        },
-        'target': 'Jun-Jul'
-    },
-    'OISST2p1': {
-        'predictand_extent': {
-            'west': -75.375,
-            'east':  -75.875,
-            'south': 40.375,
-            'north': 40.875,
-        },
-        'target': 'Jun-Jul'
-    },
-    'NNRP': {
-        'predictand_extent': {
-            'west': -76,
-            'east':  -68.5,
-            'south': 39,
-            'north': 46.5,
-        },
-        'target': 'Jun-Jul'
-    },
 }
 
 @pytest.mark.skip
