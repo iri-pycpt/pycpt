@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=prmsl, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  101332.    	  101337.    	  101344.    
-40.0	  101360.    	  101369.    	  101379.    
-39.0	  101388.    	  101402.    	  101418.    
-cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  101291.    	  101298.    	  101306.    
+40.0	  101324.    	  101335.    	  101346.    
+39.0	  101357.    	  101373.    	  101390.    
+cpt:field=prmsl, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  101389.    	  101396.    	  101403.    
-40.0	  101415.    	  101426.    	  101437.    
-39.0	  101439.    	  101455.    	  101472.    
-cpt:field=prmsl, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  101366.    	  101372.    	  101379.    
+40.0	  101398.    	  101408.    	  101420.    
+39.0	  101426.    	  101443.    	  101460.    
+cpt:field=prmsl, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cf:standard_name=air_pressure_at_sea_level, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  101319.    	  101330.    	  101342.    
-40.0	  101343.    	  101359.    	  101376.    
-39.0	  101369.    	  101391.    	  101414.    
+41.0	  101316.    	  101323.    	  101330.    
+40.0	  101346.    	  101358.    	  101370.    
+39.0	  101375.    	  101393.    	  101413.    

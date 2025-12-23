@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  120471.    	  120451.    
-39.5	  120715.    	  120691.    
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  120477.    	  120454.    
-39.5	  120731.    	  120704.    
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  120584.    	  120565.    
-39.5	  120820.    	  120796.    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  119930.    	  119898.    	  119877.    
+40.5	  120172.    	  120144.    	  120125.    
+39.5	  120408.    	  120384.    	  120361.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  119930.    	  119890.    	  119862.    
+40.5	  120187.    	  120151.    	  120126.    
+39.5	  120438.    	  120406.    	  120376.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  120041.    	  120010.    	  119989.    
+40.5	  120286.    	  120258.    	  120239.    
+39.5	  120522.    	  120497.    	  120473.    

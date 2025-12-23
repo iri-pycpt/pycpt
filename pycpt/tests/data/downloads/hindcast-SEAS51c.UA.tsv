@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  19.2365    	  19.4161    
-39.5	  17.6650    	  17.7933    
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  18.2003    	  18.3968    
-39.5	  16.7152    	  16.8343    
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  18.1001    	  18.2400    
-39.5	  16.6016    	  16.7138    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  20.9816    	  21.1840    	  21.4057    
+40.5	  19.5174    	  19.7440    	  19.9727    
+39.5	  17.9702    	  18.1981    	  18.3843    
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  20.3096    	  20.4566    	  20.6043    
+40.5	  18.8179    	  18.9632    	  19.0979    
+39.5	  17.2096    	  17.3169    	  17.3820    
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  20.1917    	  20.3118    	  20.4730    
+40.5	  18.8202    	  18.9696    	  19.1003    
+39.5	  17.3782    	  17.5027    	  17.5853    

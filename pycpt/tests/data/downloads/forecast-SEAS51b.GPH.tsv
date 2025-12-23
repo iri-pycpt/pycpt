@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2023-06/08
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2023-05-01T00:00, cpt:nrow=2, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2023-06/08
+cpt:T	2023-06/07
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2023-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2023-06/07
 	-76.0	-75.0	-74.0
-40.5	  120914.    	  120899.    	  120886.    
-39.5	  121137.    	  121123.    	  121113.    
+41.5	  120429.    	  120406.    	  120388.    
+40.5	  120676.    	  120656.    	  120639.    
+39.5	  120901.    	  120884.    	  120870.    

@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  101505.    	  101513.    
-39.5	  101519.    	  101547.    
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  101501.    	  101507.    
-39.5	  101513.    	  101537.    
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  101546.    	  101553.    
-39.5	  101560.    	  101584.    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  101424.    	  101429.    	  101430.    
+40.5	  101443.    	  101448.    	  101457.    
+39.5	  101454.    	  101467.    	  101497.    
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  101419.    	  101423.    	  101423.    
+40.5	  101440.    	  101443.    	  101450.    
+39.5	  101452.    	  101463.    	  101489.    
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=unitless, cf:standard_name=mean_sea_level_pressure, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  101494.    	  101497.    	  101497.    
+40.5	  101513.    	  101516.    	  101521.    
+39.5	  101524.    	  101532.    	  101556.    

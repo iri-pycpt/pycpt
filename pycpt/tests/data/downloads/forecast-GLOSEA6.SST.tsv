@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=sst, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2021-06/08
-	-75.5	-74.5
-40.5	  295.301    	  294.297    
-39.5	  298.710    	  295.637    
+cpt:T	2021-06/07
+cpt:field=sst, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2021-06/07
+	-76.5	-75.5	-74.5
+41.5	  9999.00    	  9999.00    	  292.966    
+40.5	  9999.00    	  293.881    	  292.733    
+39.5	  9999.00    	  297.359    	  294.194    

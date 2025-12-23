@@ -1,9 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2020-06/08
-cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2020-06/08
+cpt:T	2020-06/07
+cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2020-06/07
 	-76.0	-75.0	-74.0
-41.0	  294.015    	  294.434    	  295.271    
-40.0	  295.792    	  295.789    	  295.730    
-39.0	  296.536    	  296.417    	  296.383    
+41.0	  294.574    	  295.007    	  295.620    
+40.0	  296.365    	  296.182    	  295.597    
+39.0	  296.935    	  296.544    	  296.099    

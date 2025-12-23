@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  303.167    	  303.466    	  304.256    
-40.0	  305.092    	  305.748    	  303.681    
-39.0	  306.702    	  304.644    	  300.312    
-cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  303.217    	  303.532    	  304.331    
+40.0	  305.216    	  305.863    	  303.544    
+39.0	  306.905    	  304.609    	  299.854    
+cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  302.793    	  303.158    	  304.088    
-40.0	  304.788    	  305.806    	  304.081    
-39.0	  306.538    	  304.935    	  301.414    
-cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  302.586    	  302.948    	  303.949    
+40.0	  304.697    	  305.724    	  303.840    
+39.0	  306.530    	  304.734    	  300.898    
+cpt:field=t_ref_max, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  302.792    	  303.143    	  303.954    
-40.0	  304.617    	  304.879    	  302.423    
-39.0	  305.525    	  303.431    	  300.168    
+41.0	  302.757    	  303.092    	  303.903    
+40.0	  304.675    	  304.909    	  302.221    
+39.0	  305.621    	  303.253    	  299.605    

@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  19.8402    	  20.0735    
-39.5	  19.1483    	  19.3603    
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  21.7561    	  21.9850    
-39.5	  20.9708    	  21.1764    
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  20.5279    	  20.7207    
-39.5	  19.6945    	  19.8626    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  20.3453    	  20.5243    	  20.7149    
+40.5	  19.8363    	  20.0580    	  20.2712    
+39.5	  19.2167    	  19.4649    	  19.6697    
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  22.6342    	  22.7698    	  22.8990    
+40.5	  21.9845    	  22.1778    	  22.3518    
+39.5	  21.1615    	  21.3770    	  21.5578    
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  20.8779    	  21.0413    	  21.1954    
+40.5	  20.2744    	  20.4806    	  20.6498    
+39.5	  19.5272    	  19.7432    	  19.8868    

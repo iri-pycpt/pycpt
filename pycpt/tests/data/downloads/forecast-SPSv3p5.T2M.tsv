@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2021-06/08
-	-75.5	-74.5
-40.5	  296.646    	  296.777    
-39.5	  298.132    	  297.625    
+cpt:T	2021-06/07
+cpt:field=t2m, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2021-06/07
+	-76.5	-75.5	-74.5
+41.5	  294.680    	  294.550    	  294.685    
+40.5	  296.251    	  296.422    	  296.422    
+39.5	  297.574    	  297.815    	  297.073    

@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=tref, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=tref, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  296.844    	  296.551    	  296.244    
-40.0	  297.726    	  297.414    	  297.074    
-39.0	  298.723    	  298.396    	  298.032    
-cpt:field=tref, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  296.771    	  296.381    	  295.966    
+40.0	  297.657    	  297.227    	  296.760    
+39.0	  298.626    	  298.212    	  297.752    
+cpt:field=tref, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  297.749    	  297.276    	  296.782    
-40.0	  298.698    	  298.186    	  297.635    
-39.0	  299.755    	  299.232    	  298.662    
-cpt:field=tref, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  297.716    	  297.164    	  296.581    
+40.0	  298.630    	  298.026    	  297.375    
+39.0	  299.652    	  299.070    	  298.435    
+cpt:field=tref, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  297.113    	  296.720    	  296.306    
-40.0	  298.137    	  297.719    	  297.267    
-39.0	  299.287    	  298.888    	  298.445    
+41.0	  296.793    	  296.351    	  295.882    
+40.0	  297.833    	  297.353    	  296.833    
+39.0	  299.016    	  298.579    	  298.093    

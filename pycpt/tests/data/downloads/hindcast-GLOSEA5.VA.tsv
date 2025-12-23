@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	 -1.60728    	 -1.19036    
-39.5	 -1.31690    	-0.971639    
-cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	 -2.47861    	 -2.10460    
-39.5	 -2.23103    	 -1.89154    
-cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	 -1.68970    	 -1.46101    
-39.5	 -1.40156    	 -1.23761    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	 -2.84924    	 -2.36690    	 -1.86679    
+40.5	 -2.45599    	 -1.99607    	 -1.53549    
+39.5	 -2.12057    	 -1.71279    	 -1.32881    
+cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	 -4.27364    	 -3.88692    	 -3.46525    
+40.5	 -3.93675    	 -3.55572    	 -3.16901    
+39.5	 -3.62174    	 -3.25654    	 -2.89838    
+cpt:field=va, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	 -3.27543    	 -2.95219    	 -2.62327    
+40.5	 -2.89059    	 -2.57815    	 -2.29594    
+39.5	 -2.52291    	 -2.26378    	 -2.04127    

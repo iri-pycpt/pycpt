@@ -1,9 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2022-06/08
-cpt:field=ugrd, cpt:L=2.5 months, cpt:P=200.0 hPa, cpt:S=2022-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2022-06/08
+cpt:T	2022-06/07
+cpt:field=ugrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2022-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2022-06/07
 	-76.0	-75.0	-74.0
-41.0	  20.0097    	  20.4291    	  20.8404    
-40.0	  18.3791    	  18.7222    	  19.0788    
-39.0	  16.6079    	  16.9220    	  17.2112    
+41.0	  19.7848    	  20.2634    	  20.7308    
+40.0	  18.2409    	  18.6141    	  19.0171    
+39.0	  16.5693    	  16.9248    	  17.2481    

@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  272.591    	  260.824    
-39.5	  274.920    	  251.183    
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  284.844    	  273.800    
-39.5	  297.716    	  277.285    
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  284.954    	  273.070    
-39.5	  283.112    	  264.548    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  183.905    	  189.757    	  188.451    
+40.5	  183.721    	  187.406    	  175.213    
+39.5	  188.476    	  186.880    	  165.059    
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  181.651    	  192.247    	  191.961    
+40.5	  188.026    	  197.635    	  187.765    
+39.5	  196.891    	  199.665    	  181.591    
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  188.889    	  199.143    	  201.759    
+40.5	  184.387    	  194.753    	  184.805    
+39.5	  190.767    	  194.416    	  176.410    

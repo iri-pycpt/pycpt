@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2021-06/08
-	-75.5	-74.5
-40.5	  319.839    	  319.710    
-39.5	  343.456    	  322.143    
+cpt:T	2021-06/07
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2021-06/07
+	-76.5	-75.5	-74.5
+41.5	  212.429    	  210.288    	  211.323    
+40.5	  215.581    	  218.323    	  211.830    
+39.5	  224.234    	  230.786    	  204.290    

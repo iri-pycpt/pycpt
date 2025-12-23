@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  12197.8    	  12196.5    	  12195.7    
-40.0	  12219.0    	  12217.9    	  12217.4    
-39.0	  12239.0    	  12238.0    	  12237.4    
-cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  12183.6    	  12181.3    	  12179.6    
+40.0	  12205.2    	  12203.1    	  12201.7    
+39.0	  12225.4    	  12223.6    	  12222.1    
+cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  12174.2    	  12171.4    	  12169.2    
-40.0	  12198.0    	  12195.4    	  12193.7    
-39.0	  12220.5    	  12218.3    	  12216.6    
-cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  12158.9    	  12155.3    	  12152.3    
+40.0	  12183.3    	  12180.0    	  12177.6    
+39.0	  12206.3    	  12203.5    	  12201.2    
+cpt:field=hgt, cpt:P=200.0 mb, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=gpm, cf:standard_name=geopotential_height, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  12178.8    	  12177.5    	  12176.8    
-40.0	  12201.9    	  12200.9    	  12200.6    
-39.0	  12223.6    	  12223.0    	  12222.7    
+41.0	  12164.6    	  12162.8    	  12161.6    
+40.0	  12188.4    	  12187.1    	  12186.2    
+39.0	  12210.9    	  12209.8    	  12209.1    

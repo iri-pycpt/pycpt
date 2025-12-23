@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=ugrd, cpt:L=2.5 months, cpt:P=200.0 hPa, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=ugrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  18.9083    	  19.2423    	  19.5739    
-40.0	  17.4184    	  17.7578    	  18.0916    
-39.0	  15.7751    	  16.0904    	  16.3983    
-cpt:field=ugrd, cpt:L=2.5 months, cpt:P=200.0 hPa, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  19.7831    	  20.0211    	  20.2612    
+40.0	  18.1688    	  18.4191    	  18.6721    
+39.0	  16.3740    	  16.6260    	  16.8764    
+cpt:field=ugrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  20.5161    	  20.8409    	  21.1556    
-40.0	  19.0914    	  19.4385    	  19.7867    
-39.0	  17.5506    	  17.8907    	  18.2284    
-cpt:field=ugrd, cpt:L=2.5 months, cpt:P=200.0 hPa, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  20.9535    	  21.1949    	  21.4167    
+40.0	  19.4866    	  19.7541    	  20.0273    
+39.0	  17.8924    	  18.1565    	  18.4343    
+cpt:field=ugrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  20.2938    	  20.6596    	  21.0030    
-40.0	  18.9168    	  19.2644    	  19.6004    
-39.0	  17.3944    	  17.6966    	  17.9833    
+41.0	  20.1595    	  20.5309    	  20.8559    
+40.0	  18.7355    	  19.0543    	  19.3582    
+39.0	  17.2107    	  17.4753    	  17.7271    

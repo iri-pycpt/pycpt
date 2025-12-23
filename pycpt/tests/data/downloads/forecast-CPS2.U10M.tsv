@@ -1,7 +1,8 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=u, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2021-06/08
-	-77.5	-75.0
-40.0	 0.361637    	 0.455234    
-37.5	 0.200283    	  1.16161    
+cpt:T	2021-06/07
+cpt:field=u, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2021-06/07
+	-80.0	-77.5	-75.0
+40.0	 0.442901    	 0.426512    	 0.510472    
+37.5	 0.455938    	 0.271868    	  1.31872    
+35.0	 0.294526    	 0.760087    	  2.33202    

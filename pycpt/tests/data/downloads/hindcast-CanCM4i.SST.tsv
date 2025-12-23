@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=sst, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=sst, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  294.025    	  294.118    	  294.252    
-40.0	  294.946    	  294.926    	  294.762    
-39.0	  295.983    	  296.040    	  296.207    
-cpt:field=sst, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  292.799    	  292.882    	  292.979    
+40.0	  293.878    	  293.890    	  293.754    
+39.0	  295.069    	  295.212    	  295.490    
+cpt:field=sst, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  294.440    	  294.502    	  294.603    
-40.0	  295.267    	  295.219    	  295.056    
-39.0	  296.217    	  296.188    	  296.143    
-cpt:field=sst, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  293.460    	  293.532    	  293.614    
+40.0	  294.482    	  294.520    	  294.467    
+39.0	  295.585    	  295.704    	  295.876    
+cpt:field=sst, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=K, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  293.856    	  293.827    	  293.833    
-40.0	  294.687    	  294.490    	  294.129    
-39.0	  295.729    	  295.521    	  295.140    
+41.0	  292.956    	  292.940    	  292.909    
+40.0	  294.031    	  293.983    	  293.845    
+39.0	  295.225    	  295.232    	  295.196    

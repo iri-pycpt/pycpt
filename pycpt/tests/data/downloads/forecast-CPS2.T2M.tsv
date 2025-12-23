@@ -1,7 +1,8 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=t2m, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2021-06/08
-	-77.5	-75.0
-40.0	  296.009    	  296.706    
-37.5	  298.258    	  297.975    
+cpt:T	2021-06/07
+cpt:field=t2m, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cpt:missing=-999, cpt:T=2021-06/07
+	-80.0	-77.5	-75.0
+40.0	  294.899    	  295.888    	  296.474    
+37.5	  296.405    	  298.201    	  297.701    
+35.0	  298.539    	  298.850    	  298.636    

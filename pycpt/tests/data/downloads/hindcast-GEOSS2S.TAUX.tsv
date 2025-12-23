@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	 4.996072E-02	 5.684073E-02	 1.241208E-02
-40.0	 3.530045E-02	 3.749152E-03	-2.534254E-03
-39.0	 1.422865E-02	-8.743695E-03	-6.714988E-03
-cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2006-06/08
+41.0	 7.290822E-02	 8.197467E-02	 2.146559E-02
+40.0	 6.196821E-02	 1.629409E-02	 8.293705E-03
+39.0	 4.214799E-02	-2.423236E-03	-1.118432E-03
+cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	 5.623628E-02	 7.739178E-02	 1.946147E-02
-40.0	 3.189240E-02	-3.770050E-04	-2.320483E-03
-39.0	 1.465426E-03	-1.118284E-02	-5.673972E-03
-cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2007-06/08
+41.0	 7.614973E-02	 9.976534E-02	 2.754815E-02
+40.0	 5.699618E-02	 9.147407E-03	 4.868660E-03
+39.0	 2.905871E-02	-6.258111E-03	-2.937173E-03
+cpt:field=taux, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=N m-2, cf:standard_name=surface_downward_eastward_stress, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	 5.458441E-02	 6.610389E-02	 1.556748E-02
-40.0	 4.478335E-02	 7.255385E-03	 2.994930E-03
-39.0	 3.461230E-02	-5.490057E-03	-2.640145E-03
+41.0	 7.741032E-02	 8.931956E-02	 2.131227E-02
+40.0	 6.457746E-02	 1.422598E-02	 7.094539E-03
+39.0	 5.350187E-02	-2.399701E-03	-3.574206E-05

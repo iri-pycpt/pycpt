@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2021-06/08
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2021-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2021-06/08
-	-75.5	-74.5
-40.5	  120686.    	  120670.    
-39.5	  120870.    	  120853.    
+cpt:T	2021-06/07
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2021-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2021-06/07
+	-76.5	-75.5	-74.5
+41.5	  120317.    	  120297.    	  120277.    
+40.5	  120523.    	  120506.    	  120489.    
+39.5	  120709.    	  120692.    	  120675.    

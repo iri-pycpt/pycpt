@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.5 months, cpt:S=2005-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  119780.    	  119773.    
-39.5	  120007.    	  120003.    
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.5 months, cpt:S=2006-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  119730.    	  119732.    
-39.5	  119953.    	  119957.    
-cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.5 months, cpt:S=2007-04-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  119834.    	  119833.    
-39.5	  120055.    	  120058.    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.0 months, cpt:S=2005-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  119341.    	  119320.    	  119302.    
+40.5	  119573.    	  119556.    	  119542.    
+39.5	  119796.    	  119783.    	  119773.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.0 months, cpt:S=2006-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  119332.    	  119320.    	  119311.    
+40.5	  119560.    	  119552.    	  119545.    
+39.5	  119777.    	  119771.    	  119767.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=3.0 months, cpt:S=2007-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  119401.    	  119393.    	  119388.    
+40.5	  119628.    	  119624.    	  119623.    
+39.5	  119843.    	  119844.    	  119847.    

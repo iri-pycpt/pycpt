@@ -1,9 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2019-06/08
-cpt:field=sst, cpt:L=2.5 months, cpt:S=2019-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2019-06/08
+cpt:T	2019-06/07
+cpt:field=sst, cpt:L=2.0 months, cpt:S=2019-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=sea_surface_temperature, cpt:missing=-999, cpt:T=2019-06/07
 	-76.0	-75.0	-74.0
-41.0	  293.829    	  293.859    	  293.878    
-40.0	  295.185    	  295.418    	  295.797    
-39.0	  296.425    	  296.653    	  296.828    
+41.0	  292.888    	  292.943    	  292.959    
+40.0	  294.432    	  294.785    	  295.350    
+39.0	  295.784    	  296.154    	  296.537    

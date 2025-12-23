@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  293.663    	  293.998    	  294.348    
-40.0	  295.556    	  295.469    	  294.568    
-39.0	  296.367    	  295.980    	  295.315    
-cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  293.995    	  294.288    	  294.330    
+40.0	  295.796    	  295.511    	  293.938    
+39.0	  296.474    	  295.732    	  294.529    
+cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  293.750    	  294.132    	  294.642    
-40.0	  295.850    	  295.773    	  295.200    
-39.0	  296.756    	  296.447    	  296.056    
-cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  293.907    	  294.302    	  294.586    
+40.0	  295.994    	  295.784    	  294.654    
+39.0	  296.768    	  296.234    	  295.461    
+cpt:field=tref, cpt:Z=2.0 m, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  294.067    	  294.409    	  294.343    
-40.0	  296.117    	  295.936    	  294.618    
-39.0	  296.709    	  296.278    	  295.617    
+41.0	  294.657    	  294.967    	  294.470    
+40.0	  296.569    	  296.192    	  294.093    
+39.0	  297.064    	  296.285    	  295.062    

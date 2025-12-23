@@ -13,7 +13,7 @@ default_download_args = {
     'fdate':  dt.datetime(2020, 5, 1),
     'target_first_year': 2005,
     'target_final_year': 2007,
-    'target': 'Jun-Aug',
+    'target': 'Jun-Jul',
     'predictor_extent': {
         'west': -76,
         'east':  -74,
@@ -44,31 +44,49 @@ overrides = {
         'target': 'Sep-Nov',
     },
     'CPS2': {
-        # CPS2 has 2.5 degree resolution and some missing values. Need
-        # to select a wider area to get enough points.
-        'predictor_extent': {'west': -77, 'east': -74, 'south': 38, 'north': 41},
+        # CPS2 has 2.5 degree resolution and some missing values.
+        'predictor_extent': {'west': -80, 'east': -75, 'south': 35, 'north': 40},
         'fdate': dt.datetime(2021, 5, 1),
+    },
+    'GCFS2p0': {
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'GCFS2p1': {
         'fdate': dt.datetime(2021, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'GEM5NEMO': {
         'fdate': dt.datetime(2022, 5, 1),
     },
+    'GLOSEA5': {
+        'fdate': dt.datetime(2020, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
+    },
     'GLOSEA6': {
         'fdate': dt.datetime(2021, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
+    },
+    'METEOFRANCE7': {
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'METEOFRANCE8': {
         'fdate': dt.datetime(2022, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'METEOFRANCE9': {
         'fdate': dt.datetime(2025, 4, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'SEAS51': {
         'fdate': dt.datetime(2023, 5, 1),
     },
     'SEAS51b': {
         'fdate': dt.datetime(2023, 5, 1),
+        'predictor_extent': {'west': -76, 'east': -74, 'south': 39.5, 'north': 41.5},
+    },
+    'SEAS51c': {
+        'fdate': dt.datetime(2023, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'SPEAR': {
         'fdate': dt.datetime(2021, 5, 1),
@@ -76,8 +94,12 @@ overrides = {
     'SPEARb': {
         'fdate': dt.datetime(2021, 5, 1),
     },
+    'SPSv3p0': {
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
+    },
     'SPSv3p5': {
         'fdate': dt.datetime(2021, 5, 1),
+        'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     # For some reason the UCSB variables are all 0.05 degree, except PRCP where
     # UCSB.PRCP is 0.25 degrees and the 0.05 degree variables is called UCBP0p05.PRCP.
@@ -88,7 +110,6 @@ overrides = {
             'south': 40.875,
             'north': 40.975,
         },
-        'target': 'Jun-Jul'
     },
     'UCSB.PRCP': {
         'predictand_extent': {
@@ -97,7 +118,6 @@ overrides = {
             'south': 40.375,
             'north': 40.875,
         },
-        'target': 'Jun-Jul'
     },
     'UCSB0p05.PRCP': {
         'predictand_extent': {
@@ -106,7 +126,6 @@ overrides = {
             'south': 40.875,
             'north': 40.975,
         },
-        'target': 'Jun-Jul'
     },
     'CPCCMAPURD': {
         'predictand_extent': {
@@ -115,7 +134,6 @@ overrides = {
             'south': 40,
             'north': 42,
         },
-        'target': 'Jun-Jul'
     },
     'TRMM': {
         'predictand_extent': {
@@ -124,7 +142,6 @@ overrides = {
             'south': 40,
             'north': 43,
         },
-        'target': 'Jun-Jul'
     },
 }
 
@@ -179,8 +196,8 @@ def do_one(var, url, basename, expected_len):
         # Some grids are on the integer degrees, so three points
         # get selected. Others are on the half degree, so two get
         # selected.
-        assert len(ds['Y']) in (2, 3)
-        assert len(ds['X']) in (2, 3)
+        assert len(ds['Y']) == 3
+        assert len(ds['X']) == 3
 
         reference_file = reference_dir / f'{basename}-{var}.tsv'
         if reference_file.exists():

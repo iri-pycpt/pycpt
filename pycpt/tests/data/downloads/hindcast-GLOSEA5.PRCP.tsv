@@ -1,16 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/08
-	-75.5	-74.5
-40.5	  369.372    	  361.614    
-39.5	  386.929    	  319.638    
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/08
-	-75.5	-74.5
-40.5	  384.870    	  406.005    
-39.5	  424.394    	  365.872    
-cpt:field=aprod, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/08
-	-75.5	-74.5
-40.5	  380.313    	  366.884    
-39.5	  396.610    	  347.959    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/07
+	-76.5	-75.5	-74.5
+41.5	  228.298    	  249.849    	  247.847    
+40.5	  238.328    	  251.148    	  245.144    
+39.5	  247.593    	  256.220    	  207.695    
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/07
+	-76.5	-75.5	-74.5
+41.5	  205.540    	  228.015    	  235.745    
+40.5	  215.363    	  243.922    	  253.499    
+39.5	  249.288    	  263.207    	  234.062    
+cpt:field=aprod, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/07
+	-76.5	-75.5	-74.5
+41.5	  238.942    	  261.361    	  261.259    
+40.5	  236.423    	  254.347    	  244.789    
+39.5	  251.335    	  260.318    	  230.041    

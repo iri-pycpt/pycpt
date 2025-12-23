@@ -1,8 +1,8 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2020-06/08
-cpt:field=aprod, cpt:P=200.0 mb, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2020-06/08
+cpt:T	2020-06/07
+cpt:field=aprod, cpt:P=200.0 mb, cpt:L=2.0 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cpt:missing=-999, cpt:T=2020-06/07
 	-76.0	-75.0	-74.0
-41.0	 6.080767E-04	 6.169358E-04	 6.250549E-04
-40.0	 5.961133E-04	 6.048980E-04	 6.132417E-04
-39.0	 5.822947E-04	 5.904865E-04	 5.977079E-04
+41.0	 6.285176E-04	 6.374708E-04	 6.456266E-04
+40.0	 6.144289E-04	 6.226190E-04	 6.302700E-04
+39.0	 5.976599E-04	 6.045963E-04	 6.105501E-04

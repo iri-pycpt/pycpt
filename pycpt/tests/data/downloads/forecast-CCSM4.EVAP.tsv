@@ -1,8 +1,8 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2020-06/08
-cpt:field=evap, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2020-06/08
+cpt:T	2020-06/07
+cpt:field=evap, cpt:L=2.0 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2020-06/07
 	-76.0	-75.0	-74.0
-41.0	  20.7987    	  21.1502    	  17.9202    
-40.0	  19.1829    	  19.5803    	  13.3627    
-39.0	  20.7357    	  16.6529    	 -999.000    
+41.0	  21.7138    	  21.9177    	  18.3860    
+40.0	  19.5781    	  19.7859    	  13.1590    
+39.0	  20.9192    	  16.6558    	 -999.000    

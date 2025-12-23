@@ -1,19 +1,19 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=prec, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=prec, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  405.147    	  406.785    	  366.539    
-40.0	  397.386    	  389.698    	  330.885    
-39.0	  389.041    	  354.071    	  295.626    
-cpt:field=prec, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  270.528    	  257.732    	  233.509    
+40.0	  267.724    	  250.598    	  205.942    
+39.0	  257.916    	  229.641    	  188.755    
+cpt:field=prec, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  395.100    	  405.903    	  378.234    
-40.0	  399.724    	  407.778    	  359.161    
-39.0	  401.270    	  366.261    	  314.103    
-cpt:field=prec, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  269.338    	  279.873    	  263.790    
+40.0	  261.088    	  280.171    	  249.298    
+39.0	  278.203    	  247.330    	  205.015    
+cpt:field=prec, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  387.249    	  391.743    	  363.330    
-40.0	  413.961    	  410.716    	  351.193    
-39.0	  401.282    	  366.746    	  322.090    
+41.0	  248.963    	  255.187    	  246.738    
+40.0	  291.427    	  284.909    	  238.145    
+39.0	  295.367    	  262.073    	  216.045    

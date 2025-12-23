@@ -1,15 +1,18 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2005-06/08
-	-77.5	-75.0
-40.0	  101435.    	  101458.    
-37.5	  101491.    	  101542.    
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2006-06/08
-	-77.5	-75.0
-40.0	  101473.    	  101497.    
-37.5	  101527.    	  101583.    
-cpt:field=slp, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2007-06/08
-	-77.5	-75.0
-40.0	  101529.    	  101559.    
-37.5	  101589.    	  101645.    
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2005-06/07
+	-80.0	-77.5	-75.0
+40.0	  101366.    	  101368.    	  101392.    
+37.5	  101411.    	  101432.    	  101487.    
+35.0	  101481.    	  101530.    	  101594.    
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2006-06/07
+	-80.0	-77.5	-75.0
+40.0	  101386.    	  101389.    	  101414.    
+37.5	  101427.    	  101449.    	  101511.    
+35.0	  101493.    	  101544.    	  101619.    
+cpt:field=slp, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Pa, cpt:missing=-999, cpt:T=2007-06/07
+	-80.0	-77.5	-75.0
+40.0	  101439.    	  101446.    	  101472.    
+37.5	  101501.    	  101520.    	  101577.    
+35.0	  101582.    	  101627.    	  101695.    

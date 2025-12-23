@@ -1,18 +1,18 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 cpt:nfields=1
-cpt:T	2005-06/08	2006-06/08	2007-06/08
-cpt:field=evap, cpt:L=2.5 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2005-06/08
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=evap, cpt:L=2.0 months, cpt:S=2005-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2005-06/07
 	-76.0	-75.0	-74.0
-41.0	  21.8048    	  22.4318    	  18.2978    
-40.0	  19.4124    	  19.4361    	  10.9346    
-39.0	  19.7900    	  15.0601    	 -999.000    
-cpt:field=evap, cpt:L=2.5 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2006-06/08
+41.0	  21.8824    	  23.1599    	  19.1470    
+40.0	  19.7089    	  19.9076    	  11.3599    
+39.0	  20.3093    	  15.5852    	 -999.000    
+cpt:field=evap, cpt:L=2.0 months, cpt:S=2006-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2006-06/07
 	-76.0	-75.0	-74.0
-41.0	  21.7838    	  22.7858    	  19.0812    
-40.0	  19.6760    	  19.9345    	  11.9440    
-39.0	  20.3847    	  16.1834    	 -999.000    
-cpt:field=evap, cpt:L=2.5 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2007-06/08
+41.0	  23.1731    	  23.9463    	  19.7737    
+40.0	  20.1746    	  20.2259    	  12.2339    
+39.0	  20.3283    	  16.0057    	 -999.000    
+cpt:field=evap, cpt:L=2.0 months, cpt:S=2007-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=W/m2, cpt:missing=-999, cpt:T=2007-06/07
 	-76.0	-75.0	-74.0
-41.0	  21.4360    	  21.9099    	  18.0401    
-40.0	  19.7279    	  19.3438    	  10.8567    
-39.0	  19.6797    	  14.9491    	 -999.000    
+41.0	  21.6957    	  22.0987    	  18.3080    
+40.0	  19.8791    	  19.2939    	  11.0269    
+39.0	  19.9756    	  15.2869    	 -999.000    

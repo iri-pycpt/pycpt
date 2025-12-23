@@ -1,8 +1,9 @@
 xmlns:cpt=http://iri.columbia.edu/CPT/v10/
 xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
 cpt:nfields=1
-cpt:T	2020-06/08
-cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.5 months, cpt:S=2020-05-01T00:00, cpt:nrow=2, cpt:ncol=2, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2020-06/08
-	-75.5	-74.5
-40.5	  18.5432    	  18.6996    
-39.5	  17.4505    	  17.5574    
+cpt:T	2020-06/07
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2020-05-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2020-06/07
+	-76.5	-75.5	-74.5
+41.5	  19.5659    	  19.6847    	  19.8300    
+40.5	  18.6355    	  18.7638    	  18.9014    
+39.5	  17.4733    	  17.5852    	  17.6822    
