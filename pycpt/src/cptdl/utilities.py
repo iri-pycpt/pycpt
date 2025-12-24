@@ -93,8 +93,8 @@ def simple_download(url, dest, verbose=False, use_dlauth=False):
         cookies = {'__dlauth_id': dlauthid}
     else:
         cookies={}
-    with requests.post(url, stream=True, allow_redirects=True, cookies=cookies) as r:
-        r.raise_for_status()  
+    with requests.get(url, stream=True, allow_redirects=True, cookies=cookies) as r:
+        r.raise_for_status()
         path = Path(dest).expanduser().resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
         start, j, total_size = dt.datetime.now(), 0, 0
