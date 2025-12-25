@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2025-05/06
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2025-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2025-05/06
+	-76.5	-75.5	-74.5
+41.5	  118343.    	  118321.    	  118301.    
+40.5	  118561.    	  118542.    	  118526.    
+39.5	  118774.    	  118759.    	  118745.    

@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2025-05/06
+cpt:field=ua, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2025-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=eastward_wind, cpt:missing=-999, cpt:T=2025-05/06
+	-76.5	-75.5	-74.5
+41.5	  19.0333    	  19.2354    	  19.4489    
+40.5	  18.8003    	  18.9992    	  19.2250    
+39.5	  18.4078    	  18.6173    	  18.8764    

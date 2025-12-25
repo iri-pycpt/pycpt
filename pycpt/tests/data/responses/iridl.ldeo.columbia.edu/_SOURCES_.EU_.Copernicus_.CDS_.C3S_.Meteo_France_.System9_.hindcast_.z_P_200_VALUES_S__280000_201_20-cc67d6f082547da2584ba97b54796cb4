@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-05/06	2006-05/06	2007-05/06
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2005-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2005-05/06
+	-76.5	-75.5	-74.5
+41.5	  118027.    	  118007.    	  117987.    
+40.5	  118248.    	  118229.    	  118211.    
+39.5	  118463.    	  118447.    	  118430.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2006-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2006-05/06
+	-76.5	-75.5	-74.5
+41.5	  117976.    	  117952.    	  117930.    
+40.5	  118196.    	  118174.    	  118155.    
+39.5	  118411.    	  118391.    	  118374.    
+cpt:field=z, cpt:P=200.0 hPa, cpt:L=2.0 months, cpt:S=2007-04-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m2 s-2, cf:standard_name=geopotential, cpt:missing=-999, cpt:T=2007-05/06
+	-76.5	-75.5	-74.5
+41.5	  118143.    	  118123.    	  118104.    
+40.5	  118369.    	  118352.    	  118337.    
+39.5	  118586.    	  118573.    	  118561.    

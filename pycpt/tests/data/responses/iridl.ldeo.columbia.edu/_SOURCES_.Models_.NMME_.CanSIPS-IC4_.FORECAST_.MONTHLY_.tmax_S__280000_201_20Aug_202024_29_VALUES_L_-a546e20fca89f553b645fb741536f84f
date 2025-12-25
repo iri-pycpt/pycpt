@@ -1,0 +1,9 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2024-09/10
+cpt:field=tmax, cpt:L=2.0 months, cpt:S=2024-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Kelvin_scale, cf:standard_name=air_temperature, cpt:missing=-999, cpt:T=2024-09/10
+	-76.0	-75.0	-74.0
+41.0	  294.424    	  294.400    	  294.566    
+40.0	  295.771    	  295.713    	  295.835    
+39.0	  296.764    	  296.863    	  297.067    

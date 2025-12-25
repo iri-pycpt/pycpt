@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-09/10	2006-09/10	2007-09/10
+cpt:field=vgrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2005-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2005-09/10
+	-76.0	-75.0	-74.0
+41.0	 0.605780    	 0.957350    	  1.30907    
+40.0	 0.889386    	  1.22158    	  1.54566    
+39.0	  1.17326    	  1.46251    	  1.74073    
+cpt:field=vgrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2006-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2006-09/10
+	-76.0	-75.0	-74.0
+41.0	 0.444365    	 0.663616    	 0.874029    
+40.0	 0.654943    	 0.854315    	  1.04115    
+39.0	 0.843549    	  1.00015    	  1.13803    
+cpt:field=vgrd, cpt:L=2.0 months, cpt:P=200.0 hPa, cpt:S=2007-08-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=m s-1, cf:standard_name=northward_wind, cpt:missing=-999, cpt:T=2007-09/10
+	-76.0	-75.0	-74.0
+41.0	 9.078650E-02	 0.376214    	 0.646890    
+40.0	 0.380741    	 0.633146    	 0.872073    
+39.0	 0.615278    	 0.816668    	  1.00693    

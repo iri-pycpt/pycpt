@@ -87,6 +87,16 @@ default_download_args = {
     'pressure': 200,
 }
 
+default_obs_request = {
+    'season_years': (2005, 2007),
+    'season_start_month': 6,
+    'season_length': 2,
+    # Need force=True because we're using NamedTemporaryFile,
+    # which creates the file before we write to it.
+    'force': True,
+}
+
+
 overrides = {
     'CanCM3': {
         'fdate': dt.datetime(2019, 5, 1),
@@ -99,7 +109,7 @@ overrides = {
     },
     'CanSIPSIC4': {
         'fdate': dt.datetime(2024, 8, 1),
-        'target': 'Sep-Nov',
+        'target': 'Sep-Oct',
     },
     'CPS2': {
         # CPS2 has 2.5 degree resolution and some missing values.
@@ -133,6 +143,7 @@ overrides = {
     },
     'METEOFRANCE9': {
         'fdate': dt.datetime(2025, 4, 1),
+        'target': 'May-Jun',
         'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
     'SEAS51': {
