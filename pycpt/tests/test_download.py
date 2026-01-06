@@ -174,24 +174,24 @@ overrides = {
     # UCSB.PRCP is 0.25 degrees and the 0.05 degree variables is called UCBP0p05.PRCP.
     'UCSB': {
         'predictand_extent': {
-            'west': -75.375,
-            'east':  -75.475,
+            'west': -75.475,
+            'east':  -75.375,
             'south': 40.875,
             'north': 40.975,
         },
     },
     'UCSB.PRCP': {
         'predictand_extent': {
-            'west': -75.375,
-            'east':  -75.875,
+            'west': -75.875,
+            'east':  -75.375,
             'south': 40.375,
             'north': 40.875,
         },
     },
     'UCSB0p05.PRCP': {
         'predictand_extent': {
-            'west': -75.375,
-            'east':  -75.475,
+            'west': -75.475,
+            'east':  -75.375,
             'south': 40.875,
             'north': 40.975,
         },
@@ -259,7 +259,6 @@ def do_one(var, url, basename, expected_len):
             **args
         )
         print(ds)
-
         assert len(ds['T']) == expected_len
         # Some grids are on the integer degrees, so three points
         # get selected. Others are on the half degree, so two get

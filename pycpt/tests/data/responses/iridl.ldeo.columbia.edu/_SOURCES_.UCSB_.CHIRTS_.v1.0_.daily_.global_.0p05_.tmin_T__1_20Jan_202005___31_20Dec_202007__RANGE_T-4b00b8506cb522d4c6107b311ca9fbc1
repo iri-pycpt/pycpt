@@ -1,0 +1,18 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+cpt:nfields=1
+cpt:T	2005-06/07	2006-06/07	2007-06/07
+cpt:field=tmin, cpt:T=2005-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cpt:missing=-999
+	-75.47501	-75.425	-75.375
+40.975	  16.6579    	  17.0674    	  17.1700    
+40.925	  17.5681    	  17.5750    	  17.3573    
+40.875	  17.4629    	  17.3346    	  17.0842    
+cpt:field=tmin, cpt:T=2006-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cpt:missing=-999
+	-75.47501	-75.425	-75.375
+40.975	  16.7863    	  17.1742    	  17.2851    
+40.925	  17.7739    	  17.7810    	  17.5891    
+40.875	  17.7273    	  17.6185    	  17.4084    
+cpt:field=tmin, cpt:T=2007-06/07, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=Celsius_scale, cpt:missing=-999
+	-75.47501	-75.425	-75.375
+40.975	  15.3049    	  15.7382    	  15.8797    
+40.925	  16.2662    	  16.2971    	  16.1160    
+40.875	  16.1937    	  16.0912    	  15.8735    
