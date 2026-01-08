@@ -97,7 +97,7 @@ default_obs_request = {
 }
 
 
-overrides = {
+forecast_overrides = {
     'CanCM3': {
         'fdate': dt.datetime(2019, 5, 1),
     },
@@ -170,6 +170,9 @@ overrides = {
         'fdate': dt.datetime(2021, 5, 1),
         'predictor_extent': {'west': -76.5, 'east': -74.5, 'south': 39.5, 'north': 41.5},
     },
+}
+
+obs_overrides = {
     # For some reason the UCSB variables are all 0.05 degree, except PRCP where
     # UCSB.PRCP is 0.25 degrees and the 0.05 degree variables is called UCBP0p05.PRCP.
     'UCSB': {
@@ -219,13 +222,13 @@ def test_hindcast_download(var):
     # Proxy doesn't support HTTPS, and all the servers we're testing
     # support HTTP, so force HTTP.
     url = dl.hindcasts[var].replace('https', 'http')
-    do_one(var, url, 'hindcast', 3)
+    do_one(var, url, 'hindcast', 3, forecast_overrides)
 
 
 @pytest.mark.parametrize('var', dl.forecasts.keys())
 def test_forecast_download(var):
     url = dl.forecasts[var].replace('https', 'http')
-    do_one(var, url, 'forecast', 1)
+    do_one(var, url, 'forecast', 1, forecast_overrides)
 
 obs_to_test = {
     k: v
@@ -239,17 +242,17 @@ obs_to_test = {
         k.startswith('CHILE')
     )
 }
+
 @pytest.mark.parametrize('var', obs_to_test.keys())
 def test_obs_download(var):
     url = dl.observations[var].replace('https', 'http')
-    do_one(var, url, 'obs', 3)
+    do_one(var, url, 'obs', 3, obs_overrides)
 
-def do_one(var, url, basename, expected_len):
+def do_one(var, url, basename, expected_len, overrides):
     model, _ = var.split('.')
     override = overrides.get(var, overrides.get(model, {}))
     args = default_download_args | override
     args = pycpt.notebook._preprocess_download_args(args)
-
 
     with tempfile.NamedTemporaryFile() as f:
         ds = dl.download(
