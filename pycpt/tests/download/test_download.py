@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import pandas as pd
 import pathlib
 import pytest
 import socket
@@ -7,6 +8,7 @@ import subprocess
 import time
 from typing import Sequence
 import warnings
+import xarray as xr
 
 from pycpt.download import (
     BoundingBox,
@@ -260,7 +262,74 @@ def test_obs_download(var: str, monkeypatch: pytest.MonkeyPatch) -> None:
     if hasattr(source, 'force_http'):
         monkeypatch.setattr(source, 'force_http', True)
     da = source.download(request)
-    print(da.load())
+    print(da)
+    validate_obs_response(request, da)
     assert len(da['T']) == 3
     assert len(da['Y']) == 3
     assert len(da['X']) == 3
+
+
+def validate_forecast_response(request: SeasonalForecastRequest, da: xr.DataArray):
+    assert da.dims == ('T', 'Y', 'X')
+
+    first_year, final_year = request.init_years
+    assert ((first_year <= da['S'].dt.year) &
+            (da['S'].dt.year <= final_year)).all()
+    assert (da['S'].dt.month == request.init_month).all()
+    assert (da['S'].dt.day == 1).all()
+
+    season_starts = pd.to_datetime(da['S'].data) + pd.DateOffset(months=request.season_start_lead)
+    np.testing.assert_array_equal(da['Ti'], season_starts)
+    season_ends = season_starts + pd.DateOffset(months=request.season_length)
+    # Adjust to use PyCPT's systematically incorrect season end time
+    # TODO fix the bug everywhere in PyCPT
+    season_ends = season_ends - pd.Timedelta(hours=24)
+    assert (da['Tf'] == season_ends).all()
+
+    if request.bounding_box is not None:
+        # Some servers (e.g. Ingrid) will return any grid cell that intersects
+        # the requested bounding box, even if its center is outside the bounding
+        # box, so add half a grid cell to the limits. If a dimension has fewer than
+        # two grid points, we don't know its resolution, so we can't do this check.
+        if len(da['Y']) > 1:
+            y_half_step = abs(da['Y'][0].item() - da['Y'][1].item())
+            assert da['Y'].min().item() >= request.bounding_box['south'] - y_half_step
+            assert da['Y'].max().item() <= request.bounding_box['north'] + y_half_step
+        if len(da['X']) > 1:
+            x_half_step = abs(da['X'][0].item() - da['X'][1].item())
+            assert da['X'].min().item() >= request.bounding_box['west'] - x_half_step
+            assert da['X'].max().item() <= request.bounding_box['east'] + x_half_step
+
+    # Not asserting anything about pressure_level, because the original Ingrid implementation
+    # didn't take care to leave that information in a consistently-named attribute. If
+    # we eventually use this library outside of PyCPT, we should to improve on that.
+
+
+def validate_obs_response(request: SeasonalObsRequest, da: xr.DataArray):
+    assert da.dims == ('T', 'Y', 'X')
+
+    first_year, final_year = request.years
+    np.testing.assert_array_equal(da['Ti'].dt.year, range(first_year, final_year + 1))
+    season_starts = np.array([
+        np.datetime64(f'{y}-{request.season_start_month:02}-01')
+        for y in range(first_year, final_year + 1)
+    ])
+    np.testing.assert_array_equal(da['Ti'].values, season_starts)
+    season_ends = pd.to_datetime(season_starts) + pd.DateOffset(months=request.season_length)
+    # Adjust to use PyCPT's systematically incorrect season end time
+    # TODO fix the bug everywhere in PyCPT
+    season_ends = season_ends - pd.Timedelta(hours=24)
+    np.testing.assert_array_equal(da['Tf'].values, season_ends)
+
+    if request.bounding_box is not None:
+        # See note in validate_forecast_response
+        if len(da['Y']) > 1:
+            y_half_step = abs(da['Y'][0].item() - da['Y'][1].item())
+            assert da['Y'].min().item() >= request.bounding_box['south'] - y_half_step
+            assert da['Y'].max().item() <= request.bounding_box['north'] + y_half_step
+        if len(da['X']) > 1:
+            x_half_step = abs(da['X'][0].item() - da['X'][1].item())
+            assert da['X'].min().item() >= request.bounding_box['west'] - x_half_step
+            assert da['X'].max().item() <= request.bounding_box['east'] + x_half_step
+
+    # See note about pressure_level above.
