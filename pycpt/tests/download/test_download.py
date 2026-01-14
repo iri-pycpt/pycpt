@@ -11,6 +11,7 @@ import time
 
 
 HERE = pathlib.Path(__file__).absolute().parent
+DATA_DIR = HERE.parent / 'data' / 'responses'
 
 @pytest.fixture(scope="module", autouse=True)
 def recording_proxy(request):
@@ -19,7 +20,7 @@ def recording_proxy(request):
         "python",
         HERE / "recording_proxy.py",
         "--port", str(port),
-        "--dir", HERE / "data/responses"
+        "--dir", DATA_DIR
     ]
     if request.config.getoption("--record"):
         cmd += ["--record"]
