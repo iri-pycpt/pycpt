@@ -1,3 +1,6 @@
+from typing import Literal, Sequence, TypedDict
+
+
 hindcasts = { 
 	'CanCM4i.PRCP': "https://iridl.ldeo.columbia.edu/SOURCES/.Models/.NMME/.CanSIPS-IC3/.CanCM4i-IC3/.HINDCAST/.MONTHLY/.prec/SOURCES/.Models/.NMME/.CanCM4i/.FORECAST/.MONTHLY/.prec/S/(1%20Jan%202021)/(1%20Sep%202021)/RANGEEDGES/appendstream/SOURCES/.Models/.NMME/.CanSIPS-IC3/.CanCM4i-IC3/.FORECAST/.MONTHLY/.prec/appendstream/S/%280000%201%20{threeletters[fdate.month]}%20{first_year}-{final_year}%29/VALUES/L/{lead_low}/{lead_high}/RANGEEDGES/%5BL%5D//keepgrids/average/{'%5BM%5D/average/' if ensemblemean else ''}Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGEEDGES/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGEEDGES/{seasonal_target_length(target)}/mul/-999/setmissing_value/{'%5BX/Y%5D%5BL/S/add%5D/cptv10.tsv' if filetype == 'cptv10.tsv' and ensemblemean else '%5BX/Y%5D%5BL/S/add/M%5D/cptv10.tsv' if filetype =='cptv10.tsv' and not ensemblemean else filetype}",
 	'CanCM4i.T2M': "https://iridl.ldeo.columbia.edu/SOURCES/.Models/.NMME/.CanSIPS-IC3/.CanCM4i-IC3/.HINDCAST/.MONTHLY/.tref/SOURCES/.Models/.NMME/.CanCM4i/.FORECAST/.MONTHLY/.tref/S/(1%20Jan%202021)/(1%20Sep%202021)/RANGEEDGES/appendstream/SOURCES/.Models/.NMME/.CanSIPS-IC3/.CanCM4i-IC3/.FORECAST/.MONTHLY/.tref/appendstream/S/%280000%201%20{threeletters[fdate.month]}%20{first_year}-{final_year}%29/VALUES/L/{lead_low}/{lead_high}/RANGEEDGES/%5BL%5D//keepgrids/average/{'%5BM%5D/average/' if ensemblemean else ''}Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGEEDGES/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGEEDGES/-999/setmissing_value/{'%5BX/Y%5D%5BL/S/add%5D/cptv10.tsv' if filetype == 'cptv10.tsv' and ensemblemean else '%5BX/Y%5D%5BL/S/add/M%5D/cptv10.tsv' if filetype =='cptv10.tsv' and not ensemblemean else filetype}",
@@ -405,7 +408,32 @@ forecasts = {
 	'GLOSEA6.VA': "https://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.UKMO/.GloSea6-GC2/.System600/.forecast/.va/P/{pressure}/VALUES/S/%280000%201%20{threeletters[fdate.month]}%20{fdate.year}%29/VALUES/L/{lead_low}/{lead_high}/RANGEEDGES/%5BL%5D//keepgrids/average/Y/{predictor_extent['south']}/{predictor_extent['north']}/RANGEEDGES/X/{predictor_extent['west']}/{predictor_extent['east']}/RANGEEDGES/{'%5BM%5D/average/' if ensemblemean else ''}-999/setmissing_value/{'%5BX/Y%5D%5BL/S/add%5D/cptv10.tsv' if filetype == 'cptv10.tsv' and ensemblemean else '%5BX/Y%5D%5BL/S/add/M%5D/cptv10.tsv' if filetype =='cptv10.tsv' and not ensemblemean else filetype}",
 }
 
-metadata = { 
+class Limits(TypedDict, total=False):
+    start: str
+    end: str | Literal[-1]
+    units: str
+    calendar: str
+
+class ForecastMetadataEntry(TypedDict, total=False):
+    institution: str
+    iri: str
+    info: str
+    version: float
+    dlauth_required: bool
+    hindcast_limits: Limits
+    forecast_limits: Limits
+
+class ObservationMetadataEntry(TypedDict, total=False):
+    institution: str
+    iri: str
+    info: str
+    version: float
+    dlauth_required: bool
+    extent: Sequence[float]
+    disclaimer: str
+    limits: Limits
+
+forecasts_metadata: dict[str, ForecastMetadataEntry] = {
 	'CanCM4i': {'institution': 'Environment and Climate Change Canada (ECCC)', 'iri': 'https://iridl.ldeo.columbia.edu/SOURCES/.Models/.NMME/.CanCM4i/', 'info': 'https://journals.ametsoc.org/view/journals/wefo/35/4/wafD190259.xml', 'dlauth_required': False, 'hindcast_limits': {'start': '1980-01-01', 'end': -1}, 'forecast_limits': {'start': '2019-08-01', 'end': -1}}, 
 	'CanSIPSv2': {'institution': 'Environment and Climate Change Canada (ECCC)', 'iri': 'https://iridl.ldeo.columbia.edu/SOURCES/.Models/.NMME/.CanSIPSv2/', 'info': 'https://journals.ametsoc.org/view/journals/wefo/35/4/wafD190259.xml', 'dlauth_required': False, 'hindcast_limits': {'start': '1981-01-01', 'end': '2021-11-01'}, 'forecast_limits': {'start': '2016-12-01', 'end': '2021-11-01'}},  
 	'CanSIPSIC3': {'institution': 'Environment and Climate Change Canada (ECCC)', 'iri': 'https://iridl.ldeo.columbia.edu/SOURCES/.Models/.NMME/.CanSIPS-IC3/', 'dlauth_required': False, 'hindcast_limits': {'start': '1980-01-01', 'end': '2020-12-01'}, 'forecast_limits': {'start': '2021-10-01', 'end': -1}}, 
@@ -424,12 +452,15 @@ metadata = {
 	'GCFS2p1': {'version': 2.1, 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.DWD/.GCFS2p1/', 'info': 'https://www.dwd.de/EN/ourservices/seasonals_forecasts/start.html', 'institution': 'Deutscher Wetterdienst (DWD)', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2020-11-01', 'end': -1}}, 
 	'SEAS5': {'info': 'https://www.ecmwf.int/en/forecasts/documentation-and-support/long-range', 'institution': 'European Center For Mid-Range Weather Forecasting (ECMWF)', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS5/', 'dlauth_required': True, 'version': 5.0, 'hindcast_limits': {'start': '1981-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2017-09-01', 'end': '2022-10-01'}}, 
 	'SEAS51': {'info': 'https://www.ecmwf.int/en/forecasts/documentation-and-support/long-range', 'institution': 'European Center For Mid-Range Weather Forecasting (ECMWF)', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.ECMWF/.SEAS51/', 'dlauth_required': True, 'version': 5.1, 'hindcast_limits': {'start': '1981-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2022-11-01', 'end': -1}}, 
-	'CPS2': {'instituion': 'Japanese Metorological Agency (JMA)', 'info': 'https://confluence.ecmwf.int/display/CKB/Description+of+cps2-v20150526+C3S+contribution', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.JMA/.CPS2/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'units': 'months since 1960-01-01', 'calendar': '360_day', 'start': '2020-10-01', 'end': -1}}, 
+	'CPS2': {'institution': 'Japanese Metorological Agency (JMA)', 'info': 'https://confluence.ecmwf.int/display/CKB/Description+of+cps2-v20150526+C3S+contribution', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.JMA/.CPS2/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'units': 'months since 1960-01-01', 'calendar': '360_day', 'start': '2020-10-01', 'end': -1}}, 
 	'METEOFRANCE7': {'institution': 'Meteo France', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2019-10-01', 'end': '2021-06-01'}, 'info': 'https://confluence.ecmwf.int/display/CKB/Description+of+System7-v20190301+C3S+contribution', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System7/'}, 
 	'METEOFRANCE8': {'institution': 'Meteo France', 'dlauth_required': True, 'info': 'https://confluence.ecmwf.int/display/CKB/Description+of+System8-v20210101+C3S+contribution', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System8/', 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2021-07-01', 'end': '2025-04-01'}}, 
 	'METEOFRANCE9': {'institution': 'Meteo France', 'dlauth_required': True, 'info': 'https://confluence.ecmwf.int/display/CKB/Description+of+System9-v20250101+C3S+contribution', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.C3S/.Meteo_France/.System9/', 'hindcast_limits': {'start': '1993-01-01', 'end': '2024-12-01'}, 'forecast_limits': {'start': '2025-04-01', 'end': -1}},
-	'GLOSEA5': {'intitution': 'United Kingdom Meteorological Office (UKMO)', 'info': 'https://confluence.ecmwf.int/display/CKB/UKMO+Forecast+System', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.UKMO/.GloSea5-GC2/.System15/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2020-05-01', 'end': '2021-02-01'}}, 
-	'GLOSEA6': {'intitution': 'United Kingdom Meteorological Office (UKMO)', 'info': 'https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.UKMO/.GloSea6-GC2/.System600/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2021-03-01', 'end': -1}}, 
+	'GLOSEA5': {'institution': 'United Kingdom Meteorological Office (UKMO)', 'info': 'https://confluence.ecmwf.int/display/CKB/UKMO+Forecast+System', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.UKMO/.GloSea5-GC2/.System15/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2020-05-01', 'end': '2021-02-01'}}, 
+	'GLOSEA6': {'institution': 'United Kingdom Meteorological Office (UKMO)', 'info': 'https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6', 'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.EU/.Copernicus/.CDS/.UKMO/.GloSea6-GC2/.System600/', 'dlauth_required': True, 'hindcast_limits': {'start': '1993-01-01', 'end': '2016-12-01'}, 'forecast_limits': {'start': '2021-03-01', 'end': -1}}, 
+}
+
+observations_metadata: dict[str, ObservationMetadataEntry] = {
 	'CHILESTATIONS': {'iri': 'http://iridl.ldeo.columbia.edu/home/.xchourio/.ACToday/.CHL/.prcp/', 'info': 'http://iridl.ldeo.columbia.edu/home/.xchourio/.ACToday/.CHL/.prcp/', 'dlauth_required': False, 'institution': 'ACToday - Chile', 'limits': {'start': '1981-01-01', 'end': '2017-12-01'}}, 
 	'ENACTS.BANGLADESH': {'iri': 'https://iri.columbia.edu/resources/enacts/', 'info': 'datalibrary.bmd.gov.bd', 'disclaimer': 'This dataset is downloaded through unencrypted http - we take no responsibility for the contents you receive, be they malware or empty data files.', 'institution': 'Bandladesh Meteorological Department', 'dlauth_required': False, 'extent': [27.025, 20.375, 93.025, 87.675], 'limits': {'start': '1981-01-01', 'end': -1}}, 
 	'ENACTS.COLOMBIA': {'iri': 'https://iri.columbia.edu/resources/enacts/', 'info': 'http://www.ideam.gov.co/', 'institution': 'Instituto de Hidrología, Meteorología y Estudios Ambientales', 'extent': [15, -5, -65, -80], 'dlauth_required': False, 'limits': {'start': '1981-01-01', 'end': '2016-12-31'}}, 
@@ -445,6 +476,8 @@ metadata = {
     'OISST2p1': {'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.SOURCES/.NOAA/.NCDC/.OISST/.version2p1/.AVHRR_monthly/.sst/', 'info': 'http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NCDC/.OISST/.version2p1/', 'institution': 'NOAA NCDC', 'dlauth_required': False, 'limits': {'start': '1981-09-01', 'end': -1}}, 
     'NNRP': {'iri': 'http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NCEP-NCAR/.CDAS-1/.MONTHLY/', 'info': 'https://doi.org/10.1175/1520-0477(1996)077%3C0437:TNYRP%3E2.0.CO;2/', 'institution': 'NOAA/NCAR', 'dlauth_required': False, 'limits': {'start': '1949-01-01', 'end': -1}}, 	
 }
+
+metadata = forecasts_metadata | observations_metadata
 
 deprecations = {
     f'SEAS51.{var}': (
