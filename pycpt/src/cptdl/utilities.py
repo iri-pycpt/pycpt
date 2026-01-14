@@ -117,11 +117,10 @@ def simple_download(url, dest, verbose=False, use_dlauth=False):
     return path 
 
 
-def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs):
-    if 'filetype' in kwargs.keys():
-        format = kwargs['filetype']
-    else: 
-        raise PyCPT_ERROR("Required keyword argument missing: 'filetype'")
+def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs) -> xr.Dataset:
+    format = kwargs.get('filetype')
+    if format is None:
+        format = 'cptv10.tsv'
     assert format in ['cptv10.tsv', 'data.nc'], 'invalid download format: {}'.format(format)
     try:
         url = evaluate_url(baseurl, **kwargs)

@@ -1,4 +1,5 @@
 import datetime
+import cptdl
 import matplotlib.pyplot as plt
 from pathlib import Path
 import shutil
@@ -202,16 +203,10 @@ def initialize(config, until=None):
     for issue_month in config.issue_months:
         month_dir = dest_dir / f'{issue_month:02}'
         download_args = config.download_args
-        if 'final_year' in download_args:
-            assert 'target_final_year' not in download_args, \
-                "Don't mix first_year/final_year with target_first_year/target_final_year"
-            first_issue_year = download_args['final_year'] + 1
-        else:
-            assert 'target_final_year' in download_args, \
-                'Either final_year or target_final_year must be specified'
-            delta = notebook.issue_year_delta(issue_month, download_args['target'])
-            first_issue_year = download_args['target_final_year'] + 1 + delta
-
+        download_args = notebook.preprocess_download_args(
+            dict(config.download_args, fdate=datetime.datetime(2000, issue_month, 1)) # arbitrary year
+        )
+        first_issue_year = download_args['final_year'] + 1
         issue_date = datetime.datetime(first_issue_year, issue_month, 1)
         skip_issue_dates = getattr(config, 'skip_issue_dates', [])
         with tempfile.TemporaryDirectory() as domain_dir:

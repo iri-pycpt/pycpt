@@ -283,22 +283,28 @@ def snap_to(reference: xr.DataArray, other: xr.DataArray) -> xr.DataArray:
     '''Return a new DataArray that's a copy of `other` but with the `X` and
         `Y` coords replaced with those of `reference`. Raises an AssertionError
         if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''
-    assert np.allclose(other['X'].data, reference['X'].data)
-    assert np.allclose(other['Y'].data, reference['Y'].data)
+    # CPT accepts latitude in north-to-south (decreasing) or south-to-north
+    # (increasing) order, but always outputs decreasing. If the original
+    # was increasing, flip it.
+    new_y = align_coord(reference['Y'], other['Y'])
+    new_x = align_coord(reference['X'], other['X'])
+
+    result = other.assign_coords(Y=new_y, X=new_x)
+
     if ('station' in reference.dims):
         reference_stations = len(reference['station'])
         other_stations = len(other['station'])
         if other_stations != reference_stations:
             warnings.warn(f"CPT dropped {reference_stations - other_stations} stations.")
 
-    _, result = xr.align(reference, other, join='override', exclude='T')
+    return result
 
-    if 'station' in reference.dims:
-        # xr.align only aligns dimension coordinates. With station data,
-        # X and Y are non-dimension coordinates so we have to replace them
-        # explicitly.
-        result['X'] = reference['X']
-        result['Y'] = reference['Y']
-        result['Name'] = reference['Name']
 
+def align_coord(reference: xr.DataArray, other: xr.DataArray) -> xr.DataArray:
+    if np.allclose(other.data, reference.data):
+        result = reference
+    elif np.allclose(other.data, reference.data[::-1]):
+        result = reference[::-1]
+    else:
+        raise Exception(f"New coordinate {other.name} doesn't align with old {reference.name}")
     return result

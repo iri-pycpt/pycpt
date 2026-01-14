@@ -1,27 +1,37 @@
+import datetime
 import cartopy
 import cartopy.crs as ccrs
 import cartopy.mpl.gridliner as gridliner
-import cptcore as cc
-import cptdl as dl
-import cptextras as ce
-import cptio as cio
 from IPython.core.interactiveshell import InteractiveShell
 import IPython.display
 from IPython.display import HTML
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+import numbers
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from PIL import Image
-import requests
 from scipy.stats import norm, t
-import warnings
+import typing
+from typing import Literal, Mapping, NotRequired, Sequence, Tuple, TypedDict, overload
 import xarray as xr
 
+import cptcore as cc
+import cptdl as dl
+import cptextras as ce
+from . import download
+from .download import (
+    BoundingBox,
+    SeasonalForecastRequest,
+    SeasonalForecastSource,
+    SeasonalObsRequest,
+    SeasonalObsSource,
+    catalog,
+)
 
 missing_value_flag = -999
-
 
 def setup(case_dir, domain):
     # extracting domain boundaries and create house keeping
@@ -55,40 +65,222 @@ def setup_domain_dir(files_root):
     print(f"Output will be saved in {outputDir}")
 
 
-def download_data(
-        predictand_name,
-        local_predictand_file,
-        predictor_names,
-        download_args,
-        files_root,
-        force_download,
-):
-    forecast_data = download_forecasts(
-        predictor_names, files_root, force_download, download_args
-    )
-    if local_predictand_file is None:
-        Y = download_observations(
-            download_args, files_root, predictand_name, force_download
-        )
-    else:
-        print('Using local observed predictand dataset')
-        local_predictand_file = str(local_predictand_file) # in case it's a pathlib.Path
-        if local_predictand_file.endswith('.tsv'):
-            Y = cio.open_cptdataset(local_predictand_file)
-        elif local_predictand_file.endswith('.nc'):
-            Y = xr.open_dataset(local_predictand_file)
-        else:
-            assert False
-        Y = next(iter(Y.data_vars.values()))
+class FullDownloadArgs(TypedDict):
+    fdate: datetime.datetime
+    target: str
+    lead_low: float
+    lead_high: float
+    predictor_extent: BoundingBox
+    predictand_extent: BoundingBox
+    first_year: int
+    final_year: int
+    pressure: NotRequired[int | None]
+    ensemblemean: NotRequired[bool]
+    filetype: str | None
 
-    hindcast_data = download_hindcasts(
-        predictor_names, files_root, force_download, download_args
-    )
+
+def validate_bounding_box(d: object) -> BoundingBox:
+    if not isinstance(d, Mapping):
+        raise Exception(f'Not a valid bounding box: must be a mapping with keys west, east, south, and north. {d}')
+    try:
+        west = d['west']
+        east = d['east']
+        south = d['south']
+        north = d['north']
+    except KeyError:
+        raise Exception(f'Not a valid bounding box: must be a mapping with keys west, east, south, and north. {d}')
+    if not (
+        isinstance(west, numbers.Real) and 
+        isinstance(east, numbers.Real) and
+        isinstance(south, numbers.Real) and
+        isinstance(north, numbers.Real)
+    ):
+        raise Exception(f'Not a valid bounding box: west, east, south, and north must be numbers. {d}')
+    return {
+        'west': float(west),
+        'east': float(east),
+        'south': float(south),
+        'north': float(north)
+    }
+
+
+def preprocess_download_args(given_args: dict[str, object]) -> FullDownloadArgs:
+    fdate = given_args['fdate']
+    if not isinstance(fdate, datetime.datetime):
+        raise Exception('fdate must be a datetime.datetime')
+
+    # (lead_low, lead_high) and target are redundant ways of specifying the same thing.
+    # Accept either, or both if they're consistent (for backwards compatibility).
+    provided_target = given_args.get('target')
+    provided_lead_low = given_args.get('lead_low')
+    provided_lead_high = given_args.get('lead_high')
+    if provided_target is not None:
+        if not isinstance(provided_target, str):
+            raise Exception('provided_target must be a string or None')
+        calculated_lead_low, calculated_lead_high = dl.leads_from_target(fdate, provided_target)
+        if ((provided_lead_low is not None and provided_lead_low != calculated_lead_low) or
+            (provided_lead_high is not None and provided_lead_high != calculated_lead_high)):
+            raise Exception('lead_low and lead_high are not compatible with target')
+        lead_low = calculated_lead_low
+        lead_high = calculated_lead_high
+        target = provided_target
+    else:  # provided_target is None
+        if provided_lead_low is None or provided_lead_high is None:
+            raise Exception('Must provide either target or (lead_low and lead_high)')
+        if not (isinstance(provided_lead_low, numbers.Real) and isinstance(provided_lead_high, numbers.Real)):
+            raise Exception('lead_low and lead_high must be numbers')
+        lead_low = typing.cast(float, provided_lead_low)
+        lead_high = typing.cast(float, provided_lead_high)
+        target = dl.target_from_leads(fdate, lead_low, lead_high)
+
+    predictor_extent = validate_bounding_box(given_args['predictor_extent'])
+    predictand_extent = validate_bounding_box(given_args['predictand_extent'])
+
+    # first_year and final_year refer to the year of the initialization date,
+    # not the year of the season. In some applications (when there's a fixed
+    # target season with multiple leads) it's more convenient to specify
+    # target_first_year and target_final_year, referring to the year of the
+    # target season.
+    if (('target_first_year' in given_args or 'target_final_year' in given_args) and
+        ('first_year' in given_args or 'final_year' in given_args)):
+            raise Exception(
+                "Don't mix first_year/final_year with target_first_year/target_final_year.")
+    if 'target_first_year' in given_args and 'target_final_year' in given_args:
+        t_first = given_args['target_first_year']
+        t_final = given_args['target_final_year']
+        if not (isinstance(t_first, int) and isinstance(t_final, int)):
+            raise Exception('target_first_year and target_final_year must be integers')
+        delta = issue_year_delta(fdate.month, lead_low, lead_high)
+        first_year = t_first + delta
+        final_year = t_final + delta
+    elif 'first_year' in given_args and 'final_year' in given_args:
+        first = given_args['first_year']
+        final = given_args['final_year']
+        if not (isinstance(first, int) and isinstance(final, int)):
+            raise Exception('first_year and final_year must be integers')
+        first_year = first
+        final_year = final
+    else:
+        raise Exception('You must provide either (first_year and final_year), or (target_first_year and target_final_year).')
+
+    filetype  = given_args.get('filetype')
+    if not (filetype is None or isinstance(filetype, str)):
+        raise Exception('filetype must be a str or None')
+
+    return {
+        'fdate': fdate,
+        'target': target,
+        'lead_low': lead_low,
+        'lead_high': lead_high,
+        'predictor_extent': predictor_extent,
+        'predictand_extent': predictand_extent,
+        'first_year': first_year,
+        'final_year': final_year,
+        'filetype': filetype,
+    }
+
+
+def download_data(
+        predictand_name: str,
+        local_predictand_file: str | Path | None,
+        predictor_names: list[str],
+        download_args: dict[str, object],
+        files_root: str | Path,
+        force_download: bool,
+) -> Tuple[xr.DataArray, Sequence[xr.DataArray], Sequence[xr.DataArray | None]]:
+    data_dir = Path(files_root) / 'data'
+    if local_predictand_file is not None:
+        assert False, 'not implemented'  # TODO
+        # if not isinstance(predictand_name, str):
+        #     raise Exception('If providing local_predictand_file, predictand_arg should be a string (the name of the local dataset)')
+        # predictand = SeasonalLocalObsSource(predictand_name, Path(local_predictand_file))
+    hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request = create_requests(download_args)
+    predictand_source = catalog.observation_sources[predictand_name]
+    Y = cached_download(predictand_source, hindcast_predictand_request, data_dir / predictand_name, force_download)
+    predictor_sources = [catalog.forecast_sources[name] for name in predictor_names]
+    hindcast_data = []
+    forecast_data: list[xr.DataArray | None] = []
+    forecast_init_year = forecast_predictor_request.init_years[0]
+    for source in predictor_sources:
+        path = data_dir / source.name
+        da = cached_download(source, hindcast_predictor_request, path, force_download)
+        hindcast_data.append(da)
+        path = data_dir / f"{source.name}_f{forecast_init_year}"
+        try:
+            da = cached_download(source, forecast_predictor_request, path, force_download)
+            forecast_data.append(da)
+        except Exception:
+            forecast_data.append(None)
     return Y, hindcast_data, forecast_data
 
 
+@overload
+def cached_download(source: SeasonalForecastSource, request: SeasonalForecastRequest, path: Path, force: bool) -> xr.DataArray: ...
+@overload
+def cached_download(source: SeasonalObsSource, request: SeasonalObsRequest, path: Path, force: bool) -> xr.DataArray: ...
+def cached_download(source, request, path, force):
+    if path.exists() and not force:
+        da = xr.open_dataarray(path)
+    else:
+        da =  source.download(request)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        da.to_netcdf(path)
+    return da
+
+
+def as_int(x: float) -> int:
+    i = int(x)
+    assert i == x
+    return i
+
+
+def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsRequest, SeasonalForecastRequest, SeasonalForecastRequest]:
+    full_download_args = preprocess_download_args(download_args)
+    init_month = full_download_args['fdate'].month
+    season_start_lead = as_int(full_download_args['lead_low'] - .5)
+    season_start_month = (init_month + season_start_lead - 1) % 12 + 1
+    if season_start_month < init_month:
+        delta = 1
+    else:
+        delta = 0
+    season_length_float = full_download_args['lead_high'] - full_download_args['lead_low'] + 1
+    season_length = as_int(season_length_float)
+    hindcast_init_years = (full_download_args['first_year'], full_download_args['final_year'])
+    hindcast_season_years = (hindcast_init_years[0] + delta, hindcast_init_years[1] + delta)
+    forecast_init_years = (full_download_args['fdate'].year, full_download_args['fdate'].year)
+    predictand_bounding_box = BoundingBox(**full_download_args['predictand_extent'])
+    predictor_bounding_box = BoundingBox(**full_download_args['predictor_extent'])
+    if not full_download_args.get('ensemblemean', True):
+        raise Exception('ensemblemean=False is no longer supported.')
+    hindcast_predictand_request = SeasonalObsRequest(
+        years=hindcast_season_years,
+        season_start_month=season_start_month,
+        season_length=season_length,
+        bounding_box=predictand_bounding_box,
+        pressure_level=full_download_args.get('pressure')
+    )
+    hindcast_predictor_request = SeasonalForecastRequest(
+        init_month=init_month,
+        init_years=hindcast_init_years,
+        season_start_lead=season_start_lead,
+        season_length=season_length,
+        bounding_box=predictor_bounding_box,
+        pressure_level=full_download_args.get('pressure')
+    )
+    forecast_predictor_request = SeasonalForecastRequest(
+        init_month=init_month,
+        init_years=forecast_init_years,
+        season_start_lead=season_start_lead,
+        season_length=season_length,
+        bounding_box=predictor_bounding_box,
+        pressure_level=full_download_args.get('pressure')
+    )
+    return hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request
+
+
+
 def summarize_available_years(predictor_names, predictand_name, download_args, Y, hcsts, fcsts):
-    args = _preprocess_download_args(download_args)
+    args = preprocess_download_args(download_args)
 
     t_year = hcsts[0]['T'][0].dt.year
     s_year = hcsts[0]['S'][0].dt.year
@@ -100,7 +292,7 @@ def summarize_available_years(predictor_names, predictand_name, download_args, Y
         target_final_year = args['final_year'] + 1
     else:
         assert False
-
+    
     df = pd.DataFrame(
         {predictand_name: pd.Series(Y['T'], Y['T'])} |
         {
@@ -191,177 +383,22 @@ def display(o):
         print(o)
 
 
-def target_midpoint(target):
-    '''Given a season expressed as e.g. 'Jan-Mar', return the month number (Jan = 1) of the month containing the midpoint of the season. Can have a fractional part If the season midpoint is in the middle of a month.
-
-    >>> target_midpoint('Dec-Feb')  # middle of January
-    1.5
-
-    >>> target_midpoint('May-May')  # middle of May
-    5.5
-
-    >>> target_midpoint('Oct-Nov')  # November 1
-    11.0
-
-    '''
-    start_mo, end_mo = cio.utilities.parse_target(target)
-    length = (end_mo - start_mo) % 12 + 1
-    mid_mo = (start_mo - 1 + length / 2) % 12 + 1
-    return mid_mo
-
-
-def issue_year_delta(issue_month, target):
-    '''When issuing forecasts in month `issue_month` for the `target` season, the issue date of the forecast for the year `y` season is in the year `y + year_delta(issue_month, target). The year of a season is the year of its midpoint.
-    >>> issue_year_delta(11, 'Dec-Feb')
+def issue_year_delta(issue_month: int, lead_low: float, lead_high: float) -> Literal[-1] | Literal[0]:
+    '''When issuing forecasts in month `issue_month` for leads `lead_low` to `lead_high`, the issue
+    date of the forecast for the year `y` season is in the year `y + year_delta(issue_month, lead_low, lead_high).
+    The year of a season is the year of its midpoint.
+    >>> issue_year_delta(11, 1.5, 3.5)
     -1
 
-    >>> issue_year_delta(9, 'Oct-Dec')
+    >>> issue_year_delta(9, 1.5, 3.5)
     0
     '''
-    target_mid = target_midpoint(target)
-    if issue_month > target_mid:
-        result = -1
+    lead_midpoint = (lead_high + lead_low) / 2
+    month_midpoint = issue_month + lead_midpoint
+    if month_midpoint >= 13:
+        return -1
     else:
-        result = 0
-    return result
-
-
-def _preprocess_download_args(download_args):
-    result = dict(download_args)
-    # lead_low and lead_high: legacy redundant configuration option,
-    # still tolerated for backwards compatibility
-    user_lead_low = download_args.get('lead_low')
-    user_lead_high = download_args.get('lead_high')
-    lead_low, lead_high = \
-        dl.leads_from_target(download_args['fdate'], download_args['target'])
-    assert (
-            (user_lead_low is None or user_lead_low == lead_low) and
-            (user_lead_high is None or user_lead_high == lead_high)
-    ), "lead_low and lead_high are not consistent with fdate and target."
-    result['lead_low'] = lead_low
-    result['lead_high'] = lead_high
-
-    # Legacy config options first_year and final_year refer to the
-    # year of the initialization date, not the year of the
-    # season. target_first_year and target_final_year are the newer,
-    # recommend options that refer to the year of the target season.
-    # Legacy option is still accepted for backwards compatibility.
-    if 'target_first_year' in download_args and 'target_final_year' in download_args:
-        if 'first_year' in download_args or 'final_year' in download_args:
-            raise Exception('Provide either first_year/final_year or target_first_year/target_final_year, not both')
-        issue_month = download_args['fdate'].month
-        target = download_args['target']
-        delta = issue_year_delta(issue_month, target)
-        result['first_year'] = download_args['target_first_year'] + delta
-        result['final_year'] = download_args['target_final_year'] + delta
-        del result['target_first_year']
-        del result['target_final_year']
-    elif 'first_year' in download_args and 'final_year' in download_args:
-        if 'target_first_year' in download_args or 'target_final_year' in download_args:
-            raise Exception('first_year/final_year are incompatible with target_first_year/target_final_year')
-
-    if download_args.get('filetype') is None:
-        result['filetype'] = 'cptv10.tsv'
-
-    return result
-
-
-def download_observations(download_args, files_root, predictand_name, force_download):
-    download_args_obs = _preprocess_download_args(download_args)
-
-    # Deal with "Cross-year issues" where either the target season
-    # crosses Jan 1 (eg DJF), or where the forecast initialization is
-    # in the calendar year before the start of the target season (eg
-    # JFM from Dec 1 sart)
-
-    fmon = download_args_obs["fdate"].month
-    tmon1 = fmon + download_args_obs["lead_low"]  # first month of the target season
-    tmon2 = fmon + download_args_obs["lead_high"]  # last month of the target season
-
-    # For when the target season crossing Jan 1 (eg DJF)
-    # (i.e., when target season starts in the same calendar year as the forecast init
-    # and ends in the following calendar year)
-    # Here the final year of the obs dataset needs to be incremented by 1.
-    if tmon1 <= 12.5 and tmon2 > 12.5:
-        download_args_obs["final_year"] += 1
-
-    # For JFM, FMA .. with forecast initialization in the previous year.
-    # (i.e., when target season starts in the calendar year after the forecast init.)
-    # Here both the first and final year of the obs dataset need to be incremented by 1.
-    if tmon1 > 12.5:
-        download_args_obs["first_year"] += 1
-        download_args_obs["final_year"] += 1
-
-    return cached_download(
-        dl.observations[predictand_name], files_root, predictand_name,
-        force_download, download_args_obs
-    )
-
-
-def warn_if_deprecated(v):
-    if v in dl.catalog.deprecations:
-        replacement, doc = dl.catalog.deprecations[v]
-        warnings.warn(
-            f'{v} is deprecated. New configurations should use {replacement} '
-            f'instead. See {doc} .'
-        )
-
-def download_hindcasts(predictor_names, files_root, force_download, download_args):
-    for v in predictor_names:
-        warn_if_deprecated(v)
-    return [
-        cached_download(
-            dl.hindcasts[model], files_root, f'{model}',
-            force_download, download_args
-        )
-        for model in predictor_names
-    ]
-
-
-def download_forecasts(predictor_names, files_root, force_download, download_args):
-    results = []
-    for model in predictor_names:
-        warn_if_deprecated(model)
-        try:
-            da = cached_download(
-                dl.forecasts[model],
-                files_root,
-                f'{model}_f{download_args["fdate"].year}',
-                force_download,
-                download_args,
-            )
-        except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 404:
-                print('Not found. Continuing without it.')
-                print()
-                da = None
-            else:
-                raise
-        results.append(da)
-
-    return results
-
-
-def cached_download(url_pattern, files_root, basename, force_download, download_args):
-    dataDir = files_root / "data"
-    full_download_args = _preprocess_download_args(download_args)
-    tsvfile = dataDir / f'{basename}.tsv'
-    ncfile = dataDir / f'{basename}.nc'
-    if not ncfile.is_file() or force_download:
-        print(f'Downloading {basename}')
-        ds = dl.download(
-            url_pattern,
-            tsvfile,
-            **full_download_args,
-            verbose=True,
-        )
-        ds.to_netcdf(ncfile)
-    else:
-        print(f'Reusing already-downloaded {basename}')
-        ds = xr.open_dataset(ncfile)
-
-    print()
-    return getattr(ds, [i for i in ds.data_vars][0])
+        return 0
 
 
 def evaluate_models(
