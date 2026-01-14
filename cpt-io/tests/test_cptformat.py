@@ -139,24 +139,24 @@ def test_read_cpt_date_range_day():
 
 def test_read_cpt_date_range_month():
     d = cptio.fileio.cpt.read_cpt_date_range('2015-03')
-    assert d == [
+    assert d == (
         dt.datetime(2015, 3, 1),
         dt.datetime(2015, 3, 16),
         dt.datetime(2015, 3, 31)
-    ]
+    )
 
 def test_read_cpt_date_range_threemonth():
     d = cptio.fileio.cpt.read_cpt_date_range('2015-03/05')
-    assert d == [
+    assert d == (
         dt.datetime(2015, 3, 1),
         dt.datetime(2015, 4, 15, 12),
         dt.datetime(2015, 5, 31)
-    ]
+    )
 
 def test_read_cpt_date_range_wrap():
     d = cptio.fileio.cpt.read_cpt_date_range('2015-12/2016-02')
-    assert d == [
+    assert d == (
         dt.datetime(2015, 12, 1),
         dt.datetime(2016, 1, 15),
         dt.datetime(2016, 2, 29)
-    ]
+    )

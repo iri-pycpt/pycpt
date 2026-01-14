@@ -11,7 +11,7 @@ import cptio
 import pycpt.automation
 import pycpt.notebook
 
-def encode_season(first_year, target_first_month, target_last_month):
+def encode_season(first_year: int, target_first_month: float, target_last_month: float) -> tuple[datetime.datetime, datetime.datetime, datetime.datetime]:
     if target_last_month >= target_first_month:
         end_year = first_year
     else:
@@ -77,7 +77,7 @@ class Config:
     MOS =  'CCA'
     ensemble: list[str] = field(default_factory=lambda: ['M1.PRCP', 'M2.PRCP'])
     predictand_name = 'UCSB.PRCP'
-    local_predictand_file = None
+    local_predictand_file: str | None = None
     download_args: dict = field(default_factory=lambda: {
         'target_first_year': 2010,
         'target_final_year': 2020,

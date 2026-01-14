@@ -279,7 +279,7 @@ def find_cpt(version=CPT_DEFAULT_VERSION):
     return CPT_EXECUTABLE.parents[0] if CPT_EXECUTABLE.is_file() else False 
 
 
-def snap_to(reference, other):
+def snap_to(reference: xr.DataArray, other: xr.DataArray) -> xr.DataArray:
     '''Return a new DataArray that's a copy of `other` but with the `X` and
         `Y` coords replaced with those of `reference`. Raises an AssertionError
         if the two `X` arrays or the two `Y` arrays aren't np.allclose.'''

@@ -21,7 +21,7 @@ def parse_target(target):
     low, high = target.split('-') if '-' in target else (target, target)
     return threeletters.index(low), threeletters.index(high)
 
-def leads_from_target(fdate, target):
+def leads_from_target(fdate: dt.datetime, target: str) -> tuple[float, float]:
     """calculates lead_low and lead_high"""
     target_low, target_high = parse_target(target)
     #print(target_low, target_high, fdate.month)
@@ -31,11 +31,13 @@ def leads_from_target(fdate, target):
 
     return lead_low, lead_high
 
-def target_from_leads(fdate, lead_low, lead_high):
+def target_from_leads(fdate: dt.datetime, lead_low: float, lead_high: float) -> str:
     low_ndx = fdate.month + int(lead_low) if fdate.month + int(lead_low) <= 12 else fdate.month + int(lead_low) - 12
     high_ndx = fdate.month + int(lead_high) if fdate.month + int(lead_high) <= 12 else fdate.month + int(lead_high) - 12
     target_low = threeletters[low_ndx]
-    target_high = threeletters[high_ndx]  
+    assert isinstance(target_low, str)  # type guard
+    target_high = threeletters[high_ndx]
+    assert isinstance(target_high, str)  # type guard
     return target_low if target_low == target_high else '{}-{}'.format(target_low, target_high)
 
 def seasonal_target_length(target): 

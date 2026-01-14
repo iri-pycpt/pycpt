@@ -423,7 +423,7 @@ def read_cpt_date_range(date_original):
         ret2 = datetime_timestamp_end(date_original)
     if ret2 - ret1 == dt.timedelta(0):
         raise Exception('Zero or sub-day date range')
-    return [ret1, ret1 + (ret2 - ret1) / 2, ret2]
+    return (ret1, ret1 + (ret2 - ret1) / 2, ret2)
 
 
 convert_np64_datetime = pd.Timestamp
