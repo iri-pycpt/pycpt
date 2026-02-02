@@ -7,13 +7,6 @@ import re
 from urllib.parse import urlparse
 import urllib.request
 
-def get_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Recording HTTP proxy")
-    parser.add_argument("--record", action="store_true",
-                        help="Make real network requests and save the responses.")
-    parser.add_argument("--port", type=int, default=8080, help="Proxy port (default: 8080)")
-    parser.add_argument("--dir", default="responses", help="Directory to store responses")
-    return parser.parse_args()
 
 class RecordingProxyHandler(http.server.BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server, dir: str, is_record: bool):
@@ -59,10 +52,17 @@ class RecordingProxyHandler(http.server.BaseHTTPRequestHandler):
             self.send_error(502, f"Upstream Error: {e}")
 
 if __name__ == "__main__":
-    args = get_args()
+    parser = argparse.ArgumentParser(description="Recording HTTP proxy")
+    parser.add_argument("--record", action="store_true",
+                        help="Make real network requests and save the responses.")
+    parser.add_argument("--port", type=int, default=8080, help="Proxy port (default: 8080)")
+    parser.add_argument("--dir", default="responses", help="Directory to store responses")
+    args = parser.parse_args()
     server = http.server.HTTPServer(
         ('127.0.0.1', args.port),
-        functools.partial(RecordingProxyHandler, dir=args.dir, is_record=args.record)
+        functools.partial(
+            RecordingProxyHandler, dir=args.dir, is_record=args.record
+        )
     )
     mode = 'recording' if args.record else 'playback'
     print(f"Recording proxy: {mode} mode on port {args.port}")
