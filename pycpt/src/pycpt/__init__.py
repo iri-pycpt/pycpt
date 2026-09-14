@@ -3,4 +3,3 @@ __license__ = "MIT"
 __version__ = "2.10.5dev"
 
 from .notebook import *
-from cptextras import save_configuration, load_configuration

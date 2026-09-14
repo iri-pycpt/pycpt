@@ -4,8 +4,8 @@ import hashlib
 import json
 import subprocess
 
-import cptdl as dl
 import cptio as cio
+from pycpt import download
 
 
 def check_extent(extent):
@@ -74,11 +74,11 @@ def save_configuration(fname, download_args2, cpt_args2, MOS, predictors, predic
     tosave['MOS'] = MOS
 
     for predictor in predictors:
-        assert predictor in dl.hindcasts and predictor in dl.forecasts, f'illegal predictor - {predictor}'
+        assert predictor in download.forecast_sources, f'illegal predictor - {predictor}'
     tosave ['predictors'] = predictors
 
     if local_predictand_file is None:
-        assert predictand in dl.observations, f'illegal predictand - {predictand}'
+        assert predictand in download.observation_sources, f'illegal predictand - {predictand}'
         tosave['local_predictand_digest'] = None
     else:
         assert cio.open_cptdataset(local_predictand_file)
@@ -138,8 +138,8 @@ def load_configuration(fname):
     assert MOS in [ 'CCA', 'PCR', None]
 
     for predictor in to_unpack['predictors']:
-        assert predictor in dl.hindcasts and predictor in dl.forecasts, f'illegal predictor - {predictor}'
-    assert to_unpack['predictand'] in dl.observations, f'illegal predictand - {predictor}'
+        assert predictor in download.forecast_sources, f'illegal predictor - {predictor}'
+    assert to_unpack['predictand'] in download.observation_sources, f'illegal predictand - {predictor}'
 
     predictors = to_unpack['predictors']
     predictand = to_unpack['predictand']

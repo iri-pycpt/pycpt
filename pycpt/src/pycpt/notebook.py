@@ -21,8 +21,8 @@ from PIL import Image
 from scipy.stats import norm, t
 
 import cptcore as cc
-import cptdl as dl
 import cptextras as ce
+import cptio as ci
 
 from . import download  # noqa: F401
 from .download import (
@@ -120,7 +120,7 @@ def preprocess_download_args(given_args: dict[str, object]) -> FullDownloadArgs:
     if provided_target is not None:
         if not isinstance(provided_target, str):
             raise Exception('provided_target must be a string or None')
-        calculated_lead_low, calculated_lead_high = dl.leads_from_target(fdate, provided_target)
+        calculated_lead_low, calculated_lead_high = ci.leads_from_target(fdate, provided_target)
         if ((provided_lead_low is not None and provided_lead_low != calculated_lead_low) or
             (provided_lead_high is not None and provided_lead_high != calculated_lead_high)):
             raise Exception('lead_low and lead_high are not compatible with target')
@@ -134,7 +134,7 @@ def preprocess_download_args(given_args: dict[str, object]) -> FullDownloadArgs:
             raise Exception('lead_low and lead_high must be numbers')
         lead_low = typing.cast(float, provided_lead_low)
         lead_high = typing.cast(float, provided_lead_high)
-        target = dl.target_from_leads(fdate, lead_low, lead_high)
+        target = ci.target_from_leads(fdate, lead_low, lead_high)
 
     predictor_extent = validate_bounding_box(given_args['predictor_extent'])
     predictand_extent = validate_bounding_box(given_args['predictand_extent'])
