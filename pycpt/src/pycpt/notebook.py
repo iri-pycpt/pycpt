@@ -240,13 +240,16 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
     season_start_lead = as_int(full_download_args['lead_low'] - .5)
     season_start_month = (init_month + season_start_lead - 1) % 12 + 1
     if season_start_month < init_month:
-        delta = 1
+        # Target season is in the calendar year after the one of the
+        # initialization date
+        year_delta = 1
     else:
-        delta = 0
+        # Target season is in the same calendar year as the initialization
+        year_delta = 0
     season_length_float = full_download_args['lead_high'] - full_download_args['lead_low'] + 1
     season_length = as_int(season_length_float)
     hindcast_init_years = (full_download_args['first_year'], full_download_args['final_year'])
-    hindcast_season_years = (hindcast_init_years[0] + delta, hindcast_init_years[1] + delta)
+    hindcast_season_years = (hindcast_init_years[0] + year_delta, hindcast_init_years[1] + year_delta)
     forecast_init_years = (full_download_args['fdate'].year, full_download_args['fdate'].year)
     predictand_bounding_box = BoundingBox(**full_download_args['predictand_extent'])
     predictor_bounding_box = BoundingBox(**full_download_args['predictor_extent'])
