@@ -1,27 +1,30 @@
 import datetime
+import numbers
+import typing
+from collections.abc import Mapping, Sequence
+from pathlib import Path
+from typing import Literal, NotRequired, TypedDict, overload
+
 import cartopy
 import cartopy.crs as ccrs
-import cartopy.mpl.gridliner as gridliner
-from IPython.core.interactiveshell import InteractiveShell
 import IPython.display
-from IPython.display import HTML
-from matplotlib.colors import LinearSegmentedColormap
-import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-import numbers
 import numpy as np
 import pandas as pd
-from pathlib import Path
+import xarray as xr
+from cartopy.mpl import gridliner
+from IPython.core.interactiveshell import InteractiveShell
+from IPython.display import HTML
+from matplotlib import gridspec
+from matplotlib.colors import LinearSegmentedColormap
 from PIL import Image
 from scipy.stats import norm, t
-import typing
-from typing import Literal, Mapping, NotRequired, Sequence, Tuple, TypedDict, overload
-import xarray as xr
 
 import cptcore as cc
 import cptdl as dl
 import cptextras as ce
-from . import download
+
+from . import download  # noqa: F401
 from .download import (
     BoundingBox,
     SeasonalForecastRequest,
@@ -81,7 +84,7 @@ class FullDownloadArgs(TypedDict):
 
 def validate_bounding_box(d: object) -> BoundingBox:
     if not isinstance(d, Mapping):
-        raise Exception(f'Not a valid bounding box: must be a mapping with keys west, east, south, and north. {d}')
+        raise TypeError(f'Not a valid bounding box: must be a mapping with keys west, east, south, and north. {d}')
     try:
         west = d['west']
         east = d['east']
@@ -95,7 +98,7 @@ def validate_bounding_box(d: object) -> BoundingBox:
         isinstance(south, numbers.Real) and
         isinstance(north, numbers.Real)
     ):
-        raise Exception(f'Not a valid bounding box: west, east, south, and north must be numbers. {d}')
+        raise TypeError(f'Not a valid bounding box: west, east, south, and north must be numbers. {d}')
     return {
         'west': float(west),
         'east': float(east),
@@ -107,7 +110,7 @@ def validate_bounding_box(d: object) -> BoundingBox:
 def preprocess_download_args(given_args: dict[str, object]) -> FullDownloadArgs:
     fdate = given_args['fdate']
     if not isinstance(fdate, datetime.datetime):
-        raise Exception('fdate must be a datetime.datetime')
+        raise TypeError('fdate must be a datetime.datetime')
 
     # (lead_low, lead_high) and target are redundant ways of specifying the same thing.
     # Accept either, or both if they're consistent (for backwards compatibility).
@@ -187,7 +190,7 @@ def download_data(
         download_args: dict[str, object],
         files_root: str | Path,
         force_download: bool,
-) -> Tuple[xr.DataArray, Sequence[xr.DataArray], Sequence[xr.DataArray | None]]:
+) -> tuple[xr.DataArray, Sequence[xr.DataArray], Sequence[xr.DataArray | None]]:
     data_dir = Path(files_root) / 'data'
     if local_predictand_file is not None:
         assert False, 'not implemented'  # TODO
@@ -386,7 +389,7 @@ def display(o):
         print(o)
 
 
-def issue_year_delta(issue_month: int, lead_low: float, lead_high: float) -> Literal[-1] | Literal[0]:
+def issue_year_delta(issue_month: int, lead_low: float, lead_high: float) -> Literal[-1, 0]:
     '''When issuing forecasts in month `issue_month` for leads `lead_low` to `lead_high`, the issue
     date of the forecast for the year `y` season is in the year `y + year_delta(issue_month, lead_low, lead_high).
     The year of a season is the year of its midpoint.
@@ -607,7 +610,7 @@ def plot_cca_modes(
                 )
                 print(
                     model.upper()
-                    + ": CCA MODE {}".format(mode + 1)
+                    + f": CCA MODE {mode + 1}"
                     + " - Canonical Correlation = "
                     + str(ce.truncate(cancorr[0], 2))
                 )
@@ -691,12 +694,12 @@ def plot_cca_modes(
                 ts_ax.spines["top"].set_visible(False)
                 ts_ax.spines["right"].set_visible(False)
                 ts_ax.spines["bottom"].set_visible(False)
-                ts_ax.set_title("CCA Scores (Mode {})".format(mode + 1))
+                ts_ax.set_title(f"CCA Scores (Mode {mode + 1})")
                 ts_ax.set_ylabel(None)
                 ts_ax.set_xlabel(None)
 
-                map1_ax.set_title("X CCA MODE {}".format(mode + 1))
-                map2_ax.set_title("Y CCA MODE {}".format(mode + 1))
+                map1_ax.set_title(f"X CCA MODE {mode + 1}")
+                map2_ax.set_title(f"Y CCA MODE {mode + 1}")
 
                 map1_ax.coastlines()
                 map2_ax.coastlines()
@@ -726,7 +729,7 @@ def plot_eof_modes(
         len(pys[0]["Y"])
     )
 
-    import matplotlib.gridspec as gridspec
+    from matplotlib import gridspec
 
     if MOS == "CCA":
         for i, model in enumerate(predictor_names):
@@ -754,7 +757,7 @@ def plot_eof_modes(
                     )
 
                 print(
-                    model.upper() + ": EOF {}".format(mode + 1)
+                    model.upper() + f": EOF {mode + 1}"
                 )  # str(truncate(canvar[0], 2)))
                 fig = plt.figure(figsize=(20, 5))
 
@@ -846,15 +849,15 @@ def plot_eof_modes(
                 ts_ax.spines["top"].set_visible(False)
                 ts_ax.spines["right"].set_visible(False)
                 ts_ax.spines["bottom"].set_visible(False)
-                ts_ax.set_title("EOF Scores (Mode {})".format(mode + 1))
+                ts_ax.set_title(f"EOF Scores (Mode {mode + 1})")
                 ts_ax.set_ylabel(None)
                 ts_ax.set_xlabel(None)
 
                 map1_ax.set_title(
-                    "X EOF MODE {} = {}%".format(mode + 1, ce.truncate(canvarX, 2))
+                    f"X EOF MODE {mode + 1} = {ce.truncate(canvarX, 2)}%"
                 )
                 map2_ax.set_title(
-                    "Y EOF MODE {} = {}%".format(mode + 1, ce.truncate(canvarY, 2))
+                    f"Y EOF MODE {mode + 1} = {ce.truncate(canvarY, 2)}%"
                 )
 
                 map1_ax.coastlines()
@@ -869,7 +872,7 @@ def plot_eof_modes(
     elif MOS == "PCR":
         for i, model in enumerate(predictor_names):
             for mode in range(nmodes):
-                print(model.upper() + " - MODE {}".format(mode + 1))
+                print(model.upper() + f" - MODE {mode + 1}")
                 # print(model.upper() + ': EOF {}'.format(mode+1)  +' = '+ str(truncate(cancorr[0], 2)))
                 fig = plt.figure(figsize=(20, 5))
                 gs0 = gridspec.GridSpec(1, 3, figure=fig)
@@ -900,11 +903,11 @@ def plot_eof_modes(
                 ts_ax.spines["top"].set_visible(False)
                 ts_ax.spines["right"].set_visible(False)
                 ts_ax.spines["bottom"].set_visible(False)
-                ts_ax.set_title("EOF Scores (Mode {})".format(mode + 1))
+                ts_ax.set_title(f"EOF Scores (Mode {mode + 1})")
                 ts_ax.set_ylabel(None)
                 ts_ax.set_xlabel(None)
 
-                map1_ax.set_title("X EOF MODE {}".format(mode + 1))
+                map1_ax.set_title(f"X EOF MODE {mode + 1}")
 
                 map1_ax.coastlines()
                 map1_ax.add_feature(cartopy.feature.BORDERS)
@@ -1410,7 +1413,7 @@ def plot_mme_flex_forecast_v2(
 
     # plot exceedance probability map
 
-    ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas('POE',predictand_name,user_color=color_bar)
+    _ForTitle, vmin, vmax, mark, barcolor = ce.prepare_canvas('POE',predictand_name,user_color=color_bar)
 
     # setting up canvas on which to draw
 
@@ -1717,14 +1720,7 @@ def construct_mme(fcsts, hcsts, Y, ensemble, predictor_names, cpt_args, domain_d
 
 def construct_flex_fcst(MOS, cpt_args, det_fcst, threshold, isPercentile, Y, pev_fcst):
     # Define transformer based on transform_predictand setting
-    if MOS =='CCA':
-        if str(cpt_args['transform_predictand']).upper() == 'GAMMA':
-            transformer = ce.GammaTransformer()
-        elif str(cpt_args['transform_predictand']).upper() == 'EMPIRICAL':
-            transformer = ce.EmpiricalTransformer()
-        else:
-            transformer = None
-    elif MOS == 'PCR':
+    if MOS =='CCA' or MOS == 'PCR':
         if str(cpt_args['transform_predictand']).upper() == 'GAMMA':
             transformer = ce.GammaTransformer()
         elif str(cpt_args['transform_predictand']).upper() == 'EMPIRICAL':
@@ -1810,7 +1806,7 @@ def plot_domains(predictor_extent, predictand_extent):
                 scale='10m',
                 facecolor='none')
 
-        _, axes = plt.subplots(1, 2, figsize=(5,5), subplot_kw=dict(projection=ccrs.PlateCarree()))
+        _, axes = plt.subplots(1, 2, figsize=(5,5), subplot_kw={'projection': ccrs.PlateCarree()})
         titles = ['Predictor', 'Predictand']
         extents = [predictor_extent, predictand_extent]
         for i in range(2):

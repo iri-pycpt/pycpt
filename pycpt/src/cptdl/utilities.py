@@ -1,14 +1,18 @@
 
-from pathlib import Path 
-import json
+import datetime as dt
 import getpass
-import requests
+import json
 import sys
-import datetime as dt 
-import xarray as xr 
-import cptio as cio 
-from . import targetleadconv
+from pathlib import Path
+
 import pandas as pd
+import requests
+import xarray as xr
+
+import cptio as cio
+
+from . import targetleadconv
+
 
 def read_dlauth():
     if not (Path.home().absolute() / '.pycpt_dlauth').is_file():
@@ -69,27 +73,32 @@ def setup_dlauth(email):
             if 'html' in  response.content.decode('utf-8'):
                 print('Incorrect Username or Password')
                 return None
-            with open(str((Path.home().absolute() / '.pycpt_dlauth')), 'wb') as f: 
+            with open(str(Path.home().absolute() / '.pycpt_dlauth'), 'wb') as f: 
                 f.write(response.content)
     else: 
         print('You already have an IRIDLAUTH (~/.pycpt_dlauth)!')
         return read_dlauth()
-        
+
 
 class PyCPT_ERROR(Exception):
-    pass    
+    pass
 
 def evaluate_url(url, ensemblemean=True, **kwargs):
-    from .targetleadconv import seasonal_target, seasonal_target_length_monthly, seasonal_target_length, threeletters  # noqa: F401
+    from .targetleadconv import (  # noqa: F401
+        seasonal_target,
+        seasonal_target_length,
+        seasonal_target_length_monthly,
+        threeletters,
+    )
     # TODO The python docs say "The contents of [the locals] dictionary
     # should not be modified."
     locals().update(**kwargs)
-    return eval('f"{}"'.format(url))
+    return eval(f'f"{url}"')
 
 
 def simple_download(url, dest, verbose=False, use_dlauth=False):
     if verbose:
-        print('URL: {}'.format(url))
+        print(f'URL: {url}')
     if str(use_dlauth) == 'True':
         dlauthid = read_dlauth()
         assert dlauthid is not None, "You need to use cpttools.setup_dlauth('your_email') to get a cookie before you can download this data! or, you can try setting use_dlauth=False"
@@ -102,17 +111,17 @@ def simple_download(url, dest, verbose=False, use_dlauth=False):
         path.parent.mkdir(parents=True, exist_ok=True)
         start, j, total_size = dt.datetime.now(), 0, 0
         if verbose:
-            print('DOWNLOADING: [' + ' ' * 25 + '] ({} KB) {}'.format(total_size // 1000, dt.datetime.now() - start), end='\r')
+            print('DOWNLOADING: [' + ' ' * 25 + f'] ({total_size // 1000} KB) {dt.datetime.now() - start}', end='\r')
         with path.open("wb") as f:
             for chunk in r.iter_content(16*1024):
                 j += 1
                 total_size += sys.getsizeof(chunk)
                 if verbose:
-                    print('\rDOWNLOADING: [' + '*'*j + ' ' * (25 -j ) + '] ({} KB) {}'.format(total_size // 1000, dt.datetime.now() - start), end='\r')
+                    print('\rDOWNLOADING: [' + '*'*j + ' ' * (25 -j ) + f'] ({total_size // 1000} KB) {dt.datetime.now() - start}', end='\r')
                 j = 0 if j >= 25 else j
                 f.write(chunk)
         if verbose:
-            print('DOWNLOADING: [' + '*' * 25 + '] ({} KB) {}'.format(total_size // 1000, dt.datetime.now() - start))
+            print('DOWNLOADING: [' + '*' * 25 + f'] ({total_size // 1000} KB) {dt.datetime.now() - start}')
     assert path.is_file(), 'failed to write file'
     return path 
 
@@ -121,18 +130,18 @@ def download(baseurl, dest, verbose=False, use_dlauth=False, **kwargs) -> xr.Dat
     format = kwargs.get('filetype')
     if format is None:
         format = 'cptv10.tsv'
-    assert format in ['cptv10.tsv', 'data.nc'], 'invalid download format: {}'.format(format)
+    assert format in ['cptv10.tsv', 'data.nc'], f'invalid download format: {format}'
     try:
         url = evaluate_url(baseurl, **kwargs)
     except Exception as e:
-        raise PyCPT_ERROR("You must pass all the required arguments for this URL as keyword arguments in .download(...). \n URL: {}\n ARGS: {}".format(baseurl, kwargs)) from e
+        raise PyCPT_ERROR(f"You must pass all the required arguments for this URL as keyword arguments in .download(...). \n URL: {baseurl}\n ARGS: {kwargs}") from e
 
     path = simple_download(url, dest, verbose=verbose, use_dlauth=use_dlauth)
     
     try: 
         ds = cio.open_cptdataset(path) if format == 'cptv10.tsv' else xr.open_dataset(path, decode_times=False) 
     except Exception:
-        raise PyCPT_ERROR("Please check what's downloaded from here, it may be broken: {}".format(url))
+        raise PyCPT_ERROR(f"Please check what's downloaded from here, it may be broken: {url}")
 
     # Check for a download that only covers part of the desired season. One reason this may happen
     # is if the config calls for a lead time longer than what the model provides.

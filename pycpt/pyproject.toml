@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Utilities",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 
 [project.scripts]
 generate-forecasts-from-config = "pycpt.commands:generate_forecasts"
@@ -27,3 +27,14 @@ upload-forecasts-from-config = "pycpt.commands:upload_forecasts"
 Homepage = "https://iri.columbia.edu/our-expertise/climate/tools/"
 Documentation = "https://iri-pycpt.github.io/"
 Repository = "https://github.com/iri-pycpt/pycpt"
+
+[tool.ruff]
+src = ["src", "../cpt-io/src"]
+
+[tool.ruff.lint]
+ignore = [
+    "TRY002",  # Create your own exception
+    "BLE001",  # Do not catch blind exception
+    "DTZ001",  # datetime without timezone
+    "DTZ005"  # datetime.now without timezone
+]

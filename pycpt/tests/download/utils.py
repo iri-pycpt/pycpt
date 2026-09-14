@@ -1,10 +1,16 @@
 import datetime
+
 import numpy as np
-from typing import Sequence
 import xarray as xr
 
 import cptio
-from pycpt.download.interface import BoundingBox, SeasonalForecastRequest, SeasonalForecastSource, SeasonalObsRequest, SeasonalObsSource
+from pycpt.download.interface import (
+    BoundingBox,
+    SeasonalForecastRequest,
+    SeasonalForecastSource,
+    SeasonalObsRequest,
+    SeasonalObsSource,
+)
 
 
 def encode_season(first_year: int, target_first_month: float, target_last_month: float) -> tuple[datetime.datetime, datetime.datetime, datetime.datetime]:

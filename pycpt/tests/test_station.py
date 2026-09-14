@@ -1,10 +1,10 @@
 import datetime as dt
-import numpy as np
-from pathlib import Path
-import pandas as pd
-import pytest
 import shutil
 import tempfile
+from pathlib import Path
+
+import numpy as np
+import pytest
 
 import cptdl
 import cptio
@@ -53,13 +53,13 @@ SAVED_DATA_DIR = Path( __file__ ).absolute().parents[0] / 'data' / 'station'
 def download_test_data():
     '''Run this by hand, then track the downloaded files in version control
     so that tests can run without hitting the network.'''
-    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    fake_predictor_extent = {"west": 0, "east": 0, "south": 0, "north": 0}
     with tempfile.TemporaryDirectory() as case_dir_name:
         domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
         saved = cptdl.observations
         cptdl.observations = dict(cptdl.observations, **{'GHCN.PRCP': "http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NCDC/.GHCN/.v2beta/IWMO/grid%3A//name/(IWMO)/def//units/(ids)/def//long_name/(Station)/def/1/1/20590/%3Agrid/replaceGRID/lon/{predictand_extent['west']}/{predictand_extent['east']}/masknotrange/SELECT/lat/{predictand_extent['south']}/{predictand_extent['north']}/masknotrange/SELECT/dup/a%3A/.lat//name//Y/def/%3Aa%3A/.lon//name//X/def/%3Aa%3A/.Name/%3Aa%3A/.prcp/T/({target}%20{first_year}-{final_year})/seasonalAverage/-999/setmissing_value/%3Aa/%7BY/X/Name/prcp%7Dds/{'%5BIWMO%5D%5BT%5D/' + filetype if filetype == 'cptv10.tsv' else 'data.nc'}"})
         try:
-            Y, hindcast_data, forecast_data = pycpt.download_data(
+            pycpt.download_data(
                 PREDICTAND_NAME, None, PREDICTOR_NAMES, DOWNLOAD_ARGS,
                 domain_dir, force_download=True
             )
@@ -82,7 +82,7 @@ def get_test_data(predictor_names, predictand_name):
 
 def call_evaluate_models(original_hindcasts, original_forecasts, Y, MOS, cpt_args_override):
     cpt_args = DEFAULT_CPT_ARGS | cpt_args_override
-    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    fake_predictor_extent = {"west": 0, "east": 0, "south": 0, "north": 0}
     with tempfile.TemporaryDirectory() as case_dir_name:
         domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
         interactive = False
@@ -95,7 +95,7 @@ def call_evaluate_models(original_hindcasts, original_forecasts, Y, MOS, cpt_arg
 def check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys):
     assert len(hcsts) == len(PREDICTOR_NAMES)
     for h in hcsts:
-        assert set(h.data_vars) == set(['deterministic', 'probabilistic', 'prediction_error_variance'])
+        assert set(h.data_vars) == {'deterministic', 'probabilistic', 'prediction_error_variance'}
         assert h['deterministic'].dims == ('T', 'station')
         assert h['prediction_error_variance'].dims == ('T', 'station')
         assert h['probabilistic'].dims == ('C', 'T', 'station')
@@ -107,7 +107,7 @@ def check_MOS_results(original_hcsts, original_fcsts, Y, hcsts, fcsts, pxs, pys)
 
     assert len(fcsts) == len(PREDICTOR_NAMES)
     for f in fcsts:
-        assert set(f.data_vars) == set(['deterministic', 'probabilistic', 'prediction_error_variance'])
+        assert set(f.data_vars) == {'deterministic', 'probabilistic', 'prediction_error_variance'}
         assert f['deterministic'].dims == ('T', 'station')
         assert f['prediction_error_variance'].dims == ('T', 'station')
         assert f['probabilistic'].dims == ('C', 'T', 'station')
@@ -180,7 +180,7 @@ def test_coordinate_precision():
     assert Y['X'].min().item() == -79.3
     assert len(Y['station']) == 115
     Y['X'] = Y['X'].where(Y['X'] != -79.3, -79.299999)
-    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    hcsts, _fcsts, _skill, _pxs, _pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
     assert len(hcsts[0]['station']) == 115
 
 def test_evaluate_models_pcr():
@@ -197,7 +197,7 @@ def test_evaluate_models_nomos():
     MOS = None
     cpt_args = {}
     Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, PREDICTAND_NAME)
-    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    hcsts, fcsts, skill, _pxs, _pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
     assert hcsts == []
     assert fcsts == []
     print(skill)
@@ -210,7 +210,7 @@ def test_evaluate_models_coordinate_precision():
     Y, original_hcsts, original_fcsts = get_test_data(predictor_names, PREDICTAND_NAME)
     Y['X'][0] += .000001
     Y['Y'][0] -= .000001
-    hcsts, fcsts, skill, pxs, pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
+    hcsts, _fcsts, _skill, _pxs, _pys = call_evaluate_models(original_hcsts, original_fcsts, Y, MOS, cpt_args)
     assert hcsts[0]['X'].equals(Y['X'])
     assert hcsts[0]['Y'].equals(Y['Y'])
 
@@ -218,11 +218,11 @@ def test_construct_mme():
     MOS = 'CCA'
     cpt_args = DEFAULT_CPT_ARGS
     Y, original_hcsts, original_fcsts = get_test_data(PREDICTOR_NAMES, PREDICTAND_NAME)
-    fake_predictor_extent = dict(west=0, east=0, south=0, north=0)
+    fake_predictor_extent = {"west": 0, "east": 0, "south": 0, "north": 0}
     with tempfile.TemporaryDirectory() as case_dir_name:
         domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
         interactive = False
-        hcsts, fcsts, skill, pxs, pys = pycpt.evaluate_models(
+        hcsts, fcsts, _skill, _pxs, _pys = pycpt.evaluate_models(
             original_hcsts, MOS, Y, original_fcsts, cpt_args, domain_dir, PREDICTOR_NAMES, interactive
         )
         det_fcst, pr_fcst, pev_fcst, nextgen_skill = pycpt.construct_mme(
