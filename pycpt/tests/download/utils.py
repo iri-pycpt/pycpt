@@ -16,18 +16,15 @@ def encode_season(first_year: int, target_first_month: float, target_last_month:
 
 def generate_mock_data(
         var_name: str,
-        years: Sequence[int],
+        years: tuple[int, int],
         season_start_month: int,
         season_length: int,
         bounding_box: BoundingBox,
 ) -> xr.DataArray | None:
-    if len(years) == 0:
-        return None
-
     final_month = (season_start_month + season_length - 2) % 12 + 1
     ti, t, tf = zip(*(
         encode_season(y, season_start_month, final_month)
-        for y in years
+        for y in range(years[0], years[1] + 1)
     ))
 
     # Create a 3x3 grid that exactly covers the bounding box
@@ -45,9 +42,9 @@ def generate_mock_data(
 
     # Generate data that are arbitrary but not random: if called twice
     # for the same slice of the same variable, return the same data.
-    rng = np.random.default_rng(seed=abs(hash('-'.join([var_name, str(years)]))))
+    rng = np.random.default_rng(seed=abs(hash('-'.join([var_name, str(years[0]), str(years[1])]))))
     da = xr.DataArray(
-        data=rng.random((len(years), grid_size, grid_size)),
+        data=rng.random((years[1] - years[0] + 1, grid_size, grid_size)),
         coords={'T': list(t), 'Y': y, 'X': x},
         attrs={
             'missing': -999,
@@ -68,10 +65,8 @@ class MockObsSource(SeasonalObsSource):
     def download(self, request: SeasonalObsRequest) -> xr.DataArray:
         if request.bounding_box is None:
             raise Exception('Mock obs source requires a bounding_box')
-        first_year, final_year = request.years
-        years = range(first_year, final_year + 1)
         da = generate_mock_data(
-            self.name, years, request.season_start_month, request.season_length, request.bounding_box
+            self.name, request.years, request.season_start_month, request.season_length, request.bounding_box
         )
         if da is None:
             raise Exception("Mock obs shouldn't be None")
@@ -97,15 +92,16 @@ class MockForecastSource(SeasonalForecastSource):
         else:
             delta = 0
         init_first_year, init_final_year = request.init_years
+        season_first_year = init_first_year + delta
+        season_final_year = init_final_year + delta
         init_years = [
             y for y in range(init_first_year, init_final_year + 1)
             if y not in self.missing_years
         ]
-        season_years = [y + delta for y in init_years]
         if request.bounding_box is None:
             raise Exception("Mock forecast source requires a bounding_box")
         da = generate_mock_data(
-            self.name, season_years, season_start_month, request.season_length, request.bounding_box
+            self.name, (season_first_year, season_final_year), season_start_month, request.season_length, request.bounding_box
         )
         if da is None:
             raise Exception("Failed to download")
