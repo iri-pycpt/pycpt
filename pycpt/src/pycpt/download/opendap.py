@@ -44,7 +44,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         if request.pressure_level is not None:
             ds = ds.sel(P=request.pressure_level)
 
-        ds = ds.mean('M')
+        ds = ds.mean('M', keep_attrs=True)
 
         ds = self.seasonal_average(ds)
 
@@ -67,7 +67,8 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             xr.concat([season_start, season_end], dim='nbound')
             .transpose('S', 'nbound')
         )
-        ds = (ds * month_length).sum('L') / month_length.sum('L')
+        with xr.set_options(keep_attrs=True):
+            ds = (ds * month_length).sum('L') / month_length.sum('L')
         ds = ds.assign_coords(
             target=('S', season_start.values),
             target_bnds=(('S', 'nbound'), season_bnds.values)
@@ -91,18 +92,18 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         da = ds[data_vars[0]]
         return da
 
-# request = SeasonalForecastRequest(
-#     bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
-#     init_month=9,
-#     init_years=(2024, 2026),
-#     season_start_lead=0,
-#     season_length=2,
-# )
-# sigrid_source = OpendapSeasonalForecastSource(
-#     name='CCSM4.PRCP',
-#     url='https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
-# )
-# print(sigrid_source.download(request))
+request = SeasonalForecastRequest(
+    bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
+    init_month=9,
+    init_years=(2024, 2026),
+    season_start_lead=0,
+    season_length=2,
+)
+sigrid_source = OpendapSeasonalForecastSource(
+    name='CCSM4.PRCP',
+    url='https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+)
+print(sigrid_source.download(request))
 # print()
 # import pycpt.download.catalog
 # ingrid_source = pycpt.download.catalog.forecast_sources['CCSM4.PRCP']
@@ -197,12 +198,8 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 
         season_length = len(ds['month_of_season'])
 
-        ds_attrs = ds.attrs
-        da_attrs = {name: da.attrs for name, da in ds.data_vars.items()}
-        ds = (ds * ds['days_in_month']).sum('month_of_season', skipna=False) / ds['days_in_month'].sum('month_of_season')
-        ds.attrs = ds_attrs
-        for name, attrs in da_attrs.items():
-            ds[name].attrs = attrs
+        with xr.set_options(keep_attrs=True):
+            ds = (ds * ds['days_in_month']).sum('month_of_season', skipna=False) / ds['days_in_month'].sum('month_of_season')
 
         season_end = xr.DataArray(
             (ds['T'].values.astype('datetime64[M]') + np.timedelta64(season_length, 'M')).astype('datetime64[ns]'),
@@ -230,14 +227,14 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         da = ds[data_vars[0]]
         return da
 
-request = SeasonalObsRequest(
-    bounding_box={'west': 0, 'east': 5, 'south': 20, 'north': 30},
-    years=(2024, 2026),
-    season_start_month=12,
-    season_length=3,
-)
-sigrid_source = OpendapSeasonalObsSource(
-    name='UCSB.PRCP',
-    url='https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
-)
-print(sigrid_source.download(request))
+# request = SeasonalObsRequest(
+#     bounding_box={'west': 0, 'east': 5, 'south': 20, 'north': 30},
+#     years=(2024, 2026),
+#     season_start_month=12,
+#     season_length=3,
+# )
+# sigrid_source = OpendapSeasonalObsSource(
+#     name='UCSB.PRCP',
+#     url='https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
+# )
+# print(sigrid_source.download(request))
