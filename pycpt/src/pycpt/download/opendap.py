@@ -41,15 +41,23 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         if request.pressure_level is not None:
             ds = ds.sel(P=request.pressure_level)
 
-        # Ensemble mean
         ds = ds.mean('M')
 
-        # Average monthly value for the season, weighting months by their number
-        # of days. TODO confirm we have only intensive quantities
+        ds = self.seasonal_average(ds)
+
+        da = self.sigrid_to_pycpt(ds)
+
+        return da
+
+    @staticmethod
+    def seasonal_average(ds: xr.Dataset) -> xr.Dataset:
+        """Seasonal average of monthly values, weighting months by their number
+        of days."""
+        # TODO confirm we have only intensive quantities
         month_length = (
             ds['target_bnds'].isel(nbound=1) -
             ds['target_bnds'].isel(nbound=0)
-        ).astype(int)  / (24 * 60 * 60 * 1e9)  # nanoseconds to days
+        ).astype(int)  / (24 * 60 * 60 * 1e9)  # nanoseconds to days to avoid loss of precision
         season_start = ds['target_bnds'].isel(L=0, nbound=0)
         season_end = ds['target_bnds'].isel(L=-1, nbound=1)
         season_bnds = (
@@ -61,26 +69,24 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             target=('S', season_start.values),
             target_bnds=(('S', 'nbound'), season_bnds.values)
         )
-
-        ds = sigrid_to_pycpt(ds)
-
         return ds
 
-
-def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
-    data_vars = list(ds.data_vars)
-    assert len(data_vars) == 1
-    Ti = ds['target_bnds'].isel(nbound=0)
-    # Following the messed-up convention throughout pycpt that the end of the
-    # season is represented by midnight on the last day of the season, i.e. 24
-    # hours before the actual end. TODO can we fix this throughout pycpt?
-    Tf = ds['target_bnds'].isel(nbound=1) - np.timedelta64(1, 'D')
-    T = Ti + (Tf - Ti) / 2
-    ds = ds.assign_coords(
-        T=('S', T.values), Ti=('S', Ti.values), Tf=('S', Tf.values)
-    ).swap_dims(S='T')
-    da = ds[data_vars[0]]
-    return da
+    @staticmethod
+    def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
+        """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
+        data_vars = list(ds.data_vars)
+        assert len(data_vars) == 1
+        Ti = ds['target_bnds'].isel(nbound=0)
+        # Following the messed-up convention throughout pycpt that the end of the
+        # season is represented by midnight on the last day of the season, i.e. 24
+        # hours before the actual end. TODO can we fix this throughout pycpt?
+        Tf = ds['target_bnds'].isel(nbound=1) - np.timedelta64(1, 'D')
+        T = Ti + (Tf - Ti) / 2
+        ds = ds.assign_coords(
+            T=('S', T.values), Ti=('S', Ti.values), Tf=('S', Tf.values)
+        ).swap_dims(S='T')
+        da = ds[data_vars[0]]
+        return da
 
 request = SeasonalForecastRequest(
     bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
