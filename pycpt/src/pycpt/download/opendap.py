@@ -16,6 +16,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             name: str,
             *,
             url: str,
+            # The seasonal value of a variable that's extensive in time (e.g.
+            # accumulated precipitation) is calculated from monthly values by
+            # summation, whereas that of a variable that's intensive in time
+            # (e.g. temperature) is caclulated by (weighted) averaging. The
+            # terminology "extensive in time" comes from CF Conventions Section
+            # 7.3 "Cell Methods."
             extensive_in_time: bool,
             superseded_by: DataSource | None = None,
             superseded_doc: str | None = None,
