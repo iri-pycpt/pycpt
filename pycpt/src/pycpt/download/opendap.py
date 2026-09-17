@@ -16,11 +16,13 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             name: str,
             *,
             url: str,
+            extensive_in_time: bool,
             superseded_by: DataSource | None = None,
             superseded_doc: str | None = None,
     ):
         super().__init__(name, superseded_by, superseded_doc)
         self.url = url
+        self.extensive_in_time = extensive_in_time
 
     def download(self, request: SeasonalForecastRequest) -> xr.DataArray:
         ds = xr.open_dataset(self.url)
@@ -46,17 +48,15 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         ds = ds.mean('M', keep_attrs=True)
 
-        ds = self.seasonal_average(ds)
+        ds = self.seasonal_value(ds)
 
         da = self.sigrid_to_pycpt(ds)
 
         return da
 
-    @staticmethod
-    def seasonal_average(ds: xr.Dataset) -> xr.Dataset:
+    def seasonal_value(self, ds: xr.Dataset) -> xr.Dataset:
         """Seasonal average of monthly values, weighting months by their number
         of days."""
-        # TODO confirm we have only intensive quantities
         month_length = (
             ds['target_bnds'].isel(nbound=1) -
             ds['target_bnds'].isel(nbound=0)
@@ -68,7 +68,13 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             .transpose('S', 'nbound')
         )
         with xr.set_options(keep_attrs=True):
-            ds = (ds * month_length).sum('L') / month_length.sum('L')
+            if self.extensive_in_time:
+                ds = ds.sum('L', skipna=False)
+            else:
+                # Weighted average over the season, giving more weight to longer
+                # months
+                ds = (ds * month_length).sum('L', skipna=False) / month_length.sum('L')
+
         ds = ds.assign_coords(
             target=('S', season_start.values),
             target_bnds=(('S', 'nbound'), season_bnds.values)
@@ -102,13 +108,14 @@ request = SeasonalForecastRequest(
 sigrid_source = OpendapSeasonalForecastSource(
     name='CCSM4.PRCP',
     url='https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+    extensive_in_time=False
 )
 print(sigrid_source.download(request))
-# print()
-# import pycpt.download.catalog
-# ingrid_source = pycpt.download.catalog.forecast_sources['CCSM4.PRCP']
-# ds = ingrid_source.download(request).isel(Y=slice(None, None, -1))
-# print(ds)
+print()
+import pycpt.download.catalog
+ingrid_source = pycpt.download.catalog.forecast_sources['CCSM4.PRCP']
+ds = ingrid_source.download(request).isel(Y=slice(None, None, -1))
+print(ds)
 
 
 class OpendapSeasonalObsSource(SeasonalObsSource):
@@ -117,11 +124,13 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
             name: str,
             *,
             url: str,
+            extensive_in_time: bool,
             superseded_by: DataSource | None = None,
             superseded_doc: str | None = None,
     ):
         super().__init__(name, superseded_by, superseded_doc)
         self.url = url
+        self.extensive_in_time = extensive_in_time
 
     def download(self, request: SeasonalObsRequest) -> xr.DataArray:
         ds = xr.open_dataset(self.url)
@@ -152,14 +161,13 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         if request.pressure_level is not None:
             ds = ds.sel(P=request.pressure_level)
 
-        ds = self.seasonal_average(ds, request.season_start_month)
+        ds = self.seasonal_value(ds, request.season_start_month)
 
         da = self.sigrid_to_pycpt(ds)
 
         return da
 
-    @staticmethod
-    def seasonal_average(ds: xr.Dataset, season_start_month: int) -> xr.Dataset:
+    def seasonal_value(self, ds: xr.Dataset, season_start_month: int) -> xr.Dataset:
         """Seasonal average of monthly values, weighting months by their number
         of days."""
         # TODO confirm we have only intensive quantities. CHIRPS is in mm?
@@ -199,7 +207,15 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         season_length = len(ds['month_of_season'])
 
         with xr.set_options(keep_attrs=True):
-            ds = (ds * ds['days_in_month']).sum('month_of_season', skipna=False) / ds['days_in_month'].sum('month_of_season')
+            if self.extensive_in_time:
+                ds = ds.sum('month_of_season', skipna=False)
+            else:
+                # Weighted average over the season, giving more weight to longer
+                # months
+                ds = (
+                    (ds * ds['days_in_month']).sum('month_of_season', skipna=False)
+                    / ds['days_in_month'].sum('month_of_season')
+                )
 
         season_end = xr.DataArray(
             (ds['T'].values.astype('datetime64[M]') + np.timedelta64(season_length, 'M')).astype('datetime64[ns]'),
@@ -236,5 +252,6 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 # sigrid_source = OpendapSeasonalObsSource(
 #     name='UCSB.PRCP',
 #     url='https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
+#     extensive_in_time=True,
 # )
 # print(sigrid_source.download(request))
