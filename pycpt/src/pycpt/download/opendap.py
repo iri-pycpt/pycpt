@@ -1,3 +1,5 @@
+from typing import NotRequired, TypedDict
+
 import numpy as np
 import xarray as xr
 
@@ -10,25 +12,27 @@ from .interface import (
 )
 
 
+class _ForecastVarConfig(TypedDict):
+    url: str
+    # The seasonal value of a variable that's extensive in time (e.g.
+    # accumulated precipitation) is calculated from monthly values by
+    # summation, whereas that of a variable that's intensive in time
+    # (e.g. temperature) is caclulated by (weighted) averaging. The
+    # terminology "extensive in time" comes from CF Conventions Section
+    # 7.3 "Cell Methods."
+    extensive_in_time: bool
+    superseded_by: NotRequired[DataSource]
+    superseded_doc: NotRequired[str]
+
 class OpendapSeasonalForecastSource(SeasonalForecastSource):
-    def __init__(
-            self,
-            name: str,
-            *,
-            url: str,
-            # The seasonal value of a variable that's extensive in time (e.g.
-            # accumulated precipitation) is calculated from monthly values by
-            # summation, whereas that of a variable that's intensive in time
-            # (e.g. temperature) is caclulated by (weighted) averaging. The
-            # terminology "extensive in time" comes from CF Conventions Section
-            # 7.3 "Cell Methods."
-            extensive_in_time: bool,
-            superseded_by: DataSource | None = None,
-            superseded_doc: str | None = None,
-    ):
-        super().__init__(name, superseded_by, superseded_doc)
-        self.url = url
-        self.extensive_in_time = extensive_in_time
+    def __init__(self, name, config: _ForecastVarConfig):
+        super().__init__(
+            name,
+            config.get('superseded_by'),
+            config.get('superseded_doc')
+        )
+        self.url = config['url']
+        self.extensive_in_time = config['extensive_in_time']
 
     def download(self, request: SeasonalForecastRequest) -> xr.DataArray:
         ds = xr.open_dataset(self.url)
@@ -104,39 +108,32 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         da = ds[data_vars[0]]
         return da
 
-request = SeasonalForecastRequest(
-    bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
-    init_month=9,
-    init_years=(2024, 2026),
-    season_start_lead=0,
-    season_length=2,
-)
-sigrid_source = OpendapSeasonalForecastSource(
-    name='CCSM4.PRCP',
-    url='https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
-    extensive_in_time=False
-)
-print(sigrid_source.download(request))
-print()
-import pycpt.download.catalog
-ingrid_source = pycpt.download.catalog.forecast_sources['CCSM4.PRCP']
-ds = ingrid_source.download(request).isel(Y=slice(None, None, -1))
-print(ds)
+
+
+# This is currently identical to _ForecastVarConfig, but that might be a
+# coincidence.
+class _ObsVarConfig(TypedDict):
+    url: str
+    # The seasonal value of a variable that's extensive in time (e.g.
+    # accumulated precipitation) is calculated from monthly values by
+    # summation, whereas that of a variable that's intensive in time
+    # (e.g. temperature) is caclulated by (weighted) averaging. The
+    # terminology "extensive in time" comes from CF Conventions Section
+    # 7.3 "Cell Methods."
+    extensive_in_time: bool
+    superseded_by: NotRequired[DataSource] | None = None,
+    superseded_doc: NotRequired[str] | None = None,
 
 
 class OpendapSeasonalObsSource(SeasonalObsSource):
-    def __init__(
-            self,
-            name: str,
-            *,
-            url: str,
-            extensive_in_time: bool,
-            superseded_by: DataSource | None = None,
-            superseded_doc: str | None = None,
-    ):
-        super().__init__(name, superseded_by, superseded_doc)
-        self.url = url
-        self.extensive_in_time = extensive_in_time
+    def __init__(self, name: str, config: _ObsVarConfig):
+        super().__init__(
+            name,
+            config.get('superseded_by'),
+            config.get('superseded_doc')
+        )
+        self.url = config['url']
+        self.extensive_in_time = config['extensive_in_time']
 
     def download(self, request: SeasonalObsRequest) -> xr.DataArray:
         ds = xr.open_dataset(self.url)
@@ -249,15 +246,48 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         da = ds[data_vars[0]]
         return da
 
+
+forecast_configs: dict[str, _ForecastVarConfig] = {
+    'CCSM4.PRCP': {
+        'url': 'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+        'extensive_in_time': False,
+    },
+}
+obs_configs: dict[str, _ObsVarConfig] = {
+    'UCSB.PRCP': {
+        'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
+        'extensive_in_time': True,
+    },
+}
+forecast_sources: dict[str, SeasonalForecastSource] = {
+    name: OpendapSeasonalForecastSource(name, config)
+    for name, config in forecast_configs.items()
+}
+observation_sources: dict[str, SeasonalObsSource] = {
+    name: OpendapSeasonalObsSource(name, config)
+    for name, config in obs_configs.items()
+}
+
+# request = SeasonalForecastRequest(
+#     bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
+#     init_month=9,
+#     init_years=(2024, 2026),
+#     season_start_lead=0,
+#     season_length=2,
+# )
+# sigrid_source = forecast_sources['CCSM4.PRCP']
+# print(sigrid_source.download(request))
+# print()
+# import pycpt.download.catalog
+# ingrid_source = pycpt.download.catalog.forecast_sources['CCSM4.PRCP']
+# ds = ingrid_source.download(request).isel(Y=slice(None, None, -1))
+# print(ds)
+
 # request = SeasonalObsRequest(
 #     bounding_box={'west': 0, 'east': 5, 'south': 20, 'north': 30},
 #     years=(2024, 2026),
 #     season_start_month=12,
 #     season_length=3,
 # )
-# sigrid_source = OpendapSeasonalObsSource(
-#     name='UCSB.PRCP',
-#     url='https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
-#     extensive_in_time=True,
-# )
+# sigrid_source = observation_sources['UCSB.PRCP']
 # print(sigrid_source.download(request))
