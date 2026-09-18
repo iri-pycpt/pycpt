@@ -58,11 +58,43 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         ds = ds.mean('M', keep_attrs=True)
 
-        ds = seasonal_forecast_value(ds, self.extensive_in_time)
+        ds = self.seasonal_value(ds, self.extensive_in_time)
 
         da = self.sigrid_to_pycpt(ds)
 
         return da
+
+    @staticmethod
+    def seasonal_value(ds: xr.Dataset, extensive_in_time: bool) -> xr.Dataset:
+        """Seasonal total (for extensive) or mean (intensive) of monthly values.
+        For the mean, monthly values areis weighted by the number of days in the
+        month.
+        """
+        # TODO is it better to rely on target_bnds or to reconstruct it?
+        month_length = (
+            ds['target_bnds'].isel(nbound=1) -
+            ds['target_bnds'].isel(nbound=0)
+        ).astype(int) // 24 * 60 * 60 * 1e-9  # nanoseconds to days to avoid loss of precision
+        season_start = ds['target_bnds'].isel(L=0, nbound=0)
+        season_end = ds['target_bnds'].isel(L=-1, nbound=1)
+        season_bnds = (
+            xr.concat([season_start, season_end], dim='nbound')
+            .transpose('S', 'nbound')
+        )
+        with xr.set_options(keep_attrs=True):
+            if extensive_in_time:
+                ds = ds.sum('L', skipna=False)
+            else:
+                # Weighted average over the season, giving more weight to longer
+                # months
+                ds = (ds * month_length).sum('L', skipna=False) / month_length.sum('L')
+
+        ds = ds.assign_coords(
+            target=('S', season_start.values),
+            target_bnds=(('S', 'nbound'), season_bnds.values)
+        )
+        return ds
+
 
     @staticmethod
     def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
@@ -79,37 +111,8 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             T=('S', T.values), Ti=('S', Ti.values), Tf=('S', Tf.values)
         ).swap_dims(S='T')
         da = ds[data_vars[0]]
+        da = da.drop_vars('target')
         return da
-
-
-def seasonal_forecast_value(ds: xr.Dataset, extensive_in_time: bool) -> xr.Dataset:
-    """Seasonal average of monthly values, weighting months by their number
-    of days."""
-    # TODO is it better to rely on target_bnds or to reconstruct it?
-    month_length = (
-        ds['target_bnds'].isel(nbound=1) -
-        ds['target_bnds'].isel(nbound=0)
-    ).astype(int) // 24 * 60 * 60 * 1e-9  # nanoseconds to days to avoid loss of precision
-    season_start = ds['target_bnds'].isel(L=0, nbound=0)
-    season_end = ds['target_bnds'].isel(L=-1, nbound=1)
-    season_bnds = (
-        xr.concat([season_start, season_end], dim='nbound')
-        .transpose('S', 'nbound')
-    )
-    with xr.set_options(keep_attrs=True):
-        if extensive_in_time:
-            ds = ds.sum('L', skipna=False)
-        else:
-            # Weighted average over the season, giving more weight to longer
-            # months
-            ds = (ds * month_length).sum('L', skipna=False) / month_length.sum('L')
-
-    ds = ds.assign_coords(
-        target=('S', season_start.values),
-        target_bnds=(('S', 'nbound'), season_bnds.values)
-    )
-    return ds
-
 
 
 # This is currently identical to _ForecastVarConfig, but that might be a
@@ -166,11 +169,72 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         if request.pressure_level is not None:
             ds = ds.sel(P=request.pressure_level)
 
-        ds = seasonal_obs_value(ds, request.season_start_month, self.extensive_in_time)
+        ds = self.seasonal_value(ds, request.season_start_month, self.extensive_in_time)
 
         da = self.sigrid_to_pycpt(ds)
 
         return da
+
+    @staticmethod
+    def seasonal_value(ds: xr.Dataset, season_start_month: int, extensive_in_time: bool) -> xr.Dataset:
+        """Seasonal total (for extensive) or mean (intensive) of monthly values.
+        For the mean, monthly values areis weighted by the number of days in the
+        month.
+        """
+        # TODO add T_bnds to CHIRPS
+
+        # Count days in each month, for use later in calculating weighted
+        # average
+        ds = ds.copy()
+        T = ds['T'].values.astype('datetime64[M]')
+        ds = ds.assign_coords(days_in_month=(
+            'T',
+            ((T + np.timedelta64(1, 'M')).astype('datetime64[D]') - T.astype('datetime64[D]')).astype(int)
+        ))
+
+        # Split T into orthogonal dimensions T (season start date) and
+        # month_of_season (ranges from 0 to season_lenth - 1).
+        calendar_year = ds['T'].values.astype("datetime64[Y]")
+        calendar_year_season_start = calendar_year + np.timedelta64(season_start_month - 1, 'M')
+        season_start = xr.where(
+            ds['T'].values < calendar_year_season_start,
+            calendar_year_season_start - np.timedelta64(1, 'Y'),
+            calendar_year_season_start
+        ).astype('datetime64[ns]')
+        month_of_season = ((ds['T'] - season_start).values.astype('timedelta64[D]') // 28).astype('datetime64[ns]')  # TODO 28 seems hacky
+        ds = (
+            ds
+            .assign_coords(
+                season_start=('T', season_start),
+                month_of_season=('T', month_of_season)
+            )
+            .set_index(T=['season_start', 'month_of_season'])
+            .unstack('T')
+            .rename(season_start='T')
+            .transpose('T', 'month_of_season', ...)
+        )
+
+        season_length = len(ds['month_of_season'])
+
+        with xr.set_options(keep_attrs=True):
+            if extensive_in_time:
+                ds = ds.sum('month_of_season', skipna=False)
+            else:
+                # Weighted average over the season, giving more weight to longer
+                # months
+                ds = (
+                    (ds * ds['days_in_month']).sum('month_of_season', skipna=False)
+                    / ds['days_in_month'].sum('month_of_season')
+                )
+
+        season_end = xr.DataArray(
+            (ds['T'].values.astype('datetime64[M]') + np.timedelta64(season_length, 'M')).astype('datetime64[ns]'),
+            coords={'T': ds['T']}
+        )
+        ds = ds.assign_coords(
+            T_bnds = xr.concat([ds['T'], season_end], dim='nbound').transpose(..., 'nbound')
+        )
+        return ds
 
     @staticmethod
     def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
@@ -188,66 +252,6 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         assert len(data_vars) == 1
         da = ds[data_vars[0]]
         return da
-
-
-def seasonal_obs_value(ds: xr.Dataset, season_start_month: int, extensive_in_time: bool) -> xr.Dataset:
-    """Seasonal average of monthly values, weighting months by their number
-    of days."""
-    # TODO confirm we have only intensive quantities. CHIRPS is in mm?
-    # TODO add T_bnds to CHIRPS
-
-    # Count days in each month, for use later in calculating weighted
-    # average
-    ds = ds.copy()
-    T = ds['T'].values.astype('datetime64[M]')
-    ds = ds.assign_coords(days_in_month=(
-        'T',
-        ((T + np.timedelta64(1, 'M')).astype('datetime64[D]') - T.astype('datetime64[D]')).astype(int)
-    ))
-
-    # Split T into orthogonal dimensions T (season start date) and
-    # month_of_season (ranges from 0 to season_lenth - 1).
-    calendar_year = ds['T'].values.astype("datetime64[Y]")
-    calendar_year_season_start = calendar_year + np.timedelta64(season_start_month - 1, 'M')
-    season_start = xr.where(
-        ds['T'].values < calendar_year_season_start,
-        calendar_year_season_start - np.timedelta64(1, 'Y'),
-        calendar_year_season_start
-    ).astype('datetime64[ns]')
-    month_of_season = ((ds['T'] - season_start).values.astype('timedelta64[D]') // 28).astype('datetime64[ns]')  # TODO 28 seems hacky
-    ds = (
-        ds
-        .assign_coords(
-            season_start=('T', season_start),
-            month_of_season=('T', month_of_season)
-        )
-        .set_index(T=['season_start', 'month_of_season'])
-        .unstack('T')
-        .rename(season_start='T')
-        .transpose('T', 'month_of_season', ...)
-    )
-
-    season_length = len(ds['month_of_season'])
-
-    with xr.set_options(keep_attrs=True):
-        if extensive_in_time:
-            ds = ds.sum('month_of_season', skipna=False)
-        else:
-            # Weighted average over the season, giving more weight to longer
-            # months
-            ds = (
-                (ds * ds['days_in_month']).sum('month_of_season', skipna=False)
-                / ds['days_in_month'].sum('month_of_season')
-            )
-
-    season_end = xr.DataArray(
-        (ds['T'].values.astype('datetime64[M]') + np.timedelta64(season_length, 'M')).astype('datetime64[ns]'),
-        coords={'T': ds['T']}
-    )
-    ds = ds.assign_coords(
-        T_bnds = xr.concat([ds['T'], season_end], dim='nbound').transpose(..., 'nbound')
-    )
-    return ds
 
 
 forecast_configs: dict[str, _ForecastVarConfig] = {

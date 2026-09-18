@@ -1,7 +1,10 @@
 import numpy as np
 import xarray as xr
 
-from pycpt.download.opendap import seasonal_forecast_value, seasonal_obs_value
+from pycpt.download.opendap import (
+    OpendapSeasonalForecastSource,
+    OpendapSeasonalObsSource,
+)
 
 
 def test_forecast_sum():
@@ -19,7 +22,7 @@ def test_forecast_sum():
         np.array([[['2000-02-01', '2000-03-01'], ['2000-03-01', '2000-04-01'], ['2000-04-01', '2000-05-01']],
                   [['2001-02-01', '2001-03-01'], ['2001-03-01', '2001-04-01'], ['2001-04-01', '2001-05-01']]], dtype='datetime64[ns]')
     ))
-    ds = seasonal_forecast_value(ds, True)
+    ds = OpendapSeasonalForecastSource.seasonal_value(ds, True)
     np.testing.assert_equal(ds['v'].values, np.array([6, 15]))
 
 
@@ -38,7 +41,7 @@ def test_forecast_mean():
         np.array([[['2000-02-01', '2000-03-01'], ['2000-03-01', '2000-04-01'], ['2000-04-01', '2000-05-01']],
                   [['2001-02-01', '2001-03-01'], ['2001-03-01', '2001-04-01'], ['2001-04-01', '2001-05-01']]], dtype='datetime64[ns]')
     ))
-    ds = seasonal_forecast_value(ds, False)
+    ds = OpendapSeasonalForecastSource.seasonal_value(ds, False)
     expected = np.array([
         (1 * 29 + 2 * 31 + 3 * 30) / (29 + 31 + 30),
         (4 * 28 + 5 * 31 + 6 * 30) / (28 + 31 + 30)
@@ -58,7 +61,7 @@ def test_obs_sum():
         }
     )
     ds = xr.Dataset({'v': da})
-    ds = seasonal_obs_value(ds, 1, True)
+    ds = OpendapSeasonalObsSource.seasonal_value(ds, 1, True)
     print(ds)
     np.testing.assert_equal(ds['v'].values, np.array([6, 15]))
 
@@ -74,10 +77,14 @@ def test_obs_mean():
         }
     )
     ds = xr.Dataset({'v': da})
-    ds = seasonal_obs_value(ds, 1, False)
+    ds = OpendapSeasonalObsSource.seasonal_value(ds, 1, False)
     print(ds)
     expected = np.array([
         (1 * 29 + 2 * 31 + 3 * 30) / (29 + 31 + 30),
         (4 * 28 + 5 * 31 + 6 * 30) / (28 + 31 + 30)
     ])
     np.testing.assert_allclose(ds['v'].values, expected)
+
+
+# TODO: NaN handling; correctness of coordinates including aux coords; partial
+# season (not implemented yet)
