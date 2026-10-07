@@ -1,10 +1,11 @@
-from contextlib import contextmanager
-from dataclasses import dataclass, field
 import datetime
 import pathlib
-import pytest
 import tempfile
 import unittest.mock
+from contextlib import contextmanager
+from dataclasses import dataclass, field
+
+import pytest
 
 import pycpt.automation
 
@@ -59,63 +60,60 @@ class Config:
 
 
 def test_update_uninitialized():
-    with mock_data_sources():
-        with tempfile.TemporaryDirectory() as outdir:
-            outdir = pathlib.Path(outdir)
-            config = Config(
-                operational_forecasts_dir=outdir,
-            )
-            with pytest.raises(Exception):
-                pycpt.automation.generate_one_issue(config)
+    with mock_data_sources(), tempfile.TemporaryDirectory() as outdir:
+        outdir = pathlib.Path(outdir)
+        config = Config(
+            operational_forecasts_dir=outdir,
+        )
+        with pytest.raises(Exception):
+            pycpt.automation.generate_one_issue(config)
 
 
 def test_initialize():
-    with mock_data_sources():
-        with tempfile.TemporaryDirectory() as outdir:
-            outdir = pathlib.Path(outdir)
-            config = Config(
-                issue_months=[5, 6],
-                operational_forecasts_dir=outdir,
-            )
-            pycpt.automation.initialize(config, until=datetime.datetime(2022, 6, 2))
-            assert set(map(lambda x: x.name, (outdir / config.forecast_name / '05').iterdir())) == {
-                'MME_deterministic_hindcasts.nc',
-                'MME_hindcast_prediction_error_variance.nc',
-                'MME_deterministic_forecast_2021.nc',
-                'MME_forecast_prediction_error_variance_2021.nc',
-                'forecast_Jun-Sep_ini-2021-05.png',
-                'MME_deterministic_forecast_2022.nc',
-                'MME_forecast_prediction_error_variance_2022.nc',
-                'forecast_Jun-Sep_ini-2022-05.png',
-            }
-            assert set(map(lambda x: x.name, (outdir / config.forecast_name / '06').iterdir())) == {
-                'MME_deterministic_hindcasts.nc',
-                'MME_hindcast_prediction_error_variance.nc',
-                'MME_deterministic_forecast_2021.nc',
-                'MME_forecast_prediction_error_variance_2021.nc',
-                'forecast_Jun-Sep_ini-2021-06.png',
-                'MME_deterministic_forecast_2022.nc',
-                'MME_forecast_prediction_error_variance_2022.nc',
-                'forecast_Jun-Sep_ini-2022-06.png',
-            }
-            wrote = pycpt.automation.generate_one_issue(config, issue_date=datetime.datetime(2023, 5, 1))
-            assert wrote
+    with mock_data_sources(), tempfile.TemporaryDirectory() as outdir:
+        outdir = pathlib.Path(outdir)
+        config = Config(
+            issue_months=[5, 6],
+            operational_forecasts_dir=outdir,
+        )
+        pycpt.automation.initialize(config, until=datetime.datetime(2022, 6, 2))
+        assert set(map(lambda x: x.name, (outdir / config.forecast_name / '05').iterdir())) == {
+            'MME_deterministic_hindcasts.nc',
+            'MME_hindcast_prediction_error_variance.nc',
+            'MME_deterministic_forecast_2021.nc',
+            'MME_forecast_prediction_error_variance_2021.nc',
+            'forecast_Jun-Sep_ini-2021-05.png',
+            'MME_deterministic_forecast_2022.nc',
+            'MME_forecast_prediction_error_variance_2022.nc',
+            'forecast_Jun-Sep_ini-2022-05.png',
+        }
+        assert set(map(lambda x: x.name, (outdir / config.forecast_name / '06').iterdir())) == {
+            'MME_deterministic_hindcasts.nc',
+            'MME_hindcast_prediction_error_variance.nc',
+            'MME_deterministic_forecast_2021.nc',
+            'MME_forecast_prediction_error_variance_2021.nc',
+            'forecast_Jun-Sep_ini-2021-06.png',
+            'MME_deterministic_forecast_2022.nc',
+            'MME_forecast_prediction_error_variance_2022.nc',
+            'forecast_Jun-Sep_ini-2022-06.png',
+        }
+        wrote = pycpt.automation.generate_one_issue(config, issue_date=datetime.datetime(2023, 5, 1))
+        assert wrote
 
 
 def test_add():
-    with mock_data_sources():
-        with tempfile.TemporaryDirectory() as outdir:
-            outdir = pathlib.Path(outdir)
-            config = Config(
-                operational_forecasts_dir=outdir,
-            )
-            pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
-            monthdir = outdir /config.forecast_name / '05'
-            assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
-            assert not (monthdir / 'MME_deterministic_forecast_2022.nc').is_file()
-            wrote = pycpt.automation.generate_one_issue(config, issue_date=datetime.datetime(2022, 5, 1))
-            assert wrote
-            assert (monthdir / 'MME_deterministic_forecast_2022.nc').is_file()
+    with mock_data_sources(), tempfile.TemporaryDirectory() as outdir:
+        outdir = pathlib.Path(outdir)
+        config = Config(
+            operational_forecasts_dir=outdir,
+        )
+        pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
+        monthdir = outdir /config.forecast_name / '05'
+        assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
+        assert not (monthdir / 'MME_deterministic_forecast_2022.nc').is_file()
+        wrote = pycpt.automation.generate_one_issue(config, issue_date=datetime.datetime(2022, 5, 1))
+        assert wrote
+        assert (monthdir / 'MME_deterministic_forecast_2022.nc').is_file()
 
 
 def test_update():
@@ -144,39 +142,37 @@ def test_update():
         assert not wrote
 
 def test_update_no_change():
-    with mock_data_sources():
-        with tempfile.TemporaryDirectory() as outdir:
-            outdir = pathlib.Path(outdir)
-            config = Config(
-                operational_forecasts_dir=outdir,
-            )
+    with mock_data_sources(), tempfile.TemporaryDirectory() as outdir:
+        outdir = pathlib.Path(outdir)
+        config = Config(
+            operational_forecasts_dir=outdir,
+        )
 
-            # Generate the 2021-05-01 forecast
-            pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
-            monthdir = outdir /config.forecast_name / '05'
-            assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
+        # Generate the 2021-05-01 forecast
+        pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
+        monthdir = outdir /config.forecast_name / '05'
+        assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
 
-            # Generate the same forecast again with --update
-            wrote = pycpt.automation.generate_one_issue(
-                config, issue_date=datetime.datetime(2021, 5, 1), update=True
-            )
-            assert not wrote
+        # Generate the same forecast again with --update
+        wrote = pycpt.automation.generate_one_issue(
+            config, issue_date=datetime.datetime(2021, 5, 1), update=True
+        )
+        assert not wrote
 
 def test_no_update_no_change():
-    with mock_data_sources():
-        with tempfile.TemporaryDirectory() as outdir:
-            outdir = pathlib.Path(outdir)
-            config = Config(
-                operational_forecasts_dir=outdir,
-            )
+    with mock_data_sources(), tempfile.TemporaryDirectory() as outdir:
+        outdir = pathlib.Path(outdir)
+        config = Config(
+            operational_forecasts_dir=outdir,
+        )
 
-            # Generate the 2021-05-01 forecast
-            pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
-            monthdir = outdir /config.forecast_name / '05'
-            assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
+        # Generate the 2021-05-01 forecast
+        pycpt.automation.initialize(config, until=datetime.datetime(2021, 5, 2))
+        monthdir = outdir /config.forecast_name / '05'
+        assert (monthdir / 'MME_deterministic_forecast_2021.nc').is_file()
 
-            # Generate the same forecast again without --update
-            wrote = pycpt.automation.generate_one_issue(
-                config, issue_date=datetime.datetime(2021, 5, 1), update=False
-            )
-            assert not wrote
+        # Generate the same forecast again without --update
+        wrote = pycpt.automation.generate_one_issue(
+            config, issue_date=datetime.datetime(2021, 5, 1), update=False
+        )
+        assert not wrote

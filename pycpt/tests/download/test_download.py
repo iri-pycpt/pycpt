@@ -38,6 +38,7 @@ def recording_proxy(request):
     proxy_proc = subprocess.Popen(cmd)
 
     # Wait for the proxy to start accepting connections
+    sock = None
     for i in range(10):
         try:
             sock = socket.socket()
@@ -46,7 +47,8 @@ def recording_proxy(request):
         except ConnectionRefusedError:
             pass
         finally:
-            sock.close()
+            if sock is not None:
+                sock.close()
         time.sleep(.1)
     else:
         raise Exception('Failed to connect to proxy')
@@ -211,8 +213,7 @@ forecast_test_cases = [
     # notebook rather than in catalog.py), so we just have to
     # omit those that have already been added.
     if not (
-        var.startswith('ENACTS') or
-        var.startswith('CHILE')
+        var.startswith(('ENACTS', 'CHILE'))
     )
     for overrides in forecast_overrides.get(var.split('.')[0], default_cases)
 ] + [
@@ -229,8 +230,7 @@ obs_to_test = {
     # notebook rather than in catalog.py), so we just have to
     # omit those that have already been added.
     if not (
-        var.startswith('ENACTS') or
-        var.startswith('CHILE')
+        var.startswith(('ENACTS', 'CHILE'))
     )
 } | {
     'MOCK_OBS.PRCP': MockObsSource('MOCK_OBS.PRCP')

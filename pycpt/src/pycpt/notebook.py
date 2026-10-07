@@ -3,7 +3,7 @@ import numbers
 import typing
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Literal, NotRequired, TypedDict, overload
+from typing import Any, Literal, NotRequired, TypedDict, overload
 
 import cartopy
 import cartopy.crs as ccrs
@@ -187,7 +187,7 @@ def download_data(
         predictand_name: str,
         local_predictand_file: str | Path | None,
         predictor_names: list[str],
-        download_args: dict[str, object],
+        download_args: dict[str, Any],
         files_root: str | Path,
         force_download: bool,
 ) -> tuple[xr.DataArray, Sequence[xr.DataArray], Sequence[xr.DataArray | None]]:
@@ -198,7 +198,7 @@ def download_data(
         #     raise Exception('If providing local_predictand_file, predictand_arg should be a string (the name of the local dataset)')
         # predictand = SeasonalLocalObsSource(predictand_name, Path(local_predictand_file))
     hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request = create_requests(download_args)
-    predictand_source = catalog.observation_source(predictand_name)
+    predictand_source = catalog.observation_source(predictand_name, pressure_level=None)
     Y = cached_download(predictand_source, hindcast_predictand_request, data_dir / predictand_name, force_download)
     pressure_level = download_args.get('pressure_level')
     predictor_sources = [catalog.forecast_source(name, pressure_level) for name in predictor_names]

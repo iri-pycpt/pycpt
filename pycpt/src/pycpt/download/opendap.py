@@ -4,7 +4,6 @@ import numpy as np
 import xarray as xr
 
 from .interface import (
-    DataSource,
     SeasonalForecastRequest,
     SeasonalForecastSource,
     SeasonalObsRequest,
@@ -54,9 +53,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
                 request.season_start_lead,
                 request.season_start_lead + request.season_length - 1
             ),
-            Y=slice(request.bounding_box['south'], request.bounding_box['north']),
-            X=slice(request.bounding_box['west'], request.bounding_box['east']),
         )
+        if request.bounding_box is not None:
+            ds = ds.sel(
+                Y=slice(request.bounding_box['south'], request.bounding_box['north']),
+                X=slice(request.bounding_box['west'], request.bounding_box['east']),
+            )
         # If self.pressure_level is not None but the variable has no P
         # dimension, in principle that ought to be an error, but we're silently
         # ignoring it for backwards compatibility.
@@ -104,7 +106,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
 
     @staticmethod
-    def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
+    def sigrid_to_pycpt(ds: xr.Dataset) -> xr.DataArray:
         """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
         Ti = ds['target_bnds'].isel(nbound=0)
         # Following the messed-up convention throughout pycpt that the end of the
@@ -174,10 +176,11 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         ds = ds.isel(Y=slice(None, None, -1))
 
         # Spatial subsetting
-        ds = ds.sel(
-            Y=slice(request.bounding_box['south'], request.bounding_box['north']),
-            X=slice(request.bounding_box['west'], request.bounding_box['east']),
-        )
+        if request.bounding_box is not None:
+            ds = ds.sel(
+                Y=slice(request.bounding_box['south'], request.bounding_box['north']),
+                X=slice(request.bounding_box['west'], request.bounding_box['east']),
+            )
         # We don't need the same concession to backwards compatibility here that
         # we made in the ForecastSource, because none of the legacy Ingrid obs
         # sources had a P dimension.
@@ -252,7 +255,7 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         return ds
 
     @staticmethod
-    def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
+    def sigrid_to_pycpt(ds: xr.Dataset) -> xr.DataArray:
         """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
         Ti = ds['T_bnds'].isel(nbound=0)
         # Following the messed-up convention throughout pycpt that the end of the
