@@ -19,6 +19,7 @@ from .interface import (
 class IngridSeasonalForecastSource(SeasonalForecastSource):
     hindcast_template: str
     forecast_template: str
+    pressure_level: float | None
 
     def download(
             self,
@@ -63,8 +64,8 @@ class IngridSeasonalForecastSource(SeasonalForecastSource):
             'filetype': 'cptv10.tsv',
             'verbose': True,
         }
-        if request.pressure_level is not None:
-            download_args['pressure'] = request.pressure_level
+        if self.pressure_level is not None:
+            download_args['pressure'] = self.pressure_level
 
         if force_http and template.startswith('https'):
             template = template.replace('https', 'http', 1)
@@ -91,8 +92,7 @@ def format_season(
 @dataclass
 class IngridSeasonalObsSource(SeasonalObsSource):
     template: str
-    # For testing only. To avoid the complexity of proxying https in tests,
-    # we replace https with http.
+    pressure_level: float | None
  
     def download(
             self,
@@ -118,8 +118,8 @@ class IngridSeasonalObsSource(SeasonalObsSource):
             'filetype': 'cptv10.tsv',
             'verbose': True
         }
-        if request.pressure_level is not None:
-            download_args['pressure'] = request.pressure_level
+        if self.pressure_level is not None:
+            download_args['pressure'] = self.pressure_level
 
         template = self.template
         if force_http and template.startswith('https'):
@@ -158,29 +158,19 @@ def target_string(start_month: int, length: int) -> str:
 #         Y = next(iter(ds.data_vars.values()))
 #         return Y
 
-forecast_sources: dict[str, SeasonalForecastSource] = {
-    name: IngridSeasonalForecastSource(
+def forecast_source(name: str, pressure_level: float | None) -> SeasonalForecastSource:
+    superseded_by, superseded_doc = dl.catalog.deprecations.get(name, (None, None))
+    return IngridSeasonalForecastSource(
         name,
-        # Deferring population of succession info until we've
-        # created all the objects we need to link to
-        None, None,
-        dl.catalog.hindcasts[name], dl.catalog.forecasts[name]
+        superseded_by, superseded_doc,
+        dl.catalog.hindcasts[name], dl.catalog.forecasts[name],
+        pressure_level
     )
-    for name in dl.catalog.hindcasts
-}
 
-# Now that all the sources exist, link them together with deprecation links
-for s in forecast_sources.values():
-    metadata = dl.catalog.deprecations.get(s.name)
-    if metadata is not None:
-        name, doc = metadata
-        s.superseded_by = forecast_sources[name]
-        s.superseded_doc = doc
-
-observation_sources: dict[str, SeasonalObsSource] = {
-    name: IngridSeasonalObsSource(name, None, None, dl.observations[name])
-    for name, template in dl.observations.items()
-}
+def observation_source(name: str, pressure_level: float | None) -> SeasonalObsSource:
+    return IngridSeasonalObsSource(
+        name, None, None, dl.observations[name], pressure_level
+    )
 
 # There are as yet no deprecations for obs datasets. If we ever add any, create
 # the links here.

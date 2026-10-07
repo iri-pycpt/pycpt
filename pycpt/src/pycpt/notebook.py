@@ -198,9 +198,10 @@ def download_data(
         #     raise Exception('If providing local_predictand_file, predictand_arg should be a string (the name of the local dataset)')
         # predictand = SeasonalLocalObsSource(predictand_name, Path(local_predictand_file))
     hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request = create_requests(download_args)
-    predictand_source = catalog.observation_sources[predictand_name]
+    predictand_source = catalog.observation_source(predictand_name)
     Y = cached_download(predictand_source, hindcast_predictand_request, data_dir / predictand_name, force_download)
-    predictor_sources = [catalog.forecast_sources[name] for name in predictor_names]
+    pressure_level = download_args.get('pressure_level')
+    predictor_sources = [catalog.forecast_source(name, pressure_level) for name in predictor_names]
     hindcast_data = []
     forecast_data: list[xr.DataArray | None] = []
     forecast_init_year = forecast_predictor_request.init_years[0]
@@ -263,7 +264,6 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
         season_start_month=season_start_month,
         season_length=season_length,
         bounding_box=predictand_bounding_box,
-        pressure_level=full_download_args.get('pressure')
     )
     hindcast_predictor_request = SeasonalForecastRequest(
         init_month=init_month,
@@ -271,7 +271,6 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
         season_start_lead=season_start_lead,
         season_length=season_length,
         bounding_box=predictor_bounding_box,
-        pressure_level=full_download_args.get('pressure')
     )
     forecast_predictor_request = SeasonalForecastRequest(
         init_month=init_month,
@@ -279,7 +278,6 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
         season_start_lead=season_start_lead,
         season_length=season_length,
         bounding_box=predictor_bounding_box,
-        pressure_level=full_download_args.get('pressure')
     )
     return hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request
 

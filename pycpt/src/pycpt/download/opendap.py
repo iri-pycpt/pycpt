@@ -21,11 +21,11 @@ class _ForecastVarConfig(TypedDict):
     # averaging. The terminology "extensive in time" comes from CF Conventions
     # Section 7.3 "Cell Methods."
     extensive_in_time: bool
-    superseded_by: NotRequired[DataSource]
+    superseded_by: NotRequired[str]
     superseded_doc: NotRequired[str]
 
 class OpendapSeasonalForecastSource(SeasonalForecastSource):
-    def __init__(self, name, config: _ForecastVarConfig):
+    def __init__(self, name, config: _ForecastVarConfig, pressure_level: float | None):
         super().__init__(
             name,
             config.get('superseded_by'),
@@ -33,6 +33,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         )
         self.url = config['url']
         self.extensive_in_time = config['extensive_in_time']
+        self.pressure_level = pressure_level
 
     def download(self, request: SeasonalForecastRequest, force_http: bool = False) -> xr.DataArray:
         url = self.url
@@ -56,8 +57,11 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             Y=slice(request.bounding_box['south'], request.bounding_box['north']),
             X=slice(request.bounding_box['west'], request.bounding_box['east']),
         )
-        if request.pressure_level is not None:
-            ds = ds.sel(P=request.pressure_level)
+        # If self.pressure_level is not None but the variable has no P
+        # dimension, in principle that ought to be an error, but we're silently
+        # ignoring it for backwards compatibility.
+        if self.pressure_level is not None and 'P' in ds:
+            ds = ds.sel(P=self.pressure_level)
 
         ds = ds.mean('M', keep_attrs=True)
 
@@ -130,12 +134,12 @@ class _ObsVarConfig(TypedDict):
     # terminology "extensive in time" comes from CF Conventions Section
     # 7.3 "Cell Methods."
     extensive_in_time: bool
-    superseded_by: NotRequired[DataSource] | None = None,
-    superseded_doc: NotRequired[str] | None = None,
+    superseded_by: NotRequired[str]
+    superseded_doc: NotRequired[str]
 
 
 class OpendapSeasonalObsSource(SeasonalObsSource):
-    def __init__(self, name: str, config: _ObsVarConfig):
+    def __init__(self, name: str, config: _ObsVarConfig, pressure_level: float | None = None):
         super().__init__(
             name,
             config.get('superseded_by'),
@@ -143,6 +147,7 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         )
         self.url = config['url']
         self.extensive_in_time = config['extensive_in_time']
+        self.pressure_level = pressure_level
 
     def download(self, request: SeasonalObsRequest, force_http: bool = False) -> xr.DataArray:
         url = self.url
@@ -173,8 +178,11 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
             Y=slice(request.bounding_box['south'], request.bounding_box['north']),
             X=slice(request.bounding_box['west'], request.bounding_box['east']),
         )
-        if request.pressure_level is not None:
-            ds = ds.sel(P=request.pressure_level)
+        # We don't need the same concession to backwards compatibility here that
+        # we made in the ForecastSource, because none of the legacy Ingrid obs
+        # sources had a P dimension.
+        if self.pressure_level is not None:
+            ds = ds.sel(P=self.pressure_level)
 
         ds = self.seasonal_value(ds, request.season_start_month, self.extensive_in_time)
 
@@ -273,14 +281,18 @@ obs_configs: dict[str, _ObsVarConfig] = {
         'extensive_in_time': True,
     },
 }
-forecast_sources: dict[str, SeasonalForecastSource] = {
-    name: OpendapSeasonalForecastSource(name, config)
-    for name, config in forecast_configs.items()
-}
-observation_sources: dict[str, SeasonalObsSource] = {
-    name: OpendapSeasonalObsSource(name, config)
-    for name, config in obs_configs.items()
-}
+
+def forecast_source(name: str, pressure_level: float | None = None) -> SeasonalForecastSource | None:
+    config = forecast_configs.get(name)
+    if config is None:
+        return None
+    return OpendapSeasonalForecastSource(name, config, pressure_level)
+
+def observation_source(name: str, pressure_level: float | None = None) -> SeasonalObsSource | None:
+    config = obs_configs.get(name)
+    if config is None:
+        return None
+    return OpendapSeasonalObsSource(name, config, pressure_level)
 
 # request = SeasonalForecastRequest(
 #     bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},

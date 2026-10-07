@@ -12,17 +12,14 @@ from .download.utils import MockForecastSource, MockObsSource
 
 
 def create_mock_sources(missing_years=None):
-    obs_source = MockObsSource('O1.PRCP')
-    mock_obs = {
-        'O1.PRCP': obs_source
-    }
-
     if missing_years is None:
         missing_years = {}
-    mock_fcst = {
-        name: MockForecastSource(name, missing_years=missing_years.get(name, ()))
-        for name in ('M1.PRCP', 'M2.PRCP')
-    }
+
+    def mock_obs(name, pressure_level):
+        return MockObsSource(name)
+
+    def mock_fcst(name, pressure_level):
+        return MockForecastSource(name, missing_years=missing_years.get(name, ())) 
 
     return mock_obs, mock_fcst
 
@@ -31,8 +28,8 @@ def create_mock_sources(missing_years=None):
 def mock_data_sources(missing_years=None):
     mock_obs, mock_fcst = create_mock_sources(missing_years=missing_years)
 
-    with unittest.mock.patch('pycpt.download.catalog.observation_sources', mock_obs), \
-         unittest.mock.patch('pycpt.download.catalog.forecast_sources', mock_fcst):
+    with unittest.mock.patch('pycpt.download.catalog.observation_source', mock_obs), \
+         unittest.mock.patch('pycpt.download.catalog.forecast_source', mock_fcst):
         yield
 
 

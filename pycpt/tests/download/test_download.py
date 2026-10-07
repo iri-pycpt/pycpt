@@ -83,7 +83,6 @@ default_forecast_request = {
     'season_start_lead': 1,
     'season_length': 2,
     'bounding_box': BoundingBox(west=-76, east=-74, south=39, north=41),
-    'pressure_level': 200
 }
 
 forecast_overrides: dict[str, Sequence[dict]]  = {
@@ -205,8 +204,8 @@ default_cases = [
 ]
 
 forecast_test_cases = [
-    (source, overrides)
-    for var, source in catalog.forecast_sources.items()
+    (catalog.forecast_source(var, 200), overrides)
+    for var in catalog.list_forecast_sources()
     # Omit private datasets. We plan not to add any more
     # (private datasets are now added to the catalog in the
     # notebook rather than in catalog.py), so we just have to
@@ -223,15 +222,15 @@ forecast_test_cases = [
 ]
 
 obs_to_test = {
-    k: v
-    for k, v in catalog.observation_sources.items()
+    var: catalog.observation_source(var, None)
+    for var in catalog.list_observation_sources()
     # Omit private datasets. We plan not to add any more
     # (private datasets are now added to the catalog in the
     # notebook rather than in catalog.py), so we just have to
     # omit those that have already been added.
     if not (
-        k.startswith('ENACTS') or
-        k.startswith('CHILE')
+        var.startswith('ENACTS') or
+        var.startswith('CHILE')
     )
 } | {
     'MOCK_OBS.PRCP': MockObsSource('MOCK_OBS.PRCP')

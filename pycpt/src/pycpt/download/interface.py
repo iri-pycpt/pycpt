@@ -1,7 +1,7 @@
 import abc
 import warnings
 from dataclasses import dataclass
-from typing import Self, TypedDict
+from typing import TypedDict
 
 import xarray as xr
 
@@ -9,13 +9,13 @@ import xarray as xr
 @dataclass
 class DataSource(abc.ABC):
     name: str
-    superseded_by: Self | None
+    superseded_by: str | None
     superseded_doc: str | None
 
     def warn_if_deprecated(self) -> None:
         if self.superseded_by is not None:
             warnings.warn(
-                f'{self.name} is deprecated. New configurations should use {self.superseded_by.name} '
+                f'{self.name} is deprecated. New configurations should use {self.superseded_by} '
                 f'instead. {self.superseded_doc}',
                 DeprecationWarning
             )
@@ -35,7 +35,6 @@ class SeasonalForecastRequest:
     season_start_lead: int
     season_length: int
     bounding_box: BoundingBox | None = None
-    pressure_level: int | None = None
 
 
 @dataclass
@@ -74,9 +73,6 @@ class SeasonalForecastSource(DataSource):
         bounding_box
             Forecasts are cropped to the intersection of the full forecast and the lat/lon
             bounding box. If None, entire available spatial domain is retrieved.
-        pressure_level
-            For variables that have a third (vertical) spatial dimension, the pressure
-            level in hPa.
         """
         ...
 
@@ -87,7 +83,6 @@ class SeasonalObsRequest:
     season_start_month: int
     season_length: int
     bounding_box: BoundingBox | None = None
-    pressure_level: int | None = None
 
 
 @dataclass
@@ -124,8 +119,5 @@ class SeasonalObsSource(DataSource):
         bounding_box
             Data are cropped to the intersection of the full forecast and the lat/lon
             bounding box. If None, entire available spatial domain is retrieved.
-        pressure_level
-            For variables that have a third (vertical) spatial dimension, the pressure
-            level in hPa.
         """
         ...
