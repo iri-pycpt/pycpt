@@ -34,8 +34,11 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         self.url = config['url']
         self.extensive_in_time = config['extensive_in_time']
 
-    def download(self, request: SeasonalForecastRequest) -> xr.DataArray:
-        ds = xr.open_dataset(self.url)
+    def download(self, request: SeasonalForecastRequest, force_http: bool = False) -> xr.DataArray:
+        url = self.url
+        if force_http:
+            url = url.replace('https', 'http', 1)
+        ds = xr.open_dataset(url)
 
         # Spatiotemporal subsetting
         S = ds['S']
@@ -140,8 +143,11 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         self.url = config['url']
         self.extensive_in_time = config['extensive_in_time']
 
-    def download(self, request: SeasonalObsRequest) -> xr.DataArray:
-        ds = xr.open_dataset(self.url)
+    def download(self, request: SeasonalObsRequest, force_http: bool = False) -> xr.DataArray:
+        url = self.url
+        if force_http:
+            url = url.replace('https', 'http', 1)
+        ds = xr.open_dataset(url)
         # Temporal subsetting
         months = np.arange(
             request.season_start_month,

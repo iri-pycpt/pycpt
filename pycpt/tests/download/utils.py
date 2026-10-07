@@ -68,7 +68,7 @@ class MockObsSource(SeasonalObsSource):
     def __init__(self, name: str):
         self.name = name
 
-    def download(self, request: SeasonalObsRequest) -> xr.DataArray:
+    def download(self, request: SeasonalObsRequest, force_http: bool = False) -> xr.DataArray:
         if request.bounding_box is None:
             raise Exception('Mock obs source requires a bounding_box')
         da = generate_mock_data(
@@ -91,7 +91,7 @@ class MockForecastSource(SeasonalForecastSource):
         self.superseded_doc = None
         self.missing_years = missing_years
 
-    def download(self, request: SeasonalForecastRequest) -> xr.DataArray:
+    def download(self, request: SeasonalForecastRequest, force_http: bool = False) -> xr.DataArray:
         season_start_month = (request.init_month + request.season_start_lead - 1) % 12 + 1
         if request.init_month + request.season_start_lead >= 13:
             delta = 1

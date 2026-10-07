@@ -242,11 +242,9 @@ obs_to_test = {
 def test_forecast_download(case_, monkeypatch):
     source, overrides = case_
     request = SeasonalForecastRequest(**default_forecast_request | overrides)
-    if hasattr(source, 'force_http'):
-        monkeypatch.setattr(source, 'force_http', True)
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
-        da = source.download(request)
+        da = source.download(request, force_http=True)
     validate_forecast_response(request, da)
     assert len(da['T']) == len(range(*request.init_years)) + 1
     assert len(da['Y']) == 3
@@ -260,9 +258,7 @@ def test_obs_download(var: str, monkeypatch: pytest.MonkeyPatch) -> None:
     request = obs_requests.get(var)
     if request is None:
         request = obs_requests[model]
-    if hasattr(source, 'force_http'):
-        monkeypatch.setattr(source, 'force_http', True)
-    da = source.download(request)
+    da = source.download(request, force_http=True)
     print(da)
     validate_obs_response(request, da)
     assert len(da['T']) == 3

@@ -96,6 +96,7 @@ class SeasonalObsSource(DataSource):
     def download(
             self,
             request: SeasonalObsRequest,
+            force_http: bool = False,
     ) -> xr.DataArray:
         """
         Download seasonally aggregated observations and return them as a DataArray.

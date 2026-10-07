@@ -19,11 +19,11 @@ from .interface import (
 class IngridSeasonalForecastSource(SeasonalForecastSource):
     hindcast_template: str
     forecast_template: str
-    force_http: bool = False
 
     def download(
             self,
             request: SeasonalForecastRequest,
+            force_http: bool = False
     ) -> xr.DataArray:
         self.warn_if_deprecated()
 
@@ -66,7 +66,7 @@ class IngridSeasonalForecastSource(SeasonalForecastSource):
         if request.pressure_level is not None:
             download_args['pressure'] = request.pressure_level
 
-        if self.force_http and template.startswith('https'):
+        if force_http and template.startswith('https'):
             template = template.replace('https', 'http', 1)
         with tempfile.NamedTemporaryFile() as tmp:
             ds = dl.download(template, tmp.name, **download_args)
@@ -93,11 +93,11 @@ class IngridSeasonalObsSource(SeasonalObsSource):
     template: str
     # For testing only. To avoid the complexity of proxying https in tests,
     # we replace https with http.
-    force_http: bool = False
  
     def download(
             self,
             request: SeasonalObsRequest,
+            force_http: bool = False,
     ) -> xr.DataArray:
         self.warn_if_deprecated()
 
@@ -122,7 +122,7 @@ class IngridSeasonalObsSource(SeasonalObsSource):
             download_args['pressure'] = request.pressure_level
 
         template = self.template
-        if self.force_http and template.startswith('https'):
+        if force_http and template.startswith('https'):
             template = template.replace('https', 'http', 1)
         with tempfile.NamedTemporaryFile() as tmp:
             ds = dl.download(template, tmp.name, **download_args)
