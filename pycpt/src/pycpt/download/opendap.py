@@ -102,8 +102,6 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
     @staticmethod
     def sigrid_to_pycpt(ds: xr.Dataset) -> xr.Dataset:
         """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
-        data_vars = list(ds.data_vars)
-        assert len(data_vars) == 1
         Ti = ds['target_bnds'].isel(nbound=0)
         # Following the messed-up convention throughout pycpt that the end of the
         # season is represented by midnight on the last day of the season, i.e. 24
@@ -113,6 +111,9 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         ds = ds.assign_coords(
             T=('S', T.values), Ti=('S', Ti.values), Tf=('S', Tf.values)
         ).swap_dims(S='T')
+
+        data_vars = list(ds.data_vars)
+        assert len(data_vars) == 1
         da = ds[data_vars[0]]
         da = da.drop_vars('target')
         return da
