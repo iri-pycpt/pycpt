@@ -15,11 +15,11 @@ from .interface import (
 class _ForecastVarConfig(TypedDict):
     url: str
     # The seasonal value of a variable that's extensive in time (e.g.
-    # accumulated precipitation) is calculated from monthly values by
-    # summation, whereas that of a variable that's intensive in time
-    # (e.g. temperature) is caclulated by (weighted) averaging. The
-    # terminology "extensive in time" comes from CF Conventions Section
-    # 7.3 "Cell Methods."
+    # accumulated precipitation in mm) is calculated from monthly values by
+    # summation, whereas that of a variable that's intensive in time (e.g.
+    # precipitation rate in mm/day, temperature) is calculated by (weighted)
+    # averaging. The terminology "extensive in time" comes from CF Conventions
+    # Section 7.3 "Cell Methods."
     extensive_in_time: bool
     superseded_by: NotRequired[DataSource]
     superseded_doc: NotRequired[str]
@@ -70,7 +70,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
     @staticmethod
     def seasonal_value(ds: xr.Dataset, extensive_in_time: bool) -> xr.Dataset:
         """Seasonal total (for extensive) or mean (intensive) of monthly values.
-        For the mean, monthly values areis weighted by the number of days in the
+        For the mean, monthly values are weighted by the number of days in the
         month.
         """
         # TODO is it better to rely on target_bnds or to reconstruct it?
