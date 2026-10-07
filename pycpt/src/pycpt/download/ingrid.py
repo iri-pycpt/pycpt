@@ -1,10 +1,18 @@
-from dataclasses import dataclass
 import datetime as dt
 import tempfile
+from dataclasses import dataclass
+
 import xarray as xr
 
 import cptdl as dl
-from .interface import BoundingBox, SeasonalForecastRequest, SeasonalForecastSource, SeasonalObsRequest, SeasonalObsSource
+
+from .interface import (
+    BoundingBox,
+    SeasonalForecastRequest,
+    SeasonalForecastSource,
+    SeasonalObsRequest,
+    SeasonalObsSource,
+)
 
 
 @dataclass

@@ -1,13 +1,14 @@
-import numpy as np
 import os
-import pandas as pd
 import pathlib
-import pytest
 import socket
 import subprocess
 import time
-from typing import Sequence
 import warnings
+from collections.abc import Sequence
+
+import numpy as np
+import pandas as pd
+import pytest
 import xarray as xr
 
 from pycpt.download import (
@@ -17,8 +18,8 @@ from pycpt.download import (
     SeasonalObsSource,
     catalog,
 )
-from .utils import MockObsSource, MockForecastSource
 
+from .utils import MockForecastSource, MockObsSource
 
 HERE = pathlib.Path(__file__).absolute().parent
 DATA_DIR = HERE.parent / 'data' / 'responses'
