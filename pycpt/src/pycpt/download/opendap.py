@@ -1,9 +1,12 @@
+import copy
+import dataclasses
 from typing import NotRequired, TypedDict
 
 import numpy as np
 import xarray as xr
 
 from .interface import (
+    BoundingBox,
     SeasonalForecastRequest,
     SeasonalForecastSource,
     SeasonalObsRequest,
@@ -40,30 +43,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             url = url.replace('https', 'http', 1)
         ds = xr.open_dataset(url)
 
-        # Spatiotemporal subsetting
-        S = ds['S']
-        ds = ds.sel(
-            S=(
-                (S.dt.month == request.init_month) &
-                (S.dt.year >= request.init_years[0]) &
-                (S.dt.year <= request.init_years[1])
-                # TODO select only whole seasons
-            ),
-            L=slice(
-                request.season_start_lead,
-                request.season_start_lead + request.season_length - 1
-            ),
+        normalized_requests = normalize_request(request)
+        dss = tuple(
+            self.subset(ds, normalized_request)
+            for normalized_request in normalized_requests
         )
-        if request.bounding_box is not None:
-            ds = ds.sel(
-                Y=slice(request.bounding_box['south'], request.bounding_box['north']),
-                X=slice(request.bounding_box['west'], request.bounding_box['east']),
-            )
-        # If self.pressure_level is not None but the variable has no P
-        # dimension, in principle that ought to be an error, but we're silently
-        # ignoring it for backwards compatibility.
-        if self.pressure_level is not None and 'P' in ds:
-            ds = ds.sel(P=self.pressure_level)
+        ds = denormalize_response(request, dss)
 
         ds = ds.mean('M', keep_attrs=True)
 
@@ -72,6 +57,33 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         da = self.sigrid_to_pycpt(ds)
 
         return da
+
+    def subset(self, ds: xr.Dataset, normalized_request: SeasonalForecastRequest):
+        # Spatiotemporal subsetting
+        S = ds['S']
+        ds = ds.sel(
+            S=(
+                (S.dt.month == normalized_request.init_month) &
+                (S.dt.year >= normalized_request.init_years[0]) &
+                (S.dt.year <= normalized_request.init_years[1])
+                # TODO select only whole seasons
+            ),
+            L=slice(
+                normalized_request.season_start_lead,
+                normalized_request.season_start_lead + normalized_request.season_length - 1
+            ),
+        )
+        if normalized_request.bounding_box is not None:
+            ds = ds.sel(
+                Y=slice(normalized_request.bounding_box['south'], normalized_request.bounding_box['north']),
+                X=slice(normalized_request.bounding_box['west'], normalized_request.bounding_box['east']),
+            )
+        # If self.pressure_level is not None but the variable has no P
+        # dimension, in principle that ought to be an error, but we're silently
+        # ignoring it for backwards compatibility.
+        if self.pressure_level is not None and 'P' in ds:
+            ds = ds.sel(P=self.pressure_level)
+        return ds
 
     @staticmethod
     def seasonal_value(ds: xr.Dataset, extensive_in_time: bool) -> xr.Dataset:
@@ -296,6 +308,64 @@ def observation_source(name: str, pressure_level: float | None = None) -> Season
     if config is None:
         return None
     return OpendapSeasonalObsSource(name, config, pressure_level)
+
+
+def normalize_request(request: SeasonalForecastRequest) -> tuple[SeasonalForecastRequest, ...]:
+    if request.bounding_box is None:
+        return (request,)
+    bbs = normalize_bounding_box(request.bounding_box)
+    normalized = tuple(
+        dataclasses.replace(request, bounding_box=bb)
+        for bb in bbs
+    )
+    return normalized
+
+def normalize_bounding_box(bb: BoundingBox) -> tuple[BoundingBox, ...]:
+    west = bb['west']
+    east = bb['east']
+    if west > east:
+        raise ValueError(
+            """
+            Western edge of bounding box has a longitude value larger than the
+            eastern edge. This is not allowed because it would yield a Dataset
+            whose X coordinate is not monotonic. If your bounding box spans the
+            antimeridian (180 degrees), express it as values between 0 and 360.
+            If it spans the prime meridian (0 degrees), express it as values
+            between -180 and 180.
+            """
+        )
+    span = east - west
+    west = west % 360
+    east = west + span
+    if east < 360:
+        return ({**bb, 'west': west, 'east': east},)
+    else:
+        return (
+            {**bb, 'west': west, 'east': 360},
+            {**bb, 'west': 0, 'east': east % 360}
+        )
+
+def denormalize_response(original_request: SeasonalForecastRequest, dss: tuple[xr.Dataset,...]) -> xr.Dataset:
+    bb = original_request.bounding_box
+    if bb is None:
+        assert len(dss) == 1
+        return dss[0]
+    if len(dss) == 1:
+        ds = dss[0]
+        lons = ds['X']
+        west = bb['west']
+        new_lons = west + np.mod(lons - west, 360.)
+        return ds.assign_coords(X=new_lons)
+    elif len(dss) == 2:
+        # It spans the prime meridian, so it had to have been provided on
+        # (-180, 180).
+        left = dss[0].assign_coords(X=dss[0]['X'] - 360.)
+        right = dss[1]
+        return xr.concat([left, right], dim='X')
+    else:
+        assert False
+
+
 
 # request = SeasonalForecastRequest(
 #     bounding_box={'west': 0, 'east': 5, 'south': 0, 'north': 5},
