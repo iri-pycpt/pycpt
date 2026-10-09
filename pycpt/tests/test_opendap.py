@@ -1,12 +1,12 @@
 import numpy as np
-from pycpt.download.interface import BoundingBox, SeasonalForecastRequest
 import pytest
 import xarray as xr
 
+from pycpt.download.interface import BoundingBox
 from pycpt.download.opendap import (
     OpendapSeasonalForecastSource,
     OpendapSeasonalObsSource,
-    normalize_request,
+    normalize_bounding_box,
 )
 
 
@@ -88,66 +88,48 @@ def test_obs_mean():
     ])
     np.testing.assert_allclose(ds['v'].values, expected)
 
-def make_request(west, east):
-    return SeasonalForecastRequest(
-        bounding_box=BoundingBox(west=west, east=east, south=10, north=10),
-        init_month=1,
-        init_years=(2010, 2012),
-        season_length=3,
-        season_start_lead=1,
-    )
+def make_bb(west, east):
+    return BoundingBox(west=west, east=east, south=10, north=10)
 
-def test_normalize_request_small_positive():
-    normalized_requests = normalize_request(make_request(10, 20))
-    assert len(normalized_requests) == 1
-    bb = normalized_requests[0].bounding_box
+def test_normalize_bounding_box_small_positive():
+    normalized_bbs = normalize_bounding_box(make_bb(10, 20))
+    assert len(normalized_bbs) == 1
+    bb = normalized_bbs[0]
     assert bb is not None
     assert bb['west'] == 10
     assert bb['east'] == 20
 
-def test_normalize_request_large_positive():
-    normalized_requests = normalize_request(make_request(340, 350))
-    assert len(normalized_requests) == 1
-    bb = normalized_requests[0].bounding_box
+def test_normalize_bounding_box_large_positive():
+    normalized_bbs = normalize_bounding_box(make_bb(340, 350))
+    assert len(normalized_bbs) == 1
+    bb = normalized_bbs[0]
     assert bb is not None
     assert bb['west'] == 340
     assert bb['east'] == 350
 
-def test_normalize_request_negative():
-    normalized_requests = normalize_request(make_request(-20, -10))
-    assert len(normalized_requests) == 1
-    bb = normalized_requests[0].bounding_box
+def test_normalize_bounding_box_negative():
+    normalized_bbs = normalize_bounding_box(make_bb(-20, -10))
+    assert len(normalized_bbs) == 1
+    bb = normalized_bbs[0]
     assert bb is not None
     assert bb['west'] == 340
     assert bb['east'] == 350
 
-def test_normalize_request_split():
-    normalized_requests = normalize_request(make_request(-20, 10))
-    assert len(normalized_requests) == 2
-    bb0 = normalized_requests[0].bounding_box
+def test_normalize_bounding_box_split():
+    normalized_bbs = normalize_bounding_box(make_bb(-20, 10))
+    assert len(normalized_bbs) == 2
+    bb0 = normalized_bbs[0]
     assert bb0 is not None
     assert bb0['west'] == 340
     assert bb0['east'] == 360
-    bb1 = normalized_requests[1].bounding_box
+    bb1 = normalized_bbs[1]
     assert bb1 is not None
     assert bb1['west'] == 0
     assert bb1['east'] == 10
 
-def test_normalize_request_null():
-    request = SeasonalForecastRequest(
-        bounding_box=None,
-        init_month=1,
-        init_years=(2010, 2012),
-        season_length=3,
-        season_start_lead=1,
-    )
-    normalized_requests = normalize_request(request)
-    assert len(normalized_requests) == 1
-    assert normalized_requests[0].bounding_box is None
-
-def test_normalize_request_wrong_order():
+def test_normalize_bounding_box_wrong_order():
     with pytest.raises(ValueError):
-        normalize_request(make_request(20, 10))
+        normalize_bounding_box(make_bb(20, 10))
 
 
 # TODO: NaN handling; correctness of coordinates including aux coords; partial

@@ -1,5 +1,3 @@
-import copy
-import dataclasses
 from typing import NotRequired, TypedDict
 
 import numpy as np
@@ -26,6 +24,7 @@ class _ForecastVarConfig(TypedDict):
     superseded_by: NotRequired[str]
     superseded_doc: NotRequired[str]
 
+
 class OpendapSeasonalForecastSource(SeasonalForecastSource):
     def __init__(self, name, config: _ForecastVarConfig, pressure_level: float | None):
         super().__init__(
@@ -43,12 +42,28 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             url = url.replace('https', 'http', 1)
         ds = xr.open_dataset(url)
 
-        normalized_requests = normalize_request(request)
-        dss = tuple(
-            self.subset(ds, normalized_request)
-            for normalized_request in normalized_requests
+        # If self.pressure_level is not None but the variable has no P
+        # dimension, in principle that ought to be an error, but we're silently
+        # ignoring it for backwards compatibility.  TODO be strict here, put
+        # backwards compatibility in notebook.py?
+        if self.pressure_level is not None and 'P' in ds:
+            ds = ds.sel(P=self.pressure_level)
+
+        S = ds['S']
+        ds = ds.sel(
+            S=(
+                (S.dt.month == request.init_month) &
+                (S.dt.year >= request.init_years[0]) &
+                (S.dt.year <= request.init_years[1])
+                # TODO select only whole seasons
+            ),
+            L=slice(
+                request.season_start_lead,
+                request.season_start_lead + request.season_length - 1
+            ),
         )
-        ds = denormalize_response(request, dss)
+
+        ds = subset_spatial(ds, request.bounding_box)
 
         ds = ds.mean('M', keep_attrs=True)
 
@@ -57,33 +72,6 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         da = self.sigrid_to_pycpt(ds)
 
         return da
-
-    def subset(self, ds: xr.Dataset, normalized_request: SeasonalForecastRequest):
-        # Spatiotemporal subsetting
-        S = ds['S']
-        ds = ds.sel(
-            S=(
-                (S.dt.month == normalized_request.init_month) &
-                (S.dt.year >= normalized_request.init_years[0]) &
-                (S.dt.year <= normalized_request.init_years[1])
-                # TODO select only whole seasons
-            ),
-            L=slice(
-                normalized_request.season_start_lead,
-                normalized_request.season_start_lead + normalized_request.season_length - 1
-            ),
-        )
-        if normalized_request.bounding_box is not None:
-            ds = ds.sel(
-                Y=slice(normalized_request.bounding_box['south'], normalized_request.bounding_box['north']),
-                X=slice(normalized_request.bounding_box['west'], normalized_request.bounding_box['east']),
-            )
-        # If self.pressure_level is not None but the variable has no P
-        # dimension, in principle that ought to be an error, but we're silently
-        # ignoring it for backwards compatibility.
-        if self.pressure_level is not None and 'P' in ds:
-            ds = ds.sel(P=self.pressure_level)
-        return ds
 
     @staticmethod
     def seasonal_value(ds: xr.Dataset, extensive_in_time: bool) -> xr.Dataset:
@@ -168,6 +156,7 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         if force_http:
             url = url.replace('https', 'http', 1)
         ds = xr.open_dataset(url)
+
         # Temporal subsetting
         months = np.arange(
             request.season_start_month,
@@ -187,17 +176,14 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         # TODO put CHIRPS in increasing Y order
         ds = ds.isel(Y=slice(None, None, -1))
 
-        # Spatial subsetting
-        if request.bounding_box is not None:
-            ds = ds.sel(
-                Y=slice(request.bounding_box['south'], request.bounding_box['north']),
-                X=slice(request.bounding_box['west'], request.bounding_box['east']),
-            )
+        # Subset by P
         # We don't need the same concession to backwards compatibility here that
         # we made in the ForecastSource, because none of the legacy Ingrid obs
         # sources had a P dimension.
         if self.pressure_level is not None:
             ds = ds.sel(P=self.pressure_level)
+
+        ds = subset_spatial(ds, request.bounding_box)
 
         ds = self.seasonal_value(ds, request.season_start_month, self.extensive_in_time)
 
@@ -284,41 +270,30 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         return da
 
 
-forecast_configs: dict[str, _ForecastVarConfig] = {
-    'CCSM4.PRCP': {
-        'url': 'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
-        'extensive_in_time': False,
-    },
-}
-obs_configs: dict[str, _ObsVarConfig] = {
-    'UCSB.PRCP': {
-        'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
-        'extensive_in_time': True,
-    },
-}
+# Spatial subsetting
 
-def forecast_source(name: str, pressure_level: float | None = None) -> SeasonalForecastSource | None:
-    config = forecast_configs.get(name)
-    if config is None:
-        return None
-    return OpendapSeasonalForecastSource(name, config, pressure_level)
+def subset_spatial(ds: xr.Dataset, bounding_box: BoundingBox | None):
+    if not ds.indexes['X'].is_monotonic_increasing:
+        raise Exception('X is not monotonic increasing')
 
-def observation_source(name: str, pressure_level: float | None = None) -> SeasonalObsSource | None:
-    config = obs_configs.get(name)
-    if config is None:
-        return None
-    return OpendapSeasonalObsSource(name, config, pressure_level)
+    if bounding_box is None:
+        return ds
 
-
-def normalize_request(request: SeasonalForecastRequest) -> tuple[SeasonalForecastRequest, ...]:
-    if request.bounding_box is None:
-        return (request,)
-    bbs = normalize_bounding_box(request.bounding_box)
-    normalized = tuple(
-        dataclasses.replace(request, bounding_box=bb)
-        for bb in bbs
+    dss = tuple(
+        subset_spatial_contiguous(ds, normalized_bb)
+        for normalized_bb in normalize_bounding_box(bounding_box)
     )
-    return normalized
+    ds = denormalize_response(bounding_box, dss)
+
+    return ds
+
+def subset_spatial_contiguous(ds: xr.Dataset, normalized_bounding_box: BoundingBox):
+    if normalized_bounding_box is not None:
+        ds = ds.sel(
+            Y=slice(normalized_bounding_box['south'], normalized_bounding_box['north']),
+            X=slice(normalized_bounding_box['west'], normalized_bounding_box['east']),
+        )
+    return ds
 
 def normalize_bounding_box(bb: BoundingBox) -> tuple[BoundingBox, ...]:
     west = bb['west']
@@ -345,25 +320,54 @@ def normalize_bounding_box(bb: BoundingBox) -> tuple[BoundingBox, ...]:
             {**bb, 'west': 0, 'east': east % 360}
         )
 
-def denormalize_response(original_request: SeasonalForecastRequest, dss: tuple[xr.Dataset,...]) -> xr.Dataset:
-    bb = original_request.bounding_box
-    if bb is None:
+def denormalize_response(bounding_box: BoundingBox, dss: tuple[xr.Dataset,...]) -> xr.Dataset:
+    if bounding_box is None:
         assert len(dss) == 1
         return dss[0]
     if len(dss) == 1:
         ds = dss[0]
         lons = ds['X']
-        west = bb['west']
+        west = bounding_box['west']
+        # It doesn't span the prime meridan (because len(dss) == 1), so the 
+        # following is guaranteed to be monotonically increasing.
         new_lons = west + np.mod(lons - west, 360.)
         return ds.assign_coords(X=new_lons)
     elif len(dss) == 2:
-        # It spans the prime meridian, so it had to have been provided on
-        # (-180, 180).
+        # It spans the prime meridian, and we enforce west <= east, so make X
+        # negative in the left part and positive in the right part.
         left = dss[0].assign_coords(X=dss[0]['X'] - 360.)
         right = dss[1]
         return xr.concat([left, right], dim='X')
     else:
         assert False
+
+
+# Catalog TODO move to its own file
+
+forecast_configs: dict[str, _ForecastVarConfig] = {
+    'CCSM4.PRCP': {
+        'url': 'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+        'extensive_in_time': False,
+    },
+}
+obs_configs: dict[str, _ObsVarConfig] = {
+    'UCSB.PRCP': {
+        'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
+        'extensive_in_time': True,
+    },
+}
+
+def forecast_source(name: str, pressure_level: float | None = None) -> SeasonalForecastSource | None:
+    config = forecast_configs.get(name)
+    if config is None:
+        return None
+    return OpendapSeasonalForecastSource(name, config, pressure_level)
+
+def observation_source(name: str, pressure_level: float | None = None) -> SeasonalObsSource | None:
+    config = obs_configs.get(name)
+    if config is None:
+        return None
+    return OpendapSeasonalObsSource(name, config, pressure_level)
 
 
 
