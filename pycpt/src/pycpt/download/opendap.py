@@ -107,7 +107,9 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
     @staticmethod
     def sigrid_to_pycpt(ds: xr.Dataset) -> xr.DataArray:
-        """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
+        """Convert to PyCPT's idiosyncratic internal representation"""
+
+        # Replace target and target_bnds with Ti, T, Tf
         Ti = ds['target_bnds'].isel(nbound=0)
         # Following the messed-up convention throughout pycpt that the end of the
         # season is represented by midnight on the last day of the season, i.e. 24
@@ -117,13 +119,9 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         ds = ds.assign_coords(
             T=('S', T.values), Ti=('S', Ti.values), Tf=('S', Tf.values)
         ).swap_dims(S='T')
+        ds = ds.drop_vars(['target', 'target_bnds'])
 
-        data_vars = list(ds.data_vars)
-        assert len(data_vars) == 1
-        da = ds[data_vars[0]]
-        da = da.drop_vars('target')
-        da.attrs['missing'] = -999999
-        return da
+        return sigrid_to_pycpt_common(ds)
 
 
 # This is currently identical to _ForecastVarConfig, but that might be a
@@ -270,7 +268,7 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 
     @staticmethod
     def sigrid_to_pycpt(ds: xr.Dataset) -> xr.DataArray:
-        """Translate sigrid coordinates S and L to pycpt coordinates T, Ti, Tf"""
+        """Convert to PyCPT's idiosyncratic internal representation"""
         Ti = ds['T_bnds'].isel(nbound=0)
         # Following the messed-up convention throughout pycpt that the end of the
         # season is represented by midnight on the last day of the season, i.e. 24
@@ -280,11 +278,9 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         ds = ds.assign_coords(
             T_mid=('T', T.values), Ti=('T', Ti.values), Tf=('T', Tf.values)
         ).swap_dims(T='T_mid').drop_vars('T').rename(T_mid='T')
-        data_vars = list(ds.data_vars)
-        assert len(data_vars) == 1
-        da = ds[data_vars[0]]
-        da.attrs['missing'] = -999999
-        return da
+        ds = ds.drop_vars('T_bnds')
+
+        return sigrid_to_pycpt_common(ds)
 
 
 # Spatial subsetting
@@ -380,6 +376,27 @@ def denormalize_response(bounding_box: BoundingBox, dss: tuple[xr.Dataset,...]) 
         return xr.concat([left, right], dim='X')
     else:
         assert False
+
+
+def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
+    # Now that target_bnds is gone, we no longer need the nbound dimension,
+    # so we can simplify the Dataset to a DataArray
+    data_vars = list(ds.data_vars)
+    assert len(data_vars) == 1
+    da = ds[data_vars[0]]
+
+    # to_cptv10 requires a "missing" attribute
+    da.attrs['missing'] = -999999
+
+    # Put everything in decreasing latitude order. CPT accepts either order,
+    # but always outputs in decreasing order. PyCPT assumes obs are in
+    # decreasing order, as CHIRPS was in the IRIDL, and fails to align
+    # forecast with obs if that assumption is violated. Putting everything
+    # in decreasing latitude order simplifies things later.
+    if da['Y'].values[0] < da['Y'].values[-1]:
+        da = da.isel(Y=slice(None, None, -1))
+
+    return da
 
 
 # Catalog TODO move to its own file
