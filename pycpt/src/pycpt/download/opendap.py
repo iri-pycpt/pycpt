@@ -173,9 +173,6 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         ds = ds.sel(T=ds['T'].dt.month.isin(months))
         # TODO include only whole seasons
 
-        # TODO put CHIRPS in increasing Y order
-        ds = ds.isel(Y=slice(None, None, -1))
-
         # Subset by P
         # We don't need the same concession to backwards compatibility here that
         # we made in the ForecastSource, because none of the legacy Ingrid obs
@@ -198,6 +195,24 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         month.
         """
         # TODO add T_bnds to CHIRPS
+
+        # If daily, convert to monthly first. This is only here because PyCPT
+        # historically calculated seasonal values from daily CHIRPS, for no
+        # good reason that I can see. In general you shouldn't do this because
+        # it's very slow compared to using precalculated monthly data.
+        t_resolution = ds['T'].diff('T').median()
+        if t_resolution == np.timedelta64(1, 'D'):
+            month_starts = xr.DataArray(
+                ds['T'].values.astype('datetime64[M]').astype('datetime64[ns]'),
+                dims='T',
+                name='month'
+            )
+            groups = ds.groupby(month_starts)
+            if extensive_in_time:
+                ds = groups.sum(skipna=False)
+            else:
+                ds = groups.mean(skipna=False)
+            ds = ds.rename(month='T')
 
         # Count days in each month, for use later in calculating weighted
         # average
@@ -375,7 +390,7 @@ forecast_configs: dict[str, _ForecastVarConfig] = {
 }
 obs_configs: dict[str, _ObsVarConfig] = {
     'UCSB.PRCP': {
-        'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/monthly/precipitation',
+        'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/daily-improved/0p25/precipitation',
         'extensive_in_time': True,
     },
 }
