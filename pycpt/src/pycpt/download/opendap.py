@@ -281,7 +281,7 @@ def subset_spatial(ds: xr.Dataset, bounding_box: BoundingBox | None):
 
     dss = tuple(
         subset_spatial_contiguous(ds, normalized_bb)
-        for normalized_bb in normalize_bounding_box(bounding_box)
+        for normalized_bb in normalize_bounding_box(ds, bounding_box)
     )
     ds = denormalize_response(bounding_box, dss)
 
@@ -295,7 +295,24 @@ def subset_spatial_contiguous(ds: xr.Dataset, normalized_bounding_box: BoundingB
         )
     return ds
 
-def normalize_bounding_box(bb: BoundingBox) -> tuple[BoundingBox, ...]:
+def x_lower_bound(ds: xr.Dataset) -> float:
+    x = ds['X']
+    if len(x) == 0:
+        raise Exception("Can't find the extrema of a coordinate of length 0.")
+    if (bounds_var := x.attrs.get('bounds')) is not None:
+        return ds[bounds_var].isel(X=0, bnds=0).item()
+    if len(x) < 2:
+        raise Exception("No X bounds provided and can't infer them because length < 2")
+    cell_width = np.median(np.diff(x.values))
+    bound = x.values[0] - cell_width / 2
+    return bound
+
+def normalize_bounding_box(ds: xr.Dataset, bb: BoundingBox) -> tuple[BoundingBox, ...]:
+    """Shift the bounding box by +/- 360 degrees to fit within the range of
+    ds['X']. If it spans the dataset's seam, break it into two bounding boxes,
+    one on each side of the seam. Takes the whole Dataset rather than just the X
+    DataArray because a DataArray can't have a bounds coordinate.
+    """
     west = bb['west']
     east = bb['east']
     if west > east:
@@ -310,13 +327,19 @@ def normalize_bounding_box(bb: BoundingBox) -> tuple[BoundingBox, ...]:
             """
         )
     span = east - west
-    west = west % 360
+    x_min = x_lower_bound(ds)
+    if west < x_min:
+        west = west + 360.
+    elif west >= x_min + 360.:
+        west = west - 360.
     east = west + span
-    if east < 360:
+    if east < x_min + 360.:
+        # The BB doesn't span the seam. Do it in one piece
         return ({**bb, 'west': west, 'east': east},)
     else:
+        # Two pieces, one each side of the seam
         return (
-            {**bb, 'west': west, 'east': 360},
+            {**bb, 'west': west, 'east': x_min + 360.},
             {**bb, 'west': 0, 'east': east % 360}
         )
 

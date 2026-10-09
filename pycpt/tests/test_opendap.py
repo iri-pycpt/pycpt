@@ -91,8 +91,16 @@ def test_obs_mean():
 def make_bb(west, east):
     return BoundingBox(west=west, east=east, south=10, north=10)
 
+def make_ds(x_vals):
+    return xr.Dataset({
+            'myvar': xr.DataArray(data=np.zeros(len(x_vals)), coords={'X': x_vals})
+    })
+
 def test_normalize_bounding_box_small_positive():
-    normalized_bbs = normalize_bounding_box(make_bb(10, 20))
+    normalized_bbs = normalize_bounding_box(
+        make_ds(np.arange(0.5, 359.5, 1)),
+        make_bb(10, 20),
+    )
     assert len(normalized_bbs) == 1
     bb = normalized_bbs[0]
     assert bb is not None
@@ -100,7 +108,10 @@ def test_normalize_bounding_box_small_positive():
     assert bb['east'] == 20
 
 def test_normalize_bounding_box_large_positive():
-    normalized_bbs = normalize_bounding_box(make_bb(340, 350))
+    normalized_bbs = normalize_bounding_box(
+        make_ds(np.arange(0.5, 359.5, 1)),
+        make_bb(340, 350)
+    )
     assert len(normalized_bbs) == 1
     bb = normalized_bbs[0]
     assert bb is not None
@@ -108,7 +119,10 @@ def test_normalize_bounding_box_large_positive():
     assert bb['east'] == 350
 
 def test_normalize_bounding_box_negative():
-    normalized_bbs = normalize_bounding_box(make_bb(-20, -10))
+    normalized_bbs = normalize_bounding_box(
+        make_ds(np.arange(0.5, 359.5, 1)),
+        make_bb(-20, -10)
+    )
     assert len(normalized_bbs) == 1
     bb = normalized_bbs[0]
     assert bb is not None
@@ -116,7 +130,10 @@ def test_normalize_bounding_box_negative():
     assert bb['east'] == 350
 
 def test_normalize_bounding_box_split():
-    normalized_bbs = normalize_bounding_box(make_bb(-20, 10))
+    normalized_bbs = normalize_bounding_box(
+        make_ds(np.arange(0.5, 359.5, 1)),
+        make_bb(-20, 10)
+    )
     assert len(normalized_bbs) == 2
     bb0 = normalized_bbs[0]
     assert bb0 is not None
@@ -129,7 +146,10 @@ def test_normalize_bounding_box_split():
 
 def test_normalize_bounding_box_wrong_order():
     with pytest.raises(ValueError):
-        normalize_bounding_box(make_bb(20, 10))
+        normalize_bounding_box(
+            make_ds(np.arange(0.5, 359.5, 1)),
+            make_bb(20, 10)
+        )
 
 
 # TODO: NaN handling; correctness of coordinates including aux coords; partial
