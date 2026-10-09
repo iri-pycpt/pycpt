@@ -122,6 +122,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         assert len(data_vars) == 1
         da = ds[data_vars[0]]
         da = da.drop_vars('target')
+        da.attrs['missing'] = -999999
         return da
 
 
@@ -282,6 +283,7 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         data_vars = list(ds.data_vars)
         assert len(data_vars) == 1
         da = ds[data_vars[0]]
+        da.attrs['missing'] = -999999
         return da
 
 
