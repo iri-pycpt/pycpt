@@ -1,0 +1,6 @@
+Dataset {
+    Float32 precipitation[T = 16679][Y = 400][X = 1440];
+    Float32 Y[Y = 400];
+    Float32 X[X = 1440];
+    Int32 T[T = 16679];
+} precipitation;

@@ -1,0 +1,27 @@
+Attributes {
+    String Conventions "CF-1.13";
+    precipitation {
+        Float32 _FillValue -9999;
+        String long_name "Total precipitation";
+        String standard_name "lwe_thickness_of_precipitation_amount";
+        String units "mm";
+    }
+    T {
+        String calendar "standard";
+        String long_name "Time";
+        String standard_name "time";
+        String units "days since 1960-01-01";
+    }
+    X {
+        Float32 _FillValue nan;
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
+    Y {
+        Float32 _FillValue nan;
+        String long_name "Latitude";
+        String standard_name "latitude";
+        String units "degree_north";
+    }
+}
