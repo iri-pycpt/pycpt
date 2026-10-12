@@ -429,9 +429,13 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
 nmme_url = 'https://forecast.ccsr.columbia.edu/data/NMME'
 split_models = [
     ('CanSIPSIC4', 'ECCC/CanSIPS-IC4'),
+    ('SPEAR', 'NOAA-GFDL/SPEAR'),
+    ('GEOSS2S', 'NASA-GMAO/GEOSS2S'),
+    ('CFSv2', 'NOAA-NCEP/CFSv2/pentad_samples'),
 ]
 unified_models = [
     ('CCSM4', 'COLA-RSMAS/CCSM4'),
+    ('CESM1', 'COLA-RSMAS/CESM1'),
 ]
 vars = [
     ('PRCP', 'pr'),

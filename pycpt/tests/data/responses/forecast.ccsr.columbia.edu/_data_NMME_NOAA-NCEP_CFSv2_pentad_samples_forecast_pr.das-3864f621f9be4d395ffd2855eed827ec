@@ -1,0 +1,44 @@
+Attributes {
+    String Conventions "CF-1.13";
+    String institution "US National Weather Service - NCEP";
+    target {
+        String bounds "target_bnds";
+        String calendar "standard";
+        String long_name "Forecast target period";
+        String standard_name "time";
+        String units "days since 1960-01-01";
+    }
+    pr {
+        Float64 _FillValue nan;
+        String coordinates "target target_bnds";
+        String long_name "Precipitation rate";
+        String standard_name "lwe_precipitation_rate";
+        String units "mm/day";
+    }
+    target_bnds {
+    }
+    S {
+        String calendar "standard";
+        String long_name "Forecast start time";
+        String standard_name "forecast_reference_time";
+        String units "days since 1960-01-01";
+    }
+    M {
+        String long_name "Ensemble member";
+        String standard_name "realization";
+    }
+    L {
+        String long_name "Lead";
+        String standard_name "forecast_period";
+    }
+    Y {
+        String long_name "Latitude";
+        String standard_name "latitude";
+        String units "degree_north";
+    }
+    X {
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
+}

@@ -1,0 +1,49 @@
+Attributes {
+    String CDI "Climate Data Interface version 1.9.1 (http://mpimet.mpg.de/cdi)";
+    String CDO "Climate Data Operators version 1.9.1 (http://mpimet.mpg.de/cdo)";
+    String Contact "Unknown";
+    String Conventions "CF-1.13";
+    String History "File written by GFIO v1.0.8";
+    String Title "Unknown";
+    String history "Sat Feb 15 04:55:06 2020: cdo.exe -s -O chname,PRECTOT,precip tmpvout1.nc 20170116_1x1_precip_ens01.ncPRECTOT";
+    target {
+        String bounds "target_bnds";
+        String calendar "standard";
+        String long_name "Forecast target period";
+        String standard_name "time";
+        String units "days since 1960-01-01";
+    }
+    pr {
+        Float32 _FillValue nan;
+        String coordinates "target target_bnds";
+        String long_name "Precipitation rate";
+        String standard_name "lwe_precipitation_rate";
+        String units "mm/day";
+    }
+    target_bnds {
+    }
+    S {
+        String calendar "standard";
+        String long_name "Forecast start time";
+        String standard_name "forecast_reference_time";
+        String units "days since 1960-01-01";
+    }
+    M {
+        String long_name "Ensemble member";
+        String standard_name "realization";
+    }
+    X {
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
+    Y {
+        String long_name "Latitude";
+        String standard_name "latitude";
+        String units "degree_north";
+    }
+    L {
+        String long_name "Lead";
+        String standard_name "forecast_period";
+    }
+}

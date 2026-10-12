@@ -3,8 +3,8 @@ Dataset {
     Float32 pr[S = 538][M = 10][L = 12][Y = 181][X = 360];
     Int32 target_bnds[S = 538][L = 12][nbound = 2];
     Int32 S[S = 538];
-    Int16 Y[Y = 181];
-    Int16 X[X = 360];
     Int16 M[M = 10];
+    Int16 X[X = 360];
+    Int16 Y[Y = 181];
     Int16 L[L = 12];
 } pr;

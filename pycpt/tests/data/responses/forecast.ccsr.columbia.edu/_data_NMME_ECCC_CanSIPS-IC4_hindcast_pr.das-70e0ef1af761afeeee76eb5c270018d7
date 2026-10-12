@@ -17,6 +17,11 @@ Attributes {
     }
     target_bnds {
     }
+    X {
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
     M {
         String long_name "Ensemble member";
         String standard_name "realization";
@@ -25,11 +30,6 @@ Attributes {
         String long_name "Latitude";
         String standard_name "latitude";
         String units "degree_north";
-    }
-    X {
-        String long_name "Longitude";
-        String standard_name "longitude";
-        String units "degree_east";
     }
     S {
         String calendar "standard";

@@ -1,0 +1,10 @@
+Dataset {
+    Int32 target[S = 187][L = 10];
+    Float32 tos[S = 187][M = 28][L = 10][Y = 181][X = 360];
+    Int32 target_bnds[S = 187][L = 10][nbound = 2];
+    Int32 S[S = 187];
+    Int16 M[M = 28];
+    Int16 Y[Y = 181];
+    Int16 L[L = 10];
+    Int16 X[X = 360];
+} tos;

@@ -2,9 +2,9 @@ Dataset {
     Int32 target[S = 28][L = 12];
     Float32 pr[S = 28][M = 40][L = 12][Y = 181][X = 360];
     Int32 target_bnds[S = 28][L = 12][nbound = 2];
-    Int16 M[M = 40];
     Int32 S[S = 28];
-    Int16 Y[Y = 181];
     Int16 X[X = 360];
+    Int16 M[M = 40];
+    Int16 Y[Y = 181];
     Int16 L[L = 12];
 } pr;

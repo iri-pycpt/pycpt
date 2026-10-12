@@ -1,0 +1,45 @@
+Attributes {
+    String Conventions "CF-1.13";
+    String history "FERRET V7.02   5-Dec-20";
+    target {
+        String bounds "target_bnds";
+        String calendar "standard";
+        String long_name "Forecast target period";
+        String standard_name "time";
+        String units "days since 1960-01-01";
+    }
+    tos {
+        Float32 _FillValue -1e+34;
+        String coordinates "target target_bnds";
+        String long_name "Sea surface temperature";
+        Float32 missing_value -1e+34;
+        String standard_name "sea_surface_temperature";
+        String units "degree_Celsius";
+    }
+    target_bnds {
+    }
+    S {
+        String calendar "standard";
+        String long_name "Forecast start time";
+        String standard_name "forecast_reference_time";
+        String units "days since 1960-01-01";
+    }
+    Y {
+        String long_name "Latitude";
+        String standard_name "latitude";
+        String units "degree_north";
+    }
+    M {
+        String long_name "Ensemble member";
+        String standard_name "realization";
+    }
+    X {
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
+    L {
+        String long_name "Lead";
+        String standard_name "forecast_period";
+    }
+}

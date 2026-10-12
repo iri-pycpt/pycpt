@@ -1,0 +1,48 @@
+Attributes {
+    String Comment "Dughong Min (dmin@rsmas.miami.edu) and Ben Kirtman (bkirtman@rsmas.miami.edu)";
+    String Conventions "CF-1.13";
+    String Created "Mon Jul 21 06:03:33 EDT 2025";
+    String Generator "NCL v.5.0";
+    String References "Ben P. Kirtman, Dughong Min. (2009) Multimodel Ensemble ENSO Prediction with CCSM and CFS. Monthly Weather Review 137:9, 2908-2930";
+    String Title "CCSM4.0 National Multi-Model Ensembles(NMME) project";
+    target {
+        String bounds "target_bnds";
+        String calendar "standard";
+        String long_name "Forecast target period";
+        String standard_name "time";
+        String units "days since 1960-01-01";
+    }
+    pr {
+        Float32 _FillValue nan;
+        String coordinates "target target_bnds";
+        String long_name "Precipitation rate";
+        String standard_name "lwe_precipitation_rate";
+        String units "mm/day";
+    }
+    target_bnds {
+    }
+    S {
+        String calendar "standard";
+        String long_name "Forecast start time";
+        String standard_name "forecast_reference_time";
+        String units "days since 1960-01-01";
+    }
+    M {
+        String long_name "Ensemble member";
+        String standard_name "realization";
+    }
+    Y {
+        String long_name "Latitude";
+        String standard_name "latitude";
+        String units "degree_north";
+    }
+    X {
+        String long_name "Longitude";
+        String standard_name "longitude";
+        String units "degree_east";
+    }
+    L {
+        String long_name "Lead";
+        String standard_name "forecast_period";
+    }
+}
