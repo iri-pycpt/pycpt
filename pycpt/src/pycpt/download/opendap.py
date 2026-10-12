@@ -427,19 +427,17 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
 
 # Catalog TODO move to its own file
 nmme_url = 'https://forecast.ccsr.columbia.edu/data/NMME'
+c3s_url = 'https://forecast.ccsr.columbia.edu/data/C3S'
+
+vars = [
+    ('PRCP', 'pr'),
+    ('SST', 'tos'),
+]
 split_models = [
     ('CanSIPSIC4', 'ECCC/CanSIPS-IC4'),
     ('SPEAR', 'NOAA-GFDL/SPEAR'),
     ('GEOSS2S', 'NASA-GMAO/GEOSS2S'),
     ('CFSv2', 'NOAA-NCEP/CFSv2/pentad_samples'),
-]
-unified_models = [
-    ('CCSM4', 'COLA-RSMAS/CCSM4'),
-    ('CESM1', 'COLA-RSMAS/CESM1'),
-]
-vars = [
-    ('PRCP', 'pr'),
-    ('SST', 'tos'),
 ]
 split_forecast_configs: dict [str, _ForecastVarConfig] = {
     f'{pycpt_model}.{pycpt_var}': {
@@ -453,6 +451,10 @@ split_forecast_configs: dict [str, _ForecastVarConfig] = {
     for pycpt_var, ccsr_var in vars
 }
 
+unified_models = [
+    ('CCSM4', 'COLA-RSMAS/CCSM4'),
+    ('CESM1', 'COLA-RSMAS/CESM1'),
+]
 unified_forecast_configs: dict[str, _ForecastVarConfig] = {
     f'{pycpt_model}.{pycpt_var}': {
         'urls': [
@@ -464,7 +466,22 @@ unified_forecast_configs: dict[str, _ForecastVarConfig] = {
     for pycpt_var, ccsr_var in vars
 }
 
-forecast_configs = split_forecast_configs | unified_forecast_configs
+c3s_models = [
+    ('SEAS51c', 'ECMWF/SEAS51'),
+]
+c3s_forecast_configs: dict[str, _ForecastVarConfig] = {
+    f'{pycpt_model}.{pycpt_var}': {
+        'urls': [
+            f'{c3s_url}/{ccsr_model}/hindcast/{ccsr_var}',
+            f'{c3s_url}/{ccsr_model}/forecast/{ccsr_var}',
+        ],
+        'extensive_in_time': False,
+    }
+    for pycpt_model, ccsr_model in c3s_models
+    for pycpt_var, ccsr_var in vars
+}
+
+forecast_configs = split_forecast_configs | unified_forecast_configs | c3s_forecast_configs
 
 obs_configs: dict[str, _ObsVarConfig] = {
     'UCSB.PRCP': {
