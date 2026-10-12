@@ -435,7 +435,7 @@ unified_models = [
 ]
 vars = [
     ('PRCP', 'pr'),
-#    ('SST', 'tos'),
+    ('SST', 'tos'),
 ]
 split_forecast_configs: dict [str, _ForecastVarConfig] = {
     f'{pycpt_model}.{pycpt_var}': {
