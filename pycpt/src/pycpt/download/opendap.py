@@ -1,3 +1,4 @@
+import itertools
 from typing import NotRequired, TypedDict
 
 import numpy as np
@@ -13,7 +14,7 @@ from .interface import (
 
 
 class _ForecastVarConfig(TypedDict):
-    url: str
+    urls: list[str]
     # The seasonal value of a variable that's extensive in time (e.g.
     # accumulated precipitation in mm) is calculated from monthly values by
     # summation, whereas that of a variable that's intensive in time (e.g.
@@ -32,15 +33,57 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             config.get('superseded_by'),
             config.get('superseded_doc')
         )
-        self.url = config['url']
+        self.urls = config['urls']
         self.extensive_in_time = config['extensive_in_time']
         self.pressure_level = pressure_level
 
     def download(self, request: SeasonalForecastRequest, force_http: bool = False) -> xr.DataArray:
-        url = self.url
+        urls = self.urls
         if force_http:
-            url = url.replace('https', 'http', 1)
-        ds = xr.open_dataset(url)
+            urls = [url.replace('https', 'http', 1) for url in urls]
+        dss = [xr.open_dataset(url) for url in urls]
+
+        def temporal_subset(ds: xr.Dataset):
+            S = ds['S']
+            ds = ds.sel(
+                S=(
+                    (S.dt.month == request.init_month) &
+                    (S.dt.year >= request.init_years[0]) &
+                    (S.dt.year <= request.init_years[1])
+                    # TODO select only whole seasons
+                ),
+                L=slice(
+                    request.season_start_lead,
+                    request.season_start_lead + request.season_length - 1
+                ),
+            )
+            return ds
+        # Remove empty slices before concatenating. Including the empty slices
+        # works too, but raises a FutureWarning as of xarray 2024.10.0
+        dss = [
+            subset for ds in dss
+            if (subset := temporal_subset(ds)).sizes['S'] != 0
+        ]
+
+        # If slices overlap, prefer the later one.
+        def trim(ds: xr.Dataset, ds_next: xr.Dataset):
+            last_idx = np.searchsorted(ds['S'], ds_next['S'].values[0])
+            ds = ds.isel(S=slice(0, last_idx))
+            return ds
+        dss = [
+            trim(ds, ds_next)
+            for ds, ds_next in itertools.pairwise(dss)
+        ] + [dss[-1]]
+
+        # Spatial subsetting has to come before concat, because concat causes
+        # data to be loaded. TODO write a deferred version of concat
+        dss = [subset_spatial(ds, request.bounding_box) for ds in dss]
+
+        # Hindcasts and forecasts don't always have the same number of ensemble
+        # members, so don't concat until we've taken the ensemble mean.
+        dss = [ds.mean('M', keep_attrs=True) for ds in dss]
+
+        ds = xr.concat(dss, dim='S')
 
         # If self.pressure_level is not None but the variable has no P
         # dimension, in principle that ought to be an error, but we're silently
@@ -49,23 +92,6 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         if self.pressure_level is not None and 'P' in ds:
             ds = ds.sel(P=self.pressure_level)
 
-        S = ds['S']
-        ds = ds.sel(
-            S=(
-                (S.dt.month == request.init_month) &
-                (S.dt.year >= request.init_years[0]) &
-                (S.dt.year <= request.init_years[1])
-                # TODO select only whole seasons
-            ),
-            L=slice(
-                request.season_start_lead,
-                request.season_start_lead + request.season_length - 1
-            ),
-        )
-
-        ds = subset_spatial(ds, request.bounding_box)
-
-        ds = ds.mean('M', keep_attrs=True)
 
         ds = self.seasonal_value(ds, self.extensive_in_time)
 
@@ -403,7 +429,16 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
 
 forecast_configs: dict[str, _ForecastVarConfig] = {
     'CCSM4.PRCP': {
-        'url': 'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+        'urls': [
+            'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+        ],
+        'extensive_in_time': False,
+    },
+    'CanSIPSIC4.PRCP': {
+        'urls': [
+            'https://forecast.ccsr.columbia.edu/data/NMME/ECCC/CanSIPS-IC4/hindcast/pr',
+            'https://forecast.ccsr.columbia.edu/data/NMME/ECCC/CanSIPS-IC4/forecast/pr',
+        ],
         'extensive_in_time': False,
     },
 }
