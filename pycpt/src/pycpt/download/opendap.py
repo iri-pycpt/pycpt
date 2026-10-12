@@ -426,22 +426,42 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
 
 
 # Catalog TODO move to its own file
-
-forecast_configs: dict[str, _ForecastVarConfig] = {
-    'CCSM4.PRCP': {
+nmme_url = 'https://forecast.ccsr.columbia.edu/data/NMME'
+split_models = [
+    ('CanSIPSIC4', 'ECCC/CanSIPS-IC4'),
+]
+unified_models = [
+    ('CCSM4', 'COLA-RSMAS/CCSM4'),
+]
+vars = [
+    ('PRCP', 'pr'),
+#    ('SST', 'tos'),
+]
+split_forecast_configs: dict [str, _ForecastVarConfig] = {
+    f'{pycpt_model}.{pycpt_var}': {
         'urls': [
-            'https://forecast.ccsr.columbia.edu/data/NMME/COLA-RSMAS/CCSM4/pr',
+            f'{nmme_url}/{ccsr_model}/hindcast/{ccsr_var}',
+            f'{nmme_url}/{ccsr_model}/forecast/{ccsr_var}',
         ],
         'extensive_in_time': False,
-    },
-    'CanSIPSIC4.PRCP': {
-        'urls': [
-            'https://forecast.ccsr.columbia.edu/data/NMME/ECCC/CanSIPS-IC4/hindcast/pr',
-            'https://forecast.ccsr.columbia.edu/data/NMME/ECCC/CanSIPS-IC4/forecast/pr',
-        ],
-        'extensive_in_time': False,
-    },
+    }
+    for pycpt_model, ccsr_model in split_models
+    for pycpt_var, ccsr_var in vars
 }
+
+unified_forecast_configs: dict[str, _ForecastVarConfig] = {
+    f'{pycpt_model}.{pycpt_var}': {
+        'urls': [
+            f'{nmme_url}/{ccsr_model}/{ccsr_var}',
+        ],
+        'extensive_in_time': False,
+    }
+    for pycpt_model, ccsr_model in unified_models
+    for pycpt_var, ccsr_var in vars
+}
+
+forecast_configs = split_forecast_configs | unified_forecast_configs
+
 obs_configs: dict[str, _ObsVarConfig] = {
     'UCSB.PRCP': {
         'url': 'https://forecast.ccsr.columbia.edu/data/obs/UCSB-CHC/CHIRPSv2/daily-improved/0p25/precipitation',
