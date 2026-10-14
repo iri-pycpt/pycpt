@@ -1,14 +1,11 @@
-import os
 import pathlib
-import socket
-import subprocess
-import time
 import warnings
 from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
 import pytest
+import recording_proxy
 import xarray as xr
 
 from pycpt.download import (
@@ -24,59 +21,15 @@ from .utils import MockForecastSource, MockObsSource
 HERE = pathlib.Path(__file__).absolute().parent
 DATA_DIR = HERE.parent / 'data' / 'responses'
 
-@pytest.fixture(scope="module", autouse=True)
-def recording_proxy(request):
-    port = 8080
-    cmd = [
-        "python",
-        HERE / "recording_proxy.py",
-        "--port", str(port),
-        "--dir", DATA_DIR
-    ]
-    if request.config.getoption("--record"):
-        cmd += ["--record"]
-    proxy_proc = subprocess.Popen(cmd)
-
-    # Wait for the proxy to start accepting connections
-    sock = None
-    for i in range(10):
-        try:
-            sock = socket.socket()
-            sock.connect(('127.0.0.1', port))
-            break
-        except ConnectionRefusedError:
-            pass
-        finally:
-            if sock is not None:
-                sock.close()
-        time.sleep(.1)
-    else:
-        raise Exception('Failed to connect to proxy')
-
-    if proxy_proc.poll() is not None:
-        raise Exception('recording proxy failed to start')
-
-    # Even though the proxy only handles http for now, intercept
-    # both http and https so that tests that accidentally use https
-    # don't silently go around the proxy.
-    previous_http_proxy = os.environ.get("http_proxy")
-    os.environ["http_proxy"] = f"http://127.0.0.1:{port}"
-    previous_https_proxy = os.environ.get("https_proxy")
-    os.environ["https_proxy"] = f"http://127.0.0.1:{port}"
-
-    yield
-
-    proxy_proc.terminate()
-    proxy_proc.wait()
-
-    if previous_http_proxy is None:
-        del os.environ["http_proxy"]
-    else:
-        os.environ["http_proxy"] = previous_http_proxy
-    if previous_https_proxy is None:
-        del os.environ["https_proxy"]
-    else:
-        os.environ["https_proxy"] = previous_https_proxy
+@pytest.fixture(scope="session", autouse=True)
+def proxy(request):
+    is_record = request.config.getoption('--record')
+    with recording_proxy.recording_proxy(
+            str(DATA_DIR),
+            is_record=is_record,
+            verbose=True,
+    ):
+        yield
 
 
 default_forecast_request = {
