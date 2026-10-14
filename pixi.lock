@@ -4,6 +4,10 @@ environments:
     channels:
     - url: https://conda.anaconda.org/iri-nextgen/
     - url: https://conda.anaconda.org/conda-forge/
+    indexes:
+    - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -289,6 +293,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
       osx-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/appnope-0.1.4-pyhd8ed1ab_0.conda
@@ -569,6 +574,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/zstd-1.5.6-h915ae27_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/argon2-cffi-23.1.0-pyhd8ed1ab_0.conda
@@ -847,10 +853,13 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.6-h0ea2cb4_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
   prod:
     channels:
     - url: https://conda.anaconda.org/iri-nextgen/
     - url: https://conda.anaconda.org/conda-forge/
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -3218,15 +3227,13 @@ packages:
   version: 1.4.1dev
   build: pyh4616a5c_0
   subdir: noarch
+  variants:
+    target_platform: noarch
   depends:
   - xarray
   - python
   - python *
   license: MIT
-  input:
-    hash: 12d892e17adf150966afe3dfb9c20685bc91f63e8a55ebb8aa17b291b0e96bfb
-    globs:
-    - pyproject.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.7-py312hd8ed1ab_0.conda
   noarch: generic
   sha256: 9bbd08c83cc9c3142755b96dc5f3e0f0370d7afdb773c8285359b31e7ce96f0a
@@ -6834,6 +6841,8 @@ packages:
   - typing_extensions >=4.1.0
   license: MIT
   license_family: MIT
+  purls:
+  - pkg:pypi/mypy?source=hash-mapping
   size: 17066588
   timestamp: 1724602213195
 - conda: https://conda.anaconda.org/conda-forge/osx-64/mypy-1.18.2-py312h80b0991_0.conda
@@ -6849,6 +6858,8 @@ packages:
   - typing_extensions >=4.6.0
   license: MIT
   license_family: MIT
+  purls:
+  - pkg:pypi/mypy?source=hash-mapping
   size: 13078572
   timestamp: 1758279856912
 - conda: https://conda.anaconda.org/conda-forge/win-64/mypy-1.18.2-py312he06e257_0.conda
@@ -6866,6 +6877,8 @@ packages:
   - vc14_runtime >=14.44.35208
   license: MIT
   license_family: MIT
+  purls:
+  - pkg:pypi/mypy?source=hash-mapping
   size: 10319704
   timestamp: 1758278688634
 - conda: https://conda.anaconda.org/conda-forge/noarch/mypy_extensions-1.1.0-pyha770c72_0.conda
@@ -6875,6 +6888,8 @@ packages:
   - python >=3.9
   license: MIT
   license_family: MIT
+  purls:
+  - pkg:pypi/mypy-extensions?source=hash-mapping
   size: 11766
   timestamp: 1745776666688
 - conda: https://conda.anaconda.org/conda-forge/noarch/nbclient-0.10.0-pyhd8ed1ab_0.conda
@@ -7201,6 +7216,8 @@ packages:
   - python
   license: BSD-3-Clause
   license_family: BSD
+  purls:
+  - pkg:pypi/optype?source=hash-mapping
   size: 79018
   timestamp: 1759304812094
 - conda: https://conda.anaconda.org/conda-forge/linux-64/orc-2.0.2-h669347b_0.conda
@@ -7345,6 +7362,8 @@ packages:
   - types-pytz >=2022.1.1
   license: BSD-3-Clause
   license_family: BSD
+  purls:
+  - pkg:pypi/pandas-stubs?source=hash-mapping
   size: 102568
   timestamp: 1758925134597
 - conda: https://conda.anaconda.org/conda-forge/noarch/pandocfilters-1.5.0-pyhd8ed1ab_0.tar.bz2
@@ -7389,6 +7408,8 @@ packages:
   - python >=3.9
   license: MPL-2.0
   license_family: MOZILLA
+  purls:
+  - pkg:pypi/pathspec?source=hash-mapping
   size: 41075
   timestamp: 1733233471940
 - conda: https://conda.anaconda.org/conda-forge/noarch/patsy-0.5.6-pyhd8ed1ab_0.conda
@@ -7831,6 +7852,8 @@ packages:
   version: 2.10.5dev
   build: pyh4616a5c_0
   subdir: noarch
+  variants:
+    target_platform: noarch
   depends:
   - python >=3.8,<3.13
   - python *
@@ -7850,10 +7873,6 @@ packages:
   - xarray
   - urllib3 <2
   license: MIT
-  input:
-    hash: 64feb4c66d37954f0a594bd91cabab31ffe057124c944fb87a96d333fbde744f
-    globs:
-    - pyproject.toml
 - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.18.0-pyhd8ed1ab_0.conda
   sha256: 78267adf4e76d0d64ea2ffab008c501156c108bb08fecb703816fb63e279780b
   md5: b7f5c092b8f9800150d998a71b76d5a1
@@ -8389,6 +8408,9 @@ packages:
   purls: []
   size: 255870
   timestamp: 1679532707590
+- pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
+  name: recording-proxy
+  version: 0.1.0
 - conda: https://conda.anaconda.org/conda-forge/noarch/referencing-0.35.1-pyhd8ed1ab_0.conda
   sha256: be8d6d9e86b1a3fef5424127ff81782f8ca63d3058980859609f6f1ecdd34cb3
   md5: 0fc8b52192a8898627c3efae1003e9f6
@@ -8576,6 +8598,8 @@ packages:
   - scipy >=1.10
   license: BSD-3-Clause
   license_family: BSD
+  purls:
+  - pkg:pypi/scipy-stubs?source=hash-mapping
   size: 239800
   timestamp: 1734527845005
 - conda: https://conda.anaconda.org/conda-forge/noarch/send2trash-1.8.3-pyh0d859eb_0.conda
@@ -9054,6 +9078,8 @@ packages:
   depends:
   - python >=3.9
   license: Apache-2.0 AND MIT
+  purls:
+  - pkg:pypi/types-psutil?source=hash-mapping
   size: 27252
   timestamp: 1734758789246
 - conda: https://conda.anaconda.org/conda-forge/noarch/types-python-dateutil-2.9.0.20241003-pyhff2d567_0.conda
@@ -9072,6 +9098,8 @@ packages:
   depends:
   - python >=3.10
   license: Apache-2.0 AND MIT
+  purls:
+  - pkg:pypi/types-pytz?source=hash-mapping
   size: 19558
   timestamp: 1762578505329
 - conda: https://conda.anaconda.org/conda-forge/noarch/types-requests-2.31.0.6-pyhd8ed1ab_0.conda
@@ -9081,6 +9109,8 @@ packages:
   - python >=3.6
   - types-urllib3 <1.27
   license: Apache-2.0 AND MIT
+  purls:
+  - pkg:pypi/types-requests?source=hash-mapping
   size: 25617
   timestamp: 1695800021194
 - conda: https://conda.anaconda.org/conda-forge/noarch/types-urllib3-1.26.25.14-pyhd8ed1ab_1.conda
@@ -9090,6 +9120,8 @@ packages:
   - python >=3.9
   license: Apache-2.0
   license_family: APACHE
+  purls:
+  - pkg:pypi/types-urllib3?source=hash-mapping
   size: 25361
   timestamp: 1734804312762
 - conda: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.12.2-hd8ed1ab_0.conda
@@ -9215,6 +9247,7 @@ packages:
   - vs2015_runtime 14.44.35208.* *_32
   license: LicenseRef-MicrosoftVisualCpp2015-2022Runtime
   license_family: Proprietary
+  purls: []
   size: 682706
   timestamp: 1760418629729
 - conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.44.35208-h818238b_32.conda
@@ -9226,6 +9259,7 @@ packages:
   - vs2015_runtime 14.44.35208.* *_32
   license: LicenseRef-MicrosoftVisualCpp2015-2022Runtime
   license_family: Proprietary
+  purls: []
   size: 114846
   timestamp: 1760418593847
 - conda: https://conda.anaconda.org/conda-forge/win-64/vs2015_runtime-14.44.35208-h38c0c73_32.conda
@@ -9235,6 +9269,7 @@ packages:
   - vc14_runtime >=14.44.35208
   license: BSD-3-Clause
   license_family: BSD
+  purls: []
   size: 18919
   timestamp: 1760418632059
 - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_0.conda
