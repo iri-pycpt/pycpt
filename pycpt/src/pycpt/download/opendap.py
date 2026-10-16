@@ -45,11 +45,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         def temporal_subset(ds: xr.Dataset):
             S = ds['S']
+            (init_first_year, init_final_year) = request.init_years
             ds = ds.sel(
                 S=(
                     (S.dt.month == request.init_month) &
-                    (S.dt.year >= request.init_years[0]) &
-                    (S.dt.year <= request.init_years[1])
+                    (S.dt.year >= init_first_year) &
+                    (S.dt.year <= init_final_year)
                     # TODO select only whole seasons
                 ),
                 L=slice(
@@ -59,7 +60,8 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             )
             return ds
         # Remove empty slices before concatenating. Including the empty slices
-        # works too, but raises a FutureWarning as of xarray 2024.10.0
+        # gives the same result, but raises a FutureWarning as of xarray
+        # 2024.10.0
         dss = [
             subset for ds in dss
             if (subset := temporal_subset(ds)).sizes['S'] != 0
@@ -188,11 +190,11 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
             request.season_start_month + request.season_length
         )
         months = (months - 1) % 12 + 1
-        first_date = np.datetime64(f'{request.years[0]}-{months[0]:02}-01')
+        first_date = np.datetime64(f'{request.season_start_years[0]}-{months[0]:02}-01')
         if months[-1] < months[0]:
-            final_year = request.years[1] + 1
+            final_year = request.season_start_years[1] + 1
         else:
-            final_year = request.years[1]
+            final_year = request.season_start_years[1]
         final_date = np.datetime64(f'{final_year}-{months[-1]:02}-01')
         ds = ds.sel(T=slice(first_date, final_date))
         ds = ds.sel(T=ds['T'].dt.month.isin(months))

@@ -72,7 +72,7 @@ class MockObsSource(SeasonalObsSource):
         if request.bounding_box is None:
             raise Exception('Mock obs source requires a bounding_box')
         da = generate_mock_data(
-            self.name, request.years, request.season_start_month, request.season_length, request.bounding_box
+            self.name, request.season_start_years, request.season_start_month, request.season_length, request.bounding_box
         )
         if da is None:
             raise Exception("Mock obs shouldn't be None")

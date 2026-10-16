@@ -254,29 +254,30 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
     season_length = as_int(season_length_float)
     hindcast_init_years = (full_download_args['first_year'], full_download_args['final_year'])
     hindcast_season_years = (hindcast_init_years[0] + year_delta, hindcast_init_years[1] + year_delta)
-    forecast_init_years = (full_download_args['fdate'].year, full_download_args['fdate'].year)
+    forecast_season_year = full_download_args['fdate'].year + year_delta
+    forecast_season_years = (forecast_season_year, forecast_season_year)
     predictand_bounding_box = BoundingBox(**full_download_args['predictand_extent'])
     predictor_bounding_box = BoundingBox(**full_download_args['predictor_extent'])
     if not full_download_args.get('ensemblemean', True):
         raise Exception('ensemblemean=False is no longer supported.')
     hindcast_predictand_request = SeasonalObsRequest(
-        years=hindcast_season_years,
+        season_start_years=hindcast_season_years,
         season_start_month=season_start_month,
         season_length=season_length,
         bounding_box=predictand_bounding_box,
     )
     hindcast_predictor_request = SeasonalForecastRequest(
-        init_month=init_month,
-        init_years=hindcast_init_years,
-        season_start_lead=season_start_lead,
+        season_start_years=hindcast_season_years,
+        season_start_month=season_start_month,
         season_length=season_length,
+        season_start_lead=season_start_lead,
         bounding_box=predictor_bounding_box,
     )
     forecast_predictor_request = SeasonalForecastRequest(
-        init_month=init_month,
-        init_years=forecast_init_years,
-        season_start_lead=season_start_lead,
+        season_start_years=forecast_season_years,
+        season_start_month=season_start_month,
         season_length=season_length,
+        season_start_lead=season_start_lead,
         bounding_box=predictor_bounding_box,
     )
     return hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request

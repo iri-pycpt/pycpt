@@ -101,7 +101,7 @@ class IngridSeasonalObsSource(SeasonalObsSource):
     ) -> xr.DataArray:
         self.warn_if_deprecated()
 
-        first_year, final_year = request.years
+        first_year, final_year = request.season_start_years
 
         target = target_string(request.season_start_month, request.season_length)
 
