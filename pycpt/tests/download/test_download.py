@@ -21,7 +21,7 @@ from .utils import MockForecastSource, MockObsSource
 HERE = pathlib.Path(__file__).absolute().parent
 DATA_DIR = HERE.parent / 'data' / 'responses'
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def proxy(request):
     is_record = request.config.getoption('--record')
     with recording_proxy.recording_proxy(
