@@ -32,7 +32,7 @@ types-psutil = "*"
 
 [feature.dev.pypi-dependencies]
 #recording-proxy = { path = "../recording-proxy", editable = true }
-recording-proxy = { git = "https://github.com/iridl/recording-proxy.git", rev = "ff1e613"}
+recording-proxy = { git = "https://github.com/iridl/recording-proxy.git", rev = "ea9c361"}
 
 [environments]
 default = {features = ["dev"], solve-group = "prod"}

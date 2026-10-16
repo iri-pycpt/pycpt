@@ -1,7 +1,9 @@
 import datetime as dt
+import shutil
 import tempfile
 from pathlib import Path
 
+import cptdl
 import numpy as np
 import pytest
 
@@ -47,6 +49,26 @@ DEFAULT_CPT_ARGS = {
 }
 
 SAVED_DATA_DIR = Path( __file__ ).absolute().parents[0] / 'data' / 'station'
+
+def download_test_data():
+    '''Run this by hand, then track the downloaded files in version control
+    so that tests can run without hitting the network.'''
+    fake_predictor_extent = {"west": 0, "east": 0, "south": 0, "north": 0}
+    with tempfile.TemporaryDirectory() as case_dir_name:
+        domain_dir = pycpt.setup(Path(case_dir_name), fake_predictor_extent)
+        saved = cptdl.observations
+        cptdl.observations = dict(cptdl.observations, **{'GHCN.PRCP': "http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NCDC/.GHCN/.v2beta/IWMO/grid%3A//name/(IWMO)/def//units/(ids)/def//long_name/(Station)/def/1/1/20590/%3Agrid/replaceGRID/lon/{predictand_extent['west']}/{predictand_extent['east']}/masknotrange/SELECT/lat/{predictand_extent['south']}/{predictand_extent['north']}/masknotrange/SELECT/dup/a%3A/.lat//name//Y/def/%3Aa%3A/.lon//name//X/def/%3Aa%3A/.Name/%3Aa%3A/.prcp/T/({target}%20{first_year}-{final_year})/seasonalAverage/-999/setmissing_value/%3Aa/%7BY/X/Name/prcp%7Dds/{'%5BIWMO%5D%5BT%5D/' + filetype if filetype == 'cptv10.tsv' else 'data.nc'}"})
+        try:
+            pycpt.download_data(
+                PREDICTAND_NAME, None, PREDICTOR_NAMES, DOWNLOAD_ARGS,
+                domain_dir, force_download=True
+            )
+        finally:
+            cptdl.observations = saved
+        data_dir = domain_dir / 'data'
+        for f in data_dir.glob('*.tsv'):
+            print(f'copy {data_dir / f} to {SAVED_DATA_DIR}')
+            shutil.copy(data_dir / f, SAVED_DATA_DIR)
 
 def get_test_data(predictor_names, predictand_name):
     datadir = SAVED_DATA_DIR

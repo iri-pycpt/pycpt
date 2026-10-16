@@ -383,9 +383,6 @@ def normalize_bounding_box(ds: xr.Dataset, bb: BoundingBox) -> tuple[BoundingBox
         )
 
 def denormalize_response(bounding_box: BoundingBox, dss: tuple[xr.Dataset,...]) -> xr.Dataset:
-    if bounding_box is None:
-        assert len(dss) == 1
-        return dss[0]
     if len(dss) == 1:
         ds = dss[0]
         lons = ds['X']

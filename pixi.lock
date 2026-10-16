@@ -293,7 +293,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
       osx-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/appnope-0.1.4-pyhd8ed1ab_0.conda
@@ -574,7 +574,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/zstd-1.5.6-h915ae27_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/argon2-cffi-23.1.0-pyhd8ed1ab_0.conda
@@ -853,7 +853,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.6-h0ea2cb4_0.conda
       - conda: ./cpt-io
       - conda: ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
   prod:
     channels:
     - url: https://conda.anaconda.org/iri-nextgen/
@@ -8408,7 +8408,7 @@ packages:
   purls: []
   size: 255870
   timestamp: 1679532707590
-- pypi: git+https://github.com/iridl/recording-proxy.git?rev=ff1e613#ff1e61320698d02a7ccd50437c647b9265ee5f1a
+- pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
   name: recording-proxy
   version: 0.1.0
 - conda: https://conda.anaconda.org/conda-forge/noarch/referencing-0.35.1-pyhd8ed1ab_0.conda

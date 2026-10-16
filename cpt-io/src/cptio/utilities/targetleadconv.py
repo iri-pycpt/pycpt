@@ -31,7 +31,7 @@ def init_from_lead(lead, tstart):
     return months[(months.index(tstart) - lead) % 12]
 
 
-threeletters = [
+threeletters: list[str | None] = [
     None,
     "Jan",
     "Feb",
@@ -59,7 +59,7 @@ def parse_target(target):
     return threeletters.index(low), threeletters.index(high)
 
 
-def leads_from_target(fdate, target):
+def leads_from_target(fdate: dt.datetime, target: str) -> tuple[float, float]:
     """calculates lead_low and lead_high"""
     target_low, target_high = parse_target(target)
     # print(target_low, target_high, fdate.month)
@@ -78,7 +78,7 @@ def leads_from_target(fdate, target):
     return lead_low, lead_high
 
 
-def target_from_leads(fdate, lead_low, lead_high):
+def target_from_leads(fdate: dt.datetime, lead_low: float, lead_high: float):
     low_ndx = (
         fdate.month + int(lead_low)
         if fdate.month + int(lead_low) <= 12
@@ -90,7 +90,9 @@ def target_from_leads(fdate, lead_low, lead_high):
         else fdate.month + int(lead_high) - 12
     )
     target_low = threeletters[low_ndx]
+    assert target_low is not None
     target_high = threeletters[high_ndx]
+    assert target_high is not None
     return (
         target_low
         if target_low == target_high
