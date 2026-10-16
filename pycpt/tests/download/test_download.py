@@ -235,19 +235,7 @@ def validate_forecast_response(request: SeasonalForecastRequest, da: xr.DataArra
     season_ends = season_ends - pd.Timedelta(hours=24)
     assert (da['Tf'] == season_ends).all()
 
-    if request.bounding_box is not None:
-        # Some servers (e.g. Ingrid) will return any grid cell that intersects
-        # the requested bounding box, even if its center is outside the bounding
-        # box, so add half a grid cell to the limits. If a dimension has fewer than
-        # two grid points, we don't know its resolution, so we can't do this check.
-        if len(da['Y']) > 1:
-            y_half_step = abs(da['Y'][0].item() - da['Y'][1].item())
-            assert da['Y'].min().item() >= request.bounding_box['south'] - y_half_step
-            assert da['Y'].max().item() <= request.bounding_box['north'] + y_half_step
-        if len(da['X']) > 1:
-            x_half_step = abs(da['X'][0].item() - da['X'][1].item())
-            assert da['X'].min().item() >= request.bounding_box['west'] - x_half_step
-            assert da['X'].max().item() <= request.bounding_box['east'] + x_half_step
+    validate_bounding_box(request.bounding_box, da)
 
     # Not asserting anything about pressure_level, because the original Ingrid implementation
     # didn't take care to leave that information in a consistently-named attribute. If
@@ -270,15 +258,26 @@ def validate_obs_response(request: SeasonalObsRequest, da: xr.DataArray):
     season_ends = season_ends - pd.Timedelta(hours=24)
     np.testing.assert_array_equal(da['Tf'].values, season_ends)
 
-    if request.bounding_box is not None:
-        # See note in validate_forecast_response
-        if len(da['Y']) > 1:
-            y_half_step = abs(da['Y'][0].item() - da['Y'][1].item())
-            assert da['Y'].min().item() >= request.bounding_box['south'] - y_half_step
-            assert da['Y'].max().item() <= request.bounding_box['north'] + y_half_step
-        if len(da['X']) > 1:
-            x_half_step = abs(da['X'][0].item() - da['X'][1].item())
-            assert da['X'].min().item() >= request.bounding_box['west'] - x_half_step
-            assert da['X'].max().item() <= request.bounding_box['east'] + x_half_step
+    validate_bounding_box(request.bounding_box, da)
 
     # See note about pressure_level above.
+
+
+def validate_bounding_box(bounding_box: BoundingBox | None, da: xr.DataArray):
+    if bounding_box is not None:
+        # For historical reasons (PyCPT's original Ingrid URLs selected the
+        # bounding box using RANGEEDGES), the download API selects any cell that
+        # overlaps the requested bounding box, even if its center is outside the
+        # bounding box. Therefore, the selected grid centers can be up to half a
+        # cell width beyond the bounding box. If a dimension has fewer than two
+        # grid points, we don't know its resolution, so we can't do this check.
+        # TODO get resolution information before subsetting
+        assert len(da['Y']) > 1, "Don't know how to validate response with length < 2"
+        y_half_step = abs(da['Y'][0].item() - da['Y'][1].item())
+        assert da['Y'].min().item() >= bounding_box['south'] - y_half_step
+        assert da['Y'].max().item() <= bounding_box['north'] + y_half_step
+
+        assert len(da['X']) > 1, "Don't know how to validate response with length < 2"
+        x_half_step = abs(da['X'][0].item() - da['X'][1].item())
+        assert da['X'].min().item() >= bounding_box['west'] - x_half_step
+        assert da['X'].max().item() <= bounding_box['east'] + x_half_step
