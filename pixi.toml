@@ -29,6 +29,7 @@ pandas-stubs = "*"
 scipy-stubs = "*"
 types-requests = "*"
 types-psutil = "*"
+types-shapely = "*"
 
 [feature.dev.pypi-dependencies]
 #recording-proxy = { path = "../recording-proxy", editable = true }
