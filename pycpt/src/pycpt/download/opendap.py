@@ -1,4 +1,5 @@
 import itertools
+from collections.abc import Callable
 from typing import NotRequired, TypedDict
 
 import numpy as np
@@ -27,7 +28,12 @@ class _ForecastVarConfig(TypedDict):
 
 
 class OpendapSeasonalForecastSource(SeasonalForecastSource):
-    def __init__(self, name, config: _ForecastVarConfig, pressure_level: float | None):
+    def __init__(
+            self,
+            name, config: _ForecastVarConfig,
+            pressure_level: float | None,
+            opener: Callable[[str], xr.Dataset] = xr.open_dataset
+    ):
         super().__init__(
             name,
             config.get('superseded_by'),
@@ -36,9 +42,10 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         self.urls = config['urls']
         self.extensive_in_time = config['extensive_in_time']
         self.pressure_level = pressure_level
+        self.opener = opener
 
     def download(self, request: SeasonalForecastRequest) -> xr.DataArray:
-        dss = [xr.open_dataset(url) for url in self.urls]
+        dss = [self.opener(url) for url in self.urls]
 
         def subset_temporal(ds: xr.Dataset):
             S = ds['S']
@@ -165,7 +172,12 @@ class _ObsVarConfig(TypedDict):
 
 
 class OpendapSeasonalObsSource(SeasonalObsSource):
-    def __init__(self, name: str, config: _ObsVarConfig, pressure_level: float | None = None):
+    def __init__(
+            self, name: str,
+            config: _ObsVarConfig,
+            pressure_level: float | None = None,
+            opener: Callable[[str], xr.Dataset] = xr.open_dataset
+    ):
         super().__init__(
             name,
             config.get('superseded_by'),
@@ -174,9 +186,10 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         self.url = config['url']
         self.extensive_in_time = config['extensive_in_time']
         self.pressure_level = pressure_level
+        self.opener = opener
 
     def download(self, request: SeasonalObsRequest) -> xr.DataArray:
-        ds = xr.open_dataset(self.url)
+        ds = self.opener(self.url)
 
         # Temporal subsetting
         months = np.arange(
