@@ -43,7 +43,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
             urls = [url.replace('https', 'http', 1) for url in urls]
         dss = [xr.open_dataset(url) for url in urls]
 
-        def temporal_subset(ds: xr.Dataset):
+        def subset_temporal(ds: xr.Dataset):
             S = ds['S']
             (init_first_year, init_final_year) = request.init_years
             ds = ds.sel(
@@ -64,7 +64,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         # 2024.10.0
         dss = [
             subset for ds in dss
-            if (subset := temporal_subset(ds)).sizes['S'] != 0
+            if (subset := subset_temporal(ds)).sizes['S'] != 0
         ]
 
         # If slices overlap, prefer the later one.
