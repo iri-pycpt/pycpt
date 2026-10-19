@@ -115,7 +115,7 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         month_length = (
             ds['target_bnds'].isel(nbound=1) -
             ds['target_bnds'].isel(nbound=0)
-        ).astype(int) // 24 * 60 * 60 * 1e-9  # nanoseconds to days to avoid loss of precision
+        ).astype(int) // (24 * 60 * 60 * 1e-9)  # nanoseconds to days to avoid loss of precision
         season_start = ds['target_bnds'].isel(L=0, nbound=0)
         season_end = ds['target_bnds'].isel(L=-1, nbound=1)
         season_bnds = (
