@@ -1,3 +1,4 @@
+import copy
 import pathlib
 import warnings
 from collections.abc import Sequence
@@ -153,13 +154,34 @@ obs_requests: dict[str, SeasonalObsRequest] = {
     ),
 }
 
+def force_http(source):
+    """Return a copy of source that fetches over http instead of https.
+
+    The recording proxy can't see inside https requests, so the tests have to
+    talk to the servers over plain http.
+    """
+    def to_http(url: str) -> str:
+        if url.startswith('https://'):
+            return url.replace('https://', 'http://', 1)
+        return url
+
+    source = copy.copy(source)
+    for attr in ('template', 'hindcast_template', 'forecast_template', 'url'):
+        url = getattr(source, attr, None)
+        if url is not None:
+            setattr(source, attr, to_http(url))
+    if hasattr(source, 'urls'):
+        source.urls = [to_http(url) for url in source.urls]
+    return source
+
+
 default_cases = [
     {},
     {'season_start_years': (2020, 2020)}
 ]
 
 forecast_test_cases = [
-    (catalog.forecast_source(var, 200), overrides)
+    (force_http(catalog.forecast_source(var, 200)), overrides)
     for var in catalog.list_forecast_sources()
     # Omit private datasets. We plan not to add any more
     # (private datasets are now added to the catalog in the
@@ -176,7 +198,7 @@ forecast_test_cases = [
 ]
 
 obs_to_test = {
-    var: catalog.observation_source(var, None)
+    var: force_http(catalog.observation_source(var, None))
     for var in catalog.list_observation_sources()
     # Omit private datasets. We plan not to add any more
     # (private datasets are now added to the catalog in the
@@ -196,7 +218,7 @@ def test_forecast_download(case_, monkeypatch):
     request = SeasonalForecastRequest(**default_forecast_request | overrides)
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
-        da = source.download(request, force_http=True)
+        da = source.download(request)
     validate_forecast_response(request, da)
     assert len(da['T']) == len(range(*request.season_start_years)) + 1
     assert len(da['Y']) == 3
@@ -210,7 +232,7 @@ def test_obs_download(var: str, monkeypatch: pytest.MonkeyPatch) -> None:
     request = obs_requests.get(var)
     if request is None:
         request = obs_requests[model]
-    da = source.download(request, force_http=True)
+    da = source.download(request)
     print(da)
     validate_obs_response(request, da)
     assert len(da['T']) == 3

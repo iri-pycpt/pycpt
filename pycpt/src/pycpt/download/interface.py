@@ -107,7 +107,7 @@ class SeasonalForecastSource(DataSource):
 @dataclass
 class SeasonalObsSource(DataSource):
     @abc.abstractmethod
-    def download(self, request: SeasonalObsRequest, force_http: bool = False) -> xr.DataArray:
+    def download(self, request: SeasonalObsRequest) -> xr.DataArray:
         """
         Download seasonally aggregated observations and return them as a
         DataArray with the following dimensions:

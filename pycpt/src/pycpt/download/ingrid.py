@@ -24,7 +24,6 @@ class IngridSeasonalForecastSource(SeasonalForecastSource):
     def download(
             self,
             request: SeasonalForecastRequest,
-            force_http: bool = False
     ) -> xr.DataArray:
         self.warn_if_deprecated()
 
@@ -67,8 +66,6 @@ class IngridSeasonalForecastSource(SeasonalForecastSource):
         if self.pressure_level is not None:
             download_args['pressure'] = self.pressure_level
 
-        if force_http and template.startswith('https'):
-            template = template.replace('https', 'http', 1)
         with tempfile.NamedTemporaryFile() as tmp:
             ds = dl.download(template, tmp.name, **download_args)
 
@@ -97,7 +94,6 @@ class IngridSeasonalObsSource(SeasonalObsSource):
     def download(
             self,
             request: SeasonalObsRequest,
-            force_http: bool = False,
     ) -> xr.DataArray:
         self.warn_if_deprecated()
 
@@ -121,11 +117,8 @@ class IngridSeasonalObsSource(SeasonalObsSource):
         if self.pressure_level is not None:
             download_args['pressure'] = self.pressure_level
 
-        template = self.template
-        if force_http and template.startswith('https'):
-            template = template.replace('https', 'http', 1)
         with tempfile.NamedTemporaryFile() as tmp:
-            ds = dl.download(template, tmp.name, **download_args)
+            ds = dl.download(self.template, tmp.name, **download_args)
 
         return next(iter(ds.data_vars.values()))
 
