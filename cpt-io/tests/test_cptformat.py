@@ -8,19 +8,12 @@ import xarray as xr
 
 datadir = Path(__file__).absolute().parents[0] / 'data'
 
-out_name = "test.tsv"
-
-def prep():
-    if Path(out_name).is_file():
-        Path(out_name).unlink()
-
-def roundtrip(file_name, data_var=None, assertmissing=True, assert_units=True, exact=True):
-    prep()
+def roundtrip(tmp_path, file_name, data_var=None, assertmissing=True, assert_units=True, exact=True):
     ds = open_cptdataset(datadir / file_name)
     das = list(ds.data_vars.values())
     assert len(das) == 1
     da = das[0]
-    testfile = to_cptv10(da, opfile=out_name, assertmissing=assertmissing, assert_units=assert_units)
+    testfile = to_cptv10(da, opfile=tmp_path / "test.tsv", assertmissing=assertmissing, assert_units=assert_units)
     new_ds = open_cptdataset(testfile)
     new_da = next(iter(new_ds.data_vars.values()))
     if exact:
@@ -28,28 +21,28 @@ def roundtrip(file_name, data_var=None, assertmissing=True, assert_units=True, e
     else:
         xr.testing.assert_allclose(new_da, da)
 
-def test_gcm_input():
-    roundtrip("SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv")
+def test_gcm_input(tmp_path):
+    roundtrip(tmp_path, "SEASONAL_CANCM4I_PRCP_HCST_JUN-SEP_None_2021-05.tsv")
 
-def test_cpc_input():
-    roundtrip("SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv")
+def test_cpc_input(tmp_path):
+    roundtrip(tmp_path, "SEASONAL_CPCCMAPURD_PRCP_OBS_JUN-SEP_None_2021-05.tsv")
 
-def test_missing_data():
-    roundtrip("lesotho_ond.tsv")
+def test_missing_data(tmp_path):
+    roundtrip(tmp_path, "lesotho_ond.tsv")
 
-def test_probabilistic_data():
+def test_probabilistic_data(tmp_path):
     # exact=False because the original file from CPT has six digits after the decimal point,
     # while pycpt writes six significant digts, which in this case is four digits after the
     # decimal point. TODO pycpt should use the same precision rules as CPT, even if they
     # differ from Ingrid's precision rules. Saving that for v3.
-    roundtrip("prob_rfcsts.tsv", exact=False)
+    roundtrip(tmp_path, "prob_rfcsts.tsv", exact=False)
 
-def test_skill():
-    roundtrip("pearson.txt", assertmissing=False, assert_units=False)
+def test_skill(tmp_path):
+    roundtrip(tmp_path, "pearson.txt", assertmissing=False, assert_units=False)
 
-def test_spatial_loadings():
+def test_spatial_loadings(tmp_path):
     # See earlier comment on exact=False
-    roundtrip("predictand_cca_spatial_loadings.txt", assertmissing=False, assert_units=False, exact=False)
+    roundtrip(tmp_path, "predictand_cca_spatial_loadings.txt", assertmissing=False, assert_units=False, exact=False)
 
 def test_spatial_loadings_station():
     ds = open_cptdataset(datadir / "predictand_cca_spatial_loadings_station.txt")
@@ -63,8 +56,8 @@ def test_spatial_loadings_station():
     assert len(da['Mode']) == 2
     assert da['Y'][0] == 42.0
 
-def test_eof_timeseries():
-    roundtrip("predictand_eof_timeseries.txt", assertmissing=False, assert_units=False)
+def test_eof_timeseries(tmp_path):
+    roundtrip(tmp_path, "predictand_eof_timeseries.txt", assertmissing=False, assert_units=False)
 
 def test_canonical_correlation():
     ds = open_cptdataset(datadir / "cca_canonical_correlation.txt")
@@ -75,8 +68,8 @@ def test_canonical_correlation():
     np.testing.assert_array_equal(da['index'], ['correlation'])
     assert da.dtype == np.float64
 
-def test_station_data():
-    roundtrip("GHCN_Jun_cptv10.tsv")
+def test_station_data(tmp_path):
+    roundtrip(tmp_path, "GHCN_Jun_cptv10.tsv")
 
 def test_skill_station():
     ds = open_cptdataset(datadir / "pearson-station.txt")
@@ -87,17 +80,16 @@ def test_skill_station():
     assert set(da.dims) == {'station', 'Mode'}
     assert set(da.coords) == {'station', 'Mode', 'Y', 'X'}
 
-def test_prob_station():
-    roundtrip("forecast_probabilities_station.txt")
+def test_prob_station(tmp_path):
+    roundtrip(tmp_path, "forecast_probabilities_station.txt")
 
-def test_canonical_correlation_station():
-    roundtrip("cca_canonical_correlation_station.txt", assertmissing=False, assert_units=False)
+def test_canonical_correlation_station(tmp_path):
+    roundtrip(tmp_path, "cca_canonical_correlation_station.txt", assertmissing=False, assert_units=False)
 
-def test_forecast_values_station():
-    roundtrip("forecast_values_station.txt")
+def test_forecast_values_station(tmp_path):
+    roundtrip(tmp_path, "forecast_values_station.txt")
 
-def test_onemonth_season():
-    prep()
+def test_onemonth_season(tmp_path):
     def check(da):
         assert da['Ti'][0].values == np.datetime64('1960-06-01')
         assert da['T'][0].values == np.datetime64('1960-06-15T12:00')
@@ -105,7 +97,7 @@ def test_onemonth_season():
 
     da = open_cptdataarray(datadir / "GHCN_Jun_cptv10.tsv")
     check(da)
-    testfile = to_cptv10(da, opfile=out_name)
+    testfile = to_cptv10(da, opfile=tmp_path / "test.tsv")
     new_da = open_cptdataarray(testfile)
     check(new_da)
 
