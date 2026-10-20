@@ -1,0 +1,10 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-02	2006-02
+cpt:field=prec, cpt:L=1.5 months, cpt:S=2005-01-01T00:00, cpt:nrow=1, cpt:ncol=1, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-02
+	285.0
+40.0	  98.6341    
+cpt:field=prec, cpt:L=1.5 months, cpt:S=2006-01-01T00:00, cpt:nrow=1, cpt:ncol=1, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-02
+	285.0
+40.0	  114.851    

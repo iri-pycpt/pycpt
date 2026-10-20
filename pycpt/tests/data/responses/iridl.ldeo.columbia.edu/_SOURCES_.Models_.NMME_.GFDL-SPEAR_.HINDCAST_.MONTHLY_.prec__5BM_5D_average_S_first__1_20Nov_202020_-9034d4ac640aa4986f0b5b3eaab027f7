@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2020-01	2021-01	2022-01
+cpt:field=prec, cpt:L=1.5 months, cpt:S=2019-12-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2020-01
+	284.0	285.0	286.0
+41.0	  90.7694    	  97.9487    	  107.985    
+40.0	  99.5546    	  106.184    	  111.929    
+39.0	  104.941    	  112.666    	  120.107    
+cpt:field=prec, cpt:L=1.5 months, cpt:S=2020-12-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2021-01
+	284.0	285.0	286.0
+41.0	  100.587    	  97.1508    	  101.681    
+40.0	  102.432    	  103.181    	  106.475    
+39.0	  103.838    	  104.257    	  111.907    
+cpt:field=prec, cpt:L=1.5 months, cpt:S=2021-12-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2022-01
+	284.0	285.0	286.0
+41.0	  110.651    	  115.144    	  118.030    
+40.0	  110.568    	  114.676    	  116.320    
+39.0	  109.534    	  117.584    	  126.411    

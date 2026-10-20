@@ -326,33 +326,66 @@ def subset_spatial(ds: xr.Dataset, bounding_box: BoundingBox | None):
     if bounding_box is None:
         return ds
 
+    normalized_bbs = normalize_bounding_box(ds, bounding_box)
     dss = tuple(
         subset_spatial_contiguous(ds, normalized_bb)
-        for normalized_bb in normalize_bounding_box(ds, bounding_box)
+        for normalized_bb in normalized_bbs
     )
-    ds = denormalize_response(bounding_box, dss)
+    ds = denormalize_response(bounding_box, normalized_bbs, dss)
 
     return ds
 
 def subset_spatial_contiguous(ds: xr.Dataset, normalized_bounding_box: BoundingBox):
     if normalized_bounding_box is not None:
-        ds = ds.sel(
-            Y=slice(normalized_bounding_box['south'], normalized_bounding_box['north']),
-            X=slice(normalized_bounding_box['west'], normalized_bounding_box['east']),
+        ds = ds.isel(
+            Y=overlapping_cells(
+                ds, 'Y', normalized_bounding_box['south'], normalized_bounding_box['north']
+            ),
+            X=overlapping_cells(
+                ds, 'X', normalized_bounding_box['west'], normalized_bounding_box['east']
+            ),
         )
     return ds
 
+def overlapping_cells(ds: xr.Dataset, dim: str, low: float, high: float) -> slice:
+    """Index range of the cells along dim that overlap [low, high]. For
+    backwards compatibility with PyCPT's original Ingrid URLs, which used
+    RANGEEDGES, a cell is selected if any part of it overlaps the range, even
+    if its center is outside it. A cell that only touches the range at an edge
+    is not selected, but a zero-width range selects the cell containing it.
+    """
+    lower, upper = cell_edges(ds, dim)
+    idx = np.nonzero((lower < high) & (upper > low))[0]
+    if len(idx) == 0:
+        return slice(0, 0)
+    # The coordinate is monotonic, so the selected cells are contiguous.
+    return slice(idx[0], idx[-1] + 1)
+
+def cell_edges(ds: xr.Dataset, dim: str) -> tuple[np.ndarray, np.ndarray]:
+    """Lower and upper edges of each cell along dim, from the coordinate's
+    bounds variable if it has one, otherwise halfway between neighboring cell
+    centers. Works whether the coordinate is increasing or decreasing.
+    """
+    coord = ds[dim]
+    if (bounds_var := coord.attrs.get('bounds')) is not None:
+        bounds = ds[bounds_var].transpose(dim, ...).values
+        return bounds.min(axis=1), bounds.max(axis=1)
+    centers = coord.values.astype(float)
+    if len(centers) < 2:
+        raise Exception(f"No {dim} bounds provided and can't infer them because length < 2")
+    midpoints = (centers[:-1] + centers[1:]) / 2
+    edges = np.concatenate([
+        [centers[0] - (midpoints[0] - centers[0])],
+        midpoints,
+        [centers[-1] + (centers[-1] - midpoints[-1])],
+    ])
+    return np.minimum(edges[:-1], edges[1:]), np.maximum(edges[:-1], edges[1:])
+
 def x_lower_bound(ds: xr.Dataset) -> float:
-    x = ds['X']
-    if len(x) == 0:
+    if len(ds['X']) == 0:
         raise Exception("Can't find the extrema of a coordinate of length 0.")
-    if (bounds_var := x.attrs.get('bounds')) is not None:
-        return ds[bounds_var].isel(X=0, bnds=0).item()
-    if len(x) < 2:
-        raise Exception("No X bounds provided and can't infer them because length < 2")
-    cell_width = np.median(np.diff(x.values))
-    bound = x.values[0] - cell_width / 2
-    return bound
+    lower, _ = cell_edges(ds, 'X')
+    return float(lower.min())
 
 def normalize_bounding_box(ds: xr.Dataset, bb: BoundingBox) -> tuple[BoundingBox, ...]:
     """Shift the bounding box by +/- 360 degrees to fit within the range of
@@ -390,15 +423,19 @@ def normalize_bounding_box(ds: xr.Dataset, bb: BoundingBox) -> tuple[BoundingBox
             {**bb, 'west': 0, 'east': east % 360}
         )
 
-def denormalize_response(bounding_box: BoundingBox, dss: tuple[xr.Dataset,...]) -> xr.Dataset:
+def denormalize_response(
+        bounding_box: BoundingBox,
+        normalized_bbs: tuple[BoundingBox, ...],
+        dss: tuple[xr.Dataset,...],
+) -> xr.Dataset:
     if len(dss) == 1:
         ds = dss[0]
-        lons = ds['X']
-        west = bounding_box['west']
-        # It doesn't span the prime meridan (because len(dss) == 1), so the 
-        # following is guaranteed to be monotonically increasing.
-        new_lons = west + np.mod(lons - west, 360.)
-        return ds.assign_coords(X=new_lons)
+        # Undo the shift that normalize_bounding_box applied to the bounding
+        # box. (Wrapping the longitudes into [west, west + 360) instead would
+        # be wrong for a cell that overlaps the box but whose center is west
+        # of it.)
+        shift = bounding_box['west'] - normalized_bbs[0]['west']
+        return ds.assign_coords(X=ds['X'] + shift)
     elif len(dss) == 2:
         # It spans the prime meridian, and we enforce west <= east, so make X
         # negative in the left part and positive in the right part.

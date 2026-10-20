@@ -116,15 +116,13 @@ returned, and that a zero-area box returns the cell containing it.
 - ✅ Box edges fall on cell edges, including cells that only touch the box
   along an edge (`edges-on-cell-edges`)
 - ✅ Box edges fall on cell centers (`edges-on-cell-centers`)
-- ❌ Box edges fall strictly inside cells, off center
-  (`edges-inside-cells-off-center`; opendap drops the cells whose centers
-  are outside the box)
-- ❌ Box edges are aligned in one dimension and not the other
-  (`aligned-in-x-not-y`; same cause)
-- ❌ Box is smaller than one cell and inside it (`smaller-than-one-cell`;
-  opendap selects nothing and raises `IndexError`)
-- ❌ Box has zero width or height (west == east or south == north)
-  (`zero-width-and-height`, both at once; same as above)
+- ✅ Box edges fall strictly inside cells, off center
+  (`edges-inside-cells-off-center`)
+- ✅ Box edges are aligned in one dimension and not the other
+  (`aligned-in-x-not-y`)
+- ✅ Box is smaller than one cell and inside it (`smaller-than-one-cell`)
+- ✅ Box has zero width or height (west == east or south == north)
+  (`zero-width-and-height`, both at once)
 - ✅ Box extends past the grid's latitude range (`past-latitude-range`)
 - ✅ A grid with cell centers on whole degrees, if a dataset has one (SPEAR:
   every spatial case)
@@ -134,6 +132,9 @@ returned, and that a zero-area box returns the cell containing it.
 ### Spatial: longitude seam
 - ✅ Box in the other longitude convention from the data (e.g. data 0–360, box
   -20 to -10); `X` follows the box's convention (`other-convention`)
+- ✅ The same, with the box's west edge inside a cell east of its center, so
+  that cell's center is west of the box
+  (`other-convention-edges-inside-cells`)
 - ❌ Box edge falls exactly on the seam. SPEAR's seam is at 359.5, so:
   `edge-on-seam-0-360` (349.5 to 359.5) and `edge-on-seam-negative` (-10.5
   to -0.5). opendap returns 370 cells for both.
@@ -144,9 +145,8 @@ returned, and that a zero-area box returns the cell containing it.
   convention.
 - ✅ Box spans the seam with edges on cell edges
   (`spans-seam-edges-on-cell-edges`)
-- ❌ Box spans the seam with edges inside cells
-  (`spans-seam-edges-inside-cells`; opendap drops the cell whose center is
-  outside the box)
+- ✅ Box spans the seam with edges inside cells
+  (`spans-seam-edges-inside-cells`)
 - ❌ Box spans all 360° of longitude (`all-longitudes-0-360`,
   `all-longitudes-negative`). The cell at the box's east edge is also the
   one at its west edge, and it's returned at both ends: 361 points (0..360,

@@ -1,0 +1,19 @@
+xmlns:cpt=http://iri.columbia.edu/CPT/v10/
+xmlns:cf=http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.4/
+cpt:nfields=1
+cpt:T	2005-02/04	2006-02/04	2007-02/04
+cpt:field=prec, cpt:L=2.5 months, cpt:S=2005-01-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2005-02/04
+	284.0	285.0	286.0
+41.0	  332.664    	  343.912    	  366.164    
+40.0	  348.599    	  363.035    	  360.597    
+39.0	  356.790    	  366.155    	  371.282    
+cpt:field=prec, cpt:L=2.5 months, cpt:S=2006-01-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2006-02/04
+	284.0	285.0	286.0
+41.0	  310.446    	  315.983    	  336.491    
+40.0	  323.463    	  341.452    	  347.847    
+39.0	  338.198    	  353.924    	  371.151    
+cpt:field=prec, cpt:L=2.5 months, cpt:S=2007-01-01T00:00, cpt:nrow=3, cpt:ncol=3, cpt:row=Y, cpt:col=X, cpt:units=mm/day, cf:standard_name=lwe_precipitation_rate, cpt:missing=-999, cpt:T=2007-02/04
+	284.0	285.0	286.0
+41.0	  303.598    	  312.077    	  334.110    
+40.0	  315.735    	  329.148    	  342.611    
+39.0	  333.566    	  344.476    	  357.805    
