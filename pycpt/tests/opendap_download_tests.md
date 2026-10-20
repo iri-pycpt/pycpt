@@ -97,9 +97,8 @@ for now.
   inclusive at both ends
 - `Ti`, `Tf` and `T` (midpoint) are correct
 - A season that spans the new year (e.g. DJF)
-- Incomplete seasons at the beginning of the history are removed (opendap
-  will currently fail). UCSB.PRCP starts 1981-01-01, so e.g. DJF 1980–81
-  is incomplete.
+- Incomplete seasons at the beginning of the history are removed. UCSB.PRCP
+  starts 1981-01-01, so e.g. DJF 1980–81 is incomplete.
 - Incomplete seasons in the middle of the history: no obs dataset in the
   opendap catalog has a gap, so this is a synthetic test (section 2, obs
   only).
@@ -193,11 +192,11 @@ is an obs synthetic test.
 - ✅ When a pressure level is given and the data has no `P`, it is ignored (backwards compatibility)
 
 ### Obs only
-- ❌ Incomplete seasons at the end of the history are removed. Synthetic
+- ✅ Incomplete seasons at the end of the history are removed. Synthetic
   because a real case needs recent data, and no discontinued datasets will
   be added to the opendap catalog. (Not for forecasts: every initialization
   has all its leads, so a forecast season is never incomplete.)
-- ❌ Incomplete seasons in the middle of the history are removed. Synthetic
+- ✅ Incomplete seasons in the middle of the history are removed. Synthetic
   because no obs dataset in the opendap catalog has a gap.
 - ✅ Months outside the target season are not used
 - ✅ When a pressure level is given, that level is selected

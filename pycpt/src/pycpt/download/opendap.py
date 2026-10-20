@@ -207,7 +207,6 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
         final_date = np.datetime64(f'{final_year}-{months[-1]:02}-01')
         ds = ds.sel(T=slice(first_date, final_date))
         ds = ds.sel(T=ds['T'].dt.month.isin(months))
-        # TODO include only whole seasons
 
         # Subset by P
         # We don't need the same concession to backwards compatibility here that
@@ -218,17 +217,25 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 
         ds = subset_spatial(ds, request.bounding_box)
 
-        ds = self.seasonal_value(ds, request.season_start_month, self.extensive_in_time)
+        ds = self.seasonal_value(
+            ds, request.season_start_month, request.season_length,
+            self.extensive_in_time
+        )
 
         da = self.sigrid_to_pycpt(ds)
 
         return da
 
     @staticmethod
-    def seasonal_value(ds: xr.Dataset, season_start_month: int, extensive_in_time: bool) -> xr.Dataset:
+    def seasonal_value(
+            ds: xr.Dataset,
+            season_start_month: int,
+            season_length: int,
+            extensive_in_time: bool,
+    ) -> xr.Dataset:
         """Seasonal total (for extensive) or mean (intensive) of monthly values.
-        For the mean, monthly values areis weighted by the number of days in the
-        month.
+        For the mean, monthly values are weighted by the number of days in the
+        month. Seasons with months missing from ds are left out.
         """
         # TODO add T_bnds to CHIRPS
 
@@ -269,19 +276,23 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
             calendar_year_season_start
         ).astype('datetime64[ns]')
         month_of_season = ((ds['T'] - season_start).values.astype('timedelta64[D]') // 28).astype('datetime64[ns]')  # TODO 28 seems hacky
+        # Remove incomplete seasons, i.e. those with months missing from the
+        # data. (A month that's present but NaN makes the seasonal value NaN
+        # instead.)
+        starts, counts = np.unique(season_start, return_counts=True)
+        complete = np.isin(season_start, starts[counts == season_length])
         ds = (
             ds
             .assign_coords(
                 season_start=('T', season_start),
                 month_of_season=('T', month_of_season)
             )
+            .isel(T=complete)
             .set_index(T=['season_start', 'month_of_season'])
             .unstack('T')
             .rename(season_start='T')
             .transpose('T', 'month_of_season', ...)
         )
-
-        season_length = len(ds['month_of_season'])
 
         with xr.set_options(keep_attrs=True):
             if extensive_in_time:
