@@ -50,35 +50,38 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         def subset_temporal(ds: xr.Dataset):
             S = ds['S']
             (init_first_year, init_final_year) = request.init_years
-            ds = ds.sel(
-                S=(
-                    (S.dt.month == request.init_month) &
-                    (S.dt.year >= init_first_year) &
-                    (S.dt.year <= init_final_year)
-                ),
+            in_range = (
+                (S.dt.month == request.init_month) &
+                (S.dt.year >= init_first_year) &
+                (S.dt.year <= init_final_year)
+            ).values
+            # Indexing the DAP backend with an empty array returns data of the
+            # wrong shape, so select nothing with an empty slice instead.
+            S_indexer = np.nonzero(in_range)[0] if in_range.any() else slice(0, 0)
+            ds = ds.isel(S=S_indexer).sel(
                 L=slice(
                     request.season_start_lead,
                     request.season_start_lead + request.season_length - 1
                 ),
             )
             return ds
-        # Remove empty slices before concatenating. Including the empty slices
-        # gives the same result, but raises a FutureWarning as of xarray
-        # 2024.10.0
-        dss = [
-            subset for ds in dss
-            if (subset := subset_temporal(ds)).sizes['S'] != 0
-        ]
 
-        # If slices overlap, prefer the later one.
-        def trim(ds: xr.Dataset, ds_next: xr.Dataset):
-            last_idx = np.searchsorted(ds['S'], ds_next['S'].values[0])
-            ds = ds.isel(S=slice(0, last_idx))
-            return ds
-        dss = [
-            trim(ds, ds_next)
-            for ds, ds_next in itertools.pairwise(dss)
-        ] + [dss[-1]]
+        subsets = [subset_temporal(ds) for ds in dss]
+        if all(subset.sizes['S'] == 0 for subset in subsets):
+            # Keep one, so that the result is an array with length 0 in T.
+            dss = subsets[:1]
+        else:
+            dss = [subset for subset in subsets if subset.sizes['S'] != 0]
+
+            # If slices overlap, prefer the later one.
+            def trim(ds: xr.Dataset, ds_next: xr.Dataset):
+                last_idx = np.searchsorted(ds['S'], ds_next['S'].values[0])
+                ds = ds.isel(S=slice(0, last_idx))
+                return ds
+            dss = [
+                trim(ds, ds_next)
+                for ds, ds_next in itertools.pairwise(dss)
+            ] + [dss[-1]]
 
         # Spatial subsetting has to come before concat, because concat causes
         # data to be loaded. TODO write a deferred version of concat
