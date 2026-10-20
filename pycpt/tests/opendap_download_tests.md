@@ -171,35 +171,37 @@ is an obs synthetic test.
 ## 2. Synthetic tests (opendap only)
 
 ### Both sources (parametrized over forecast and obs)
-- ✅ (forecast so far) Extensive variables are summed over the season
-- Intensive variables are averaged over the season, weighted by days in the month
-- A NaN in any month of the season makes the seasonal value NaN
-- Output has a `missing` attribute
-- Data whose `X` is not monotonic increasing raises an error
+- ✅ Extensive variables are summed over the season
+- ✅ Intensive variables are averaged over the season, weighted by days in the month
+- ✅ A NaN in any month of the season makes the seasonal value NaN
+- ✅ Output has a `missing` attribute
+- ✅ Data whose `X` is not monotonic increasing raises an error
+- ✅ A bounding box whose west edge is greater than its east edge raises an
+  error (replaces the `normalize_bounding_box` test of the same)
 
 ### Forecast only
 - ✅ Ensemble members are averaged
-- Only leads `season_start_lead` through `season_start_lead + season_length - 1` are used
+- ✅ Only leads `season_start_lead` through `season_start_lead + season_length - 1` are used
 - ✅ Where URLs overlap in `S`, the later URL's values are used
-- Non-overlapping URLs are concatenated in order
-- Initializations missing from `S` (a gap in the history) are left out of the
+- ✅ Non-overlapping URLs are concatenated in order
+- ✅ Initializations missing from `S` (a gap in the history) are left out of the
   result, not returned as all-NaN years. Synthetic as well as the
   `missing-initializations` specification case, because that case depends on
   the server's data staying incomplete.
-- URLs with different ensemble sizes are combined correctly
-- When a pressure level is given and the data has `P`, that level is selected
-- When a pressure level is given and the data has no `P`, it is ignored (backwards compatibility)
+- ✅ URLs with different ensemble sizes are combined correctly
+- ✅ When a pressure level is given and the data has `P`, that level is selected
+- ✅ When a pressure level is given and the data has no `P`, it is ignored (backwards compatibility)
 
 ### Obs only
-- Incomplete seasons at the end of the history are removed (will currently
-  fail). Synthetic because a real case needs recent data, and no discontinued
-  datasets will be added to the opendap catalog. (Not for forecasts: every
-  initialization has all its leads, so a forecast season is never incomplete.)
-- Incomplete seasons in the middle of the history are removed (will currently
-  fail). Synthetic because no obs dataset in the opendap catalog has a gap.
-- Months outside the target season are not used
-- When a pressure level is given, that level is selected
-- When a pressure level is given and the data has no `P`, an error is raised
+- ❌ Incomplete seasons at the end of the history are removed. Synthetic
+  because a real case needs recent data, and no discontinued datasets will
+  be added to the opendap catalog. (Not for forecasts: every initialization
+  has all its leads, so a forecast season is never incomplete.)
+- ❌ Incomplete seasons in the middle of the history are removed. Synthetic
+  because no obs dataset in the opendap catalog has a gap.
+- ✅ Months outside the target season are not used
+- ✅ When a pressure level is given, that level is selected
+- ✅ When a pressure level is given and the data has no `P`, an error is raised
 - Daily data: skip for now. We might end up deleting CHIRPSv2 daily and I
   don't want to waste time on it.
 
@@ -217,10 +219,3 @@ re-record when a refactor changes the DAP requests `opendap.py` makes.
 
 Add the "no bounding box: full grid" case at that point (deferred because
 its recording would be large).
-
-## Cleanup
-- `test_forecast_download_target_season_coords` (✅) is superseded by the
-  specification cases; delete it once they exist.
-- Once the tests above exist, delete the subroutine tests
-  `test_forecast_sum`, `test_forecast_mean`, `test_obs_sum`, `test_obs_mean`
-  and the `normalize_bounding_box` tests.
