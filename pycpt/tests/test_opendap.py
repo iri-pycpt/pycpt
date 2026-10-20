@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import xarray as xr
 
-from pycpt.download.interface import BoundingBox
+from pycpt.download.interface import BoundingBox, SeasonalForecastRequest
 from pycpt.download.opendap import (
     OpendapSeasonalForecastSource,
     OpendapSeasonalObsSource,
@@ -87,6 +87,103 @@ def test_obs_mean():
         (4 * 28 + 5 * 31 + 6 * 30) / (28 + 31 + 30)
     ])
     np.testing.assert_allclose(ds['v'].values, expected)
+
+def make_forecast_ds(first_init_year, n_inits, member_values, n_leads=4):
+    """Synthetic forecast Dataset with annual January initializations. Every
+    grid point and lead of member m has value member_values[m].
+    """
+    S = np.array(
+        [f'{first_init_year + i}-01-01' for i in range(n_inits)],
+        dtype='datetime64[M]'
+    )
+    L = np.arange(n_leads)
+    M = np.arange(len(member_values))
+    Y = np.array([10., 11.])
+    X = np.array([0., 1., 2.])
+    target_start = S[:, None] + L[None, :].astype('timedelta64[M]')
+    target_bnds = np.stack([target_start, target_start + np.timedelta64(1, 'M')], axis=-1)
+    data = np.broadcast_to(
+        np.array(member_values, dtype=float)[None, None, :, None, None],
+        (len(S), len(L), len(M), len(Y), len(X)),
+    )
+    return xr.Dataset(
+        {'prcp': (('S', 'L', 'M', 'Y', 'X'), data)},
+        coords={
+            'S': S.astype('datetime64[ns]'),
+            'L': L,
+            'M': M,
+            'Y': Y,
+            'X': X,
+            'target_bnds': (('S', 'L', 'nbound'), target_bnds.astype('datetime64[ns]')),
+        },
+    )
+
+
+def make_forecast_source(datasets, extensive_in_time=True):
+    return OpendapSeasonalForecastSource(
+        'test',
+        {'urls': list(datasets), 'extensive_in_time': extensive_in_time},
+        pressure_level=None,
+        opener=datasets.__getitem__,
+    )
+
+
+def make_forecast_request(season_start_years, season_length=1):
+    return SeasonalForecastRequest(
+        season_start_month=2,
+        season_length=season_length,
+        season_start_years=season_start_years,
+        bounding_box=None,
+        season_start_lead=1,
+    )
+
+
+def test_forecast_download_ensemble_mean():
+    source = make_forecast_source({
+        'url': make_forecast_ds(2000, 2, member_values=[1., 3.]),
+    })
+    da = source.download(make_forecast_request((2000, 2001)))
+    np.testing.assert_equal(da.values, 2.)
+
+
+def test_forecast_download_extensive_sums_season():
+    source = make_forecast_source({
+        'url': make_forecast_ds(2000, 2, member_values=[2.]),
+    })
+    da = source.download(make_forecast_request((2000, 2001), season_length=3))
+    np.testing.assert_equal(da.values, 6.)
+
+
+def test_forecast_download_overlapping_urls_prefers_later():
+    # Hindcast and forecast both contain the 2002 initialization; the forecast
+    # (later url) should win.
+    source = make_forecast_source({
+        'hindcast': make_forecast_ds(2000, 3, member_values=[1.]),
+        'forecast': make_forecast_ds(2002, 3, member_values=[10.]),
+    })
+    da = source.download(make_forecast_request((2000, 2004)))
+    np.testing.assert_equal(
+        da.transpose('T', ...).values[:, 0, 0],
+        np.array([1., 1., 10., 10., 10.])
+    )
+
+
+def test_forecast_download_target_season_coords():
+    # January initialization, lead 1, length 3: FMA season.
+    source = make_forecast_source({
+        'url': make_forecast_ds(2000, 2, member_values=[1.]),
+    })
+    da = source.download(make_forecast_request((2000, 2001), season_length=3))
+    np.testing.assert_equal(
+        da['Ti'].values,
+        np.array(['2000-02-01', '2001-02-01'], dtype='datetime64[ns]')
+    )
+    # The end of the season is represented by its last day, not the day after.
+    np.testing.assert_equal(
+        da['Tf'].values,
+        np.array(['2000-04-30', '2001-04-30'], dtype='datetime64[ns]')
+    )
+
 
 def make_bb(west, east):
     return BoundingBox(west=west, east=east, south=10, north=10)
