@@ -55,7 +55,6 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
                     (S.dt.month == request.init_month) &
                     (S.dt.year >= init_first_year) &
                     (S.dt.year <= init_final_year)
-                    # TODO select only whole seasons
                 ),
                 L=slice(
                     request.season_start_lead,

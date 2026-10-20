@@ -1,3 +1,4 @@
+import copy
 import datetime
 
 import numpy as np
@@ -120,3 +121,24 @@ class MockForecastSource(SeasonalForecastSource):
 # Let the type checker verify that MockForecastSource implements the SeasonalForecastSource
 # interface.
 _2: SeasonalForecastSource = MockForecastSource('test')
+
+
+def force_http(source):
+    """Return a copy of source that fetches over http instead of https.
+
+    The recording proxy can't see inside https requests, so the tests have to
+    talk to the servers over plain http.
+    """
+    def to_http(url: str) -> str:
+        if url.startswith('https://'):
+            return url.replace('https://', 'http://', 1)
+        return url
+
+    source = copy.copy(source)
+    for attr in ('template', 'hindcast_template', 'forecast_template', 'url'):
+        url = getattr(source, attr, None)
+        if url is not None:
+            setattr(source, attr, to_http(url))
+    if hasattr(source, 'urls'):
+        source.urls = [to_http(url) for url in source.urls]
+    return source

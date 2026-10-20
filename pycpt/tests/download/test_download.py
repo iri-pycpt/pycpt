@@ -1,4 +1,3 @@
-import copy
 import pathlib
 import warnings
 from collections.abc import Sequence
@@ -17,7 +16,7 @@ from pycpt.download import (
     catalog,
 )
 
-from .utils import MockForecastSource, MockObsSource
+from .utils import MockForecastSource, MockObsSource, force_http
 
 HERE = pathlib.Path(__file__).absolute().parent
 DATA_DIR = HERE.parent / 'data' / 'responses'
@@ -153,27 +152,6 @@ obs_requests: dict[str, SeasonalObsRequest] = {
         bounding_box=BoundingBox(west=-75, east=-72, south=40, north=43),
     ),
 }
-
-def force_http(source):
-    """Return a copy of source that fetches over http instead of https.
-
-    The recording proxy can't see inside https requests, so the tests have to
-    talk to the servers over plain http.
-    """
-    def to_http(url: str) -> str:
-        if url.startswith('https://'):
-            return url.replace('https://', 'http://', 1)
-        return url
-
-    source = copy.copy(source)
-    for attr in ('template', 'hindcast_template', 'forecast_template', 'url'):
-        url = getattr(source, attr, None)
-        if url is not None:
-            setattr(source, attr, to_http(url))
-    if hasattr(source, 'urls'):
-        source.urls = [to_http(url) for url in source.urls]
-    return source
-
 
 default_cases = [
     {},
