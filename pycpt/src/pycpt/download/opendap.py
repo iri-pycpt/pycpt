@@ -416,14 +416,14 @@ def normalize_bounding_box(ds: xr.Dataset, bb: BoundingBox) -> tuple[BoundingBox
     elif west >= x_min + 360.:
         west = west - 360.
     east = west + span
-    if east < x_min + 360.:
+    if east <= x_min + 360.:
         # The BB doesn't span the seam. Do it in one piece
         return ({**bb, 'west': west, 'east': east},)
     else:
         # Two pieces, one each side of the seam
         return (
             {**bb, 'west': west, 'east': x_min + 360.},
-            {**bb, 'west': 0, 'east': east % 360}
+            {**bb, 'west': x_min, 'east': east - 360.},
         )
 
 def denormalize_response(
@@ -431,22 +431,16 @@ def denormalize_response(
         normalized_bbs: tuple[BoundingBox, ...],
         dss: tuple[xr.Dataset,...],
 ) -> xr.Dataset:
-    if len(dss) == 1:
-        ds = dss[0]
-        # Undo the shift that normalize_bounding_box applied to the bounding
-        # box. (Wrapping the longitudes into [west, west + 360) instead would
-        # be wrong for a cell that overlaps the box but whose center is west
-        # of it.)
-        shift = bounding_box['west'] - normalized_bbs[0]['west']
-        return ds.assign_coords(X=ds['X'] + shift)
-    elif len(dss) == 2:
-        # It spans the prime meridian, and we enforce west <= east, so make X
-        # negative in the left part and positive in the right part.
-        left = dss[0].assign_coords(X=dss[0]['X'] - 360.)
-        right = dss[1]
-        return xr.concat([left, right], dim='X')
-    else:
-        assert False
+    # Undo the shift that normalize_bounding_box applied to the bounding box.
+    # (Wrapping the longitudes into [west, west + 360) instead would be wrong
+    # for a cell that overlaps the box but whose center is west of it.) The
+    # piece east of the seam is one more turn east.
+    shift = bounding_box['west'] - normalized_bbs[0]['west']
+    dss = tuple(
+        ds.assign_coords(X=ds['X'] + shift + 360. * i)
+        for i, ds in enumerate(dss)
+    )
+    return dss[0] if len(dss) == 1 else xr.concat(dss, dim='X')
 
 
 def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:

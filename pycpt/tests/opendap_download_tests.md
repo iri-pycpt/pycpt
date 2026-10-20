@@ -85,9 +85,9 @@ is an odd number of days. Ingrid agrees.
   returned). Ingrid can't take part because it fills them with NaN. Will
   break on re-recording if the missing data is filled in on the server, so
   the behavior is also a synthetic test (section 2, forecast only).
-- ❌ opendap-only: if no data falls in the requested range, the result has
-  length 0 in `T` (`no-data-in-range`, 1980–1982; opendap currently raises
-  `IndexError`). Confirmed that Ingrid returns a 404 here.
+- ✅ opendap-only: if no data falls in the requested range, the result has
+  length 0 in `T` (`no-data-in-range`, 1980–1982). Confirmed that Ingrid
+  returns a 404 here.
 
 ### Obs: temporal selection
 🚫 for all of these: SPEAR is a forecast dataset. UCSB.PRCP is the only obs
@@ -135,24 +135,23 @@ returned, and that a zero-area box returns the cell containing it.
 - ✅ The same, with the box's west edge inside a cell east of its center, so
   that cell's center is west of the box
   (`other-convention-edges-inside-cells`)
-- ❌ Box edge falls exactly on the seam. SPEAR's seam is at 359.5, so:
+- ✅ Box edge falls exactly on the seam. SPEAR's seam is at 359.5, so:
   `edge-on-seam-0-360` (349.5 to 359.5) and `edge-on-seam-negative` (-10.5
-  to -0.5). opendap returns 370 cells for both.
-- ❌ The plan's examples, box 350 to 360 or -10 to 0, overlap SPEAR's cell
-  centered on 0, so for SPEAR they span the seam: `east-edge-360` (Ingrid
-  returns `X` 350..360) and `east-edge-0` (✅, `X` -10..0). For
-  `east-edge-360`, opendap returns -10..0 instead of following the box's
-  convention.
+  to -0.5).
+- ✅ The plan's examples, box 350 to 360 or -10 to 0, overlap SPEAR's cell
+  centered on 0, so for SPEAR they span the seam: `east-edge-360` (`X`
+  350..360) and `east-edge-0` (`X` -10..0).
 - ✅ Box spans the seam with edges on cell edges
   (`spans-seam-edges-on-cell-edges`)
 - ✅ Box spans the seam with edges inside cells
   (`spans-seam-edges-inside-cells`)
-- ❌ Box spans all 360° of longitude (`all-longitudes-0-360`,
+- ✅ Box spans all 360° of longitude (`all-longitudes-0-360`,
   `all-longitudes-negative`). The cell at the box's east edge is also the
   one at its west edge, and it's returned at both ends: 361 points (0..360,
   or -180..180), as Ingrid does. That's acceptable for a box spanning the
-  globe; a caller who wants the whole globe leaves the box None. opendap
-  passes the -180–180 case but returns -360..0 for the 0–360 one.
+  globe; a caller who wants the whole globe leaves the box None.
+- Box wider than 360°: not handled (the piece east of the seam would reach
+  past the seam again). Decide whether to raise an error; no case yet.
 - 🚫 At least one dataset of each longitude convention (0–360 and -180–180), if
   both exist. SPEAR is 0–360. Look for a -180–180 dataset among the other
   twins.
