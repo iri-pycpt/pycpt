@@ -308,7 +308,7 @@ environments:
       - conda: https://conda.anaconda.org/iri-nextgen/linux-64/cptbin-17.8.3-h3d0eb6f_0.tar.bz2
       - conda_source: cptio[bdfe658a] @ ./cpt-io
       - conda_source: pycpt[23a2144d] @ ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=50f1b66#50f1b6674a70ec054838f30f8dbb9703c4be3f1b
       osx-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/appnope-0.1.4-pyhd8ed1ab_0.conda
@@ -590,7 +590,7 @@ environments:
       - conda: https://conda.anaconda.org/iri-nextgen/osx-64/cptbin-17.8.3-hae5c3c8_0.tar.bz2
       - conda_source: cptio[6694c9b6] @ ./cpt-io
       - conda_source: pycpt[410edc43] @ ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=50f1b66#50f1b6674a70ec054838f30f8dbb9703c4be3f1b
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/anyio-4.6.2.post1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/argon2-cffi-23.1.0-pyhd8ed1ab_0.conda
@@ -870,7 +870,7 @@ environments:
       - conda: https://conda.anaconda.org/iri-nextgen/win-64/cptbin-17.8.3-0.tar.bz2
       - conda_source: cptio[0bf28b2c] @ ./cpt-io
       - conda_source: pycpt[a36b13c6] @ ./pycpt
-      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
+      - pypi: git+https://github.com/iridl/recording-proxy.git?rev=50f1b66#50f1b6674a70ec054838f30f8dbb9703c4be3f1b
   prod:
     channels:
     - url: https://conda.anaconda.org/iri-nextgen/
@@ -10611,6 +10611,7 @@ packages:
   - conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.51.36247-habf1de7_41.conda
   - conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.51.36247-habf1de7_41.conda
   - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_7.conda
-- pypi: git+https://github.com/iridl/recording-proxy.git?rev=ea9c361#ea9c361269d81fedbf48d8c57d78aa4dcec44939
+- pypi: git+https://github.com/iridl/recording-proxy.git?rev=50f1b66#50f1b6674a70ec054838f30f8dbb9703c4be3f1b
   name: recording-proxy
   version: 0.1.0
+  requires_python: '>=3.9'

@@ -23,10 +23,18 @@ DATA_DIR = HERE.parent / 'data' / 'responses'
 
 @pytest.fixture(scope="module", autouse=True)
 def proxy(request):
-    is_record = request.config.getoption('--record')
+    record_opt = request.config.getoption('--record')
+    if record_opt == 'new':
+        mode = recording_proxy.Mode.record_new
+    elif record_opt == 'all':
+        mode = recording_proxy.Mode.record_all
+    elif record_opt == None:
+        mode = recording_proxy.Mode.frozen
+    else:
+        raise ValueError(f'Unknown recording mode {record_opt}')
     with recording_proxy.recording_proxy(
             str(DATA_DIR),
-            is_record=is_record,
+            mode=mode,
             verbose=True,
     ):
         yield

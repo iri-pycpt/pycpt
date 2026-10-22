@@ -33,7 +33,7 @@ types-shapely = "*"
 
 [feature.dev.pypi-dependencies]
 #recording-proxy = { path = "../recording-proxy", editable = true }
-recording-proxy = { git = "https://github.com/iridl/recording-proxy.git", rev = "ea9c361"}
+recording-proxy = { git = "https://github.com/iridl/recording-proxy.git", rev = "50f1b66"}
 
 [environments]
 default = {features = ["dev"], solve-group = "prod"}

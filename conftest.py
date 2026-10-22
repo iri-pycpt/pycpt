@@ -20,8 +20,7 @@ def pytest_configure(config):
 
 
 def pytest_addoption(parser):
-    # Add the custom command-line flag
     parser.addoption(
-        "--record", action="store_true", default=False,
-        help="Make real network requests and record the responses"
+        "--record", action="store", default=None,
+        help="new: make a network request only if no recorded response is available; all: make network requests for all tests and overwrite existing recorded responses"
     )
