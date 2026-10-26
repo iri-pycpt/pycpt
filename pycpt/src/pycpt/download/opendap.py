@@ -87,19 +87,21 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
         # data to be loaded. TODO write a deferred version of concat
         dss = [subset_spatial(ds, request.bounding_box) for ds in dss]
 
+        # If self.pressure_level is not None but the variable has no P
+        # dimension, in principle that ought to be an error, but we're silently
+        # ignoring it for backwards compatibility.  TODO be strict here, put
+        # backwards compatibility in notebook.py?
+        def subset_pressure(ds, pressure_level):
+            if pressure_level is not None and 'P' in ds.dims:
+                return ds.sel(P=pressure_level)
+            return ds
+        dss = [subset_pressure(ds, self.pressure_level) for ds in dss]
+
         # Hindcasts and forecasts don't always have the same number of ensemble
         # members, so don't concat until we've taken the ensemble mean.
         dss = [ds.mean('M', keep_attrs=True) for ds in dss]
 
         ds = xr.concat(dss, dim='S')
-
-        # If self.pressure_level is not None but the variable has no P
-        # dimension, in principle that ought to be an error, but we're silently
-        # ignoring it for backwards compatibility.  TODO be strict here, put
-        # backwards compatibility in notebook.py?
-        if self.pressure_level is not None and 'P' in ds:
-            ds = ds.sel(P=self.pressure_level)
-
 
         ds = self.seasonal_value(ds, self.extensive_in_time)
 
