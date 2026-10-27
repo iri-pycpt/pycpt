@@ -103,6 +103,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         ds = xr.concat(dss, dim='S')
 
+        # Workaround for netcdf-c bug
+        # https://github.com/Unidata/netcdf-c/issues/1074
+        # Should become unnecessary if we switch to pydap client.
+        if all_zero(ds):
+            raise Exception('Download failed')
+
         ds = self.seasonal_value(ds, self.extensive_in_time)
 
         da = self.sigrid_to_pycpt(ds)
@@ -218,6 +224,12 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
             ds = ds.sel(P=self.pressure_level)
 
         ds = subset_spatial(ds, request.bounding_box)
+
+        # Workaround for netcdf-c bug
+        # https://github.com/Unidata/netcdf-c/issues/1074
+        # Should become unnecessary if we switch to pydap client.
+        if all_zero(ds):
+            raise Exception('Download failed')
 
         ds = self.seasonal_value(
             ds, request.season_start_month, request.season_length,
@@ -475,6 +487,13 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
         da = da.isel(Y=slice(None, None, -1))
 
     return da
+
+
+def all_zero(ds):
+    for var in ds.data_vars.values():
+        if (var == 0).all():
+            return True
+    return False
 
 
 # Catalog TODO move to its own file
