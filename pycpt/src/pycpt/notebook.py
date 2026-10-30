@@ -260,7 +260,7 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
     # Ingrid tolerated west > east, but opendap does not, so swap them if necessary
     def fix_longitude(bb: BoundingBox) -> BoundingBox:
         if bb['west'] > bb['east']:
-            return BoundingBox(bb, west=bb['east'], east=bb['west'])
+            return BoundingBox({**bb, 'west': bb['east'], 'east': bb['west']})
         return bb
     predictand_bounding_box = fix_longitude(BoundingBox(**full_download_args['predictand_extent']))
     predictor_bounding_box = fix_longitude(BoundingBox(**full_download_args['predictor_extent']))
