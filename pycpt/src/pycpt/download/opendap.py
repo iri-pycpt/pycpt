@@ -491,7 +491,7 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
 
 def all_zero(ds):
     for var in ds.data_vars.values():
-        if (var == 0).all():
+        if var.size > 0 and (var == 0).all():
             return True
     return False
 
