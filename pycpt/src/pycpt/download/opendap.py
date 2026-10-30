@@ -103,13 +103,13 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         ds = xr.concat(dss, dim='S')
 
+        ds = self.seasonal_value(ds, self.extensive_in_time)
+
         # Workaround for netcdf-c bug
         # https://github.com/Unidata/netcdf-c/issues/1074
         # Should become unnecessary if we switch to pydap client.
-        if all_zero(ds):
+        if has_zero_slice(ds):
             raise Exception('Download failed')
-
-        ds = self.seasonal_value(ds, self.extensive_in_time)
 
         da = self.sigrid_to_pycpt(ds)
 
@@ -225,16 +225,17 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 
         ds = subset_spatial(ds, request.bounding_box)
 
-        # Workaround for netcdf-c bug
-        # https://github.com/Unidata/netcdf-c/issues/1074
-        # Should become unnecessary if we switch to pydap client.
-        if all_zero(ds):
-            raise Exception('Download failed')
-
         ds = self.seasonal_value(
             ds, request.season_start_month, request.season_length,
             self.extensive_in_time
         )
+
+        # Workaround for netcdf-c bug
+        # https://github.com/Unidata/netcdf-c/issues/1074
+        # Should become unnecessary if we switch to pydap client.
+        if has_zero_slice(ds):
+            raise Exception('Download failed')
+
 
         da = self.sigrid_to_pycpt(ds)
 
@@ -489,10 +490,12 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
     return da
 
 
-def all_zero(ds):
+def has_zero_slice(ds):
     for var in ds.data_vars.values():
-        if var.size > 0 and (var == 0).all():
-            return True
+        if var.size > 0:
+            for i in range(var.sizes[var.dims[0]]):
+                if (var[i] == 0).all():
+                    return True
     return False
 
 
