@@ -256,8 +256,15 @@ def create_requests(download_args: dict[str, object]) -> tuple[SeasonalObsReques
     hindcast_season_years = (hindcast_init_years[0] + year_delta, hindcast_init_years[1] + year_delta)
     forecast_season_year = full_download_args['fdate'].year + year_delta
     forecast_season_years = (forecast_season_year, forecast_season_year)
-    predictand_bounding_box = BoundingBox(**full_download_args['predictand_extent'])
-    predictor_bounding_box = BoundingBox(**full_download_args['predictor_extent'])
+
+    # Ingrid tolerated west > east, but opendap does not, so swap them if necessary
+    def fix_longitude(bb: BoundingBox) -> BoundingBox:
+        if bb['west'] > bb['east']:
+            return BoundingBox(bb, west=bb['east'], east=bb['west'])
+        return bb
+    predictand_bounding_box = fix_longitude(BoundingBox(**full_download_args['predictand_extent']))
+    predictor_bounding_box = fix_longitude(BoundingBox(**full_download_args['predictor_extent']))
+
     if not full_download_args.get('ensemblemean', True):
         raise Exception('ensemblemean=False is no longer supported.')
     hindcast_predictand_request = SeasonalObsRequest(
