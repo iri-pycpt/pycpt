@@ -107,8 +107,10 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         # Workaround for netcdf-c bug
         # https://github.com/Unidata/netcdf-c/issues/1074
-        # Should become unnecessary if we switch to pydap client.
-        if has_zero_slice(ds):
+        # netcdf4 makes one opendap request for each season; a season that's
+        # full of zeros indicates that the request for that season failed.
+        # Should become unnecessary if we fix that or switch to pydap client.
+        if has_zero_season(ds):
             raise Exception('Download failed')
 
         da = self.sigrid_to_pycpt(ds)
@@ -232,8 +234,10 @@ class OpendapSeasonalObsSource(SeasonalObsSource):
 
         # Workaround for netcdf-c bug
         # https://github.com/Unidata/netcdf-c/issues/1074
-        # Should become unnecessary if we switch to pydap client.
-        if has_zero_slice(ds):
+        # netcdf4 makes one opendap request for each season; a season that's
+        # full of zeros indicates that the request for that season failed.
+        # Should become unnecessary if we fix that or switch to pydap client.
+        if has_zero_season(ds):
             raise Exception('Download failed')
 
 
@@ -490,7 +494,7 @@ def sigrid_to_pycpt_common(ds: xr.Dataset) -> xr.DataArray:
     return da
 
 
-def has_zero_slice(ds):
+def has_zero_season(ds):
     for var in ds.data_vars.values():
         if var.size > 0:
             for i in range(var.sizes[var.dims[0]]):
