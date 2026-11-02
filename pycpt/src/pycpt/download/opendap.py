@@ -103,6 +103,12 @@ class OpendapSeasonalForecastSource(SeasonalForecastSource):
 
         ds = xr.concat(dss, dim='S')
 
+        # Imitate Ingrid behavior: raise an exception instead of returning an
+        # empty result
+        for var in ds.data_vars.values():
+            if var.size == 0:
+                raise ValueError("Empty result")
+
         ds = self.seasonal_value(ds, self.extensive_in_time)
 
         # Workaround for netcdf-c bug

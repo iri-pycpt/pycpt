@@ -2,6 +2,7 @@ import datetime as dt
 import tempfile
 from dataclasses import dataclass
 
+import requests
 import xarray as xr
 
 import cptdl as dl
@@ -67,7 +68,12 @@ class IngridSeasonalForecastSource(SeasonalForecastSource):
             download_args['pressure'] = self.pressure_level
 
         with tempfile.NamedTemporaryFile() as tmp:
-            ds = dl.download(template, tmp.name, **download_args)
+            try:
+                ds = dl.download(template, tmp.name, **download_args)
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 404:
+                    raise ValueError('Empty result')
+                raise
 
         return next(iter(ds.data_vars.values()))
 

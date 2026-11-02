@@ -195,15 +195,13 @@ class TestForecast:
         """Before the start of SPEAR's history. Ingrid can't take part: it
         returns an error rather than an empty result.
         """
-        if isinstance(source, ingrid.IngridSeasonalForecastSource):
-            pytest.skip()
         request = SeasonalForecastRequest(
             season_start_month=2, season_start_lead=1, season_length=1,
             season_start_years=(1980, 1982),
             bounding_box=small_box,
         )
-        expected = {'S': dates(), 'Ti': dates(), 'T': dates(), 'Tf': dates()}
-        validate(source.download(request), expected)
+        with pytest.raises(ValueError):
+            source.download(request)
 
 
     # Spatial selection
