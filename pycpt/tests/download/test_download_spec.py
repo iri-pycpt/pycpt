@@ -2,7 +2,10 @@
 run against both the Ingrid and the opendap implementations. Ingrid is the
 reference for legacy behavior. See ../opendap_download_tests.md.
 """
+from dataclasses import asdict
 import pathlib
+
+from pycpt.download.interface import SeasonalObsRequest, SeasonalObsSource
 
 import numpy as np
 import pytest
@@ -42,20 +45,8 @@ def proxy(request):
 def dates(*strs: str) -> np.ndarray:
     return np.array(strs, dtype='datetime64[ns]')
 
-
 def floats(*vals: float) -> np.ndarray:
     return np.array(vals, dtype=float)
-
-
-
-# NMME grid is 1°, with cell centers on whole degrees (so cell edges on
-# half degrees), X from 0 to 359 and Y from -90 to 90.
-
-# A 3x3 box whose edges fall on cell centers, for temporal selection tests.
-small_box = BoundingBox(west=284, east=286, south=39, north=41)
-
-INGRID_SPEAR = force_http(ingrid.forecast_source('SPEAR.PRCP', None))
-OPENDAP_SPEAR = force_http(opendap.forecast_source('SPEAR.PRCP', None))
 
 def validate(da, expected):
     assert da.dims == ('T', 'Y', 'X')
@@ -63,16 +54,29 @@ def validate(da, expected):
     for name, values in expected.items():
         np.testing.assert_array_equal(da[name].values, values, err_msg=name)
 
+INGRID_SPEAR = force_http(ingrid.forecast_source('SPEAR.PRCP', None))
+OPENDAP_SPEAR = force_http(opendap.forecast_source('SPEAR.PRCP', None))
+INGRID_UCSB = force_http(ingrid.observation_source('UCSB.PRCP', None))
+OPENDAP_UCSB = force_http(opendap.observation_source('UCSB.PRCP', None))
+
+
+# Temporal selection tests
+
+# A 3x3 box whose edges fall on cell centers, for temporal selection tests.
+small_box = BoundingBox(west=284, east=286, south=39, north=41)
+
+def temporal_case(source, request, expected):
+    if isinstance(source, SeasonalObsSource):
+        request = SeasonalObsRequest(**{k: v for k, v in asdict(request).items() if k != 'season_start_lead'})
+        expected = {k: v for k, v in expected.items() if k != 'S'}
+    validate(source.download(request), expected)
 
 @pytest.mark.parametrize(
     'source',
-    [INGRID_SPEAR, OPENDAP_SPEAR],
+    [INGRID_SPEAR, OPENDAP_SPEAR, INGRID_UCSB, OPENDAP_UCSB],
     ids=lambda x: x.__class__.__name__
 )
 class TestTemporalSelection:
-    # SPEAR's hindcasts start with the January 1991 initialization, and every
-    # initialization has leads 0 through 11.
-
     def test_lead_1_length_2(self, source):
         request = SeasonalForecastRequest(
             season_start_month=2, season_start_lead=1, season_length=2,
@@ -85,7 +89,7 @@ class TestTemporalSelection:
             'T': dates('2005-03-02', '2006-03-02', '2007-03-02'),
             'Tf': dates('2005-03-31', '2006-03-31', '2007-03-31'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_lead_1_length_3(self, source):
         request = SeasonalForecastRequest(
@@ -99,7 +103,7 @@ class TestTemporalSelection:
             'T': dates('2005-03-17', '2006-03-17', '2007-03-17'),
             'Tf': dates('2005-04-30', '2006-04-30', '2007-04-30'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_lead_0(self, source):
         request = SeasonalForecastRequest(
@@ -113,7 +117,7 @@ class TestTemporalSelection:
             'T': dates('2005-03-02', '2006-03-02', '2007-03-02'),
             'Tf': dates('2005-03-31', '2006-03-31', '2007-03-31'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_season_following_year(self, source):
         request = SeasonalForecastRequest(
@@ -127,7 +131,7 @@ class TestTemporalSelection:
             'T': dates('2005-04-15T12', '2006-04-15T12', '2007-04-15T12'),
             'Tf': dates('2005-05-31', '2006-05-31', '2007-05-31'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_season_spanning_jan_1(self, source):
         request = SeasonalForecastRequest(
@@ -141,7 +145,7 @@ class TestTemporalSelection:
             'T': dates('2006-01-14T12', '2007-01-14T12', '2008-01-15'),
             'Tf': dates('2006-02-28', '2007-02-28', '2008-02-29'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_hindcast_forecast_split(self, source):
         """The Dec 2019 initialization is only in the opendap hindcast url,
@@ -158,7 +162,7 @@ class TestTemporalSelection:
             'T': dates('2020-01-16', '2021-01-16', '2022-01-16'),
             'Tf': dates('2020-01-31', '2021-01-31', '2022-01-31'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_missing_inits(self, source):
         """The Jun 2025 and Jun 2026 initializations are missing, and missing
@@ -180,7 +184,7 @@ class TestTemporalSelection:
             'T': dates('2024-07-16'),
             'Tf': dates('2024-07-31'),
         }
-        validate(source.download(request), expected)
+        temporal_case(source, request, expected)
 
     def test_no_inits_in_range(self, source):
         """Before the start of SPEAR's history. Ingrid can't take part: it
