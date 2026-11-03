@@ -104,6 +104,10 @@ class IngridSeasonalObsSource(SeasonalObsSource):
         self.warn_if_deprecated()
 
         first_year, final_year = request.season_start_years
+        # If the season spans Jan 1, increment final_year by 1 so we get the
+        # whole final season.
+        if request.season_start_month + request.season_length > 12:
+            final_year = final_year + 1
 
         target = target_string(request.season_start_month, request.season_length)
 
