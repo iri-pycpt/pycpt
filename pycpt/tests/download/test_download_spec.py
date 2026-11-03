@@ -49,10 +49,7 @@ def floats(*vals: float) -> np.ndarray:
 
 
 # NMME grid is 1°, with cell centers on whole degrees (so cell edges on
-# half degrees), X from 0 to 359 and Y from -90 to 90. SPEAR's history starts
-# with the January 1991 initialization, and every initialization has leads 0
-# through 11. The opendap hindcast and forecast urls overlap at the December
-# 2020 initialization.
+# half degrees), X from 0 to 359 and Y from -90 to 90.
 
 # A 3x3 box whose edges fall on cell centers, for temporal selection tests.
 small_box = BoundingBox(west=284, east=286, south=39, north=41)
@@ -66,21 +63,15 @@ def validate(da, expected):
     for name, values in expected.items():
         np.testing.assert_array_equal(da[name].values, values, err_msg=name)
 
-def spatial_case(source, west, east, south, north, X, Y):
-    # A single-month season and two years, to keep the recordings small.
-    request = SeasonalForecastRequest(
-        season_start_month=2, season_start_lead=1, season_length=1,
-        season_start_years=(2005, 2006),
-        bounding_box=BoundingBox(west=west, east=east, south=south, north=north),
-    )
-    expected = {'X': X, 'Y': Y}
-    validate(source.download(request), expected)
 
-
-@pytest.mark.parametrize('source', [INGRID_SPEAR, OPENDAP_SPEAR], ids=lambda x: x.__class__.__name__)
-class TestForecast:
-
-    # Temporal selection
+@pytest.mark.parametrize(
+    'source',
+    [INGRID_SPEAR, OPENDAP_SPEAR],
+    ids=lambda x: x.__class__.__name__
+)
+class TestTemporalSelection:
+    # SPEAR's hindcasts start with the January 1991 initialization, and every
+    # initialization has leads 0 through 11.
 
     def test_lead_1_length_2(self, source):
         request = SeasonalForecastRequest(
@@ -204,8 +195,20 @@ class TestForecast:
             source.download(request)
 
 
-    # Spatial selection
+def spatial_case(source, west, east, south, north, X, Y):
+    # A single-month season and two years, to keep the recordings small.
+    request = SeasonalForecastRequest(
+        season_start_month=2, season_start_lead=1, season_length=1,
+        season_start_years=(2005, 2006),
+        bounding_box=BoundingBox(west=west, east=east, south=south, north=north),
+    )
+    expected = {'X': X, 'Y': Y}
+    validate(source.download(request), expected)
 
+# TODO add an NMME obs? Maybe not worth the effort, as forecast and obs
+# use the same function for spatial selection.
+@pytest.mark.parametrize('source', [INGRID_SPEAR, OPENDAP_SPEAR], ids=lambda x: x.__class__.__name__)
+class TestSpatialSelection:
     def test_bounds_on_cell_edges(self, source):
         """Cells 283 and 287 only touch the box along an edge."""
         spatial_case(
