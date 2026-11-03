@@ -133,7 +133,8 @@ class TestTemporalSelection:
         }
         temporal_case(source, request, expected)
 
-    def test_season_spanning_jan_1(self, source):
+    def test_djf(self, source):
+        # season start and midpoint in one year, end in the next
         request = SeasonalForecastRequest(
             season_start_month=12, season_start_lead=1, season_length=3,
             season_start_years=(2005, 2007),
@@ -144,6 +145,21 @@ class TestTemporalSelection:
             'Ti': dates('2005-12-01', '2006-12-01', '2007-12-01'),
             'T': dates('2006-01-14T12', '2007-01-14T12', '2008-01-15'),
             'Tf': dates('2006-02-28', '2007-02-28', '2008-02-29'),
+        }
+        temporal_case(source, request, expected)
+
+    def test_ndj(self, source):
+        # season start in one year, midpoint and end in the next
+        request = SeasonalForecastRequest(
+            season_start_month=11, season_start_lead=1, season_length=3,
+            season_start_years=(2005, 2007),
+            bounding_box=small_box,
+        )
+        expected = {
+            'S': dates('2005-10-01', '2006-10-01', '2007-10-01'),
+            'Ti': dates('2005-11-01', '2006-11-01', '2007-11-01'),
+            'T': dates('2005-12-16T12', '2006-12-16T12', '2007-12-16T12'),
+            'Tf': dates('2006-01-31', '2007-01-31', '2008-01-31'),
         }
         temporal_case(source, request, expected)
 
