@@ -2,16 +2,15 @@
 run against both the Ingrid and the opendap implementations. Ingrid is the
 reference for legacy behavior. See ../opendap_download_tests.md.
 """
-from dataclasses import asdict
 import pathlib
-
-from pycpt.download.interface import SeasonalObsRequest, SeasonalObsSource
+from dataclasses import asdict
 
 import numpy as np
 import pytest
 import recording_proxy
 
 from pycpt.download import BoundingBox, SeasonalForecastRequest, ingrid, opendap
+from pycpt.download.interface import SeasonalObsRequest, SeasonalObsSource
 
 from .utils import force_http
 
@@ -65,10 +64,13 @@ OPENDAP_UCSB = force_http(opendap.observation_source('UCSB.PRCP', None))
 # A 3x3 box whose edges fall on cell centers, for temporal selection tests.
 small_box = BoundingBox(west=284, east=286, south=39, north=41)
 
-def temporal_case(source, request, expected):
+def temporal_case(source, params, expected):
+    params = dict(params, bounding_box=small_box)
     if isinstance(source, SeasonalObsSource):
-        request = SeasonalObsRequest(**{k: v for k, v in asdict(request).items() if k != 'season_start_lead'})
+        request = SeasonalObsRequest(**{k: v for k, v in params.items() if k != 'season_start_lead'})
         expected = {k: v for k, v in expected.items() if k != 'S'}
+    else:
+        request = SeasonalForecastRequest(**params)
     validate(source.download(request), expected)
 
 @pytest.mark.parametrize(
@@ -78,141 +80,160 @@ def temporal_case(source, request, expected):
 )
 class TestTemporalSelection:
     def test_lead_1_length_2(self, source):
-        request = SeasonalForecastRequest(
-            season_start_month=2, season_start_lead=1, season_length=2,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 2,
+            'season_start_lead': 1,
+            'season_length': 2,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2005-01-01', '2006-01-01', '2007-01-01'),
             'Ti': dates('2005-02-01', '2006-02-01', '2007-02-01'),
             'T': dates('2005-03-02', '2006-03-02', '2007-03-02'),
             'Tf': dates('2005-03-31', '2006-03-31', '2007-03-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_lead_1_length_3(self, source):
-        request = SeasonalForecastRequest(
-            season_start_month=2, season_start_lead=1, season_length=3,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 2,
+            'season_start_lead': 1,
+            'season_length': 3,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2005-01-01', '2006-01-01', '2007-01-01'),
             'Ti': dates('2005-02-01', '2006-02-01', '2007-02-01'),
             'T': dates('2005-03-17', '2006-03-17', '2007-03-17'),
             'Tf': dates('2005-04-30', '2006-04-30', '2007-04-30'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_lead_0(self, source):
-        request = SeasonalForecastRequest(
-            season_start_month=2, season_start_lead=0, season_length=2,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 2,
+            'season_start_lead': 0,
+            'season_length': 2,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2005-02-01', '2006-02-01', '2007-02-01'),
             'Ti': dates('2005-02-01', '2006-02-01', '2007-02-01'),
             'T': dates('2005-03-02', '2006-03-02', '2007-03-02'),
             'Tf': dates('2005-03-31', '2006-03-31', '2007-03-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_season_following_year(self, source):
-        request = SeasonalForecastRequest(
-            season_start_month=3, season_start_lead=3, season_length=3,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box
-        )
+        params = {
+            'season_start_month': 3,
+            'season_start_lead': 3,
+            'season_length': 3,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2004-12-01', '2005-12-01', '2006-12-01'),
             'Ti': dates('2005-03-01', '2006-03-01', '2007-03-01'),
             'T': dates('2005-04-15T12', '2006-04-15T12', '2007-04-15T12'),
             'Tf': dates('2005-05-31', '2006-05-31', '2007-05-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_djf(self, source):
         # season start and midpoint in one year, end in the next
-        request = SeasonalForecastRequest(
-            season_start_month=12, season_start_lead=1, season_length=3,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 12,
+            'season_start_lead': 1,
+            'season_length': 3,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2005-11-01', '2006-11-01', '2007-11-01'),
             'Ti': dates('2005-12-01', '2006-12-01', '2007-12-01'),
             'T': dates('2006-01-14T12', '2007-01-14T12', '2008-01-15'),
             'Tf': dates('2006-02-28', '2007-02-28', '2008-02-29'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_ndj(self, source):
         # season start in one year, midpoint and end in the next
-        request = SeasonalForecastRequest(
-            season_start_month=11, season_start_lead=1, season_length=3,
-            season_start_years=(2005, 2007),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 11,
+            'season_start_lead': 1,
+            'season_length': 3,
+            'season_start_years': (2005, 2007),
+        }
         expected = {
             'S': dates('2005-10-01', '2006-10-01', '2007-10-01'),
             'Ti': dates('2005-11-01', '2006-11-01', '2007-11-01'),
             'T': dates('2005-12-16T12', '2006-12-16T12', '2007-12-16T12'),
             'Tf': dates('2006-01-31', '2007-01-31', '2008-01-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
-    def test_hindcast_forecast_split(self, source):
-        """The Dec 2019 initialization is only in the opendap hindcast url,
-        Dec 2020 is in both, and Dec 2021 is only in the forecast url.
+
+@pytest.mark.parametrize(
+    'source',
+    [INGRID_SPEAR, OPENDAP_SPEAR],
+    ids=lambda x: x.__class__.__name__
+)
+class TestTemporalSelectionSPEAR:
+    """Tests that rely on specific characteristics of SPEAR"""
+    def test_hindcast_forecast_split(self, request, source):
+        """The Dec 2019 initialization is only in hindcasts, Dec 2020 is in
+        both, and Dec 2021 is only in the forecasts.
         """
-        request = SeasonalForecastRequest(
-            season_start_month=1, season_start_lead=1, season_length=1,
-            season_start_years=(2020, 2022),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 1,
+            'season_start_lead': 1,
+            'season_length': 1,
+            'season_start_years': (2020, 2022),
+        }
         expected = {
             'S': dates('2019-12-01', '2020-12-01', '2021-12-01'),
             'Ti': dates('2020-01-01', '2021-01-01', '2022-01-01'),
             'T': dates('2020-01-16', '2021-01-16', '2022-01-16'),
             'Tf': dates('2020-01-31', '2021-01-31', '2022-01-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_missing_inits(self, source):
         """The Jun 2025 and Jun 2026 initializations are missing, and missing
         years are left out. Ingrid can't take part: its S grid is regular,
-        and it returns those years with all-NaN values. If the missing data
-        is ever filled in on the server, re-recording will break this case;
-        the synthetic test of missing initializations covers the behavior.
+        and it returns those years with all-NaN values. TODO If the missing data
+        are ever filled in on the server, re-recording will break this case;
+        write a test with synthetic data to cover this behavior.
         """
         if isinstance(source, ingrid.IngridSeasonalForecastSource):
             pytest.skip()
-        request = SeasonalForecastRequest(
-            season_start_month=7, season_start_lead=1, season_length=1,
-            season_start_years=(2024, 2026),
-            bounding_box=small_box,
-        )
+        params = {
+            'season_start_month': 7,
+            'season_start_lead': 1,
+            'season_length': 1,
+            'season_start_years': (2024, 2026),
+        }
         expected = {
             'S': dates('2024-06-01'),
             'Ti': dates('2024-07-01'),
             'T': dates('2024-07-16'),
             'Tf': dates('2024-07-31'),
         }
-        temporal_case(source, request, expected)
+        temporal_case(source, params, expected)
 
     def test_no_inits_in_range(self, source):
         """Before the start of SPEAR's history. Ingrid can't take part: it
         returns an error rather than an empty result.
         """
-        request = SeasonalForecastRequest(
-            season_start_month=2, season_start_lead=1, season_length=1,
-            season_start_years=(1980, 1982),
-            bounding_box=small_box,
-        )
+        if isinstance(source, ingrid.IngridSeasonalForecastSource):
+            pytest.skip()
+        params = {
+            'season_start_month': 2,
+            'season_start_lead': 1,
+            'season_length': 1,
+            'season_start_years': (1980, 1982),
+        }
         with pytest.raises(ValueError):
-            source.download(request)
+            temporal_case(source, params, {})
 
 
 def spatial_case(source, west, east, south, north, X, Y):
