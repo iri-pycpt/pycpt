@@ -221,11 +221,8 @@ class TestTemporalSelectionSPEAR:
         temporal_case(source, params, expected)
 
     def test_no_inits_in_range(self, source):
-        """Before the start of SPEAR's history. Ingrid can't take part: it
-        returns an error rather than an empty result.
+        """Before the start of SPEAR's history.
         """
-        if isinstance(source, ingrid.IngridSeasonalForecastSource):
-            pytest.skip()
         params = {
             'season_start_month': 2,
             'season_start_lead': 1,
