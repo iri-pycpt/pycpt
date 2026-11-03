@@ -192,14 +192,14 @@ def download_data(
         force_download: bool,
 ) -> tuple[xr.DataArray, Sequence[xr.DataArray], Sequence[xr.DataArray | None]]:
     data_dir = Path(files_root) / 'data'
-    if local_predictand_file is not None:
-        assert False, 'not implemented'  # TODO
-        # if not isinstance(predictand_name, str):
-        #     raise Exception('If providing local_predictand_file, predictand_arg should be a string (the name of the local dataset)')
-        # predictand = SeasonalLocalObsSource(predictand_name, Path(local_predictand_file))
     hindcast_predictand_request, hindcast_predictor_request, forecast_predictor_request = create_requests(download_args)
-    predictand_source = catalog.observation_source(predictand_name, pressure_level=None)
-    Y = cached_download(predictand_source, hindcast_predictand_request, data_dir / predictand_name, force_download)
+
+    if local_predictand_file is None:
+        predictand_source = catalog.observation_source(predictand_name, pressure_level=None)
+        Y = cached_download(predictand_source, hindcast_predictand_request, data_dir / predictand_name, force_download)
+    else:
+        Y = xr.open_dataarray(local_predictand_file)
+
     pressure_level = download_args.get('pressure_level')
     predictor_sources = [catalog.forecast_source(name, pressure_level) for name in predictor_names]
     hindcast_data = []
